@@ -1,0 +1,34 @@
+{
+  "stageElements": [
+		{
+			"description": "Schiene1",
+			"x": "0.0",
+			"y": "0.0",
+			"z": "0.0"
+		},
+		{
+			"description": "Schiene2",
+			"x": "0.0",
+			"y": "0.0",
+			"z": "0.0"
+		},
+		{
+			"description": "Schiene3",
+			"x": "0.0",
+			"y": "0.0",
+			"z": "0.0"
+		},
+		{
+			"description": "Schiene4",
+			"x": "0.0",
+			"y": "0.0",
+			"z": "0.0"
+		},
+		{
+			"description": "Hintergrund",
+			"x": "0.0",
+			"y": "0.0",
+			"z": "0.0" 
+		}
+	]
+}
