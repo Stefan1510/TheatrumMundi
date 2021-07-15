@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.IO;
 using System;
-using UnityEditor;
+//using UnityEditor;
 
 public class SettingController : MonoBehaviour {
     public Slider sliderHoeheEins;
@@ -10,13 +10,43 @@ public class SettingController : MonoBehaviour {
     public Slider sliderAbstand12_34;
     public Slider sliderDeltaHoehe12_34;
 
+    public Dropdown DropdownFileSelection;
+
     private StageElementList myStageElements = new StageElementList();
     private bool sceneLoaded = false;
 
-    public void LoadFile() {
-        string path = EditorUtility.OpenFilePanel("Load .json", "", "json");
+    private void Start()
+    {
+        LoadFilesFromFolder();
+    }
 
-        if (path.Length != 0) {
+    private void LoadFilesFromFolder()
+    {
+        DirectoryInfo directoryInfo = new DirectoryInfo(Application.dataPath + "/Resources/JSON/");
+        //DirectoryInfo directoryInfo = new DirectoryInfo(Application.persistentDataPath);
+        FileInfo[] fileInfo = directoryInfo.GetFiles("*.json", SearchOption.AllDirectories);
+        DropdownFileSelection.options.Clear();
+        DropdownFileSelection.options.Add(new Dropdown.OptionData("new"));
+
+        foreach (FileInfo file in fileInfo)
+        {
+            Dropdown.OptionData optionData = new Dropdown.OptionData(file.Name);
+            DropdownFileSelection.options.Add(optionData);
+            DropdownFileSelection.value = 1;
+        }
+    }
+
+    public void LoadFile()
+    {
+        string selectedFilename = DropdownFileSelection.options[DropdownFileSelection.value].text;
+        Debug.Log(selectedFilename);
+
+        ///string path = EditorUtility.OpenFilePanel("Load .json", "", "json");
+        string path = Application.dataPath + "/Resources/JSON/" + selectedFilename;
+        //string path = Application.persistentDataPath + selectedFilename;
+
+        if (path.Length != 0)
+        {
             sceneLoaded = true;
 
             StreamReader reader = new StreamReader(path);
@@ -25,8 +55,10 @@ public class SettingController : MonoBehaviour {
 
             myStageElements = JsonUtility.FromJson<StageElementList>(jsonString);
 
-            for (int i = 0; i < myStageElements.stageElements.Count; i++) {
-                switch (myStageElements.stageElements[i].description) {
+            for (int i = 0; i < myStageElements.stageElements.Count; i++)
+            {
+                switch (myStageElements.stageElements[i].description)
+                {
                     case "Schiene1":
                         sliderHoeheEins.value = myStageElements.stageElements[i].z;
                         break;
@@ -45,7 +77,8 @@ public class SettingController : MonoBehaviour {
     public void SaveFile() {
         //if no File was loaded - init myStageElements Class with init .json 
         if (!sceneLoaded) {
-            string tempPath = Application.dataPath + "/Resources/JSON/initScene.json";
+            string tempPath = Application.dataPath + "/Resources/initScene.json";
+            //string tempPath = Application.persistentDataPath;
             StreamReader reader = new StreamReader(tempPath);
             string jsonString = reader.ReadToEnd();
             reader.Close();
@@ -66,7 +99,8 @@ public class SettingController : MonoBehaviour {
 
         string json = JsonUtility.ToJson(myStageElements);
 
-        var path = EditorUtility.SaveFilePanel("Save Settings as JSON", "", ".json", "json");
+        //var path = EditorUtility.SaveFilePanel("Save Settings as JSON", "", ".json", "json");
+        var path = Application.dataPath + "/Resources/thisScene.json";
         if (path.Length != 0) {
             File.WriteAllText(path, json);
         }

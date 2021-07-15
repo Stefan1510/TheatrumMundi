@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/TheatrumMundi.unity
+    guid: 73ab7355c81e69543a4afded4620eee7
   m_configObjects: {}

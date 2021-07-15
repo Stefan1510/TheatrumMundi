@@ -17,6 +17,7 @@ public class MoveKulisse : MonoBehaviour
     private void Start()
     {
         _RailSelectionClone = Instantiate(_railSelectionTemplate, GameObject.Find("Canvas").transform);
+        _RailSelectionClone.onValueChanged.AddListener((val) => SelectRail(val));
     }
 
     public void toggleSceneryObject()
@@ -33,7 +34,7 @@ public class MoveKulisse : MonoBehaviour
 
     }
 
-    public void selectRail(int value)
+    private void SelectRail(int value)
     {
         GameObject schiene = GameObject.Find("Schiene1");
         switch (value)
@@ -49,6 +50,7 @@ public class MoveKulisse : MonoBehaviour
                 ///
                 break;
         }
+        Debug.Log("hallo " + gameObject.name + " - " + value.ToString());
         gameObject.transform.SetParent(schiene.transform);
         gameObject.transform.localPosition = new Vector3(schiene.transform.localPosition.z + 0.06f, gameObject.transform.localPosition.y, gameObject.transform.localPosition.z);
         Update();
