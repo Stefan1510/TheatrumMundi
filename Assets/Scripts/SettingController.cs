@@ -25,9 +25,10 @@ public class SettingController : MonoBehaviour {
         StartCoroutine(LoadFileFromWW());
     }
 
+
     private IEnumerator LoadFilesFromServer() {
         WWWForm form = new WWWForm();
-        WWW www = new WWW("https://www2.htw-dresden.de/~struckk/unity/LoadFileNames.php", form);
+        WWW www = new WWW("https://struck.by/unity/LoadFileNames.php", form);
         yield return www;
 
         string line = www.text;
@@ -42,7 +43,7 @@ public class SettingController : MonoBehaviour {
     }
     private IEnumerator LoadFileFromWW() {
         string selectedFilename = DropdownFileSelection.options[DropdownFileSelection.value].text;
-        WWW www = new WWW("https://www2.htw-dresden.de/~struckk/unity/Saves/" + selectedFilename);
+        WWW www = new WWW("https://struck.by/unity/Saves/" + selectedFilename);
         yield return www;
         string jsonString = www.text;
 
@@ -147,17 +148,15 @@ public class SettingController : MonoBehaviour {
 
     private IEnumerator WriteToServer(string json) {
         WWWForm form = new WWWForm();
-        string filePath = System.DateTime.Now.Year + "_" + System.DateTime.Now.Month + "_" 
-            + System.DateTime.Now.Day + "_" + System.DateTime.Now.Hour + "_" + System.DateTime.Now.Minute + "_" + System.DateTime.Now.Second + ".json";
+        string filePath = System.DateTime.Now.ToString("yyMMdd-HHmmss") + ".json";
         form.AddField("pathFile", filePath);
         form.AddField("text", json);
 
-        WWW www = new WWW("https://www2.htw-dresden.de/~neubert/WriteFile.php", form);
+        WWW www = new WWW("https://struck.by/unity/WriteFile.php", form);
         yield return www;
 
         Debug.Log("www: " +www.text);
 
-        yield return new WaitForSeconds(2f);
-        LoadFileFromWWWWrapper();
+        yield return StartCoroutine(LoadFilesFromServer());
     }
 }
