@@ -14,7 +14,7 @@ public class MoveRailsHoeheEins : MonoBehaviour
     void Start()
     {
         MyLibrary myLibrary = new MyLibrary();
-        myLibrary.test();
+        myLibrary.Test();
 
         _startHeightSchiene1 = transform.position.y;
     }

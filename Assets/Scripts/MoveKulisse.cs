@@ -20,7 +20,7 @@ public class MoveKulisse : MonoBehaviour
         _RailSelectionClone.onValueChanged.AddListener((val) => SelectRail(val));
     }
 
-    public void toggleSceneryObject()
+    public void ToggleSceneryObject()
     {
         if (!gameObject.activeSelf)
         {
@@ -43,16 +43,30 @@ public class MoveKulisse : MonoBehaviour
                 
                 break;
             case 1:
-                schiene = GameObject.Find("Schiene3");
+                schiene = GameObject.Find("Schiene2");
                 break;
             case 2:
-                ///ToDO
-                ///
+                schiene = GameObject.Find("Schiene3");
+                break;
+            case 3:
+                schiene = GameObject.Find("Schiene4");
+                break;
+            case 4:
+                schiene = GameObject.Find("Schiene5");
+                break;
+            case 5:
+                schiene = GameObject.Find("Schiene6");
+                break;
+            case 6:
+                schiene = GameObject.Find("Nagelbrett1");
+                break;
+            case 7:
+                schiene = GameObject.Find("Nagelbrett2");
                 break;
         }
         Debug.Log("hallo " + gameObject.name + " - " + value.ToString());
+        gameObject.transform.position = new Vector3(schiene.transform.position.x + 0.06f, schiene.transform.position.y + gameObject.transform.localPosition.y, gameObject.transform.position.z);
         gameObject.transform.SetParent(schiene.transform);
-        gameObject.transform.localPosition = new Vector3(schiene.transform.localPosition.z + 0.06f, gameObject.transform.localPosition.y, gameObject.transform.localPosition.z);
         Update();
         
     }
@@ -95,9 +109,9 @@ public class MoveKulisse : MonoBehaviour
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
             Vector3 rayPoint = ray.GetPoint(distance);
-            float zPos = transform.position.z;
+            float xPos = transform.position.x;
             transform.position = rayPoint + startDist;
-            transform.position = new Vector3(transform.position.x, transform.position.y, zPos);
+            transform.position = new Vector3(xPos, transform.position.y, transform.position.z);
 
             //RaycastHit hit;
             //if (Physics.Raycast(ray, out hit))
