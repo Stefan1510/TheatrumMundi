@@ -38,7 +38,7 @@ public class SettingController : MonoBehaviour {
 
     private IEnumerator LoadFilesFromServer() {
         WWWForm form = new WWWForm();
-        WWW www = new WWW("https://struck.by/unity/LoadFileNames.php", form);
+        WWW www = new WWW("https://lightframefx.de/extras/theatrum-mundi/LoadFileNames.php", form);
         yield return www;
 
         string line = www.text;
@@ -53,7 +53,7 @@ public class SettingController : MonoBehaviour {
     }
     private IEnumerator LoadFileFromWWW() {
         string selectedFilename = DropdownFileSelection.options[DropdownFileSelection.value].text;
-        WWW www = new WWW("https://struck.by/unity/Saves/" + selectedFilename);
+        WWW www = new WWW("https://lightframefx.de/extras/theatrum-mundi/Saves/" + selectedFilename);
         yield return www;
         string jsonString = www.text;
 
@@ -143,7 +143,7 @@ public class SettingController : MonoBehaviour {
 
     private IEnumerator GetJsonString()
     {
-        WWW www = new WWW("https://struck.by/unity/Saves/InitScene.json");
+        WWW www = new WWW("https://lightframefx.de/extras/theatrum-mundi/Saves/InitScene.json");
         yield return www;
         _jsonString = www.text;
     }
@@ -206,7 +206,7 @@ public class SettingController : MonoBehaviour {
         form.AddField("pathFile", filePath);
         form.AddField("text", json);
 
-        WWW www = new WWW("https://struck.by/unity/WriteFile.php", form);
+        WWW www = new WWW("https://lightframefx.de/extras/theatrum-mundi/WriteFile.php", form);
         yield return www;
 
         Debug.Log("www: " +www.text);
