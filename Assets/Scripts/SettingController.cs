@@ -6,23 +6,33 @@ using System.Collections;
 //using UnityEditor;
 
 public class SettingController : MonoBehaviour {
-    public Slider sliderHoeheEins;
-    public Slider sliderAbstandEinsZwei;
-    public Slider sliderAbstand12_34;
-    public Slider sliderDeltaHoehe12_34;
+    public Slider SliderRail1x;
+    public Slider SliderRail1y;
+    public Slider SliderRail2x;
+    public Slider SliderRail3x;
+    public Slider SliderRail3y;
+    public Slider SliderRail4x;
+    public Slider SliderRail5x;
+    public Slider SliderRail5y;
+    public Slider SliderRail6x;
+    public Slider SliderRail7x;
+    public Slider SliderRail7y;
+    public Slider SliderRail8x;
 
     public Dropdown DropdownFileSelection;
 
     private StageElementList myStageElements = new StageElementList();
     private bool sceneLoaded = false;
+    private string _jsonString;
 
     private void Start() {
         //LoadFilesFromFolder();
         StartCoroutine(LoadFilesFromServer());
+        StartCoroutine(GetJsonString());
     }
 
     public void LoadFileFromWWWWrapper() {
-        StartCoroutine(LoadFileFromWW());
+        StartCoroutine(LoadFileFromWWW());
     }
 
 
@@ -41,7 +51,7 @@ public class SettingController : MonoBehaviour {
             }
         }
     }
-    private IEnumerator LoadFileFromWW() {
+    private IEnumerator LoadFileFromWWW() {
         string selectedFilename = DropdownFileSelection.options[DropdownFileSelection.value].text;
         WWW www = new WWW("https://struck.by/unity/Saves/" + selectedFilename);
         yield return www;
@@ -52,14 +62,32 @@ public class SettingController : MonoBehaviour {
         for (int i = 0; i < myStageElements.stageElements.Count; i++) {
             switch (myStageElements.stageElements[i].description) {
                 case "Schiene1":
-                    sliderHoeheEins.value = myStageElements.stageElements[i].z;
+                    SliderRail1x.value = myStageElements.stageElements[i].x;
+                    SliderRail1y.value = myStageElements.stageElements[i].y;
                     break;
                 case "Schiene2":
-                    sliderAbstandEinsZwei.value = myStageElements.stageElements[i].y;
+                    SliderRail2x.value = myStageElements.stageElements[i].x;
                     break;
                 case "Schiene3":
-                    sliderAbstand12_34.value = myStageElements.stageElements[i].y;
-                    sliderDeltaHoehe12_34.value = myStageElements.stageElements[i].z;
+                    SliderRail3x.value = myStageElements.stageElements[i].x;
+                    SliderRail3y.value = myStageElements.stageElements[i].y;
+                    break;
+                case "Schiene4":
+                    SliderRail4x.value = myStageElements.stageElements[i].x;
+                    break;
+                case "Schiene5":
+                    SliderRail5x.value = myStageElements.stageElements[i].x;
+                    SliderRail5y.value = myStageElements.stageElements[i].y;
+                    break;
+                case "Schiene6":
+                    SliderRail6x.value = myStageElements.stageElements[i].x;
+                    break;
+                case "Nagelbrett1":
+                    SliderRail7x.value = myStageElements.stageElements[i].x;
+                    SliderRail7y.value = myStageElements.stageElements[i].y;
+                    break;
+                case "Nagelbrett2":
+                    SliderRail8x.value = myStageElements.stageElements[i].x;
                     break;
             }
         }
@@ -99,43 +127,69 @@ public class SettingController : MonoBehaviour {
             for (int i = 0; i < myStageElements.stageElements.Count; i++) {
                 switch (myStageElements.stageElements[i].description) {
                     case "Schiene1":
-                        sliderHoeheEins.value = myStageElements.stageElements[i].z;
+                        SliderRail1x.value = myStageElements.stageElements[i].z;
                         break;
                     case "Schiene2":
-                        sliderAbstandEinsZwei.value = myStageElements.stageElements[i].y;
+                        SliderRail2x.value = myStageElements.stageElements[i].y;
                         break;
                     case "Schiene3":
-                        sliderAbstand12_34.value = myStageElements.stageElements[i].y;
-                        sliderDeltaHoehe12_34.value = myStageElements.stageElements[i].z;
+                        SliderRail3x.value = myStageElements.stageElements[i].y;
+                        SliderRail3y.value = myStageElements.stageElements[i].z;
                         break;
                 }
             }
         }
     }
 
+    private IEnumerator GetJsonString()
+    {
+        WWW www = new WWW("https://struck.by/unity/Saves/InitScene.json");
+        yield return www;
+        _jsonString = www.text;
+    }
+
     public void SaveFile() {
         //if no File was loaded - init myStageElements Class with init .json 
         if (!sceneLoaded) {
             //string tempPath = Resources.Load("JSON/Init.json")
-            string tempPath = Application.dataPath + "/Resources/JSON/InitScene.json";
+            //string tempPath = Application.dataPath + "/Resources/JSON/InitScene.json";
             //string tempPath = Application.persistentDataPath;
-            StreamReader reader = new StreamReader(tempPath);
-            string jsonString = reader.ReadToEnd();
-            reader.Close();
-
-            myStageElements = JsonUtility.FromJson<StageElementList>(jsonString);
+            //StreamReader reader = new StreamReader(tempPath);
+            //string jsonString = reader.ReadToEnd();
+            //reader.Close();
+            StartCoroutine(GetJsonString());
+            myStageElements = JsonUtility.FromJson<StageElementList>(_jsonString);
         }
 
         int index = 0;
         index = myStageElements.stageElements.FindIndex(i => i.description == "Schiene1");
-        myStageElements.stageElements[index].z = (float)Math.Round(sliderHoeheEins.value * 100f) / 100f;
+        //myStageElements.stageElements[index].x = (float)Math.Round(SliderRail1x.value * 100f) / 100f;
+        myStageElements.stageElements[index].x = (SliderRail1x.value);
+        myStageElements.stageElements[index].y = (SliderRail1y.value);
 
         index = myStageElements.stageElements.FindIndex(i => i.description == "Schiene2");
-        myStageElements.stageElements[index].y = sliderAbstandEinsZwei.value;
+        myStageElements.stageElements[index].x = SliderRail2x.value;
 
         index = myStageElements.stageElements.FindIndex(i => i.description == "Schiene3");
-        myStageElements.stageElements[index].y = sliderAbstand12_34.value;
-        myStageElements.stageElements[index].z = sliderDeltaHoehe12_34.value;
+        myStageElements.stageElements[index].x = SliderRail3x.value;
+        myStageElements.stageElements[index].y = SliderRail3y.value;
+
+        index = myStageElements.stageElements.FindIndex(i => i.description == "Schiene4");
+        myStageElements.stageElements[index].x = SliderRail4x.value;
+
+        index = myStageElements.stageElements.FindIndex(i => i.description == "Schiene5");
+        myStageElements.stageElements[index].x = (SliderRail5x.value);
+        myStageElements.stageElements[index].y = (SliderRail5y.value);
+
+        index = myStageElements.stageElements.FindIndex(i => i.description == "Schiene6");
+        myStageElements.stageElements[index].x = SliderRail6x.value;
+
+        index = myStageElements.stageElements.FindIndex(i => i.description == "Nagelbrett1");
+        myStageElements.stageElements[index].x = SliderRail7x.value;
+        myStageElements.stageElements[index].y = SliderRail7y.value;
+
+        index = myStageElements.stageElements.FindIndex(i => i.description == "Nagelbrett2");
+        myStageElements.stageElements[index].x = SliderRail8x.value;
 
         string json = JsonUtility.ToJson(myStageElements);
         //var path = EditorUtility.SaveFilePanel("Save Settings as JSON", "", ".json", "json");

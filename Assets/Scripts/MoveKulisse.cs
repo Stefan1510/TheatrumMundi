@@ -63,6 +63,10 @@ public class MoveKulisse : MonoBehaviour
             case 7:
                 schiene = GameObject.Find("Nagelbrett2");
                 break;
+            case 8:
+                gameObject.SetActive(false);
+                isActive = false;
+                break;
         }
         Debug.Log("hallo " + gameObject.name + " - " + value.ToString());
         gameObject.transform.position = new Vector3(schiene.transform.position.x + 0.06f, schiene.transform.position.y + gameObject.transform.localPosition.y, gameObject.transform.position.z);
