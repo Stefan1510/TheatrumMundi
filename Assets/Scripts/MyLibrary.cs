@@ -7,7 +7,7 @@ public class MyLibrary
 {
     public void Test ()
     {
-        Debug.Log("testitest");
+        //Debug.Log("testitest");
     }
     
     public float ChangeSelectedValue(string str, Slider slider, InputField input)

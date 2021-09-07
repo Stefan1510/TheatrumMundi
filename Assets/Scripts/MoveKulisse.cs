@@ -14,10 +14,13 @@ public class MoveKulisse : MonoBehaviour
     private int _attachedToRail = 1;
 
     // Start is called before the first frame update
+
     private void Start()
     {
+        //gameObject.SetActive(false);
         _RailSelectionClone = Instantiate(_railSelectionTemplate, GameObject.Find("Canvas").transform);
         _RailSelectionClone.onValueChanged.AddListener((val) => SelectRail(val));
+        
     }
 
     public void ToggleSceneryObject()
@@ -68,7 +71,7 @@ public class MoveKulisse : MonoBehaviour
                 isActive = false;
                 break;
         }
-        Debug.Log("hallo " + gameObject.name + " - " + value.ToString());
+        //Debug.Log("hallo " + gameObject.name + " - " + value.ToString());
         gameObject.transform.position = new Vector3(schiene.transform.position.x + 0.06f, schiene.transform.position.y + gameObject.transform.localPosition.y, gameObject.transform.position.z);
         gameObject.transform.SetParent(schiene.transform);
         Update();

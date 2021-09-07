@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using System.IO;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 //using UnityEditor;
 
 public class SettingController : MonoBehaviour {
@@ -18,12 +19,14 @@ public class SettingController : MonoBehaviour {
     public Slider SliderRail7x;
     public Slider SliderRail7y;
     public Slider SliderRail8x;
+    public GameObject[] saveKulissen;
 
     public Dropdown DropdownFileSelection;
 
     private StageElementList myStageElements = new StageElementList();
     private bool sceneLoaded = false;
     private string _jsonString;
+
 
     private void Start() {
         //LoadFilesFromFolder();
@@ -88,7 +91,14 @@ public class SettingController : MonoBehaviour {
                     break;
                 case "Nagelbrett2":
                     SliderRail8x.value = myStageElements.stageElements[i].x;
-                    break;
+                    break; 
+            }
+            for (int j = 0; j < saveKulissen.Length; j++)
+            {
+                if (myStageElements.stageElements[i].description == saveKulissen[j].name)
+                {
+                    Debug.Log("halloooo:" + saveKulissen[j].name);
+                }
             }
         }
     }
@@ -191,6 +201,16 @@ public class SettingController : MonoBehaviour {
         index = myStageElements.stageElements.FindIndex(i => i.description == "Nagelbrett2");
         myStageElements.stageElements[index].x = SliderRail8x.value;
 
+        for (int j = 0; j < saveKulissen.Length; j++)
+        { 
+            index = myStageElements.stageElements.FindIndex(i => i.description == saveKulissen[j].name);
+            myStageElements.stageElements[index].x = saveKulissen[j].transform.position.x;
+            myStageElements.stageElements[index].y = saveKulissen[j].transform.position.y;
+            myStageElements.stageElements[index].z = saveKulissen[j].transform.position.z;
+            myStageElements.stageElements[index].parent = saveKulissen[j].transform.parent.name;
+            myStageElements.stageElements[index].active = saveKulissen[j].activeSelf;
+        }
+
         string json = JsonUtility.ToJson(myStageElements);
         //var path = EditorUtility.SaveFilePanel("Save Settings as JSON", "", ".json", "json");
         var path = Application.dataPath + "/Resources/thisScene.json";
@@ -212,5 +232,14 @@ public class SettingController : MonoBehaviour {
         Debug.Log("www: " +www.text);
 
         yield return StartCoroutine(LoadFilesFromServer());
+    }
+
+    public void getInformation()
+    {
+        GameObject[] kulissen = GameObject.FindGameObjectsWithTag("Kulisse");
+        foreach (GameObject kulisse in saveKulissen)
+        {
+            Debug.Log(kulisse.name + " - " + kulisse.gameObject.transform.parent.name + " - " + kulisse.transform.position + " - " + kulisse.activeSelf);
+        }
     }
 }

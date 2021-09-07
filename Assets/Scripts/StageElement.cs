@@ -8,6 +8,8 @@ public class StageElement {
     public float x;
     public float y;
     public float z;
+    public string parent;
+    public bool active;
 }
 
 public class StageElementList {
