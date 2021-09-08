@@ -12,7 +12,6 @@ public class MoveKulisse : MonoBehaviour
     private float distance;
     private Vector3 startDist;
     private int _attachedToRail = 1;
-
     // Start is called before the first frame update
 
     private void Start()
@@ -20,7 +19,6 @@ public class MoveKulisse : MonoBehaviour
         //gameObject.SetActive(false);
         _RailSelectionClone = Instantiate(_railSelectionTemplate, GameObject.Find("Canvas").transform);
         _RailSelectionClone.onValueChanged.AddListener((val) => SelectRail(val));
-        
     }
 
     public void ToggleSceneryObject()
@@ -80,13 +78,50 @@ public class MoveKulisse : MonoBehaviour
 
     void OnMouseDown()
     {
+        _RailSelectionClone.gameObject.transform.SetParent(null);
+        _RailSelectionClone.gameObject.transform.SetParent(GameObject.Find("Canvas").transform);
         distance = Vector3.Distance(transform.position, Camera.main.transform.position);
         dragging = true;
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         Vector3 rayPoint = ray.GetPoint(distance);
         startDist = transform.position - rayPoint;
         isActive = true;
-        _RailSelectionClone.value = this._attachedToRail - 1;
+        //_RailSelectionClone.value = this._attachedToRail - 1;
+        switch (gameObject.transform.parent.name)
+        {
+            case "Schiene1":
+                _attachedToRail = 1;
+                _RailSelectionClone.value = 0;
+                break;
+            case "Schiene2":
+                _attachedToRail = 2;
+                _RailSelectionClone.value = 1;
+                break;
+            case "Schiene3":
+                _attachedToRail = 3;
+                _RailSelectionClone.value = 2;
+                break;
+            case "Schiene4":
+                _attachedToRail = 4;
+                _RailSelectionClone.value = 3;
+                break;
+            case "Schiene5":
+                _attachedToRail = 5;
+                _RailSelectionClone.value = 4;
+                break;
+            case "Schiene6":
+                _attachedToRail = 6;
+                _RailSelectionClone.value = 5;
+                break;
+            case "Nagelbrett1":
+                _attachedToRail = 7;
+                _RailSelectionClone.value = 6;
+                break;
+            case "Nagelbrett2":
+                _attachedToRail = 8;
+                _RailSelectionClone.value = 7;
+                break;
+        }
     }
 
     private void OnMouseUp()

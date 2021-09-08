@@ -93,11 +93,17 @@ public class SettingController : MonoBehaviour {
                     SliderRail8x.value = myStageElements.stageElements[i].x;
                     break; 
             }
-            for (int j = 0; j < saveKulissen.Length; j++)
+
+            foreach (GameObject saveKulisse in saveKulissen)
             {
-                if (myStageElements.stageElements[i].description == saveKulissen[j].name)
+                if (myStageElements.stageElements[i].description == saveKulisse.name)
                 {
-                    Debug.Log("halloooo:" + saveKulissen[j].name);
+                    Debug.Log("halloooo:" + saveKulisse.name);
+
+                    saveKulisse.transform.position = new Vector3(myStageElements.stageElements[i].x, myStageElements.stageElements[i].y, myStageElements.stageElements[i].z);
+                    saveKulisse.transform.SetParent(GameObject.Find(myStageElements.stageElements[i].parent).transform);
+                    saveKulisse.SetActive(myStageElements.stageElements[i].active);
+
                 }
             }
         }
@@ -201,14 +207,24 @@ public class SettingController : MonoBehaviour {
         index = myStageElements.stageElements.FindIndex(i => i.description == "Nagelbrett2");
         myStageElements.stageElements[index].x = SliderRail8x.value;
 
-        for (int j = 0; j < saveKulissen.Length; j++)
-        { 
-            index = myStageElements.stageElements.FindIndex(i => i.description == saveKulissen[j].name);
-            myStageElements.stageElements[index].x = saveKulissen[j].transform.position.x;
-            myStageElements.stageElements[index].y = saveKulissen[j].transform.position.y;
-            myStageElements.stageElements[index].z = saveKulissen[j].transform.position.z;
-            myStageElements.stageElements[index].parent = saveKulissen[j].transform.parent.name;
-            myStageElements.stageElements[index].active = saveKulissen[j].activeSelf;
+        //for (int j = 0; j < saveKulissen.Length; j++)
+        //{ 
+        //    index = myStageElements.stageElements.FindIndex(i => i.description == saveKulissen[j].name);
+        //    myStageElements.stageElements[index].x = saveKulissen[j].transform.position.x;
+        //    myStageElements.stageElements[index].y = saveKulissen[j].transform.position.y;
+        //    myStageElements.stageElements[index].z = saveKulissen[j].transform.position.z;
+        //    myStageElements.stageElements[index].parent = saveKulissen[j].transform.parent.name;
+        //    myStageElements.stageElements[index].active = saveKulissen[j].activeSelf;
+        //}
+
+        foreach (GameObject saveKulisse in saveKulissen)
+        {
+            index = myStageElements.stageElements.FindIndex(i => i.description == saveKulisse.name);
+            myStageElements.stageElements[index].x = saveKulisse.transform.position.x;
+            myStageElements.stageElements[index].y = saveKulisse.transform.position.y;
+            myStageElements.stageElements[index].z = saveKulisse.transform.position.z;
+            myStageElements.stageElements[index].parent = saveKulisse.transform.parent.name;
+            myStageElements.stageElements[index].active = saveKulisse.activeSelf;
         }
 
         string json = JsonUtility.ToJson(myStageElements);
