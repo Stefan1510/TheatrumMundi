@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class MoveKulisse : MonoBehaviour
 {
@@ -18,7 +19,7 @@ public class MoveKulisse : MonoBehaviour
     {
         //gameObject.SetActive(false);
         _RailSelectionClone = Instantiate(_railSelectionTemplate, GameObject.Find("Canvas").transform);
-        _RailSelectionClone.onValueChanged.AddListener((val) => SelectRail(val));
+        _RailSelectionClone.onValueChanged.AddListener((val) => SelectRail(val));   
     }
 
     public void ToggleSceneryObject()
@@ -76,8 +77,14 @@ public class MoveKulisse : MonoBehaviour
         
     }
 
+    void OnPointerDown(PointerEventData eventData)
+    {
+        Debug.Log("Clicked: " + eventData.pointerCurrentRaycast.gameObject.name);
+    }
+
     void OnMouseDown()
     {
+        
         _RailSelectionClone.gameObject.transform.SetParent(null);
         _RailSelectionClone.gameObject.transform.SetParent(GameObject.Find("Canvas").transform);
         distance = Vector3.Distance(transform.position, Camera.main.transform.position);
@@ -129,6 +136,7 @@ public class MoveKulisse : MonoBehaviour
         dragging = false;
     }
 
+
     // Update is called once per frame
     void Update()
     {
@@ -144,30 +152,51 @@ public class MoveKulisse : MonoBehaviour
             this._attachedToRail = _RailSelectionClone.value + 1;
             //Debug.Log(this._attachedToRail);
         }
-        
+
+        /// Voodoo to realize if mouse is over a UIPanel
+        PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
+        eventDataCurrentPosition.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+        List<RaycastResult> results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
+
+        GameObject uiPanel = GameObject.FindGameObjectWithTag("UIPanel");
+        foreach (RaycastResult result in results)
+        {
+            if (result.gameObject == uiPanel)
+            {
+                //Debug.Log(result.gameObject);
+                dragging = false;
+                isActive = false;
+            }
+        }
+        /// End of Voodoo 
+        /// if Mouse is over a UIPanel no Movement of SceneryObjects is possible
 
         if (dragging)
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
             Vector3 rayPoint = ray.GetPoint(distance);
             float xPos = transform.position.x;
             transform.position = rayPoint + startDist;
             transform.position = new Vector3(xPos, transform.position.y, transform.position.z);
+            if (transform.position.y < -1.0f)
+            {
+                transform.position = new Vector3(xPos, -0.99f, transform.position.z);
+            }
 
-            //RaycastHit hit;
-            //if (Physics.Raycast(ray, out hit))
-            //{
-            //    Debug.DrawRay(ray.origin, ray.direction * hit.distance, Color.red);
+                //RaycastHit hit;
+                //if (Physics.Raycast(ray, out hit))
+                //{
+                //    Debug.DrawRay(ray.origin, ray.direction * hit.distance, Color.red);
 
-            //    if (hit.collider.gameObject == gameObject)
-            //    {
-            //        Debug.Log(hit.collider.gameObject);
-            //        float zPos = transform.position.z;
-            //        transform.position = ray.origin + (ray.direction * Mathf.Abs(ray.origin.z));
-            //        transform.position = new Vector3(transform.position.x, transform.position.y, zPos);
-            //    }
-            //}
+                //    if (hit.collider.gameObject == gameObject)
+                //    {
+                //        Debug.Log(hit.collider.gameObject);
+                //        float zPos = transform.position.z;
+                //        transform.position = ray.origin + (ray.direction * Mathf.Abs(ray.origin.z));
+                //        transform.position = new Vector3(transform.position.x, transform.position.y, zPos);
+                //    }
+                //}
+            }
         }
-    }
 }
