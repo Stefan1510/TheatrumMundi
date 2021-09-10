@@ -2639,6 +2639,50 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _railSelectionTemplate: {fileID: 1729388311}
+  _kulissenButton: {fileID: 1508016063}
+  isActive: 0
+  kulissenMaterial: {fileID: 0}
+--- !u!23 &383804062
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 383804058}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &386247952
 GameObject:
   m_ObjectHideFlags: 0
@@ -3889,6 +3933,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _railSelectionTemplate: {fileID: 1729388311}
+  _kulissenButton: {fileID: 2025078040}
+  isActive: 0
+  kulissenMaterial: {fileID: 0}
 --- !u!65 &557864255
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3972,7 +4019,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 2d0d3fcea10d3d34cb271c2b976c97c1,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 2d0d3fcea10d3d34cb271c2b976c97c1,
         type: 3}
@@ -8348,7 +8395,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1098295344
 RectTransform:
   m_ObjectHideFlags: 0
@@ -10852,6 +10899,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _railSelectionTemplate: {fileID: 1729388311}
+  _kulissenButton: {fileID: 1698546515}
+  isActive: 0
+  kulissenMaterial: {fileID: 0}
 --- !u!65 &1390181332
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -11637,7 +11687,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1508016061
 RectTransform:
   m_ObjectHideFlags: 0
@@ -11921,6 +11971,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _railSelectionTemplate: {fileID: 1729388311}
+  _kulissenButton: {fileID: 1098295346}
+  isActive: 0
+  kulissenMaterial: {fileID: 0}
 --- !u!65 &1530508293
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -11934,6 +11987,47 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.8, y: 1.1, z: 0.2}
   m_Center: {x: 0, y: 0.5, z: 0}
+--- !u!23 &1530508294
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1530508290}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &1564741603
 GameObject:
   m_ObjectHideFlags: 0
@@ -13482,7 +13576,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: a469e42ec88c21b46924a42b2c5525b3,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: a469e42ec88c21b46924a42b2c5525b3,
         type: 3}
@@ -13716,7 +13810,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 5019e61d2b716a64f959d4ce79b847c7,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 5019e61d2b716a64f959d4ce79b847c7,
         type: 3}
@@ -13894,6 +13988,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _railSelectionTemplate: {fileID: 1729388311}
+  _kulissenButton: {fileID: 782553071}
+  isActive: 0
+  kulissenMaterial: {fileID: 0}
 --- !u!65 &1922936265
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -14883,7 +14980,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 7c7c19a9e46d1b24f963d128f3e8f05a,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 7c7c19a9e46d1b24f963d128f3e8f05a,
         type: 3}
@@ -14924,6 +15021,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _railSelectionTemplate: {fileID: 1729388311}
+  _kulissenButton: {fileID: 104476496}
+  isActive: 0
+  kulissenMaterial: {fileID: 0}
 --- !u!1 &2025078037
 GameObject:
   m_ObjectHideFlags: 0

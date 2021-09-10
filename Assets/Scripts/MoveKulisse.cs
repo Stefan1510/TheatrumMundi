@@ -7,31 +7,45 @@ using UnityEngine.EventSystems;
 public class MoveKulisse : MonoBehaviour
 {
     [SerializeField] private Dropdown _railSelectionTemplate;
+    [SerializeField] private Button _kulissenButton;
     private Dropdown _RailSelectionClone;
     private bool dragging = false;
-    private bool isActive = false;
+    [HideInInspector] public bool isActive = false;
     private float distance;
     private Vector3 startDist;
     private int _attachedToRail = 1;
     // Start is called before the first frame update
+    [HideInInspector] public Material kulissenMaterial;
+    private GameObject[] allKulissen;
+
+    private void Awake()
+    {
+        allKulissen = GameObject.FindGameObjectsWithTag("Kulisse");
+        _RailSelectionClone = Instantiate(_railSelectionTemplate, GameObject.Find("Canvas").transform);
+        _RailSelectionClone.onValueChanged.AddListener((val) => SelectRail(val));
+    }
 
     private void Start()
     {
-        //gameObject.SetActive(false);
-        _RailSelectionClone = Instantiate(_railSelectionTemplate, GameObject.Find("Canvas").transform);
-        _RailSelectionClone.onValueChanged.AddListener((val) => SelectRail(val));   
+        //Fetch the Material from the Renderer of the GameObject
+        kulissenMaterial = GetComponent<MeshRenderer>().material;
+        //print("Materials " + Resources.FindObjectsOfTypeAll(typeof(Material)).Length);
+        //print(kulissenMaterial);
+        gameObject.SetActive(false);
+
     }
 
     public void ToggleSceneryObject()
     {
         if (!gameObject.activeSelf)
-        {
-            
+        {            
             gameObject.SetActive(true);
+            _kulissenButton.GetComponent<RawImage>().color = new Color(0.3f, 0.3f, 0.3f);
         }
         else
         {
             gameObject.SetActive(false);
+            _kulissenButton.GetComponent<RawImage>().color = new Color(1.0f, 1.0f, 1.0f);
         }
 
     }
@@ -68,6 +82,7 @@ public class MoveKulisse : MonoBehaviour
             case 8:
                 gameObject.SetActive(false);
                 isActive = false;
+                _kulissenButton.GetComponent<RawImage>().color = new Color(1.0f, 1.0f, 1.0f);
                 break;
         }
         //Debug.Log("hallo " + gameObject.name + " - " + value.ToString());
@@ -77,16 +92,14 @@ public class MoveKulisse : MonoBehaviour
         
     }
 
-    void OnPointerDown(PointerEventData eventData)
-    {
-        Debug.Log("Clicked: " + eventData.pointerCurrentRaycast.gameObject.name);
-    }
-
     void OnMouseDown()
     {
-        
-        _RailSelectionClone.gameObject.transform.SetParent(null);
-        _RailSelectionClone.gameObject.transform.SetParent(GameObject.Find("Canvas").transform);
+        foreach (GameObject oneKulisse in allKulissen)
+        {
+            oneKulisse.GetComponent<MoveKulisse>().isActive = false;
+        }
+        //_RailSelectionClone.gameObject.transform.SetParent(null);
+        //_RailSelectionClone.gameObject.transform.SetParent(GameObject.Find("Canvas").transform);
         distance = Vector3.Distance(transform.position, Camera.main.transform.position);
         dragging = true;
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -140,7 +153,20 @@ public class MoveKulisse : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (gameObject.activeSelf)
+        {
+            _kulissenButton.GetComponent<RawImage>().color = new Color(0.3f, 0.3f, 0.3f);
+        }
+        else
+        {
+            _kulissenButton.GetComponent<RawImage>().color = new Color(1.0f, 1.0f, 1.0f);
+        }
 
+        if (!isActive)
+        {
+            kulissenMaterial.color = Color.white;
+            _RailSelectionClone.gameObject.SetActive(false);
+        }
         if (Input.GetButton("Fire2"))
         {
             isActive = false;
@@ -151,6 +177,7 @@ public class MoveKulisse : MonoBehaviour
         {
             this._attachedToRail = _RailSelectionClone.value + 1;
             //Debug.Log(this._attachedToRail);
+            kulissenMaterial.color = Color.red;
         }
 
         /// Voodoo to realize if mouse is over a UIPanel
@@ -179,24 +206,36 @@ public class MoveKulisse : MonoBehaviour
             float xPos = transform.position.x;
             transform.position = rayPoint + startDist;
             transform.position = new Vector3(xPos, transform.position.y, transform.position.z);
-            if (transform.position.y < -1.0f)
+            if (transform.localPosition.y < -0.8f)
             {
-                transform.position = new Vector3(xPos, -0.99f, transform.position.z);
+                transform.localPosition = new Vector3(transform.localPosition.x, -0.79f, transform.localPosition.z);
+            }
+            if (transform.localPosition.y > 0.4f)
+            {
+                transform.localPosition = new Vector3(transform.localPosition.x, 0.39f, transform.localPosition.z);
+            }
+            if (transform.localPosition.z < -2.1f)
+            {
+                transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, -2.09f);
+            }
+            if (transform.localPosition.z > 2.1f)
+            {
+                transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, 2.09f);
             }
 
-                //RaycastHit hit;
-                //if (Physics.Raycast(ray, out hit))
-                //{
-                //    Debug.DrawRay(ray.origin, ray.direction * hit.distance, Color.red);
+            //RaycastHit hit;
+            //if (Physics.Raycast(ray, out hit))
+            //{
+            //    Debug.DrawRay(ray.origin, ray.direction * hit.distance, Color.red);
 
-                //    if (hit.collider.gameObject == gameObject)
-                //    {
-                //        Debug.Log(hit.collider.gameObject);
-                //        float zPos = transform.position.z;
-                //        transform.position = ray.origin + (ray.direction * Mathf.Abs(ray.origin.z));
-                //        transform.position = new Vector3(transform.position.x, transform.position.y, zPos);
-                //    }
-                //}
-            }
+            //    if (hit.collider.gameObject == gameObject)
+            //    {
+            //        Debug.Log(hit.collider.gameObject);
+            //        float zPos = transform.position.z;
+            //        transform.position = ray.origin + (ray.direction * Mathf.Abs(ray.origin.z));
+            //        transform.position = new Vector3(transform.position.x, transform.position.y, zPos);
+            //    }
+            //}
         }
+    }
 }

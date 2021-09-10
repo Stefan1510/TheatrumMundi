@@ -98,7 +98,7 @@ public class SettingController : MonoBehaviour {
             {
                 if (myStageElements.stageElements[i].description == saveKulisse.name)
                 {
-                    Debug.Log("halloooo:" + saveKulisse.name);
+                    //Debug.Log("halloooo:" + saveKulisse.name);
 
                     saveKulisse.transform.position = new Vector3(myStageElements.stageElements[i].x, myStageElements.stageElements[i].y, myStageElements.stageElements[i].z);
                     saveKulisse.transform.SetParent(GameObject.Find(myStageElements.stageElements[i].parent).transform);
