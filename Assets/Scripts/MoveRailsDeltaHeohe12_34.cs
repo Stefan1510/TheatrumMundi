@@ -13,7 +13,7 @@ public class MoveRailsDeltaHeohe12_34 : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _objectSchiene3 = GameObject.Find("Schiene3");
+        _objectSchiene3 = GameObject.Find("Schien3");
         _sliderDeltaHeohe12_34.onValueChanged.AddListener(ChangeHeightSchiene3Slider);
         _inputFieldDeltaHeohe12_34.onEndEdit.AddListener(ChangeHeightSchiene3InputField);
     }
@@ -22,7 +22,7 @@ public class MoveRailsDeltaHeohe12_34 : MonoBehaviour
     {
         _inputFieldDeltaHeohe12_34.text = val.ToString("0.00");
         Vector3 pos = _objectSchiene3.transform.position;
-        float baseheight = GameObject.Find("Schiene1").transform.position.y;
+        float baseheight = GameObject.Find("Schien1").transform.position.y;
         _objectSchiene3.transform.position = new Vector3(pos.x, baseheight + val, pos.z);
     }
 

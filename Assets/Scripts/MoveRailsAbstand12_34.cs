@@ -14,7 +14,7 @@ public class MoveRailsAbstand12_34 : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _objectSchiene3 = GameObject.Find("Schiene3");
+        _objectSchiene3 = GameObject.Find("Schien3");
         _startDistSchiene3 = _objectSchiene3.transform.position.z;
         _sliderAbstand12_34.onValueChanged.AddListener(ChangeDistanceSchiene3Slider);
         _inputFieldAbstand12_34.onEndEdit.AddListener(ChangeDistanceSchiene3InputField);
@@ -24,7 +24,7 @@ public class MoveRailsAbstand12_34 : MonoBehaviour
     {
         _inputFieldAbstand12_34.text = val.ToString("0.00");
         Vector3 pos = _objectSchiene3.transform.position;
-        float baseDist = GameObject.Find("Schiene2").transform.position.z;
+        float baseDist = GameObject.Find("Schien2").transform.position.z;
         _objectSchiene3.transform.position = new Vector3(pos.x, pos.y, _startDistSchiene3 + baseDist + val);
     }
 
