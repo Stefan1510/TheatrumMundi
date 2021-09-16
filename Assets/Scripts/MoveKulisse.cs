@@ -15,7 +15,7 @@ public class MoveKulisse : MonoBehaviour
     private Vector3 startDist;
     private int _attachedToRail = 1;
     // Start is called before the first frame update
-    [HideInInspector] public Material kulissenMaterial;
+    [HideInInspector] public Material[] kulissenMaterials;
     private GameObject[] allKulissen;
 
     private void Awake()
@@ -28,12 +28,13 @@ public class MoveKulisse : MonoBehaviour
     private void Start()
     {
         //Fetch the Material from the Renderer of the GameObject
-        kulissenMaterial = GetComponent<MeshRenderer>().material;
+        kulissenMaterials = GetComponent<MeshRenderer>().materials;
         //print("Materials " + Resources.FindObjectsOfTypeAll(typeof(Material)).Length);
-        //print(kulissenMaterial);
+        //print(kulissenMaterials);
         gameObject.SetActive(false);
         _railSelectionTemplate.gameObject.SetActive(false);
         _RailSelectionClone.gameObject.SetActive(false);
+        gameObject.transform.SetParent(GameObject.Find("Schiene1").transform);
     }
 
     public void ToggleSceneryObject()
@@ -165,7 +166,10 @@ public class MoveKulisse : MonoBehaviour
 
         if (!isActive)
         {
-            kulissenMaterial.color = Color.white;
+            foreach (Material kulissenMat in kulissenMaterials)
+            {
+                kulissenMat.color = Color.white;
+            }
             _RailSelectionClone.gameObject.SetActive(false);
         }
         if (Input.GetButton("Fire2"))
@@ -178,7 +182,10 @@ public class MoveKulisse : MonoBehaviour
         {
             this._attachedToRail = _RailSelectionClone.value + 1;
             //Debug.Log(this._attachedToRail);
-            kulissenMaterial.color = Color.red;
+            foreach (Material kulissenMat in kulissenMaterials)
+            {
+                kulissenMat.color = Color.red;
+            }
         }
 
         /// Voodoo to realize if mouse is over a UIPanel
@@ -207,13 +214,13 @@ public class MoveKulisse : MonoBehaviour
             float xPos = transform.position.x;
             transform.position = rayPoint + startDist;
             transform.position = new Vector3(xPos, transform.position.y, transform.position.z);
-            if (transform.localPosition.y < -0.8f)
+            if (transform.localPosition.y < -1.0f)
             {
-                transform.localPosition = new Vector3(transform.localPosition.x, -0.79f, transform.localPosition.z);
+                transform.localPosition = new Vector3(transform.localPosition.x, -0.99f, transform.localPosition.z);
             }
-            if (transform.localPosition.y > 0.4f)
+            if (transform.localPosition.y > 0.01f)
             {
-                transform.localPosition = new Vector3(transform.localPosition.x, 0.39f, transform.localPosition.z);
+                transform.localPosition = new Vector3(transform.localPosition.x, 0.0f, transform.localPosition.z);
             }
             if (transform.localPosition.z < -2.1f)
             {

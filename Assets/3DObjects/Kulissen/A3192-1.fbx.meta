@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 7c7c19a9e46d1b24f963d128f3e8f05a
+guid: b6ed74b7fefcea941ade5995db0d828d
 ModelImporter:
   serializedVersion: 20200
   internalIDToNameTable: []
@@ -7,13 +7,13 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: mat_back
-    second: {fileID: 2100000, guid: 3335014383e09e14ba85cb6e2f2d62db, type: 2}
+      name: mat_A3192-1
+    second: {fileID: 2100000, guid: 2da08dd67f0e11b48a0a6b8244843724, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: mat_front
-    second: {fileID: 2100000, guid: 4580d65e65bbc8647a6c042861313241, type: 2}
+      name: mat_background
+    second: {fileID: 2100000, guid: 80b7ab053f81f5847b2cb4cee97b322e, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

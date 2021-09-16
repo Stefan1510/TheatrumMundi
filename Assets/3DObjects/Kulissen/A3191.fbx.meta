@@ -8,12 +8,12 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: mat_A3190
-    second: {fileID: 2100000, guid: 4602e3df1191ae34aba76fdab2d4c9a3, type: 2}
+    second: {fileID: 2100000, guid: 05615c5ad2c852444998945bd5981c94, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: mat_background
-    second: {fileID: 2100000, guid: 52432a81898fd2348a8571640829febd, type: 2}
+    second: {fileID: 2100000, guid: 2fb86e2054cd416459b5c184cbee050c, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

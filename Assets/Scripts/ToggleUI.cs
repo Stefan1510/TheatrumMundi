@@ -23,7 +23,7 @@ public class ToggleUI : MonoBehaviour
         }
 
         _mainCamera = GameObject.Find("Main Camera");
-        if (gameObject.name == "PanelMeasures")
+        if (gameObject.name == "PanelMeasures" && gameObject.activeSelf)
         {
             Debug.Log("changecam");
             _mainCamera.transform.position = new Vector3(8f, 4f, 5f);

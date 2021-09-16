@@ -17,8 +17,8 @@ public class MyLibrary
         {
             if (val < 0f)
                 val = 0f;
-            if (val > 1f)
-                val = 1f;
+            if (val > 0.2f)
+                val = 0.2f;
             slider.value = val;
             //ChangeHeightSchiene1Slider(val);
 
