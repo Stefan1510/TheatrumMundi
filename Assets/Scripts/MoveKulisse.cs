@@ -32,7 +32,8 @@ public class MoveKulisse : MonoBehaviour
         //print("Materials " + Resources.FindObjectsOfTypeAll(typeof(Material)).Length);
         //print(kulissenMaterial);
         gameObject.SetActive(false);
-
+        _railSelectionTemplate.gameObject.SetActive(false);
+        _RailSelectionClone.gameObject.SetActive(false);
     }
 
     public void ToggleSceneryObject()
