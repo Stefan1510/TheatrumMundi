@@ -4675,7 +4675,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &577506939
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10903,12 +10903,14 @@ MonoBehaviour:
   SliderRail7y: {fileID: 690893396}
   SliderRail8x: {fileID: 1201012928}
   saveKulissen:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 943721725}
+  - {fileID: 728948781}
+  - {fileID: 107165779}
+  - {fileID: 1858087014}
+  - {fileID: 1806765528}
+  - {fileID: 1523941701}
+  - {fileID: 1993962487}
+  - {fileID: 943490680}
   DropdownFileSelection: {fileID: 1032587664}
 --- !u!4 &1280239968
 Transform:
@@ -14949,7 +14951,7 @@ GameObject:
   - component: {fileID: 1729388311}
   m_Layer: 5
   m_Name: DropdownRailSelectionTemplate
-  m_TagString: UIPanel
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
