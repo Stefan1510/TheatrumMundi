@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: cf2570f38dc3a544586fd75c9a917b9b
+guid: d4be6e8edd3039641932270cc93776ad
 ModelImporter:
   serializedVersion: 20200
   internalIDToNameTable: []
@@ -8,27 +8,17 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: mat_A3192-2
-    second: {fileID: 2100000, guid: 1fa23d1c2bc7a1d4384d17ce2f5fc258, type: 2}
+    second: {fileID: 2100000, guid: 76cc5f6b384f5094da06798ccbd7a0e1, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: mat_background
-    second: {fileID: 2100000, guid: d51e445607c6a334391cc3b62657d6c6, type: 2}
+    second: {fileID: 2100000, guid: 0fe75c28d55a6424294f0098966f3613, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: mat_windowBlue
-    second: {fileID: 2100000, guid: d411047d3bd232c41b04e9bb4ca84b67, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: mat_windowRed
-    second: {fileID: 2100000, guid: 2507b40ba67191d479513097ab5ea429, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: mat_windowYellow
-    second: {fileID: 2100000, guid: 643750935dd08604d878999fa16bfc4f, type: 2}
+      name: mat_window
+    second: {fileID: 2100000, guid: 59aab40eaa5591f4d8c587af781ed460, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
