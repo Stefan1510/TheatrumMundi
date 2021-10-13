@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 9e5a0415ce32db2468e0364bf3866352
+guid: f78eaecaa73ce2a4f80b0a3f84b4a63d
 ModelImporter:
   serializedVersion: 20200
   internalIDToNameTable: []
@@ -7,13 +7,13 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: mat_background
-    second: {fileID: 2100000, guid: c8c16eb64c439944ab0148ad89f039fb, type: 2}
+      name: mat_A3190
+    second: {fileID: 2100000, guid: de93555aa9c80ba4c8dec59241b12c83, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: mat_kulisse
-    second: {fileID: 2100000, guid: e7b75dc42d2bb8347b93359c9f0534a5, type: 2}
+      name: mat_background
+    second: {fileID: 2100000, guid: 88db3a2683b43f441a9ec662e068711d, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
