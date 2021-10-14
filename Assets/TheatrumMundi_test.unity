@@ -229,7 +229,7 @@ GameObject:
   - component: {fileID: 7729323}
   m_Layer: 5
   m_Name: ButtonA3192-1
-  m_TagString: Untagged
+  m_TagString: KulissenButton
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -323,19 +323,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 7729323}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: MoveKulisse, Assembly-CSharp
-        m_MethodName: ToggleSceneryObject
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!222 &7729325
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -609,7 +597,7 @@ RectTransform:
   m_GameObject: {fileID: 19906327}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2, y: 2, z: 1}
   m_Children: []
   m_Father: {fileID: 1500384961}
   m_RootOrder: 0
@@ -617,7 +605,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 20, y: 0}
+  m_SizeDelta: {x: 12, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &19906329
 MonoBehaviour:
@@ -632,7 +620,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -763,15 +751,15 @@ RectTransform:
   m_GameObject: {fileID: 32686696}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_Children: []
   m_Father: {fileID: 1858200664}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 100, y: -120}
-  m_SizeDelta: {x: 30, y: 30}
+  m_AnchoredPosition: {x: 100, y: -80}
+  m_SizeDelta: {x: 60, y: 60}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &32686698
 MonoBehaviour:
@@ -794,8 +782,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 20
+    m_Font: {fileID: 12800000, guid: 6ed1604352725f64f90a89af2bc9b234, type: 3}
+    m_FontSize: 32
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 2
@@ -1204,8 +1192,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.25}
   m_AnchorMax: {x: 1, y: 0.75}
-  m_AnchoredPosition: {x: -5, y: 0}
-  m_SizeDelta: {x: -20, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &60749690
 GameObject:
@@ -1221,7 +1209,7 @@ GameObject:
   - component: {fileID: 60749692}
   m_Layer: 5
   m_Name: ButtonA-3186
-  m_TagString: Untagged
+  m_TagString: KulissenButton
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1768,13 +1756,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 83546779}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 439f12e06e293de4db16288e7253e560, type: 3}
+  m_Script: {fileID: 11500000, guid: 002f0a83d6afccd4787b88b73c8b8845, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _railSelectionTemplate: {fileID: 1729388311}
-  _kulissenButton: {fileID: 0}
-  isActive: 0
-  kulissenMaterials: []
+  _kulissenButton: {fileID: 1921544230}
+  selectedScenery: 0
+  SceneryActive: 0
+  SceneryPositionX: 0.5
+  SceneryPositionY: 0.5
+  kulissenMaterial: {fileID: 0}
 --- !u!65 &83546781
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2376,13 +2366,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 107165779}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 439f12e06e293de4db16288e7253e560, type: 3}
+  m_Script: {fileID: 11500000, guid: 002f0a83d6afccd4787b88b73c8b8845, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _railSelectionTemplate: {fileID: 1729388311}
-  _kulissenButton: {fileID: 0}
-  isActive: 0
-  kulissenMaterials: []
+  _kulissenButton: {fileID: 1958873565}
+  selectedScenery: 0
+  SceneryActive: 0
+  SceneryPositionX: 0.5
+  SceneryPositionY: 0.5
+  kulissenMaterial: {fileID: 0}
 --- !u!65 &107165781
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3535,7 +3527,7 @@ GameObject:
   - component: {fileID: 174386460}
   m_Layer: 5
   m_Name: ButtonA-3187
-  m_TagString: Untagged
+  m_TagString: KulissenButton
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4556,13 +4548,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 222694505}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 439f12e06e293de4db16288e7253e560, type: 3}
+  m_Script: {fileID: 11500000, guid: 002f0a83d6afccd4787b88b73c8b8845, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _railSelectionTemplate: {fileID: 1729388311}
-  _kulissenButton: {fileID: 0}
-  isActive: 0
-  kulissenMaterials: []
+  _kulissenButton: {fileID: 1708191086}
+  selectedScenery: 0
+  SceneryActive: 0
+  SceneryPositionX: 0.5
+  SceneryPositionY: 0.5
+  kulissenMaterial: {fileID: 0}
 --- !u!65 &222694507
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6047,7 +6041,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 20, y: -70}
+  m_AnchoredPosition: {x: 20, y: -55}
   m_SizeDelta: {x: 120, y: 40}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &314950281
@@ -7361,7 +7355,7 @@ GameObject:
   - component: {fileID: 386160073}
   m_Layer: 5
   m_Name: ButtonA-3238
-  m_TagString: Untagged
+  m_TagString: KulissenButton
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7455,19 +7449,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 386160073}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: MoveKulisse, Assembly-CSharp
-        m_MethodName: ToggleSceneryObject
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!222 &386160075
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -10335,7 +10317,7 @@ GameObject:
   - component: {fileID: 558152448}
   m_Layer: 5
   m_Name: ButtonA3189
-  m_TagString: Untagged
+  m_TagString: KulissenButton
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -10429,19 +10411,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 558152448}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: MoveKulisse, Assembly-CSharp
-        m_MethodName: ToggleSceneryObject
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!222 &558152450
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -11501,7 +11471,7 @@ GameObject:
   - component: {fileID: 629611107}
   m_Layer: 5
   m_Name: ButtonA-7349
-  m_TagString: Untagged
+  m_TagString: KulissenButton
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11595,19 +11565,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 629611107}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: MoveKulisse, Assembly-CSharp
-        m_MethodName: ToggleSceneryObject
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!222 &629611109
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -11797,13 +11755,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 637828595}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 439f12e06e293de4db16288e7253e560, type: 3}
+  m_Script: {fileID: 11500000, guid: 002f0a83d6afccd4787b88b73c8b8845, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _railSelectionTemplate: {fileID: 1729388311}
-  _kulissenButton: {fileID: 0}
-  isActive: 0
-  kulissenMaterials: []
+  _kulissenButton: {fileID: 1001279105}
+  selectedScenery: 0
+  SceneryActive: 0
+  SceneryPositionX: 0.5
+  SceneryPositionY: 0.5
+  kulissenMaterial: {fileID: 0}
 --- !u!65 &637828597
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -13277,7 +13237,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -20, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &710899080
 GameObject:
@@ -13314,7 +13274,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 10, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &710899082
 MonoBehaviour:
@@ -13329,7 +13289,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -13368,7 +13328,7 @@ GameObject:
   - component: {fileID: 711933907}
   m_Layer: 5
   m_Name: ButtonA3192-2
-  m_TagString: Untagged
+  m_TagString: KulissenButton
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -13462,19 +13422,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 711933907}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: MoveKulisse, Assembly-CSharp
-        m_MethodName: ToggleSceneryObject
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!222 &711933909
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -13840,13 +13788,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 728948781}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 439f12e06e293de4db16288e7253e560, type: 3}
+  m_Script: {fileID: 11500000, guid: 002f0a83d6afccd4787b88b73c8b8845, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _railSelectionTemplate: {fileID: 1729388311}
-  _kulissenButton: {fileID: 0}
-  isActive: 0
-  kulissenMaterials: []
+  _kulissenButton: {fileID: 174386461}
+  selectedScenery: 0
+  SceneryActive: 0
+  SceneryPositionX: 0.5
+  SceneryPositionY: 0.5
+  kulissenMaterial: {fileID: 0}
 --- !u!65 &728948783
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -15078,13 +15028,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 764634418}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 439f12e06e293de4db16288e7253e560, type: 3}
+  m_Script: {fileID: 11500000, guid: 002f0a83d6afccd4787b88b73c8b8845, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _railSelectionTemplate: {fileID: 1729388311}
-  _kulissenButton: {fileID: 0}
-  isActive: 0
-  kulissenMaterials: []
+  _kulissenButton: {fileID: 1268522307}
+  selectedScenery: 0
+  SceneryActive: 0
+  SceneryPositionX: 0.5
+  SceneryPositionY: 0.5
+  kulissenMaterial: {fileID: 0}
 --- !u!65 &764634420
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -18561,7 +18513,7 @@ RectTransform:
   m_GameObject: {fileID: 941648658}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.5, y: 1.5, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1402550465}
   - {fileID: 48524389}
@@ -18571,8 +18523,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 130, y: -70}
-  m_SizeDelta: {x: 100, y: 20}
+  m_AnchoredPosition: {x: 130, y: -60}
+  m_SizeDelta: {x: 120, y: 12}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &941648660
 MonoBehaviour:
@@ -18618,10 +18570,10 @@ MonoBehaviour:
   m_FillRect: {fileID: 710899081}
   m_HandleRect: {fileID: 1680405670}
   m_Direction: 0
-  m_MinValue: 0
-  m_MaxValue: 1
+  m_MinValue: -2
+  m_MaxValue: 2
   m_WholeNumbers: 0
-  m_Value: 0.5
+  m_Value: 0
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
@@ -18652,13 +18604,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 943490680}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 439f12e06e293de4db16288e7253e560, type: 3}
+  m_Script: {fileID: 11500000, guid: 002f0a83d6afccd4787b88b73c8b8845, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _railSelectionTemplate: {fileID: 1729388311}
-  _kulissenButton: {fileID: 0}
-  isActive: 0
-  kulissenMaterials: []
+  _kulissenButton: {fileID: 2101924910}
+  selectedScenery: 0
+  SceneryActive: 0
+  SceneryPositionX: 0.5
+  SceneryPositionY: 0.5
+  kulissenMaterial: {fileID: 0}
 --- !u!65 &943490682
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -18700,13 +18654,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 943721725}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 439f12e06e293de4db16288e7253e560, type: 3}
+  m_Script: {fileID: 11500000, guid: 002f0a83d6afccd4787b88b73c8b8845, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _railSelectionTemplate: {fileID: 1729388311}
-  _kulissenButton: {fileID: 0}
-  isActive: 0
-  kulissenMaterials: []
+  _kulissenButton: {fileID: 60749693}
+  selectedScenery: 0
+  SceneryActive: 0
+  SceneryPositionX: 0.5
+  SceneryPositionY: 0.5
+  kulissenMaterial: {fileID: 0}
 --- !u!1 &943824333
 GameObject:
   m_ObjectHideFlags: 0
@@ -20005,7 +19961,7 @@ GameObject:
   - component: {fileID: 1001279104}
   m_Layer: 5
   m_Name: ButtonX1_Teil1
-  m_TagString: Untagged
+  m_TagString: KulissenButton
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -20099,19 +20055,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1001279104}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: MoveKulisse, Assembly-CSharp
-        m_MethodName: ToggleSceneryObject
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!222 &1001279106
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -21709,7 +21653,7 @@ RectTransform:
   m_GameObject: {fileID: 1053606531}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_Children: []
   m_Father: {fileID: 1408382374}
   m_RootOrder: 1
@@ -21717,7 +21661,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 50, y: 25}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1053606533
 MonoBehaviour:
@@ -21740,8 +21684,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 20
+    m_Font: {fileID: 12800000, guid: 6ed1604352725f64f90a89af2bc9b234, type: 3}
+    m_FontSize: 32
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 2
@@ -21752,7 +21696,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 0,50
+  m_Text: 0,00
 --- !u!222 &1053606534
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -22457,11 +22401,11 @@ RectTransform:
   m_Father: {fileID: 1858200664}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 290, y: -70}
-  m_SizeDelta: {x: 60, y: 30}
-  m_Pivot: {x: 0, y: 1}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 0, y: 0.5}
+  m_AnchoredPosition: {x: 259.99997, y: 14.999992}
+  m_SizeDelta: {x: 50, y: 25}
+  m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &1081651489
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22531,10 +22475,10 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_CaretColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_CaretColor: {r: 1, g: 0, b: 0, a: 1}
   m_CustomCaretColor: 0
   m_SelectionColor: {r: 0.65882355, g: 0.80784315, b: 1, a: 0.7529412}
-  m_Text: 0,50
+  m_Text: 0,00
   m_CaretBlinkRate: 0.85
   m_CaretWidth: 1
   m_ReadOnly: 0
@@ -22612,7 +22556,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 10, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1082340237
 MonoBehaviour:
@@ -22627,7 +22571,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -25057,7 +25001,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -25211,7 +25155,7 @@ GameObject:
   - component: {fileID: 1258502801}
   m_Layer: 5
   m_Name: ButtonA3191
-  m_TagString: Untagged
+  m_TagString: KulissenButton
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -25305,19 +25249,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1258502801}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: MoveKulisse, Assembly-CSharp
-        m_MethodName: ToggleSceneryObject
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!222 &1258502803
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -25705,13 +25637,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 1264014628}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 439f12e06e293de4db16288e7253e560, type: 3}
+  m_Script: {fileID: 11500000, guid: 002f0a83d6afccd4787b88b73c8b8845, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _railSelectionTemplate: {fileID: 0}
-  _kulissenButton: {fileID: 0}
-  isActive: 0
-  kulissenMaterials: []
+  _kulissenButton: {fileID: 386160074}
+  selectedScenery: 0
+  SceneryActive: 0
+  SceneryPositionX: 0.5
+  SceneryPositionY: 0.5
+  kulissenMaterial: {fileID: 0}
 --- !u!65 &1264014630
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -25814,7 +25748,7 @@ GameObject:
   - component: {fileID: 1268522306}
   m_Layer: 5
   m_Name: ButtonX1_Teil3
-  m_TagString: Untagged
+  m_TagString: KulissenButton
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -25908,19 +25842,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1268522306}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: MoveKulisse, Assembly-CSharp
-        m_MethodName: ToggleSceneryObject
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!222 &1268522308
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -29068,7 +28990,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -29128,11 +29050,11 @@ RectTransform:
   m_Father: {fileID: 1858200664}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 290, y: -120}
-  m_SizeDelta: {x: 60, y: 30}
-  m_Pivot: {x: 0, y: 1}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 0, y: 0.5}
+  m_AnchoredPosition: {x: 260, y: -15}
+  m_SizeDelta: {x: 50, y: 25}
+  m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &1408382375
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -29205,7 +29127,7 @@ MonoBehaviour:
   m_CaretColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
   m_CustomCaretColor: 0
   m_SelectionColor: {r: 0.65882355, g: 0.80784315, b: 1, a: 0.7529412}
-  m_Text: 0,50
+  m_Text: 0,00
   m_CaretBlinkRate: 0.85
   m_CaretWidth: 1
   m_ReadOnly: 0
@@ -30619,13 +30541,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 1475951051}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 439f12e06e293de4db16288e7253e560, type: 3}
+  m_Script: {fileID: 11500000, guid: 002f0a83d6afccd4787b88b73c8b8845, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _railSelectionTemplate: {fileID: 0}
-  _kulissenButton: {fileID: 0}
-  isActive: 0
-  kulissenMaterials: []
+  _kulissenButton: {fileID: 1676641363}
+  selectedScenery: 0
+  SceneryActive: 0
+  SceneryPositionX: 0.5
+  SceneryPositionY: 0.5
+  kulissenMaterial: {fileID: 0}
 --- !u!65 &1475951053
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -30845,13 +30769,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 1496324396}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 439f12e06e293de4db16288e7253e560, type: 3}
+  m_Script: {fileID: 11500000, guid: 002f0a83d6afccd4787b88b73c8b8845, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _railSelectionTemplate: {fileID: 1729388311}
-  _kulissenButton: {fileID: 0}
-  isActive: 0
-  kulissenMaterials: []
+  _kulissenButton: {fileID: 629611108}
+  selectedScenery: 0
+  SceneryActive: 0
+  SceneryPositionX: 0.5
+  SceneryPositionY: 0.5
+  kulissenMaterial: {fileID: 0}
 --- !u!65 &1496324398
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -30899,7 +30825,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -20, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1519143513
 GameObject:
@@ -31074,13 +31000,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 1523941701}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 439f12e06e293de4db16288e7253e560, type: 3}
+  m_Script: {fileID: 11500000, guid: 002f0a83d6afccd4787b88b73c8b8845, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _railSelectionTemplate: {fileID: 1729388311}
-  _kulissenButton: {fileID: 0}
-  isActive: 0
-  kulissenMaterials: []
+  _kulissenButton: {fileID: 7729324}
+  selectedScenery: 0
+  SceneryActive: 0
+  SceneryPositionX: 0.5
+  SceneryPositionY: 0.5
+  kulissenMaterial: {fileID: 0}
 --- !u!65 &1523941703
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -34596,7 +34524,7 @@ GameObject:
   - component: {fileID: 1676641362}
   m_Layer: 5
   m_Name: ButtonA-3190
-  m_TagString: Untagged
+  m_TagString: KulissenButton
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -34690,19 +34618,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1676641362}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: MoveKulisse, Assembly-CSharp
-        m_MethodName: ToggleSceneryObject
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!222 &1676641364
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -34738,7 +34654,7 @@ RectTransform:
   m_GameObject: {fileID: 1680405669}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2, y: 2, z: 1}
   m_Children: []
   m_Father: {fileID: 703466556}
   m_RootOrder: 0
@@ -34746,7 +34662,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 20, y: 0}
+  m_SizeDelta: {x: 12, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1680405671
 MonoBehaviour:
@@ -34761,7 +34677,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -35249,7 +35165,7 @@ GameObject:
   - component: {fileID: 1708191085}
   m_Layer: 5
   m_Name: ButtonA3271
-  m_TagString: Untagged
+  m_TagString: KulissenButton
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -35343,19 +35259,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1708191085}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: MoveKulisse, Assembly-CSharp
-        m_MethodName: ToggleSceneryObject
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!222 &1708191087
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -35878,8 +35782,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.25}
   m_AnchorMax: {x: 1, y: 0.75}
-  m_AnchoredPosition: {x: -5, y: 0}
-  m_SizeDelta: {x: -20, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1752427880
 GameObject:
@@ -36840,13 +36744,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 1806765528}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 439f12e06e293de4db16288e7253e560, type: 3}
+  m_Script: {fileID: 11500000, guid: 002f0a83d6afccd4787b88b73c8b8845, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _railSelectionTemplate: {fileID: 1729388311}
-  _kulissenButton: {fileID: 0}
-  isActive: 0
-  kulissenMaterials: []
+  _kulissenButton: {fileID: 1258502802}
+  selectedScenery: 0
+  SceneryActive: 0
+  SceneryPositionX: 0.5
+  SceneryPositionY: 0.5
+  kulissenMaterial: {fileID: 0}
 --- !u!65 &1806765530
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -36886,7 +36792,7 @@ RectTransform:
   m_GameObject: {fileID: 1810532223}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.5, y: 1.5, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1242408474}
   - {fileID: 1748550046}
@@ -36896,8 +36802,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 130, y: -120}
-  m_SizeDelta: {x: 100, y: 20}
+  m_AnchoredPosition: {x: 130, y: -90}
+  m_SizeDelta: {x: 120, y: 12}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1810532225
 MonoBehaviour:
@@ -36943,10 +36849,10 @@ MonoBehaviour:
   m_FillRect: {fileID: 1082340236}
   m_HandleRect: {fileID: 19906328}
   m_Direction: 0
-  m_MinValue: 0
-  m_MaxValue: 1
+  m_MinValue: -2
+  m_MaxValue: 2
   m_WholeNumbers: 0
-  m_Value: 0.5
+  m_Value: 0
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
@@ -37400,13 +37306,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 1858087014}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 439f12e06e293de4db16288e7253e560, type: 3}
+  m_Script: {fileID: 11500000, guid: 002f0a83d6afccd4787b88b73c8b8845, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _railSelectionTemplate: {fileID: 1729388311}
-  _kulissenButton: {fileID: 0}
-  isActive: 0
-  kulissenMaterials: []
+  _kulissenButton: {fileID: 558152449}
+  selectedScenery: 0
+  SceneryActive: 0
+  SceneryPositionX: 0.5
+  SceneryPositionY: 0.5
+  kulissenMaterial: {fileID: 0}
 --- !u!65 &1858087016
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -38177,7 +38085,7 @@ GameObject:
   - component: {fileID: 1921544229}
   m_Layer: 5
   m_Name: ButtonX1_Teil2
-  m_TagString: Untagged
+  m_TagString: KulissenButton
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -38271,19 +38179,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1921544229}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: MoveKulisse, Assembly-CSharp
-        m_MethodName: ToggleSceneryObject
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!222 &1921544231
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -39329,7 +39225,7 @@ GameObject:
   - component: {fileID: 1958873564}
   m_Layer: 5
   m_Name: ButtonA-3188
-  m_TagString: Untagged
+  m_TagString: KulissenButton
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -40115,13 +40011,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 1993962487}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 439f12e06e293de4db16288e7253e560, type: 3}
+  m_Script: {fileID: 11500000, guid: 002f0a83d6afccd4787b88b73c8b8845, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _railSelectionTemplate: {fileID: 1729388311}
-  _kulissenButton: {fileID: 0}
-  isActive: 0
-  kulissenMaterials: []
+  _kulissenButton: {fileID: 711933908}
+  selectedScenery: 0
+  SceneryActive: 0
+  SceneryPositionX: 0.5
+  SceneryPositionY: 0.5
+  kulissenMaterial: {fileID: 0}
 --- !u!65 &1993962489
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -42092,7 +41990,7 @@ GameObject:
   - component: {fileID: 2101924909}
   m_Layer: 5
   m_Name: ButtonA-3228
-  m_TagString: Untagged
+  m_TagString: KulissenButton
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -42186,19 +42084,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2101924909}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: MoveKulisse, Assembly-CSharp
-        m_MethodName: ToggleSceneryObject
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!222 &2101924911
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -42787,15 +42673,15 @@ RectTransform:
   m_GameObject: {fileID: 2138207052}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_Children: []
   m_Father: {fileID: 1858200664}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 100, y: -70}
-  m_SizeDelta: {x: 30, y: 30}
+  m_AnchoredPosition: {x: 100, y: -50}
+  m_SizeDelta: {x: 60, y: 60}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &2138207054
 MonoBehaviour:
@@ -42818,8 +42704,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 20
+    m_Font: {fileID: 12800000, guid: 6ed1604352725f64f90a89af2bc9b234, type: 3}
+    m_FontSize: 32
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 2
@@ -42866,7 +42752,7 @@ RectTransform:
   m_GameObject: {fileID: 2143169811}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_Children: []
   m_Father: {fileID: 1081651488}
   m_RootOrder: 1
@@ -42874,7 +42760,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 50, y: 25}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &2143169813
 MonoBehaviour:
@@ -42897,8 +42783,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 20
+    m_Font: {fileID: 12800000, guid: 6ed1604352725f64f90a89af2bc9b234, type: 3}
+    m_FontSize: 32
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 2
@@ -42909,7 +42795,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 0,50
+  m_Text: 0,00
 --- !u!222 &2143169814
 CanvasRenderer:
   m_ObjectHideFlags: 0
