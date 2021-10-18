@@ -20,6 +20,8 @@ public class SceneryController : MonoBehaviour
     Text _textSceneryname;
     Slider _sliderSceneryPositionX;
     Slider _sliderSceneryPositionY;
+    InputField _inputFieldSceneryPositionX;
+    InputField _InputFieldSceneryPositionY;
 
     private void Awake()
     {
@@ -34,6 +36,8 @@ public class SceneryController : MonoBehaviour
         _textSceneryname = GameObject.Find("TextSceneryName").GetComponent<Text>();
         _sliderSceneryPositionX = GameObject.Find("SliderSceneryPositionX").GetComponent<Slider>();
         _sliderSceneryPositionY = GameObject.Find("SliderSceneryPositionY").GetComponent<Slider>();
+        _inputFieldSceneryPositionX = GameObject.Find("InputFieldSceneryPositionX").GetComponent<InputField>();
+        _InputFieldSceneryPositionY = GameObject.Find("InputFieldSceneryPositionY").GetComponent<InputField>();
 
         gameObject.transform.SetParent(GameObject.Find("Schiene1").transform);
         
@@ -102,11 +106,19 @@ public class SceneryController : MonoBehaviour
             pos = gameObject.transform.position;
             SceneryPositionX = val;
             gameObject.transform.position = new Vector3(pos.x, pos.y, val);
+            _inputFieldSceneryPositionX.text = val.ToString("0.00");
         }
 
     }
     void ChangeSceneryPositionY(float val)
     {
-
+        Vector3 pos;
+        if (selectedScenery)
+        {
+            pos = gameObject.transform.position;
+            SceneryPositionY = val;
+            gameObject.transform.position = new Vector3(pos.x, val, pos.z);
+            _InputFieldSceneryPositionY.text = val.ToString("0.00");
+        }
     }
 }

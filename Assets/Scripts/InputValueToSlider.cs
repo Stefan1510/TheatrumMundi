@@ -25,6 +25,10 @@ public class InputValueToSlider : MonoBehaviour
 		{
 			myInputField.text=attachedSlider.maxValue.ToString("0.00");
 		}
+		if (float.Parse(myInputField.text)<attachedSlider.minValue)
+		{
+			myInputField.text=attachedSlider.minValue.ToString("0.00");
+		}
 	}
 
     // Update is called once per frame
