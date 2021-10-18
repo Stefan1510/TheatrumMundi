@@ -7,16 +7,16 @@ public class ObjectShelf : MonoBehaviour
 {
 	//objectShelf is the class for the object-browser (buehne,kulisse,licht)
 	//global class variables
-	public GameObject MenueBuehne;
-	public GameObject MenueKulisse;
-	public GameObject MenueLicht;
+	public GameObject MenueShelf01;
+	public GameObject MenueShelf02;
+	public GameObject MenueShelf03;
 	
 	public GameObject LiveView;
 	public GameObject SchematicView;
 	
-	public Text HeadlineBuehne;
-	public Text HeadlineKulisse;
-	public Text HeadlineLicht;
+	public Text HeadlineShelf01;
+	public Text HeadlineShelf02;
+	public Text HeadlineShelf03;
 	
 	//private GameObject lvcamera;
 	
@@ -27,30 +27,30 @@ public class ObjectShelf : MonoBehaviour
 		//define the buttons
 		Debug.Log("this is the main menue");
 		//mytext.text="this is text";
-		MenueBuehne.SetActive(true);
-		MenueKulisse.SetActive(false);
-		MenueLicht.SetActive(false);
+		MenueShelf01.SetActive(true);
+		MenueShelf02.SetActive(false);
+		MenueShelf03.SetActive(false);
 		
 		LiveView.SetActive(true);
 		
-		HeadlineBuehne.gameObject.SetActive(true);
-		HeadlineKulisse.gameObject.SetActive(false);
-		HeadlineLicht.gameObject.SetActive(false);
+		HeadlineShelf01.gameObject.SetActive(true);
+		HeadlineShelf02.gameObject.SetActive(false);
+		HeadlineShelf03.gameObject.SetActive(false);
     }
 	
-	public void ButtonBuehne()
+	public void ButtonShelf01()
 	{
-		Debug.Log("button for buehne");
+		Debug.Log("button for shelf01");
 		//show menue of buehne
-		MenueBuehne.SetActive(true);
-		MenueKulisse.SetActive(false);
-		MenueLicht.SetActive(false);
+		MenueShelf01.SetActive(true);
+		MenueShelf02.SetActive(false);
+		MenueShelf03.SetActive(false);
 		//show headline of buehne
 		//HeadlineBuehne.text="bababababa";
 		//HeadlineBuehne.color=Color.red;
-		HeadlineBuehne.gameObject.SetActive(true);
-		HeadlineKulisse.gameObject.SetActive(false);
-		HeadlineLicht.gameObject.SetActive(false);
+		HeadlineShelf01.gameObject.SetActive(true);
+		HeadlineShelf02.gameObject.SetActive(false);
+		HeadlineShelf03.gameObject.SetActive(false);
 		//HeadlineKulisse.show(false);
 		//HeadlineLicht.show(false);
 		//mytext.text="this is buehne";
@@ -59,16 +59,16 @@ public class ObjectShelf : MonoBehaviour
 		//Debug.Log("lvc");
 		//lvcamera.transform.position=new Vector3(8f,4f,5f);
 	}
-	public void ButtonKulisse()
+	public void ButtonShelf02()
 	{
-		Debug.Log("button for kulisse");
+		Debug.Log("button for shelf02");
 		//show menue of buehne
-		MenueBuehne.SetActive(false);
-		MenueKulisse.SetActive(true);
-		MenueLicht.SetActive(false);
-		HeadlineBuehne.gameObject.SetActive(false);
-		HeadlineKulisse.gameObject.SetActive(true);
-		HeadlineLicht.gameObject.SetActive(false);
+		MenueShelf01.SetActive(false);
+		MenueShelf02.SetActive(true);
+		MenueShelf03.SetActive(false);
+		HeadlineShelf01.gameObject.SetActive(false);
+		HeadlineShelf02.gameObject.SetActive(true);
+		HeadlineShelf03.gameObject.SetActive(false);
 		//mytext.text="in kulisse";
 		//Debug.Log(mytext);
 		//show headline of buehne
@@ -76,17 +76,17 @@ public class ObjectShelf : MonoBehaviour
 		//HeadlineKulisse.SetActive(false);
 		//HeadlineLicht.SetActive(false);
 	}
-	public void ButtonLicht()
+	public void ButtonShelf03()
 	{
-		Debug.Log("button for Licht");
+		Debug.Log("button for shelf03");
 		//show menue of buehne
-		MenueBuehne.SetActive(false);
-		MenueKulisse.SetActive(false);
-		MenueLicht.SetActive(true);
+		MenueShelf01.SetActive(false);
+		MenueShelf02.SetActive(false);
+		MenueShelf03.SetActive(true);
 		//show headline of buehne
-		HeadlineBuehne.gameObject.SetActive(false);
-		HeadlineKulisse.gameObject.SetActive(false);
-		HeadlineLicht.gameObject.SetActive(true);
+		HeadlineShelf01.gameObject.SetActive(false);
+		HeadlineShelf02.gameObject.SetActive(false);
+		HeadlineShelf03.gameObject.SetActive(true);
 	}
 
     // Update is called once per frame
