@@ -42,9 +42,9 @@ public class SceneryController : MonoBehaviour
         gameObject.transform.SetParent(GameObject.Find("Schiene1").transform);
         
         _kulissenButton.onClick.AddListener(() => ToggleSceneryButton());
-        _toggleSceneryActivate.onValueChanged.AddListener((val) => ActivateKulisse(val));
         _sliderSceneryPositionX.onValueChanged.AddListener((val) => ChangeSceneryPositionX(val));
         _sliderSceneryPositionY.onValueChanged.AddListener((val) => ChangeSceneryPositionY(val));
+        _toggleSceneryActivate.onValueChanged.AddListener((val) => ActivateKulisse(val));
     }
 
     // Start is called before the first frame update
@@ -53,7 +53,7 @@ public class SceneryController : MonoBehaviour
         selectedScenery = false;
         _textSceneryname.text = "";
         gameObject.SetActive(false);
-        //_toggleSceneryActivate.isOn = true;
+        _toggleSceneryActivate.isOn = true;
 
     }
 
