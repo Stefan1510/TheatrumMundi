@@ -27,8 +27,8 @@ public class ObjectShelf : MonoBehaviour
 		//define the buttons
 		Debug.Log("this is the main menue");
 		//mytext.text="this is text";
-		MenueBuehne.SetActive(true);
-		MenueKulisse.SetActive(false);
+		MenueBuehne.SetActive(false);
+		MenueKulisse.SetActive(true);
 		MenueLicht.SetActive(false);
 		
 		LiveView.SetActive(true);
