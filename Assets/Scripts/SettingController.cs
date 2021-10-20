@@ -22,11 +22,15 @@ public class SettingController : MonoBehaviour {
     public GameObject[] saveKulissen;
 
     public Dropdown DropdownFileSelection;
+    public GameObject contentFileSelect;
+    public Button fileSelectButton;
+    //public Text fileSelectButtonText;
 
     private StageElementList myStageElements = new StageElementList();
     private bool sceneLoaded = false;
     private string _jsonString;
 
+    private string _fileName;
 
     private void Start() {
         //LoadFilesFromFolder();
@@ -34,12 +38,16 @@ public class SettingController : MonoBehaviour {
         StartCoroutine(GetJsonString());
     }
 
-    public void LoadFileFromWWWWrapper() {
+    public void LoadFileFromWWWWrapper(string filename)
+    {
+        //_fileName = "211015-110409.json";
+        _fileName = filename;
         StartCoroutine(LoadFileFromWWW());
     }
 
 
-    private IEnumerator LoadFilesFromServer() {
+    private IEnumerator LoadFilesFromServer()
+    {
         WWWForm form = new WWWForm();
         WWW www = new WWW("https://lightframefx.de/extras/theatrum-mundi/LoadFileNames.php", form);
         yield return www;
@@ -51,12 +59,20 @@ public class SettingController : MonoBehaviour {
         foreach (string str in arr) {
             if (str.Length > 4) {
                 DropdownFileSelection.options.Add(new Dropdown.OptionData(str));
+                Button fileButtonInstance = Instantiate(fileSelectButton, contentFileSelect.transform);
+                fileButtonInstance.name = str;
+                fileButtonInstance.GetComponentInChildren<Text>().text = str;
+                fileButtonInstance.gameObject.SetActive(true);
+                fileButtonInstance.onClick.AddListener(() => LoadFileFromWWWWrapper(fileButtonInstance.name));
             }
         }
+        fileSelectButton.gameObject.SetActive(false);
+
     }
-    private IEnumerator LoadFileFromWWW() {
+    private IEnumerator LoadFileFromWWW()
+    {
         string selectedFilename = DropdownFileSelection.options[DropdownFileSelection.value].text;
-        WWW www = new WWW("https://lightframefx.de/extras/theatrum-mundi/Saves/" + selectedFilename);
+        WWW www = new WWW("https://lightframefx.de/extras/theatrum-mundi/Saves/" + _fileName);
         yield return www;
         string jsonString = www.text;
 
