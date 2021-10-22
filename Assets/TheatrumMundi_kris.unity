@@ -170,7 +170,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1917096}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d10758ba3fc4e474d9c9c4c6e88737fc, type: 3}
+  m_Script: {fileID: 0}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &1917099
@@ -1433,6 +1433,12 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 60749690}
   m_CullTransparentMesh: 1
+--- !u!1 &63904378 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: eb0ffec7c94fbf54fba5e663f87c1442,
+    type: 3}
+  m_PrefabInstance: {fileID: 926034547}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &73921736
 GameObject:
   m_ObjectHideFlags: 0
@@ -1954,9 +1960,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _kulissenButton: {fileID: 1921544230}
   selectedScenery: 0
-  SceneryActive: 0
-  SceneryPositionX: 0.5
-  SceneryPositionY: 0.5
+  sceneryActive: 0
+  sceneryPositionX: -0.1
+  sceneryPositionY: 0.1
   kulissenMaterial: {fileID: 0}
 --- !u!65 &83546781
 BoxCollider:
@@ -2564,9 +2570,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _kulissenButton: {fileID: 1958873565}
   selectedScenery: 0
-  SceneryActive: 0
-  SceneryPositionX: 0.5
-  SceneryPositionY: 0.5
+  sceneryActive: 0
+  sceneryPositionX: -0.1
+  sceneryPositionY: 0.1
   kulissenMaterial: {fileID: 0}
 --- !u!65 &107165781
 BoxCollider:
@@ -4407,6 +4413,139 @@ RectTransform:
   m_AnchoredPosition: {x: -596.41003, y: -295.12048}
   m_SizeDelta: {x: 1192.8188, y: 589.76}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &200898391
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 200898392}
+  - component: {fileID: 200898395}
+  - component: {fileID: 200898394}
+  - component: {fileID: 200898393}
+  m_Layer: 5
+  m_Name: Button
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &200898392
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 200898391}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 1304663487}
+  m_Father: {fileID: 1191707640}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -841, y: -555}
+  m_SizeDelta: {x: 160, y: 30}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &200898393
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 200898391}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 200898394}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1280239969}
+        m_TargetAssemblyTypeName: SceneDataController, Assembly-CSharp
+        m_MethodName: createJSONfromSceneData
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &200898394
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 200898391}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  m_Type: 1
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &200898395
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 200898391}
+  m_CullTransparentMesh: 1
 --- !u!1 &205293857
 GameObject:
   m_ObjectHideFlags: 0
@@ -4978,9 +5117,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _kulissenButton: {fileID: 1708191086}
   selectedScenery: 0
-  SceneryActive: 0
-  SceneryPositionX: 0.5
-  SceneryPositionY: 0.5
+  sceneryActive: 0
+  sceneryPositionX: -0.1
+  sceneryPositionY: 0.1
   kulissenMaterial: {fileID: 0}
 --- !u!65 &222694507
 BoxCollider:
@@ -12788,9 +12927,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _kulissenButton: {fileID: 1001279105}
   selectedScenery: 0
-  SceneryActive: 0
-  SceneryPositionX: 0.5
-  SceneryPositionY: 0.5
+  sceneryActive: 0
+  sceneryPositionX: -0.1
+  sceneryPositionY: 0.1
   kulissenMaterial: {fileID: 0}
 --- !u!65 &637828597
 BoxCollider:
@@ -14705,9 +14844,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _kulissenButton: {fileID: 174386461}
   selectedScenery: 0
-  SceneryActive: 0
-  SceneryPositionX: 0.5
-  SceneryPositionY: 0.5
+  sceneryActive: 0
+  sceneryPositionX: -0.1
+  sceneryPositionY: 0.1
   kulissenMaterial: {fileID: 0}
 --- !u!65 &728948783
 BoxCollider:
@@ -16093,9 +16232,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _kulissenButton: {fileID: 1268522307}
   selectedScenery: 0
-  SceneryActive: 0
-  SceneryPositionX: 0.5
-  SceneryPositionY: 0.5
+  sceneryActive: 0
+  sceneryPositionX: -0.1
+  sceneryPositionY: 0.1
   kulissenMaterial: {fileID: 0}
 --- !u!65 &764634420
 BoxCollider:
@@ -19600,10 +19739,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1280239967}
-        m_TargetAssemblyTypeName: SettingController, Assembly-CSharp
-        m_MethodName: LoadFileFromWWWWrapper
-        m_Mode: 5
+      - m_Target: {fileID: 1280239969}
+        m_TargetAssemblyTypeName: SceneDataController, Assembly-CSharp
+        m_MethodName: CreateJSON
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -20123,9 +20262,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _kulissenButton: {fileID: 2101924910}
   selectedScenery: 0
-  SceneryActive: 0
-  SceneryPositionX: 0.5
-  SceneryPositionY: 0.5
+  sceneryActive: 0
+  sceneryPositionX: -0.1
+  sceneryPositionY: 0.1
   kulissenMaterial: {fileID: 0}
 --- !u!65 &943490682
 BoxCollider:
@@ -20173,9 +20312,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _kulissenButton: {fileID: 60749693}
   selectedScenery: 0
-  SceneryActive: 0
-  SceneryPositionX: 0.5
-  SceneryPositionY: 0.5
+  sceneryActive: 0
+  sceneryPositionX: -0.1
+  sceneryPositionY: 0.1
   kulissenMaterial: {fileID: 0}
 --- !u!1 &943824333
 GameObject:
@@ -20578,6 +20717,12 @@ RectTransform:
   m_AnchoredPosition: {x: -5, y: 0}
   m_SizeDelta: {x: -20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &959537580 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: eb0ffec7c94fbf54fba5e663f87c1442,
+    type: 3}
+  m_PrefabInstance: {fileID: 584045448}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &962806002
 GameObject:
   m_ObjectHideFlags: 0
@@ -26530,6 +26675,7 @@ RectTransform:
   - {fileID: 1934784308}
   - {fileID: 125553331}
   - {fileID: 1087234603}
+  - {fileID: 200898392}
   m_Father: {fileID: 0}
   m_RootOrder: 27
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -27995,9 +28141,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _kulissenButton: {fileID: 386160074}
   selectedScenery: 0
-  SceneryActive: 0
-  SceneryPositionX: 0.5
-  SceneryPositionY: 0.5
+  sceneryActive: 0
+  sceneryPositionX: -0.1
+  sceneryPositionY: 0.1
   kulissenMaterial: {fileID: 0}
 --- !u!65 &1264014630
 BoxCollider:
@@ -28293,6 +28439,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1280239968}
   - component: {fileID: 1280239967}
+  - component: {fileID: 1280239969}
+  - component: {fileID: 1280239970}
   m_Layer: 0
   m_Name: GameController
   m_TagString: Untagged
@@ -28350,6 +28498,63 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 21
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1280239969
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1280239966}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a13419a4e0158dd40a183fa5fb70317c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  objectsRailElements:
+  - {fileID: 926344152}
+  - {fileID: 1164684795}
+  - {fileID: 446737474}
+  - {fileID: 10009807}
+  - {fileID: 311931153}
+  - {fileID: 1963256998}
+  - {fileID: 428265976}
+  - {fileID: 1054160536}
+  objectsSceneryElements:
+  - {fileID: 943721725}
+  - {fileID: 728948781}
+  - {fileID: 107165779}
+  - {fileID: 1858087014}
+  - {fileID: 1475951051}
+  - {fileID: 1806765528}
+  - {fileID: 1523941701}
+  - {fileID: 1993962487}
+  - {fileID: 943490680}
+  - {fileID: 1264014628}
+  - {fileID: 222694505}
+  - {fileID: 1496324396}
+  - {fileID: 637828595}
+  - {fileID: 83546779}
+  - {fileID: 764634418}
+  objectsLightElements:
+  - {fileID: 63904378}
+  - {fileID: 959537580}
+  - {fileID: 1464892097}
+  sceneFileAuthor: 
+  sceneFileDate: 
+  sceneFileComment: 
+  recentSceneDataSerialized: 
+--- !u!114 &1280239970
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1280239966}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98a6a1fb3b068d14dbbac331e526be02, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1283402880
 GameObject:
   m_ObjectHideFlags: 0
@@ -29235,6 +29440,85 @@ CanvasRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1303719247}
+  m_CullTransparentMesh: 1
+--- !u!1 &1304663486
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1304663487}
+  - component: {fileID: 1304663489}
+  - component: {fileID: 1304663488}
+  m_Layer: 5
+  m_Name: Text
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1304663487
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1304663486}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 200898392}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1304663488
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1304663486}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_FontData:
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_FontSize: 14
+    m_FontStyle: 0
+    m_BestFit: 0
+    m_MinSize: 10
+    m_MaxSize: 40
+    m_Alignment: 4
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1
+  m_Text: Button
+--- !u!222 &1304663489
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1304663486}
   m_CullTransparentMesh: 1
 --- !u!1 &1306963883
 GameObject:
@@ -32891,6 +33175,12 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1455857462}
   m_CullTransparentMesh: 1
+--- !u!1 &1464892097 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: eb0ffec7c94fbf54fba5e663f87c1442,
+    type: 3}
+  m_PrefabInstance: {fileID: 499224331}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1465504604 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 68d2f433a9ce5f74699ea2054c9911e4,
@@ -33437,9 +33727,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _kulissenButton: {fileID: 1676641363}
   selectedScenery: 0
-  SceneryActive: 0
-  SceneryPositionX: 0.5
-  SceneryPositionY: 0.5
+  sceneryActive: 0
+  sceneryPositionX: -0.1
+  sceneryPositionY: 0.1
   kulissenMaterial: {fileID: 0}
 --- !u!65 &1475951053
 BoxCollider:
@@ -33665,9 +33955,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _kulissenButton: {fileID: 629611108}
   selectedScenery: 0
-  SceneryActive: 0
-  SceneryPositionX: 0.5
-  SceneryPositionY: 0.5
+  sceneryActive: 0
+  sceneryPositionX: -0.1
+  sceneryPositionY: 0.1
   kulissenMaterial: {fileID: 0}
 --- !u!65 &1496324398
 BoxCollider:
@@ -33896,9 +34186,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _kulissenButton: {fileID: 7729324}
   selectedScenery: 0
-  SceneryActive: 0
-  SceneryPositionX: 0.5
-  SceneryPositionY: 0.5
+  sceneryActive: 0
+  sceneryPositionX: -0.1
+  sceneryPositionY: 0.1
   kulissenMaterial: {fileID: 0}
 --- !u!65 &1523941703
 BoxCollider:
@@ -36377,6 +36667,18 @@ MonoBehaviour:
       - m_Target: {fileID: 1280239967}
         m_TargetAssemblyTypeName: SettingController, Assembly-CSharp
         m_MethodName: SaveFile
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1280239970}
+        m_TargetAssemblyTypeName: SaveFileController, Assembly-CSharp
+        m_MethodName: saveJSONFile
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -40350,9 +40652,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _kulissenButton: {fileID: 1258502802}
   selectedScenery: 0
-  SceneryActive: 0
-  SceneryPositionX: 0.5
-  SceneryPositionY: 0.5
+  sceneryActive: 0
+  sceneryPositionX: -0.1
+  sceneryPositionY: 0.1
   kulissenMaterial: {fileID: 0}
 --- !u!65 &1806765530
 BoxCollider:
@@ -41283,9 +41585,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _kulissenButton: {fileID: 558152449}
   selectedScenery: 0
-  SceneryActive: 0
-  SceneryPositionX: 0.5
-  SceneryPositionY: 0.5
+  sceneryActive: 0
+  sceneryPositionX: -0.1
+  sceneryPositionY: 0.1
   kulissenMaterial: {fileID: 0}
 --- !u!65 &1858087016
 BoxCollider:
@@ -44454,9 +44756,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _kulissenButton: {fileID: 711933908}
   selectedScenery: 0
-  SceneryActive: 0
-  SceneryPositionX: 0.5
-  SceneryPositionY: 0.5
+  sceneryActive: 0
+  sceneryPositionX: -0.1
+  sceneryPositionY: 0.1
   kulissenMaterial: {fileID: 0}
 --- !u!65 &1993962489
 BoxCollider:

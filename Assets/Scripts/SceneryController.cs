@@ -9,9 +9,9 @@ public class SceneryController : MonoBehaviour
     [SerializeField] private Button _kulissenButton;
 
     [HideInInspector] public bool selectedScenery = false;
-    [HideInInspector] public bool SceneryActive = false;
-    [HideInInspector] public float SceneryPositionX = -0.1f;
-    [HideInInspector] public float SceneryPositionY = 0.1f;
+    [HideInInspector] public bool sceneryActive = false;
+    [HideInInspector] public float sceneryPositionX = 0.0f;
+    [HideInInspector] public float sceneryPositionY = 0.1f;
     private RawImage _kulissenButtonImage;
     private GameObject[] allKulissen;
     private GameObject[] allKulissenButtons;
@@ -81,8 +81,8 @@ public class SceneryController : MonoBehaviour
             selectedScenery = true;
             _textSceneryname.text = gameObject.name;
             _toggleSceneryActivate.isOn = gameObject.activeSelf;
-            _sliderSceneryPositionX.value = SceneryPositionX;
-            _sliderSceneryPositionY.value = SceneryPositionY;
+            _sliderSceneryPositionX.value = sceneryPositionX;
+            _sliderSceneryPositionY.value = sceneryPositionY;
             Debug.Log("Button AN");
         }
         else
@@ -96,7 +96,10 @@ public class SceneryController : MonoBehaviour
     void ActivateKulisse(bool val)
     {
         if (selectedScenery)
+        {
             gameObject.SetActive(val);
+            sceneryActive = val;
+        }
     }
     void ChangeSceneryPositionX(float val)
     {
@@ -104,7 +107,7 @@ public class SceneryController : MonoBehaviour
         if (selectedScenery)
         {
             pos = gameObject.transform.position;
-            SceneryPositionX = val;
+            sceneryPositionX = val;
             gameObject.transform.position = new Vector3(pos.x, pos.y, val);
             _inputFieldSceneryPositionX.text = val.ToString("0.00");
         }
@@ -116,7 +119,7 @@ public class SceneryController : MonoBehaviour
         if (selectedScenery)
         {
             pos = gameObject.transform.position;
-            SceneryPositionY = val;
+            sceneryPositionY = val;
             gameObject.transform.position = new Vector3(pos.x, val, pos.z);
             _InputFieldSceneryPositionY.text = val.ToString("0.00");
         }
