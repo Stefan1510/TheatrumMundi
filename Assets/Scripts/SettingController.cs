@@ -22,8 +22,8 @@ public class SettingController : MonoBehaviour {
     public GameObject[] saveKulissen;
 
     public Dropdown DropdownFileSelection;
-    public GameObject contentFileSelect;
-    public Button fileSelectButton;
+    //public GameObject contentFileSelect;
+    //public Button fileSelectButton;
     //public Text fileSelectButtonText;
 
     private StageElementList myStageElements = new StageElementList();
@@ -59,14 +59,8 @@ public class SettingController : MonoBehaviour {
         foreach (string str in arr) {
             if (str.Length > 4) {
                 DropdownFileSelection.options.Add(new Dropdown.OptionData(str));
-                Button fileButtonInstance = Instantiate(fileSelectButton, contentFileSelect.transform);
-                fileButtonInstance.name = str;
-                fileButtonInstance.GetComponentInChildren<Text>().text = str;
-                fileButtonInstance.gameObject.SetActive(true);
-                fileButtonInstance.onClick.AddListener(() => LoadFileFromWWWWrapper(fileButtonInstance.name));
             }
         }
-        fileSelectButton.gameObject.SetActive(false);
 
     }
     private IEnumerator LoadFileFromWWW()

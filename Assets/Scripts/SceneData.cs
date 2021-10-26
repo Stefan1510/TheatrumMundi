@@ -6,7 +6,7 @@ using UnityEngine;
 [System.Serializable]
 public class RailElement
 {
-    public string description;
+    public string name;
     public float x;
     public float y;
     public float z;
@@ -15,7 +15,7 @@ public class RailElement
 [System.Serializable]
 public class SceneryElement
 {
-    public string description;
+    public string name;
     public float x;
     public float y;
     public float z;
@@ -26,7 +26,7 @@ public class SceneryElement
 [System.Serializable]
 public class LightElement
 {
-    public string description;
+    public string name;
     public float x;
     public float y;
     public float z;
@@ -36,6 +36,7 @@ public class LightElement
 
 public class SceneData
 {
+    public string fileName;
     public string fileAuthor;
     public string fileDate;
     public string fileComment;
