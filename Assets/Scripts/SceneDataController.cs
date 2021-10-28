@@ -21,7 +21,8 @@ public class SceneDataController : MonoBehaviour
     [HideInInspector] public int countActiveSceneryElements = 0;
     [HideInInspector] public int countActiveLightElements = 0;
 
-    SceneData recentSceneData;
+    [HideInInspector] public SceneData recentSceneData;
+    [HideInInspector] public SceneData tempSceneData;
 
     // Start is called before the first frame update
     void Start()
