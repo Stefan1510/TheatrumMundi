@@ -1375,7 +1375,7 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: 6ed1604352725f64f90a89af2bc9b234, type: 3}
-    m_FontSize: 56
+    m_FontSize: 52
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 5
@@ -1385,7 +1385,7 @@ MonoBehaviour:
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
-    m_LineSpacing: 1
+    m_LineSpacing: 0.7
   m_Text: 
 --- !u!222 &60433358
 CanvasRenderer:
@@ -12445,7 +12445,7 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: 6ed1604352725f64f90a89af2bc9b234, type: 3}
-    m_FontSize: 56
+    m_FontSize: 52
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 5
@@ -12455,7 +12455,7 @@ MonoBehaviour:
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
-    m_LineSpacing: 1
+    m_LineSpacing: 0.7
   m_Text: 
 --- !u!222 &607925812
 CanvasRenderer:
@@ -28949,6 +28949,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   contentFileSelect: {fileID: 1413993268}
   fileSelectButton: {fileID: 31703931}
+  textFileMetaData: {fileID: 607925811}
+  textFileContentData: {fileID: 60433357}
 --- !u!1 &1283402880
 GameObject:
   m_ObjectHideFlags: 0
