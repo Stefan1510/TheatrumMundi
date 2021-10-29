@@ -29,8 +29,8 @@ public class SceneryController : MonoBehaviour
         allKulissenButtons = GameObject.FindGameObjectsWithTag("KulissenButton");
         kulissenMaterial = GetComponent<MeshRenderer>().material;
         
-        _kulissenButtonImage = _kulissenButton.GetComponent<RawImage>();
-        _kulissenButtonImage.color = new Color(1f, 1f, 1f, 0.4f);
+        //_kulissenButtonImage = _kulissenButton.GetComponent<RawImage>();
+        //_kulissenButtonImage.color = new Color(1f, 1f, 1f, 0.4f);
 
         _toggleSceneryActivate = GameObject.Find("ToggleSceneryActivate").GetComponent<Toggle>();
         _textSceneryname = GameObject.Find("TextSceneryName").GetComponent<Text>();
@@ -41,7 +41,7 @@ public class SceneryController : MonoBehaviour
 
         gameObject.transform.SetParent(GameObject.Find("Schiene1").transform);
         
-        _kulissenButton.onClick.AddListener(() => ToggleSceneryButton());
+        //_kulissenButton.onClick.AddListener(() => ToggleSceneryButton());
         _sliderSceneryPositionX.onValueChanged.AddListener((val) => ChangeSceneryPositionX(val));
         _sliderSceneryPositionY.onValueChanged.AddListener((val) => ChangeSceneryPositionY(val));
         _toggleSceneryActivate.onValueChanged.AddListener((val) => ActivateKulisse(val));
@@ -68,11 +68,11 @@ public class SceneryController : MonoBehaviour
         float alpha = _kulissenButtonImage.color.a;
         if (!selectedScenery)
         {
-            foreach (GameObject kulissenButton in allKulissenButtons)
+            /*foreach (GameObject kulissenButton in allKulissenButtons)
             {
                 RawImage kb = kulissenButton.GetComponent<Button>().GetComponent<RawImage>();
                 kb.color = new Color(1f, 1f, 1f, kb.color.a);
-            }
+            }*/
             foreach(GameObject kulisse in allKulissen)
             {
                 kulisse.GetComponent<SceneryController>().selectedScenery = false;
@@ -88,7 +88,7 @@ public class SceneryController : MonoBehaviour
         else
         {
             selectedScenery = false;
-            _kulissenButtonImage.color = new Color(1f, 1f, 1f, alpha);
+            //_kulissenButtonImage.color = new Color(1f, 1f, 1f, alpha);
             Debug.Log("Button AUS");
             _textSceneryname.text = "";
         }
