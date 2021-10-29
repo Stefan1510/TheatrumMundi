@@ -40,7 +40,6 @@ public class SaveFileController : MonoBehaviour
             //GenerateFileButton(filePath);
         }
         StartCoroutine(LoadFilesFromServer());
-
     }
 
     public void LoadSceneFromFile(string fileName)
