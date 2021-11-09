@@ -9,5 +9,6 @@ public static class SceneManager
     public static int triggerActive = new int();
     public static bool triggerEinstellungen = new bool();
     public static bool mouse_over = new bool();
+    public static bool deleteButtonPressed = new bool();
 
 }

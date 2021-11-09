@@ -5,33 +5,12 @@ using UnityEngine;
 public class ReiterButton : MonoBehaviour
 {
     public List<DragDrop> kulissen;
-    //private bool mouse_over = false;
-    //float currentTime;
 
     private void Start()
     {
         kulissen = new List<DragDrop>();
-        //currentTime = 0f;
     }
 
-    /*void Update()
-    {
-        if (mouse_over)
-        {
-            if(currentTime > .5f)
-            {
-                
-            }
-            //Debug.Log("currentTime: "+currentTime+", Time.deltaTime: "+ Time.deltaTime+", MouseOver: "+mouse_over);
-            else if(currentTime <= .5f) 
-            {
-                currentTime += Time.deltaTime;
-                Debug.Log("currentTime: "+currentTime +", Time.deltatime: "+Time.deltaTime);
-            }
-            else {}
-            
-         }
-     }*/
 
     public void OnPointerEnter()
     {
@@ -45,7 +24,12 @@ public class ReiterButton : MonoBehaviour
         else if (gameObject.name == "Reiter6") SceneManager.triggerActive = 6;
         else if (gameObject.name == "Reiter7") SceneManager.triggerActive = 7;
         else if (gameObject.name == "Reiter8") SceneManager.triggerActive = 8;
-        else if (gameObject.name == "Einstellungen") SceneManager.triggerEinstellungen = true;
+        else if (gameObject.name == "Einstellungen") 
+        {
+            SceneManager.triggerEinstellungen = true;
+            SceneManager.mouse_over = false;
+            SceneManager.triggerActive = 0;
+        }
         else SceneManager.triggerActive = 0;
         //Debug.Log("entering "+gameObject+", triggerActive: "+SceneManager.triggerActive);
         //SceneManager.dragDrop.setReiterActive(SceneManager.dragDrop.statusReiter);
@@ -65,11 +49,9 @@ public class ReiterButton : MonoBehaviour
         else
         {
             SceneManager.triggerActive = 0;
-
         }
-
-
     }
+
     public void RemoveKulisse(DragDrop kulisse)
     {
         kulissen.Remove(kulisse);

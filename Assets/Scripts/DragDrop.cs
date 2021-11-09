@@ -8,10 +8,12 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
 {
     [SerializeField] private Canvas canvas;
     [SerializeField] private GameObject schieneBild;
+    [SerializeField] private GameObject menuExtra;
     public ReiterButton activeReiter;
     private RectTransform rectTransform;
     private CanvasGroup canvasGroup;
     public Vector2 pos;
+    public GameObject activeKulisse;
 
 
 
@@ -53,6 +55,8 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
         schieneKulisse = 0;         // schieneKulisse ist 0, wenn sie im Shelf liegt, also keinem Reiter angehoert!
 
         SceneManager.dragDrop = this; // hier wird dem dragDrop-Objekt im SceneManager die aktuelle Kulisse uebergeben!
+        menuExtra.SetActive(false);
+        activeKulisse = gameObject;
     }
 
     public void Start()
@@ -68,6 +72,8 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
         //Debug.Log("ActiveReiter: "+ activeReiter+", Status Reiter: "+statusReiter);
         if (SceneManager.mouse_over)
         {
+            
+            //Debug.Log("currentTime: " + currentTime + ", MouseOver: " + SceneManager.mouse_over + ", delay: " + delay);
             if (currentTime <= .5f)
             {
                 currentTime += Time.deltaTime;
@@ -80,65 +86,31 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
                     this.schieneKulisse = delay;
                     setReiterActive(delay);
                     activeReiter.AddKulisse(this);
+                    Debug.Log("StatusReiter: "+statusReiter+", SchieneKulisse: "+schieneKulisse+", Liste: "+activeReiter.kulissen.Count);
                 }
-                else { currentTime = 0f; }
-
-                /*if (delay == 1 && this.schieneKulisse!=1)
-                {
-                    statusReiter = 1;
-                    this.schieneKulisse = 1;
-                    setReiterActive(1);
-                    activeReiter.AddKulisse(this);
-                }
-                else if (delay == 2&& this.schieneKulisse!=2)
-                {
-                    statusReiter = 2;
-                    this.schieneKulisse = 2;
-                    setReiterActive(2);
-                    activeReiter.AddKulisse(this);
+                else
+                { 
+                    //Debug.Log("Why the fuck???");
+                    //currentTime = 0f; 
                 }
 
-                else if (delay == 3&& this.schieneKulisse!=3)
-                {
-                    statusReiter = 3;
-                    this.schieneKulisse = 3;
-                    setReiterActive(3);
-                    activeReiter.AddKulisse(this);
-                }
-
-                else if (delay == 4&& this.schieneKulisse!=4)
-                {
-                    statusReiter = 4;
-                    this.schieneKulisse = 4;
-                    setReiterActive(4);
-                    activeReiter.AddKulisse(this);
-                    //Debug.Log("Kulisse: " + this.name + ", Reiter: "+activeReiter.name + "List Count: " + activeReiter.kulissen.Count);
-                }
-
-                else if (delay == 5&& this.schieneKulisse!=5)
-                {
-                    statusReiter = 5;
-                    this.schieneKulisse = 5;
-                    setReiterActive(5);
-                    activeReiter.AddKulisse(this);
-                    //Debug.Log("Kulisse: " + this.name + ", Reiter: "+activeReiter.name + "List Count: " + activeReiter.kulissen.Count);
-                }
-
-                else if (delay == 6&& this.schieneKulisse!=6)
-                {
-                    statusReiter = 6;
-                    this.schieneKulisse = 6;
-                    setReiterActive(6);
-                    activeReiter.AddKulisse(this);
-                    //Debug.Log("Kulisse: " + this.name + ", Reiter: "+activeReiter.name + "List Count: " + activeReiter.kulissen.Count);
-                }*/
             }
             
         }
-        else
+        else if (currentTime != 0f)
         {
             currentTime = 0f;
-            delay = 0;
+            //delay = 0;
+            //Debug.Log("currentTime wird: "+currentTime);
+        }
+
+        if (SceneManager.deleteButtonPressed == true)
+        {
+            activeReiter.RemoveKulisse(GetComponent<DeleteKulisse>().gameObject.GetComponent<DragDrop>());
+            GetComponent<DeleteKulisse>().gameObject.GetComponent<DragDrop>().schieneKulisse = 0;
+            GetComponent<DeleteKulisse>().gameObject.GetComponent<DragDrop>().rectTransform.anchoredPosition = GetComponent<DeleteKulisse>().gameObject.GetComponent<DragDrop>().pos;
+            Debug.Log("Active Reiter: "+ activeReiter + ", kulissenanzahl: " + activeReiter.kulissen.Count);
+            SceneManager.deleteButtonPressed = false;
         }
     }
 
@@ -198,14 +170,27 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
     public void OnBeginDrag(PointerEventData eventData)
     {
         canvasGroup.blocksRaycasts = false;
+
+        if(SceneManager.deleteButtonPressed) {
+            SceneManager.deleteButtonPressed = false;
+        }
     }
 
     public void OnDrag(PointerEventData eventData)
     {
         rectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
         // durch Skalierung d. Canvas teilen, sonst Bewegung d. Objekts nicht gleich der Mausbewegung
-        Debug.Log("Schiene Active: " + GetComponent<TriggerSchiene>().schieneActive + ", schieneKulisse: " + this.schieneKulisse+", delay: "+delay+", triggerEinstellungen: "+SceneManager.triggerEinstellungen);
-        if (SceneManager.triggerActive == 1 && this.schieneKulisse != 1 && delay != 1) // riggerActive heisst, dass zeiger reiter1 betreten hat. abfrage, ob reiter1 schon aktiv ist, dann rein, ansonsten nach delay fragen
+        //Debug.Log("Trigger Active: " + SceneManager.triggerActive + ", schieneKulisse: " + this.schieneKulisse+", delay: "+delay+", triggerEinstellungen: "+SceneManager.triggerEinstellungen);
+
+        //Debug.Log("Trigger Active: "+SceneManager.triggerActive+ ", Reiter: "+activeReiter+", Anzahl Kulissen: "+activeReiter.kulissen.Count+", this.Schiene: "+this.schieneKulisse);
+
+        if(SceneManager.triggerActive != 0 && this.schieneKulisse != SceneManager.triggerActive && delay != SceneManager.triggerActive)
+        {
+            delay = SceneManager.triggerActive;
+            Debug.Log("delay wird: " + delay);
+        }
+
+        /*if (SceneManager.triggerActive == 1 && this.schieneKulisse != 1 && delay != 1) // riggerActive heisst, dass zeiger reiter1 betreten hat. abfrage, ob reiter1 schon aktiv ist, dann rein, ansonsten nach delay fragen
         {
             delay = 1;
             //Debug.Log("delay: " + delay);
@@ -244,7 +229,7 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
         else if (SceneManager.triggerActive == 8 && schieneKulisse != 8 && delay != 8)
         {
             delay = 8;
-        }
+        }*/
 
         else if (this.schieneKulisse != statusReiter && SceneManager.triggerEinstellungen)
         {
@@ -260,9 +245,9 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
             //Debug.Log("Schiene hinzugefuegt, da im einstellungsfenster.");
         }*/
 
-        else if (SceneManager.triggerEinstellungen == false && this.schieneKulisse != 0 && GetComponent<TriggerSchiene>().schieneActive==false)
+        else if (SceneManager.triggerEinstellungen == false && this.schieneKulisse != 0 && this.schieneKulisse != delay && GetComponent<TriggerSchiene>().schieneActive==false)
         {
-            Debug.Log("jetzt wird schieneKulisse 0!");
+            Debug.Log("jetzt wird schieneKulisse 0 und die Kulisse removed!");
             activeReiter.RemoveKulisse(this);
             this.schieneKulisse = 0;
             delay = 0;
@@ -279,6 +264,7 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
         canvasGroup.blocksRaycasts = true;
         rectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
         //Debug.Log("Status Reiter: " + statusReiter + ", this.SchieneKulisse: " + this.schieneKulisse + ", Count: " + activeReiter.kulissen.Count);
+
         if (statusReiter == 1)
         {
             if (GetComponent<TriggerSchiene>().schieneActive)
@@ -346,7 +332,7 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
             else if (SceneManager.triggerActive == 4)
             {
                 GetComponent<RectTransform>().anchoredPosition = schieneBild.GetComponent<RectTransform>().anchoredPosition;
-                this.schieneKulisse = 4;
+                //this.schieneKulisse = 4;
             }
 
             else
