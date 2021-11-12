@@ -15,7 +15,7 @@ public class DeleteKulisse : MonoBehaviour
         }
     }
 
-    public void OnClick()
+    /*public void OnClick()
     {
         if(gameObject.name != "DeleteButton") 
         {
@@ -47,5 +47,5 @@ public class DeleteKulisse : MonoBehaviour
             //gameObject.transform.GetComponentInParent<DragDrop>().GetComponent<RectTransform>().anchoredPosition = gameObject.transform.GetComponentInParent<DragDrop>().pos;
         }
         else SceneManager.deleteButtonPressed = false;
-    }
+    }*/
 }

@@ -526,9 +526,6 @@ MonoBehaviour:
   canvas: {fileID: 1191707639}
   schieneBild: {fileID: 1035157086}
   menuExtra: {fileID: 1301422409}
-  activeReiter: {fileID: 0}
-  pos: {x: 0, y: 0}
-  activeKulisse: {fileID: 0}
   reiter1: {fileID: 0}
   reiter2: {fileID: 0}
   reiter3: {fileID: 0}
@@ -547,7 +544,6 @@ MonoBehaviour:
   reiter7Active: {fileID: 0}
   reiter8Active: {fileID: 0}
   statusReiter: 0
-  schieneKulisse: 0
 --- !u!225 &7729328
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -2128,9 +2124,6 @@ MonoBehaviour:
   canvas: {fileID: 1191707639}
   schieneBild: {fileID: 1035157086}
   menuExtra: {fileID: 1301422409}
-  activeReiter: {fileID: 0}
-  pos: {x: 0, y: 0}
-  activeKulisse: {fileID: 0}
   reiter1: {fileID: 0}
   reiter2: {fileID: 0}
   reiter3: {fileID: 0}
@@ -2149,7 +2142,6 @@ MonoBehaviour:
   reiter7Active: {fileID: 0}
   reiter8Active: {fileID: 0}
   statusReiter: 0
-  schieneKulisse: 0
 --- !u!225 &60749697
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -4803,9 +4795,6 @@ MonoBehaviour:
   canvas: {fileID: 1191707639}
   schieneBild: {fileID: 1035157086}
   menuExtra: {fileID: 1301422409}
-  activeReiter: {fileID: 0}
-  pos: {x: 0, y: 0}
-  activeKulisse: {fileID: 0}
   reiter1: {fileID: 0}
   reiter2: {fileID: 0}
   reiter3: {fileID: 0}
@@ -4824,7 +4813,6 @@ MonoBehaviour:
   reiter7Active: {fileID: 0}
   reiter8Active: {fileID: 0}
   statusReiter: 0
-  schieneKulisse: 0
 --- !u!225 &174386465
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -9370,9 +9358,6 @@ MonoBehaviour:
   canvas: {fileID: 1191707639}
   schieneBild: {fileID: 1035157086}
   menuExtra: {fileID: 1301422409}
-  activeReiter: {fileID: 0}
-  pos: {x: 0, y: 0}
-  activeKulisse: {fileID: 0}
   reiter1: {fileID: 0}
   reiter2: {fileID: 0}
   reiter3: {fileID: 0}
@@ -9391,7 +9376,6 @@ MonoBehaviour:
   reiter7Active: {fileID: 0}
   reiter8Active: {fileID: 0}
   statusReiter: 0
-  schieneKulisse: 0
 --- !u!225 &386160078
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -13505,9 +13489,6 @@ MonoBehaviour:
   canvas: {fileID: 1191707639}
   schieneBild: {fileID: 1035157086}
   menuExtra: {fileID: 1301422409}
-  activeReiter: {fileID: 0}
-  pos: {x: 0, y: 0}
-  activeKulisse: {fileID: 0}
   reiter1: {fileID: 0}
   reiter2: {fileID: 0}
   reiter3: {fileID: 0}
@@ -13526,7 +13507,6 @@ MonoBehaviour:
   reiter7Active: {fileID: 0}
   reiter8Active: {fileID: 0}
   statusReiter: 0
-  schieneKulisse: 0
 --- !u!225 &558152453
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -15521,9 +15501,6 @@ MonoBehaviour:
   canvas: {fileID: 1191707639}
   schieneBild: {fileID: 1035157086}
   menuExtra: {fileID: 1301422409}
-  activeReiter: {fileID: 0}
-  pos: {x: 0, y: 0}
-  activeKulisse: {fileID: 0}
   reiter1: {fileID: 0}
   reiter2: {fileID: 0}
   reiter3: {fileID: 0}
@@ -15542,7 +15519,6 @@ MonoBehaviour:
   reiter7Active: {fileID: 0}
   reiter8Active: {fileID: 0}
   statusReiter: 0
-  schieneKulisse: 0
 --- !u!225 &629611112
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -17705,9 +17681,6 @@ MonoBehaviour:
   canvas: {fileID: 1191707639}
   schieneBild: {fileID: 1035157086}
   menuExtra: {fileID: 1301422409}
-  activeReiter: {fileID: 0}
-  pos: {x: 0, y: 0}
-  activeKulisse: {fileID: 0}
   reiter1: {fileID: 0}
   reiter2: {fileID: 0}
   reiter3: {fileID: 0}
@@ -17726,7 +17699,6 @@ MonoBehaviour:
   reiter7Active: {fileID: 0}
   reiter8Active: {fileID: 0}
   statusReiter: 0
-  schieneKulisse: 0
 --- !u!225 &711933912
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -26687,9 +26659,6 @@ MonoBehaviour:
   canvas: {fileID: 1191707639}
   schieneBild: {fileID: 1035157086}
   menuExtra: {fileID: 1301422409}
-  activeReiter: {fileID: 0}
-  pos: {x: 0, y: 0}
-  activeKulisse: {fileID: 0}
   reiter1: {fileID: 0}
   reiter2: {fileID: 0}
   reiter3: {fileID: 0}
@@ -26708,7 +26677,6 @@ MonoBehaviour:
   reiter7Active: {fileID: 0}
   reiter8Active: {fileID: 0}
   statusReiter: 0
-  schieneKulisse: 0
 --- !u!225 &1001279109
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -33831,9 +33799,6 @@ MonoBehaviour:
   canvas: {fileID: 1191707639}
   schieneBild: {fileID: 1035157086}
   menuExtra: {fileID: 1301422409}
-  activeReiter: {fileID: 0}
-  pos: {x: 0, y: 0}
-  activeKulisse: {fileID: 0}
   reiter1: {fileID: 0}
   reiter2: {fileID: 0}
   reiter3: {fileID: 0}
@@ -33852,7 +33817,6 @@ MonoBehaviour:
   reiter7Active: {fileID: 0}
   reiter8Active: {fileID: 0}
   statusReiter: 0
-  schieneKulisse: 0
 --- !u!225 &1258502806
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -34857,9 +34821,6 @@ MonoBehaviour:
   canvas: {fileID: 1191707639}
   schieneBild: {fileID: 1035157086}
   menuExtra: {fileID: 1301422409}
-  activeReiter: {fileID: 0}
-  pos: {x: 0, y: 0}
-  activeKulisse: {fileID: 0}
   reiter1: {fileID: 0}
   reiter2: {fileID: 0}
   reiter3: {fileID: 0}
@@ -34878,7 +34839,6 @@ MonoBehaviour:
   reiter7Active: {fileID: 0}
   reiter8Active: {fileID: 0}
   statusReiter: 0
-  schieneKulisse: 0
 --- !u!225 &1268522311
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -45980,9 +45940,6 @@ MonoBehaviour:
   canvas: {fileID: 1191707639}
   schieneBild: {fileID: 1035157086}
   menuExtra: {fileID: 1301422409}
-  activeReiter: {fileID: 0}
-  pos: {x: 0, y: 0}
-  activeKulisse: {fileID: 0}
   reiter1: {fileID: 0}
   reiter2: {fileID: 0}
   reiter3: {fileID: 0}
@@ -46001,7 +45958,6 @@ MonoBehaviour:
   reiter7Active: {fileID: 0}
   reiter8Active: {fileID: 0}
   statusReiter: 0
-  schieneKulisse: 0
 --- !u!225 &1676641367
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -46918,9 +46874,6 @@ MonoBehaviour:
   canvas: {fileID: 1191707639}
   schieneBild: {fileID: 1035157086}
   menuExtra: {fileID: 1301422409}
-  activeReiter: {fileID: 0}
-  pos: {x: 0, y: 0}
-  activeKulisse: {fileID: 0}
   reiter1: {fileID: 0}
   reiter2: {fileID: 0}
   reiter3: {fileID: 0}
@@ -46939,7 +46892,6 @@ MonoBehaviour:
   reiter7Active: {fileID: 0}
   reiter8Active: {fileID: 0}
   statusReiter: 0
-  schieneKulisse: 0
 --- !u!225 &1708191090
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -51973,9 +51925,6 @@ MonoBehaviour:
   canvas: {fileID: 1191707639}
   schieneBild: {fileID: 1035157086}
   menuExtra: {fileID: 1301422409}
-  activeReiter: {fileID: 0}
-  pos: {x: 0, y: 0}
-  activeKulisse: {fileID: 0}
   reiter1: {fileID: 0}
   reiter2: {fileID: 0}
   reiter3: {fileID: 0}
@@ -51994,7 +51943,6 @@ MonoBehaviour:
   reiter7Active: {fileID: 0}
   reiter8Active: {fileID: 0}
   statusReiter: 0
-  schieneKulisse: 0
 --- !u!225 &1921544234
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -53638,9 +53586,6 @@ MonoBehaviour:
   canvas: {fileID: 1191707639}
   schieneBild: {fileID: 1035157086}
   menuExtra: {fileID: 1301422409}
-  activeReiter: {fileID: 0}
-  pos: {x: 0, y: 0}
-  activeKulisse: {fileID: 0}
   reiter1: {fileID: 0}
   reiter2: {fileID: 0}
   reiter3: {fileID: 0}
@@ -53659,7 +53604,6 @@ MonoBehaviour:
   reiter7Active: {fileID: 0}
   reiter8Active: {fileID: 0}
   statusReiter: 0
-  schieneKulisse: 0
 --- !u!225 &1958873569
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -57058,9 +57002,6 @@ MonoBehaviour:
   canvas: {fileID: 1191707639}
   schieneBild: {fileID: 1035157086}
   menuExtra: {fileID: 1301422409}
-  activeReiter: {fileID: 0}
-  pos: {x: 0, y: 0}
-  activeKulisse: {fileID: 0}
   reiter1: {fileID: 0}
   reiter2: {fileID: 0}
   reiter3: {fileID: 0}
@@ -57079,7 +57020,6 @@ MonoBehaviour:
   reiter7Active: {fileID: 0}
   reiter8Active: {fileID: 0}
   statusReiter: 0
-  schieneKulisse: 0
 --- !u!225 &2101924914
 CanvasGroup:
   m_ObjectHideFlags: 0
