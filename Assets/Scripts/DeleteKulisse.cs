@@ -4,38 +4,37 @@ using UnityEngine;
 
 public class DeleteKulisse : MonoBehaviour
 {
-    bool showDeleteButton;
-    //public DragDrop activeKulisse;
     private void Awake()
     {
-        showDeleteButton = false;
+        SceneManager.showDeleteButton = false;
         if(gameObject.name == "DeleteButton")
         {
             gameObject.SetActive(false);
         }
     }
 
-    /*public void OnClick()
+    public void OnClick()
     {
         if(gameObject.name != "DeleteButton") 
         {
             //activeKulisse = this.transform.parent.gameObject.GetComponent<DragDrop>();
-            if (GetComponent<DragDrop>().schieneKulisse != 0)
+            if (this.GetComponent<DragDrop>().schieneKulisse != 0)
             {
-                if (showDeleteButton)
+                if (SceneManager.showDeleteButton)
                 {
                     gameObject.transform.GetChild(0).gameObject.SetActive(false);
-                    showDeleteButton = false;
+                    SceneManager.showDeleteButton = false;
                 }
-                else if (showDeleteButton == false)
+                else if (SceneManager.showDeleteButton == false)
                 {
                     gameObject.transform.GetChild(0).gameObject.SetActive(true);
-                    showDeleteButton = true;
+                    SceneManager.showDeleteButton = true;
+                    GetComponent<DragDrop>().menuExtra.SetActive(true);
                 }
             }
             else 
             {
-                showDeleteButton = false;
+                SceneManager.showDeleteButton = false;
                 //GetComponent<DragDrop>().activeKulisse = null;
             }
         }
@@ -47,5 +46,5 @@ public class DeleteKulisse : MonoBehaviour
             //gameObject.transform.GetComponentInParent<DragDrop>().GetComponent<RectTransform>().anchoredPosition = gameObject.transform.GetComponentInParent<DragDrop>().pos;
         }
         else SceneManager.deleteButtonPressed = false;
-    }*/
+    }
 }

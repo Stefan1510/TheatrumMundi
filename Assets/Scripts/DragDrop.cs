@@ -8,20 +8,20 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
 {
     [SerializeField] private Canvas canvas;
     [SerializeField] private GameObject schieneBild;
-    [SerializeField] private GameObject menuExtra;
-    private ReiterButton activeReiter;
+    [SerializeField] public GameObject menuExtra;
+    private ReiterActiveButton activeReiter;
     private RectTransform rectTransform;
     private CanvasGroup canvasGroup;
     private Vector2 pos;
 
 
 
-    public GameObject reiter1, reiter2, reiter3, reiter4, reiter5, reiter6, reiter7, reiter8, einstellungen;
+    public GameObject reiter1, reiter2, reiter3, reiter4, reiter5, reiter6, reiter7, reiter8, einstellungen, content, scenerysettings;
     public GameObject reiter1Active, reiter2Active, reiter3Active, reiter4Active, reiter5Active, reiter6Active, reiter7Active, reiter8Active;
 
 
     public int statusReiter;
-    int schieneKulisse;
+    public int schieneKulisse;
 
 
     private void Awake()
@@ -43,6 +43,8 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
         reiter6Active = GameObject.Find("Reiter6Active");
         reiter7Active = GameObject.Find("Reiter7Active");
         reiter8Active = GameObject.Find("Reiter8Active");
+        content = GameObject.Find("ContentSeneryObjects");
+        scenerysettings = GameObject.Find("MenuSettingsSceneryObjects");
         rectTransform = GetComponent<RectTransform>();
         canvasGroup = GetComponent<CanvasGroup>();
         pos = rectTransform.anchoredPosition;
@@ -64,76 +66,84 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
 
     public void setReiterActive(int stat) // stat ist statusReiter
     {
-        reiter1Active.GetComponent<ReiterButton>().Hide();
-        reiter2Active.GetComponent<ReiterButton>().Hide();
-        reiter3Active.GetComponent<ReiterButton>().Hide();
-        reiter4Active.GetComponent<ReiterButton>().Hide();
-        reiter5Active.GetComponent<ReiterButton>().Hide();
-        reiter6Active.GetComponent<ReiterButton>().Hide();
-        reiter7Active.GetComponent<ReiterButton>().Hide();
-        reiter8Active.GetComponent<ReiterButton>().Hide();
+        reiter1Active.GetComponent<ReiterActiveButton>().Hide();
+        reiter2Active.GetComponent<ReiterActiveButton>().Hide();
+        reiter3Active.GetComponent<ReiterActiveButton>().Hide();
+        reiter4Active.GetComponent<ReiterActiveButton>().Hide();
+        reiter5Active.GetComponent<ReiterActiveButton>().Hide();
+        reiter6Active.GetComponent<ReiterActiveButton>().Hide();
+        reiter7Active.GetComponent<ReiterActiveButton>().Hide();
+        reiter8Active.GetComponent<ReiterActiveButton>().Hide();
 
         if (stat == 1)
         {
-            activeReiter = reiter1Active.GetComponent<ReiterButton>();
-            reiter1Active.GetComponent<ReiterButton>().Show();
+            activeReiter = reiter1Active.GetComponent<ReiterActiveButton>();
+            reiter1Active.GetComponent<ReiterActiveButton>().Show();
         }
         else if (stat == 2)
         {
-            activeReiter = reiter2Active.GetComponent<ReiterButton>();
-            reiter2Active.GetComponent<ReiterButton>().Show();
+            activeReiter = reiter2Active.GetComponent<ReiterActiveButton>();
+            reiter2Active.GetComponent<ReiterActiveButton>().Show();
         }
         else if (stat == 3)
         {
-            activeReiter = reiter3Active.GetComponent<ReiterButton>();
-            reiter3Active.GetComponent<ReiterButton>().Show();
+            activeReiter = reiter3Active.GetComponent<ReiterActiveButton>();
+            reiter3Active.GetComponent<ReiterActiveButton>().Show();
         }
         else if (stat == 4)
         {
-            activeReiter = reiter4Active.GetComponent<ReiterButton>();
-            reiter4Active.GetComponent<ReiterButton>().Show();
+            activeReiter = reiter4Active.GetComponent<ReiterActiveButton>();
+            reiter4Active.GetComponent<ReiterActiveButton>().Show();
         }
         else if (stat == 5)
         {
-            activeReiter = reiter5Active.GetComponent<ReiterButton>();
-            reiter5Active.GetComponent<ReiterButton>().Show();
+            activeReiter = reiter5Active.GetComponent<ReiterActiveButton>();
+            reiter5Active.GetComponent<ReiterActiveButton>().Show();
         }
         else if (stat == 6)
         {
-            activeReiter = reiter6Active.GetComponent<ReiterButton>();
-            reiter6Active.GetComponent<ReiterButton>().Show();
+            activeReiter = reiter6Active.GetComponent<ReiterActiveButton>();
+            reiter6Active.GetComponent<ReiterActiveButton>().Show();
         }
         else if (stat == 7)
         {
-            activeReiter = reiter7Active.GetComponent<ReiterButton>();
-            reiter7Active.GetComponent<ReiterButton>().Show();
+            activeReiter = reiter7Active.GetComponent<ReiterActiveButton>();
+            reiter7Active.GetComponent<ReiterActiveButton>().Show();
         }
         else if (stat == 8)
         {
-            activeReiter = reiter8Active.GetComponent<ReiterButton>();
-            reiter8Active.GetComponent<ReiterButton>().Show();
+            activeReiter = reiter8Active.GetComponent<ReiterActiveButton>();
+            reiter8Active.GetComponent<ReiterActiveButton>().Show();
         }
     }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
+        if(SceneManager.showDeleteButton)
+        {
+            menuExtra.SetActive(false);
+            SceneManager.showDeleteButton = false;
+            gameObject.transform.GetChild(0).gameObject.SetActive(false);
+        }
+
         canvasGroup.blocksRaycasts = false;
+        gameObject.transform.SetParent(scenerysettings.transform);
     }
 
     public void OnDrag(PointerEventData eventData)
     {
         rectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
         // durch Skalierung d. Canvas teilen, sonst Bewegung d. Objekts nicht gleich der Mausbewegung
-        
-        //Debug.Log("Trigger Active: "+SceneManager.triggerActive+ ", Reiter: "+activeReiter+", Anzahl Kulissen: "+activeReiter.kulissen.Count+", this.Schiene: "+this.schieneKulisse);
+        //Debug.Log("StatusReiter: " + statusReiter + ", SchieneKulisse: " + schieneKulisse + ", Liste: " + activeReiter.kulissen.Count);
 
         if (SceneManager.triggerActive != 0 && this.schieneKulisse != SceneManager.triggerActive)
         {
+            Debug.Log("Test");
             statusReiter = SceneManager.triggerActive;
             this.schieneKulisse = SceneManager.triggerActive;
             setReiterActive(SceneManager.triggerActive);
             activeReiter.AddKulisse(this);
-            Debug.Log("StatusReiter: " + statusReiter + ", SchieneKulisse: " + schieneKulisse + ", Liste: " + activeReiter.kulissen.Count);
+            //Debug.Log("Trigger Active: "+SceneManager.triggerActive+ ", Reiter: "+activeReiter+", Anzahl Kulissen: "+activeReiter.kulissen.Count+", this.Schiene: "+this.schieneKulisse);
         }
 
         else if (this.schieneKulisse != statusReiter && SceneManager.triggerEinstellungen)
@@ -152,9 +162,10 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
 
         else if (SceneManager.triggerEinstellungen == false && this.schieneKulisse != 0 && SceneManager.triggerActive == 0 && GetComponent<TriggerSchiene>().schieneActive == false)
         {
-            Debug.Log("jetzt wird schieneKulisse 0 und die Kulisse removed!");
             activeReiter.RemoveKulisse(this);
             this.schieneKulisse = 0;
+            
+            //Debug.Log("jetzt wird schieneKulisse 0 und die Kulisse removed!"+", von Reiter: "+activeReiter+", Count: "+activeReiter.kulissen.Count+", this: "+this);
             //Debug.Log("ENTFERNT: Kulisse: " + this.name + ", von Active Reiter: " + activeReiter.name + ", Liste: " + activeReiter.kulissen.Count + ", trigger Einstellungen: " + SceneManager.triggerEinstellungen);
         }
 
@@ -170,33 +181,19 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
             if (GetComponent<TriggerSchiene>().schieneActive)
             {
                 this.schieneKulisse = 1;
-                //Debug.Log("List Count: "+activeReiter.kulissen.Count+", active Reiter: "+activeReiter);
-                /* if (this.schieneKulisse != 1) {
-                     //activeReiter.AddKulisse(this);
-
-                 }
-                 else {  
-                     Debug.Log("this.schiene: "+this.schieneKulisse+", schiene: "+schieneKulisse+"... Schiene Kulisse ist schon 1, die Schiene bleibt aber trotzdem hier.");
-                 }*/
-
             }
             else if (SceneManager.triggerActive == 1)   // wenn Maus ueber Reiter1 ist
             {
-                //if (schieneKulisse != 1) {
                 GetComponent<RectTransform>().anchoredPosition = schieneBild.GetComponent<RectTransform>().anchoredPosition;
-                //activeReiter.AddKulisse(this);
                 this.schieneKulisse = 1;
-                // }
-                // else {
-                // GetComponent<RectTransform>().anchoredPosition = schieneBild.GetComponent<RectTransform>().anchoredPosition;
-                // }
             }
 
             else
             {
+                gameObject.transform.SetParent(content.transform);
                 rectTransform.anchoredPosition = pos;
                 this.schieneKulisse = 0;
-                //activeReiter.RemoveKulisse(this);
+                
             }
         }
 
@@ -206,11 +203,7 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
             {
                 if (schieneKulisse != 2)
                 {
-                    //activeReiter.AddKulisse(this);
                     this.schieneKulisse = 2;
-                }
-                else
-                {
                 }
 
             }
@@ -230,9 +223,10 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
 
             else
             {
+                gameObject.transform.SetParent(content.transform);
                 rectTransform.anchoredPosition = pos;
                 this.schieneKulisse = 0;
-                //activeReiter.RemoveKulisse(this);
+                
             }
         }
 
@@ -245,17 +239,14 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
                     //activeReiter.AddKulisse(this);
                     this.schieneKulisse = 3;
                 }
-                else
-                {
-                }
 
             }
+
             else if (SceneManager.triggerActive == 3)
             {
                 if (schieneKulisse != 3)
                 {
                     GetComponent<RectTransform>().anchoredPosition = schieneBild.GetComponent<RectTransform>().anchoredPosition;
-                    //activeReiter.AddKulisse(this);
                     this.schieneKulisse = 3;
                 }
                 else
@@ -266,9 +257,9 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
 
             else
             {
+                gameObject.transform.SetParent(content.transform);
                 rectTransform.anchoredPosition = pos;
                 this.schieneKulisse = 0;
-                //activeReiter.RemoveKulisse(this);
             }
         }
 
@@ -279,9 +270,6 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
                 if (schieneKulisse != 4)
                 {
                     this.schieneKulisse = 4;
-                }
-                else
-                {
                 }
 
             }
@@ -302,6 +290,7 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
             {
                 rectTransform.anchoredPosition = pos;
                 this.schieneKulisse = 0;
+                gameObject.transform.SetParent(content.transform);
             }
         }
 
@@ -335,6 +324,7 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
             {
                 rectTransform.anchoredPosition = pos;
                 this.schieneKulisse = 0;
+                gameObject.transform.SetParent(content.transform);
             }
         }
 
@@ -370,6 +360,7 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
             {
                 rectTransform.anchoredPosition = pos;
                 this.schieneKulisse = 0;
+                gameObject.transform.SetParent(content.transform);
             }
         }
 
@@ -389,6 +380,7 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
             {
                 rectTransform.anchoredPosition = pos;
                 this.schieneKulisse = 0;
+                gameObject.transform.SetParent(content.transform);
             }
         }
 
@@ -408,6 +400,7 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
             {
                 rectTransform.anchoredPosition = pos;
                 this.schieneKulisse = 0;
+                gameObject.transform.SetParent(content.transform);
             }
         }
         else if (SceneManager.triggerEinstellungen && GetComponent<TriggerSchiene>().schieneActive == false)
@@ -419,7 +412,9 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
         else
         {
             Debug.Log("else");
+            gameObject.transform.SetParent(content.transform);
             rectTransform.anchoredPosition = pos;
+            
         }
 
         

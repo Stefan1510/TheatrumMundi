@@ -4,89 +4,15 @@ using UnityEngine;
 
 public class ReiterButton : MonoBehaviour
 {
-    public List<DragDrop> kulissen;
-    //private bool mouse_over = false;
-    //float currentTime;
-    
-    private void Start()
-    {
-        kulissen = new List<DragDrop>();
-        //currentTime = 0f;
-    }
 
-    public void OnPointerEnter() 
-    {
-        SceneManager.mouse_over = true;
-        //Debug.Log("entering "+gameObject);
-        if (gameObject.name == "Reiter1") SceneManager.triggerActive = 1;
-        else if (gameObject.name == "Reiter2") SceneManager.triggerActive = 2;
-        else if (gameObject.name == "Reiter3") SceneManager.triggerActive = 3;
-        else if (gameObject.name == "Reiter4") SceneManager.triggerActive = 4;
-        else if (gameObject.name == "Reiter5") SceneManager.triggerActive = 5;
-        else if (gameObject.name == "Reiter6") SceneManager.triggerActive = 6;
-        else if (gameObject.name == "Reiter7") SceneManager.triggerActive = 7;
-        else if (gameObject.name == "Reiter8") SceneManager.triggerActive = 8;
-        else if (gameObject.name == "Einstellungen") SceneManager.triggerEinstellungen = true;
-        else SceneManager.triggerActive = 0;
-        
-        //SceneManager.dragDrop.setReiterActive(SceneManager.dragDrop.statusReiter);
-        //add kulisse an liste! SceneManager.dragDrop.setReiterActive()
-    }
-
-    public void OnPointerExit()
-    {
-        //Debug.Log("exiting: "+gameObject.name);
-        //SceneManager.mouse_over = false;
-        //currentTime = 0f;
-        //if(SceneManager.triggerEinstellungen == true) {}
-        if(gameObject.name == "Einstellungen") {
-            SceneManager.triggerEinstellungen = false;
-        }
-        else
-        {
-            SceneManager.triggerActive = 0;
-            Debug.Log("TriggerActive = 0");
-        }
-        
-    }
-    public void RemoveKulisse (DragDrop kulisse)
-    {
-        kulissen.Remove(kulisse);
-    }
-        
-    public void AddKulisse(DragDrop kulisse) 
-    {
-        kulissen.Add(kulisse);
-    }
-
-    public void Hide()
-    {
-        gameObject.SetActive(false);
-
-        foreach(DragDrop kulisse in kulissen)
-        {
-            kulisse.gameObject.SetActive(false);
-        }
-    }
-
-    public void Show() 
-    {
-        //Debug.Log(gameObject.name);
-        gameObject.SetActive(true);
-
-        foreach(DragDrop kulisse in kulissen)
-        {
-            kulisse.gameObject.SetActive(true);
-        }
-    }
-    public void OnClick() 
+    public void OnClick()
     {
         DragDrop dragdrop = SceneManager.dragDrop;
-        
-        /*if (dragdrop == null)
+
+        if (dragdrop == null)
         {
             return;
-        }*/
+        }
 
         if (gameObject.name == "Reiter1")
         {
@@ -121,4 +47,37 @@ public class ReiterButton : MonoBehaviour
             dragdrop.setReiterActive(8);
         }
     }
+
+    public void OnPointerEnter()
+    {
+        SceneManager.mouse_over = true;
+        Debug.Log("entering "+gameObject);
+        if (gameObject.name == "Reiter1") SceneManager.triggerActive = 1;
+        else if (gameObject.name == "Reiter2") SceneManager.triggerActive = 2;
+        else if (gameObject.name == "Reiter3") SceneManager.triggerActive = 3;
+        else if (gameObject.name == "Reiter4") SceneManager.triggerActive = 4;
+        else if (gameObject.name == "Reiter5") SceneManager.triggerActive = 5;
+        else if (gameObject.name == "Reiter6") SceneManager.triggerActive = 6;
+        else if (gameObject.name == "Reiter7") SceneManager.triggerActive = 7;
+        else if (gameObject.name == "Reiter8") SceneManager.triggerActive = 8;
+        else if (gameObject.name == "Einstellungen") SceneManager.triggerEinstellungen = true;
+        else SceneManager.triggerActive = 0;
+        Debug.Log("triggerACtive: " + SceneManager.triggerActive);
+        //SceneManager.dragDrop.setReiterActive(SceneManager.dragDrop.statusReiter);
+    }
+
+    public void OnPointerExit()
+    {
+        if (gameObject.name == "Einstellungen")
+        {
+            SceneManager.triggerEinstellungen = false;
+        }
+        else
+        {
+            SceneManager.triggerActive = 0;
+            Debug.Log("TriggerActive = 0");
+        }
+
+    }
+
 }
