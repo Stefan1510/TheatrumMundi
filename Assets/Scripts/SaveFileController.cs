@@ -9,6 +9,9 @@ public class SaveFileController : MonoBehaviour
     private string _jsonString;
     public GameObject contentFileSelect;
     public Button fileSelectButton;
+    private List<Button> _buttonsFileList = new List<Button>();
+    public Text textFileMetaData;
+    public Text textFileContentData;
 
     //// Start is called before the first frame update
     void Start()
@@ -34,8 +37,9 @@ public class SaveFileController : MonoBehaviour
             //File.WriteAllText(path, json);
 
             StartCoroutine(WriteToServer(sceneDataSaveString, filePath));
-            GenerateFileButton(filePath);
+            //GenerateFileButton(filePath);
         }
+        StartCoroutine(LoadFilesFromServer());
     }
 
     public void LoadSceneFromFile(string fileName)
@@ -43,13 +47,23 @@ public class SaveFileController : MonoBehaviour
         StartCoroutine(LoadFileFromWWW(fileName));
     }
 
-    public void GenerateFileButton(string fileName)
+    private void GenerateFileButton(string fileName)
     {
         Button fileButtonInstance = Instantiate(fileSelectButton, contentFileSelect.transform);
         fileButtonInstance.name = fileName;
         fileButtonInstance.GetComponentInChildren<Text>().text = fileName;
         fileButtonInstance.gameObject.SetActive(true);
         fileButtonInstance.onClick.AddListener(() => LoadSceneFromFile(fileName));
+        _buttonsFileList.Add(fileButtonInstance);
+    }
+
+    private void ClearFileButtons()
+    {
+        foreach (Button fileButton in _buttonsFileList)
+        {
+            Destroy(fileButton.gameObject);
+        }
+        _buttonsFileList.Clear();
     }
 
     //public void GenerateFileButtonList()
@@ -65,6 +79,8 @@ public class SaveFileController : MonoBehaviour
 
     private IEnumerator LoadFilesFromServer()
     {
+        ClearFileButtons();
+        fileSelectButton.gameObject.SetActive(true);
         WWWForm form = new WWWForm();
         WWW www = new WWW("https://lightframefx.de/extras/theatrum-mundi/LoadFileNames.php", form);
         yield return www;
@@ -83,7 +99,7 @@ public class SaveFileController : MonoBehaviour
         fileSelectButton.gameObject.SetActive(false);
     }
 
-        private IEnumerator WriteToServer(string json, string filePath)
+    private IEnumerator WriteToServer(string json, string filePath)
     {
         WWWForm form = new WWWForm();
         form.AddField("pathFile", filePath);
@@ -103,6 +119,20 @@ public class SaveFileController : MonoBehaviour
         _jsonString = www.text;
         SceneData sceneData = this.GetComponent<SceneDataController>().CreateSceneDataFromJSON(_jsonString);
         this.GetComponent<SceneDataController>().CreateScene(sceneData);
+        string sceneMetaData = "";
+        sceneMetaData += sceneData.fileName + "\n\n";
+        sceneMetaData += "erstellt: " + sceneData.fileDate + "\n\n";
+        sceneMetaData += "Ersteller: " + sceneData.fileAuthor + "\n\n";
+        sceneMetaData += "Kommentar:\n" + sceneData.fileComment;
+        textFileMetaData.text = sceneMetaData;
+        string sceneContentData = "";
+        sceneContentData += "Dateiinformationen:\n\n";
+        sceneContentData += "Kulissen: " + this.GetComponent<SceneDataController>().countActiveSceneryElements.ToString() + "\n\n";
+        sceneContentData += "Fuguren: " + "\n\n";
+        sceneContentData += "Länge: " + "\n\n";
+        sceneContentData += "Lichter: " + "\n\n";
+        sceneContentData += "Musik: ";
+        textFileContentData.text = sceneContentData;
     }
 
 }

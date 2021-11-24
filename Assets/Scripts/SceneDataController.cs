@@ -19,8 +19,11 @@ public class SceneDataController : MonoBehaviour
     [HideInInspector] public string sceneFileDate;
     [HideInInspector] public string sceneFileComment;
     [HideInInspector] public string recentSceneDataSerialized;
+    [HideInInspector] public int countActiveSceneryElements = 0;
+    [HideInInspector] public int countActiveLightElements = 0;
 
-    SceneData recentSceneData;
+    [HideInInspector] public SceneData recentSceneData;
+    [HideInInspector] public SceneData tempSceneData;
 
     // Start is called before the first frame updates
     void Start()
@@ -154,6 +157,8 @@ public class SceneDataController : MonoBehaviour
         sceneFileDate = sceneData.fileDate;
         sceneFileComment = sceneData.fileComment;
         SetFileMetaDataToScene();
+        countActiveSceneryElements = 0;
+        countActiveLightElements = 0;
         Debug.Log(sceneData.railElements[0]);
 		//rail elements
         foreach (RailElement railElement in sceneData.railElements)
@@ -177,6 +182,10 @@ public class SceneDataController : MonoBehaviour
                     objectSceneryElement.GetComponent<SceneryController>().sceneryActive = sceneryElement.active;
                     objectSceneryElement.SetActive(sceneryElement.active);
                     objectSceneryElement.transform.parent = GameObject.Find(sceneryElement.parent).transform;
+                    if (sceneryElement.active)
+                    {
+                        countActiveSceneryElements++;
+                    }
                 }
             }
         }
