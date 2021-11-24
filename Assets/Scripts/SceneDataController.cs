@@ -12,6 +12,7 @@ public class SceneDataController : MonoBehaviour
     public InputField inputFieldFileComment;
     public GameObject[] objectsRailElements;
     public GameObject[] objectsSceneryElements;
+	public GameObject[] objectsFigureElements;
     public GameObject[] objectsLightElements;
     [HideInInspector] public string sceneFileName;
     [HideInInspector] public string sceneFileAuthor;
@@ -21,7 +22,7 @@ public class SceneDataController : MonoBehaviour
 
     SceneData recentSceneData;
 
-    // Start is called before the first frame update
+    // Start is called before the first frame updates
     void Start()
     {
         sceneFileName = "-";
@@ -31,6 +32,7 @@ public class SceneDataController : MonoBehaviour
         recentSceneData = new SceneData();
         recentSceneData.railElements = new List<RailElement>();
         recentSceneData.sceneryElements = new List<SceneryElement>();
+		recentSceneData.figureElements = new List<FigureElement>();
         recentSceneData.lightElements = new List<LightElement>();
     }
 
@@ -62,6 +64,7 @@ public class SceneDataController : MonoBehaviour
         //sceneData.lightElements.Clear();
         sceneData.railElements = new List<RailElement>();
         sceneData.sceneryElements = new List<SceneryElement>();
+		sceneData.figureElements = new List<FigureElement>();
         sceneData.lightElements = new List<LightElement>();
 
         foreach (GameObject objectRailElement in objectsRailElements)
@@ -71,11 +74,17 @@ public class SceneDataController : MonoBehaviour
                 name = objectRailElement.name,
                 x = objectRailElement.transform.localPosition.x,
                 y = objectRailElement.transform.localPosition.y,
-                z = objectRailElement.transform.localPosition.z
+                z = objectRailElement.transform.localPosition.z,
+				//width=objectRailElement.GetComponent<SceneryController>().bounds.Length,
+				width=objectRailElement.GetComponent<Renderer>().bounds.size.x,
+				height=objectRailElement.GetComponent<Renderer>().bounds.size.y,
+				velocity=1.0f,
+				direction="toRight"
             };
             sceneData.railElements.Add(sceneRailElement);
         }
-
+		
+		//scenery aka kulissen
         foreach (GameObject objectSceneryElement in objectsSceneryElements)
         {
             SceneryElement sceneSceneryElement = new SceneryElement
@@ -85,11 +94,36 @@ public class SceneDataController : MonoBehaviour
                 y = objectSceneryElement.transform.position.y,
                 z = objectSceneryElement.transform.position.z,
                 active = objectSceneryElement.GetComponent<SceneryController>().sceneryActive,
-                parent = objectSceneryElement.transform.parent.name
+                parent = objectSceneryElement.transform.parent.name,
+				zPos=0,
+				mirrored=false
             };
             sceneData.sceneryElements.Add(sceneSceneryElement);
         }
-
+		
+		//figures
+		foreach (GameObject objectFigureElement in objectsFigureElements)
+        {
+            FigureElement sceneFigureElements = new FigureElement
+            {
+                name = objectFigureElement.name,
+                x = objectFigureElement.transform.position.x,
+                y = objectFigureElement.transform.position.y,
+                z = objectFigureElement.transform.position.z,
+                active = objectFigureElement.GetComponent<SceneryController>().sceneryActive,	//check, if this command can be set up on a better way ;)
+                parent = objectFigureElement.transform.parent.name,
+				mirrored=false,
+				width=objectFigureElement.GetComponent<Renderer>().bounds.size.x,
+				height=objectFigureElement.GetComponent<Renderer>().bounds.size.y,
+				velocity=0.0f,
+				wheelsize=1.0f,
+				railnumber=1,
+				direction="toRight"
+            };
+            sceneData.figureElements.Add(sceneFigureElements);
+        }
+		
+		//light
         foreach (GameObject objectLightElement in objectsLightElements)
         {
             LightElement sceneLightElement = new LightElement
@@ -98,8 +132,14 @@ public class SceneDataController : MonoBehaviour
                 x = objectLightElement.transform.position.x,
                 y = objectLightElement.transform.position.y,
                 z = objectLightElement.transform.position.z,
-                active = false
-            };
+                active = false,
+				railnumber=1,
+				r=1,
+				g=1,
+				b=1,
+				intensity=1.0f,
+				angle_h=90,
+				angle_v=120           };
             sceneData.lightElements.Add(sceneLightElement);
         }
 
@@ -115,6 +155,7 @@ public class SceneDataController : MonoBehaviour
         sceneFileComment = sceneData.fileComment;
         SetFileMetaDataToScene();
         Debug.Log(sceneData.railElements[0]);
+		//rail elements
         foreach (RailElement railElement in sceneData.railElements)
         {
             foreach (GameObject objectRailElement in objectsRailElements)
@@ -125,6 +166,7 @@ public class SceneDataController : MonoBehaviour
                 }
             }
         }
+		//scenery elements (kulissen)
         foreach (SceneryElement sceneryElement in sceneData.sceneryElements)
         {
             foreach (GameObject objectSceneryElement in objectsSceneryElements)
@@ -138,6 +180,21 @@ public class SceneDataController : MonoBehaviour
                 }
             }
         }
+		//figure elements (kulissen)
+        foreach (FigureElement figureElement in sceneData.figureElements)
+        {
+            foreach (GameObject objectFigureElement in objectsFigureElements)
+            {
+                if (figureElement.name == objectFigureElement.name)
+                {
+                    objectFigureElement.transform.position = new Vector3(figureElement.x, figureElement.y, figureElement.z);
+                    objectFigureElement.GetComponent<SceneryController>().sceneryActive = figureElement.active;
+                    objectFigureElement.SetActive(figureElement.active);
+                    objectFigureElement.transform.parent = GameObject.Find(figureElement.parent).transform;
+                }
+            }
+        }
+		//light elements
         foreach (LightElement lightElement in sceneData.lightElements)
         {
             foreach (GameObject objectLightElements in objectsLightElements)
