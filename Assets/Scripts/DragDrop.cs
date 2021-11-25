@@ -446,7 +446,7 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
         Debug.Log("---- Kulissenname -------- " + gameObject.name.Substring(6));
 
         SceneryElement ThisSceneryElement = StaticSceneData.StaticData.sceneryElements.Find(x => x.name == gameObject.name.Substring(6));
-        ThisSceneryElement.parent = "Schiene" + statusReiter.ToString();
+        ThisSceneryElement.parent = "Schiene" + statusReiter.ToString(); //hier bitte mal genau überprüfen wie die parents dann wirklich sind
         Debug.Log("---- Kulissenname -------- " + ThisSceneryElement.name + " --- " + ThisSceneryElement.parent);
         ThisSceneryElement.x = 0.1f; // Bitte ausfüllen .x .y .z
         ThisSceneryElement.zPos = 0; // oder 1 oder 2 je nachdem

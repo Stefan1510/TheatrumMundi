@@ -47,11 +47,11 @@ public class SceneDataController : MonoBehaviour
             objectSceneryElement.transform.SetParent(GameObject.Find("Schiene1").transform);
             objectSceneryElement.SetActive(false);
         }
-
         Debug.Log("------- staticSceneDataJSON");
         StaticSceneData.StaticData = CreateSceneData();
         Debug.Log("------- staticSceneDataJSON" + StaticSceneData.StaticData.ToString());
         Debug.Log("------- staticSceneDataJSON" + CreateJsonFromSceneData(StaticSceneData.StaticData));
+
     }
 
     private void GetFileMetaDataFromScene()
