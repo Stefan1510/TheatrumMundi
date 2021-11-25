@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -19,12 +20,14 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
     public GameObject reiter1, reiter2, reiter3, reiter4, reiter5, reiter6, reiter7, reiter8, einstellungen, scenerysettings;
     public GameObject collection1, collection2, collection3, collection4, collection5, collection6, collection7, collection8;
     public GameObject reiter1Active, reiter2Active, reiter3Active, reiter4Active, reiter5Active, reiter6Active, reiter7Active, reiter8Active;
+    [HideInInspector] public GameObject gameController; // neue Zeile von Kris für den SceneryController
 
     public int statusReiter;
     public int schieneKulisse;
 
     private void Awake()
     {
+        gameController = GameObject.Find("GameController"); // neue Zeile von Kris für den SceneryController
         reiter1 = GameObject.Find("Reiter1");
         reiter2 = GameObject.Find("Reiter2");
         reiter3 = GameObject.Find("Reiter3");
@@ -438,6 +441,21 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
             rectTransform.anchoredPosition = pos;
             
         }
+
+        // ------------ Dinge, die für die Kulissen im Controler passieren müssen
+        Debug.Log("---- Kulissenname -------- " + gameObject.name.Substring(6));
+
+        SceneryElement ThisSceneryElement = StaticSceneData.StaticData.sceneryElements.Find(x => x.name == gameObject.name.Substring(6));
+        ThisSceneryElement.parent = "Schiene" + statusReiter.ToString();
+        Debug.Log("---- Kulissenname -------- " + ThisSceneryElement.name + " --- " + ThisSceneryElement.parent);
+        ThisSceneryElement.x = 0.1f; // Bitte ausfüllen .x .y .z
+        ThisSceneryElement.zPos = 0; // oder 1 oder 2 je nachdem
+        ThisSceneryElement.active = true; // oder auch false, je nachdem ob es da ist oder nicht
+
+        // ------------ Übertragen der Daten aus dem Controller auf die 3D-Kulissen
+        //SceneDataController mySceneDataController = new SceneDataController(); // diese Zeile dürfte einmal bei Start oder so ausreichen
+        //mySceneDataController.CreateScene(StaticSceneData.StaticData);
+        gameController.GetComponent<SceneDataController>().CreateScene(StaticSceneData.StaticData); // dieses Zeile macht das gleiche und ist glaube besser.
 
     }
 

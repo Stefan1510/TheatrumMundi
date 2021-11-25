@@ -26,17 +26,32 @@ public class SceneDataController : MonoBehaviour
     [HideInInspector] public SceneData tempSceneData;
 
     // Start is called before the first frame updates
-    void Start()
+    void Awake()
     {
+        Debug.Log("***************************** Puffpaff");
         sceneFileName = "-";
         sceneFileAuthor = "-";
         sceneFileDate = "-";
         sceneFileComment = "-";
-        recentSceneData = new SceneData();
-        recentSceneData.railElements = new List<RailElement>();
-        recentSceneData.sceneryElements = new List<SceneryElement>();
-		recentSceneData.figureElements = new List<FigureElement>();
-        recentSceneData.lightElements = new List<LightElement>();
+        //recentSceneData = new SceneData();
+        //recentSceneData.railElements = new List<RailElement>();
+        //recentSceneData.sceneryElements = new List<SceneryElement>();
+        //recentSceneData.figureElements = new List<FigureElement>();
+        //recentSceneData.lightElements = new List<LightElement>();
+    }
+
+    private void Start()
+    {
+        foreach (GameObject objectSceneryElement in objectsSceneryElements)
+        {
+            objectSceneryElement.transform.SetParent(GameObject.Find("Schiene1").transform);
+            objectSceneryElement.SetActive(false);
+        }
+
+        Debug.Log("------- staticSceneDataJSON");
+        StaticSceneData.StaticData = CreateSceneData();
+        Debug.Log("------- staticSceneDataJSON" + StaticSceneData.StaticData.ToString());
+        Debug.Log("------- staticSceneDataJSON" + CreateJsonFromSceneData(StaticSceneData.StaticData));
     }
 
     private void GetFileMetaDataFromScene()
@@ -79,8 +94,8 @@ public class SceneDataController : MonoBehaviour
                 y = objectRailElement.transform.localPosition.y,
                 z = objectRailElement.transform.localPosition.z,
 				//width=objectRailElement.GetComponent<SceneryController>().bounds.Length,
-				width=objectRailElement.GetComponent<Renderer>().bounds.size.x,
-				height=objectRailElement.GetComponent<Renderer>().bounds.size.y,
+				//width=objectRailElement.GetComponent<Renderer>().bounds.size.x,
+				//height=objectRailElement.GetComponent<Renderer>().bounds.size.y,
 				velocity=1.0f,
 				direction="toRight"
             };
@@ -98,7 +113,7 @@ public class SceneDataController : MonoBehaviour
                 z = objectSceneryElement.transform.position.z,
                 active = objectSceneryElement.GetComponent<SceneryController>().sceneryActive,
                 parent = objectSceneryElement.transform.parent.name,
-				zPos=0,
+                zPos =0,
 				mirrored=false
             };
             sceneData.sceneryElements.Add(sceneSceneryElement);
@@ -142,7 +157,8 @@ public class SceneDataController : MonoBehaviour
 				b=1,
 				intensity=1.0f,
 				angle_h=90,
-				angle_v=120           };
+				angle_v=120
+            };
             sceneData.lightElements.Add(sceneLightElement);
         }
 

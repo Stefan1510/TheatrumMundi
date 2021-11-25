@@ -69,6 +69,7 @@ public class LightElement
 	public int angle_v;
 }
 
+//[System.Serializable]
 public class SceneData
 {
 	//enthält alle objekte
@@ -80,4 +81,21 @@ public class SceneData
     public List<SceneryElement> sceneryElements;
 	public List<FigureElement> figureElements;
     public List<LightElement> lightElements;
+}
+
+public class StaticSceneData
+{
+    private StaticSceneData() { }
+    private static SceneData staticData = new SceneData();
+    public static SceneData StaticData
+    {
+        get
+        {
+            return staticData;
+        }
+        set
+        {
+            staticData = value;
+        }
+    }
 }

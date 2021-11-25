@@ -28,8 +28,8 @@ public class sliderValueToInputValue : MonoBehaviour
     void Start()
     {		
 		slider=this.GetComponent<Slider>();
-		Debug.Log("+++Name of Slider: " +slider.ToString());
-		Debug.Log("===START: " +slider.value);
+		//Debug.Log("+++Name of Slider: " +slider.ToString());
+		//Debug.Log("===START: " +slider.value);
 		currSliderVal=slider.value;
 		currSliderVal2=slider.value;
 		currSliderVal3=slider.value;
@@ -49,7 +49,7 @@ public class sliderValueToInputValue : MonoBehaviour
 		{
 			Debug.Log("there are scene objects with some inputs which are not completly set");
 		}
-		Debug.Log("===Rail: " +v.x.ToString());
+		//Debug.Log("===Rail: " +v.x.ToString());
 		//myInputfield=GameObject.Find("InputField").GetComponent<InputField>();
 		try
 		{
@@ -71,16 +71,16 @@ public class sliderValueToInputValue : MonoBehaviour
 		//Debug.Log("+++Name of Slider: " +slider.ToString());
 		//Debug.Log(">>>curr RailPos.x: "+attachedRailSide.transform.localPosition.x.ToString());
 		//Debug.Log(">>>curr SlideVal: "+currSliderVal.ToString());
-		Debug.Log("+++Name of Slider: " +slider.ToString());
-		Debug.Log("---before sidePosObj: "+attachedRailSide.transform.localPosition);
+		//Debug.Log("+++Name of Slider: " +slider.ToString());
+		//Debug.Log("---before sidePosObj: "+attachedRailSide.transform.localPosition);
 			Debug.Log("---before sidePosVec: "+v);
 		//seperate the height-slider from horizontal slider by name
 		string [] returnedArray = slider.ToString().Split(' ');
 		if ((returnedArray[0]=="SliderHeight12to34") || (returnedArray[0]=="SliderHeight34to56") || (returnedArray[0]=="SliderHeight56to78") || (returnedArray[0]=="SliderStageHeight"))
 		{
-			Debug.Log("----->its an height slider<-------");
-			Debug.Log("---if height sidePosObj: "+attachedRailSide.transform.localPosition);
-			Debug.Log("---if height sidePosVec: "+v);
+			//Debug.Log("----->its an height slider<-------");
+			//Debug.Log("---if height sidePosObj: "+attachedRailSide.transform.localPosition);
+			//Debug.Log("---if height sidePosVec: "+v);
 			if ((currSliderVal)<(slider.value))
 			{
 				v.y=v.y+((slider.value-currSliderVal)*shiftScaleFac);
@@ -93,17 +93,17 @@ public class sliderValueToInputValue : MonoBehaviour
 				//3d
 				v3.y=v3.y-((currSliderVal3-slider.value)*shiftScaleFac3d);
 			}
-			Debug.Log("---if height sidePosObj: "+attachedRailSide.transform.localPosition);
-			Debug.Log("---if height sidePosVec: "+v);
+			//Debug.Log("---if height sidePosObj: "+attachedRailSide.transform.localPosition);
+			//Debug.Log("---if height sidePosVec: "+v);
 			//write back last x-value
 			v.x=attachedRailSide.transform.localPosition.x;
 			v3.x=rail3D.transform.localPosition.x;
 		}
 		else
 		{
-			Debug.Log("---else sidePosObj: "+attachedRailSide.transform.localPosition);
-			Debug.Log("---else sidePosVec: "+v);
-			Debug.Log("----->its an horizontal slider<-------");
+			//Debug.Log("---else sidePosObj: "+attachedRailSide.transform.localPosition);
+			//Debug.Log("---else sidePosVec: "+v);
+			//Debug.Log("----->its an horizontal slider<-------");
 			if ((currSliderVal)<(slider.value))
 			{
 				//sideview
@@ -126,8 +126,8 @@ public class sliderValueToInputValue : MonoBehaviour
 				v3.x=v3.x-((currSliderVal3-slider.value)*shiftScaleFac3d*-1.0f);
 				v3.y=rail3D.transform.localPosition.y;
 			}
-			Debug.Log("---else sidePosObj: "+attachedRailSide.transform.localPosition);
-			Debug.Log("---else sidePosVec: "+v);
+			//Debug.Log("---else sidePosObj: "+attachedRailSide.transform.localPosition);
+			//Debug.Log("---else sidePosVec: "+v);
 			//write back the value and save the current value for x
 			//attachedRailSide.transform.localPosition=new Vector3(v.x,attachedRailSide.transform.localPosition.y,v.z);
 		}
@@ -135,13 +135,13 @@ public class sliderValueToInputValue : MonoBehaviour
 		currSliderVal=slider.value;
 		currSliderVal2=slider.value;
 		currSliderVal3=slider.value;
-		Debug.Log(">>>new SlideVal: "+currSliderVal.ToString());
-		Debug.Log(">>>new RailPos.x: "+v.x.ToString());
-		Debug.Log("+++Name of Slider: " +slider.ToString());
-		Debug.Log("---update sidePosObj: "+attachedRailSide.transform.localPosition);
-		Debug.Log("---update sidePosVec: "+v);
-		Debug.Log("---update 3dPosObj: "+rail3D.transform.localPosition);
-		Debug.Log("---update 3dPosVec: "+v3);
+		//Debug.Log(">>>new SlideVal: "+currSliderVal.ToString());
+		//Debug.Log(">>>new RailPos.x: "+v.x.ToString());
+		//Debug.Log("+++Name of Slider: " +slider.ToString());
+		//Debug.Log("---update sidePosObj: "+attachedRailSide.transform.localPosition);
+		//Debug.Log("---update sidePosVec: "+v);
+		//Debug.Log("---update 3dPosObj: "+rail3D.transform.localPosition);
+		//Debug.Log("---update 3dPosVec: "+v3);
 		//update the objects in scene/write back values
 		try
 		{

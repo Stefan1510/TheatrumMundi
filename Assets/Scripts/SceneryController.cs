@@ -32,28 +32,28 @@ public class SceneryController : MonoBehaviour
         //_kulissenButtonImage = _kulissenButton.GetComponent<RawImage>();
         //_kulissenButtonImage.color = new Color(1f, 1f, 1f, 0.4f);
 
-        _toggleSceneryActivate = GameObject.Find("ToggleSceneryActivate").GetComponent<Toggle>();
-        _textSceneryname = GameObject.Find("TextSceneryName").GetComponent<Text>();
-        _sliderSceneryPositionX = GameObject.Find("SliderSceneryPositionX").GetComponent<Slider>();
-        _sliderSceneryPositionY = GameObject.Find("SliderSceneryPositionY").GetComponent<Slider>();
-        _inputFieldSceneryPositionX = GameObject.Find("InputFieldSceneryPositionX").GetComponent<InputField>();
-        _InputFieldSceneryPositionY = GameObject.Find("InputFieldSceneryPositionY").GetComponent<InputField>();
+        //_toggleSceneryActivate = GameObject.Find("ToggleSceneryActivate").GetComponent<Toggle>();
+        //_textSceneryname = GameObject.Find("TextSceneryName").GetComponent<Text>();
+        //_sliderSceneryPositionX = GameObject.Find("SliderSceneryPositionX").GetComponent<Slider>();
+        //_sliderSceneryPositionY = GameObject.Find("SliderSceneryPositionY").GetComponent<Slider>();
+        //_inputFieldSceneryPositionX = GameObject.Find("InputFieldSceneryPositionX").GetComponent<InputField>();
+        //_InputFieldSceneryPositionY = GameObject.Find("InputFieldSceneryPositionY").GetComponent<InputField>();
 
-        gameObject.transform.SetParent(GameObject.Find("Schiene1").transform);
+        //gameObject.transform.SetParent(GameObject.Find("Schiene1").transform);
         
-        //_kulissenButton.onClick.AddListener(() => ToggleSceneryButton());
-        _sliderSceneryPositionX.onValueChanged.AddListener((val) => ChangeSceneryPositionX(val));
-        _sliderSceneryPositionY.onValueChanged.AddListener((val) => ChangeSceneryPositionY(val));
-        _toggleSceneryActivate.onValueChanged.AddListener((val) => ActivateKulisse(val));
+        ////_kulissenButton.onClick.AddListener(() => ToggleSceneryButton());
+        //_sliderSceneryPositionX.onValueChanged.AddListener((val) => ChangeSceneryPositionX(val));
+        //_sliderSceneryPositionY.onValueChanged.AddListener((val) => ChangeSceneryPositionY(val));
+        //_toggleSceneryActivate.onValueChanged.AddListener((val) => ActivateKulisse(val));
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        selectedScenery = false;
-        _textSceneryname.text = "";
-        gameObject.SetActive(false);
-        _toggleSceneryActivate.isOn = true;
+        //selectedScenery = false;
+        //_textSceneryname.text = "";
+        //gameObject.SetActive(false);
+        //_toggleSceneryActivate.isOn = true;
 
     }
 

@@ -27,7 +27,7 @@ public class ObjectShelf : MonoBehaviour
     {
         //Debug.Log("testprint");
 		//define the buttons
-		Debug.Log("this is the main menue");
+		//Debug.Log("this is the main menue");
 		//mytext.text="this is text";
 		MenueShelf01.SetActive(true);
 		MenueShelf02.SetActive(false);
