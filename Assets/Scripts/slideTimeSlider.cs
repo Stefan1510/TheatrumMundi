@@ -102,31 +102,31 @@ public class slideTimeSlider : MonoBehaviour
 	//not used
 	public Vector2 getScreenXPosOfObject(Vector2 actStageSize,Vector2 objectPos, Vector2 objectSize)
 	{
-		Debug.Log("----getScreenXPosOfObject----");
+		//Debug.Log("----getScreenXPosOfObject----");
 		Vector2 minPos=new Vector2(0.0f,0.0f);
 		//stagesize 1920x1080
 		//half stagesize 960x540
 		double halfStageXSize=actStageSize.x/2.0f;
-		Debug.Log("----halfStageXSize: "+halfStageXSize);
+		//Debug.Log("----halfStageXSize: "+halfStageXSize);
 		//anchorPoint of stage is (0;0) at size x: 1920/2
 		//object x: e.g. -140px -> make absolute
 		double absObjXPos=Mathf.Abs(objectPos.x);
-		Debug.Log("----absObjXPos: "+absObjXPos);
+		//Debug.Log("----absObjXPos: "+absObjXPos);
 		//object size x 1638
-		Debug.Log("----ObjectSize: "+objectSize.x);
+		//Debug.Log("----ObjectSize: "+objectSize.x);
 		//object halfsize x 819
 		double halfObjXSize=objectSize.x/2.0f;
-		Debug.Log("----halfObjXSize: "+halfObjXSize);
+		//Debug.Log("----halfObjXSize: "+halfObjXSize);
 		//object |x| + halfsize x = |-140|+819=959
 		double absoluteHalfObjectXSize=absObjXPos+halfObjXSize;
-		Debug.Log("----absoluteHalfObjectXSize: "+absoluteHalfObjectXSize);
+		//Debug.Log("----absoluteHalfObjectXSize: "+absoluteHalfObjectXSize);
 		//object - stage = 960-959=1 -> this is the screenXPos of Object
 		minPos.x=(float)(halfStageXSize-absoluteHalfObjectXSize);
 		if(minPos.x<0)
 		{
-			Debug.Log("pos x is lower than 0.0 !!");
+			//Debug.Log("pos x is lower than 0.0 !!");
 		}
-		Debug.Log("----minPos: "+minPos.x);
+		//Debug.Log("----minPos: "+minPos.x);
 		return minPos;
 	}
 	//not used
