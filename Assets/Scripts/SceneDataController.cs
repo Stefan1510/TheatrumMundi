@@ -38,6 +38,10 @@ public class SceneDataController : MonoBehaviour
         //recentSceneData.sceneryElements = new List<SceneryElement>();
         //recentSceneData.figureElements = new List<FigureElement>();
         //recentSceneData.lightElements = new List<LightElement>();
+        foreach(GameObject re in objectsRailElements)
+        {
+            Debug.Log("-----+++++" + re.name);
+        }
     }
 
     private void Start()
@@ -194,10 +198,10 @@ public class SceneDataController : MonoBehaviour
             {
                 if (sceneryElement.name == objectSceneryElement.name)
                 {
-                    objectSceneryElement.transform.position = new Vector3(sceneryElement.x, sceneryElement.y, sceneryElement.z);
+                    objectSceneryElement.transform.parent = GameObject.Find(sceneryElement.parent).transform;
+                    objectSceneryElement.transform.localPosition = new Vector3(sceneryElement.x, sceneryElement.y, sceneryElement.z);
                     objectSceneryElement.GetComponent<SceneryController>().sceneryActive = sceneryElement.active;
                     objectSceneryElement.SetActive(sceneryElement.active);
-                    objectSceneryElement.transform.parent = GameObject.Find(sceneryElement.parent).transform;
                     if (sceneryElement.active)
                     {
                         countActiveSceneryElements++;
