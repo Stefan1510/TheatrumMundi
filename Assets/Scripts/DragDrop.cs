@@ -10,18 +10,18 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
     [SerializeField] private Canvas canvas;
     [SerializeField] private GameObject schieneBild;
     [SerializeField] public GameObject menuExtra;
-    private ReiterActiveButton activeReiter;
+    [HideInInspector] public ReiterActiveButton activeReiter;
     private RectTransform rectTransform;
     private CanvasGroup canvasGroup;
-    private Vector2 pos;
-    private SceneryElement ThisSceneryElement;
+    [HideInInspector] public Vector2 pos;
+    public SceneryElement ThisSceneryElement;
 
     [HideInInspector] public GameObject parentStart;
     GameObject[] collection = new GameObject[8];
 
     [HideInInspector] public GameObject reiter1, reiter2, reiter3, reiter4, reiter5, reiter6, reiter7, reiter8, einstellungen, scenerysettings;
     [HideInInspector] public GameObject reiter1Active, reiter2Active, reiter3Active, reiter4Active, reiter5Active, reiter6Active, reiter7Active, reiter8Active;
-    [HideInInspector] public GameObject gameController; // neue Zeile von Kris f�r den SceneryController
+    [HideInInspector] public GameObject gameController; // neue Zeile von Kris fÜr den SceneryController
 
     [HideInInspector] public int statusReiter;
     [HideInInspector] public int schieneKulisse;
@@ -66,8 +66,6 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
         menuExtra.SetActive(false);
 
         parentStart = gameObject.transform.parent.gameObject;
-
-
     }
 
     public void Start()
@@ -137,9 +135,7 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
 
         if (SceneManager.showSettings)
         {
-            menuExtra.SetActive(false);
-            SceneManager.showSettings = false;
-            gameObject.transform.GetChild(0).gameObject.SetActive(false);
+            setElementInactive(this);
         }
 
         canvasGroup.blocksRaycasts = false;
@@ -151,9 +147,8 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
     {
         rectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
 
-
         // durch Skalierung d. Canvas teilen, sonst Bewegung d. Objekts nicht gleich der Mausbewegung
-        Debug.Log("PosX: " + GetComponent<RectTransform>().anchoredPosition.x + ", PosY: " + GetComponent<RectTransform>().anchoredPosition.y);
+        //Debug.Log("PosX: " + GetComponent<RectTransform>().anchoredPosition.x + ", PosY: " + GetComponent<RectTransform>().anchoredPosition.y);
         //Debug.Log("Trigger Active: "+SceneManager.triggerActive+ ", Reiter: "+activeReiter+", Anzahl Kulissen: "+activeReiter.kulissen.Count+", this.Schiene: "+this.schieneKulisse);
 
         if (SceneManager.triggerActive != 0 && this.schieneKulisse != SceneManager.triggerActive)
@@ -246,36 +241,55 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
 
         // ------------ Dinge, die f�r die Kulissen im Controler passieren m�ssen
 
-        //ThisSceneryElement.parent = "Schiene" + statusReiter.ToString(); //hier bitte mal genau �berpr�fen wie die parents dann wirklich sind
         Debug.Log("---- Kulissenname -------- " + ThisSceneryElement.name + " --- " + ThisSceneryElement.parent + " --- " + ThisSceneryElement.x);
-        ThisSceneryElement.z = GetComponent<RectTransform>().anchoredPosition.x/300;
-        ThisSceneryElement.y = GetComponent<RectTransform>().anchoredPosition.y/300+0.1f;  //die werte stimmen ungefaehr mit dem liveview ueberein
+        ThisSceneryElement.z = GetComponent<RectTransform>().anchoredPosition.x / 300;
+        ThisSceneryElement.y = GetComponent<RectTransform>().anchoredPosition.y / 300 + 0.1f;  //die werte stimmen ungefaehr mit dem liveview ueberein
 
 
         // ------------ uebertragen der Daten aus dem Controller auf die 3D-Kulissen
         gameController.GetComponent<SceneDataController>().CreateScene(StaticSceneData.StaticData); // dieses Zeile macht das gleiche und ist glaube besser.
     }
 
+    public void setElementActive(DragDrop dragdrop)
+    {
+        dragdrop.GetComponent<Image>().color = new Color(.5f, 1f, 0.3f, 1f);
+        SceneManager.showSettings = true;
+        dragdrop.menuExtra.SetActive(true);
+        dragdrop.transform.GetChild(0).gameObject.SetActive(true);
+    }
+
+    public void setElementInactive(DragDrop dragdrop)
+    {
+        dragdrop.GetComponent<Image>().color = new Color(1f, 1f, 1f, 1f);
+        dragdrop.transform.GetChild(0).gameObject.SetActive(false);
+        SceneManager.showSettings = false;
+        dragdrop.menuExtra.SetActive(false);
+    }
+
     public void OnClick()
     {
+        SceneManager.dragDrop = this; // hier wird dem dragDrop-Objekt im SceneManager die aktuelle Kulisse uebergeben!
+        Debug.Log("showSettings: "+SceneManager.showSettings);
         if (schieneKulisse != 0)
         {
+            for (int i = 0; i < this.transform.parent.childCount; i++)
+            {
+                setElementInactive(gameObject.transform.parent.GetChild(i).GetComponent<DragDrop>());
+                Debug.Log("Child: "+gameObject.transform.parent.GetChild(i).GetComponent<DragDrop>());
+            }
+
             if (SceneManager.showSettings)
             {
-                gameObject.transform.GetChild(0).gameObject.SetActive(false);
-                SceneManager.showSettings = false;
-                menuExtra.SetActive(false);
+                setElementInactive(this);
             }
             else if (SceneManager.showSettings == false)
             {
-                gameObject.transform.GetChild(0).gameObject.SetActive(true);
-                SceneManager.showSettings = true;
-                menuExtra.SetActive(true);
+                setElementActive(this);
             }
         }
         else
         {
-            SceneManager.showSettings = false;
+            setElementInactive(this);
         }
     }
 

@@ -9,6 +9,11 @@ public class ReiterButton : MonoBehaviour
     {
         DragDrop dragdrop = SceneManager.dragDrop;
 
+        for(int i=0 ; i<this.transform.childCount ; i++)
+        {
+            dragdrop.setElementInactive(this.transform.GetChild(i).GetComponent<DragDrop>());
+        }
+
         if (dragdrop == null)
         {
             return;

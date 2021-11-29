@@ -9,6 +9,10 @@ public class ReiterActiveButton : MonoBehaviour
     private void Start()
     {
         kulissen = new List<DragDrop>();
+        /*foreach (DragDrop kulisse in kulissen)
+        {
+            kulisse.setElementInactive(kulisse);
+        }*/
     }
 
     // Update is called once per frame
