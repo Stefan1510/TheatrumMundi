@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class ReiterButton : MonoBehaviour
 {
-
     public void OnClick()
     {
         DragDrop dragdrop = SceneManager.dragDrop;
@@ -55,7 +54,7 @@ public class ReiterButton : MonoBehaviour
 
     public void OnPointerEnter()
     {
-        SceneManager.mouse_over = true;
+        //SceneManager.mouse_over = true;
         //Debug.Log("entering "+gameObject);
         if (gameObject.name == "Reiter1") SceneManager.triggerActive = 1;
         else if (gameObject.name == "Reiter2") SceneManager.triggerActive = 2;
@@ -67,7 +66,7 @@ public class ReiterButton : MonoBehaviour
         else if (gameObject.name == "Reiter8") SceneManager.triggerActive = 8;
         else if (gameObject.name == "Einstellungen") SceneManager.triggerEinstellungen = true;
         else SceneManager.triggerActive = 0;
-        //Debug.Log("triggerACtive: " + SceneManager.triggerActive);
+        //Debug.Log("triggerACtive: " + SceneManager.triggerActive+", triggerEinstellung: "+SceneManager.triggerEinstellungen);
         //SceneManager.dragDrop.setReiterActive(SceneManager.dragDrop.statusReiter);
     }
 

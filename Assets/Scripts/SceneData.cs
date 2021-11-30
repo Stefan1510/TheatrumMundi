@@ -22,6 +22,7 @@ public class SceneryElement
 {
 	//kulisse
     public string name;
+    public string description;
     public float x;
     public float y;
     public float z;
