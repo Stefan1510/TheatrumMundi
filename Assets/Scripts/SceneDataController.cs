@@ -52,7 +52,9 @@ public class SceneDataController : MonoBehaviour
             objectSceneryElement.SetActive(false);
         }
         Debug.Log("------- staticSceneDataJSON");
+
         StaticSceneData.StaticData = CreateSceneData();
+        
         Debug.Log("------- staticSceneDataJSON" + StaticSceneData.StaticData.ToString());
         Debug.Log("------- staticSceneDataJSON" + CreateJsonFromSceneData(StaticSceneData.StaticData));
 
@@ -117,35 +119,35 @@ public class SceneDataController : MonoBehaviour
                 z = objectSceneryElement.transform.position.z,
                 active = objectSceneryElement.GetComponent<SceneryController>().sceneryActive,
                 parent = objectSceneryElement.transform.parent.name,
-                zPos =0,
-				mirrored=false
+                zPos = 0,
+                mirrored = false
             };
             sceneData.sceneryElements.Add(sceneSceneryElement);
         }
-		
-		//figures
-		foreach (GameObject objectFigureElement in objectsFigureElements)
+
+        //figures
+        foreach (GameObject objectFigureElement in objectsFigureElements)
         {
-            FigureElement sceneFigureElements = new FigureElement
+            FigureElement sceneFigureElement = new FigureElement
             {
                 name = objectFigureElement.name,
                 x = objectFigureElement.transform.position.x,
                 y = objectFigureElement.transform.position.y,
                 z = objectFigureElement.transform.position.z,
-                active = objectFigureElement.GetComponent<SceneryController>().sceneryActive,	//check, if this command can be set up on a better way ;)
-                parent = objectFigureElement.transform.parent.name,
-				mirrored=false,
-				width=objectFigureElement.GetComponent<Renderer>().bounds.size.x,
-				height=objectFigureElement.GetComponent<Renderer>().bounds.size.y,
-				velocity=0.0f,
-				wheelsize=1.0f,
-				railnumber=1,
-				direction="toRight"
+                //active = objectFigureElement.GetComponent<SceneryController>().sceneryActive,	//check, if this command can be set up on a better way ;)
+                //parent = objectFigureElement.transform.parent.name,
+                mirrored = false,
+                width = objectFigureElement.GetComponent<Renderer>().bounds.size.x,
+                height = objectFigureElement.GetComponent<Renderer>().bounds.size.y,
+                velocity = 0.0f,
+                wheelsize = 1.0f,
+                railnumber = 1,
+                direction = "toRight"
             };
-            sceneData.figureElements.Add(sceneFigureElements);
+            sceneData.figureElements.Add(sceneFigureElement);
         }
-		
-		//light
+
+        //light
         foreach (GameObject objectLightElement in objectsLightElements)
         {
             LightElement sceneLightElement = new LightElement
@@ -179,7 +181,7 @@ public class SceneDataController : MonoBehaviour
         SetFileMetaDataToScene();
         countActiveSceneryElements = 0;
         countActiveLightElements = 0;
-        Debug.Log(sceneData.railElements[0]);
+        //Debug.Log(sceneData.railElements[0]);
 		//rail elements
         foreach (RailElement railElement in sceneData.railElements)
         {
@@ -209,20 +211,20 @@ public class SceneDataController : MonoBehaviour
                 }
             }
         }
-		//figure elements (kulissen)
-        foreach (FigureElement figureElement in sceneData.figureElements)
-        {
-            foreach (GameObject objectFigureElement in objectsFigureElements)
-            {
-                if (figureElement.name == objectFigureElement.name)
-                {
-                    objectFigureElement.transform.position = new Vector3(figureElement.x, figureElement.y, figureElement.z);
-                    objectFigureElement.GetComponent<SceneryController>().sceneryActive = figureElement.active;
-                    objectFigureElement.SetActive(figureElement.active);
-                    objectFigureElement.transform.parent = GameObject.Find(figureElement.parent).transform;
-                }
-            }
-        }
+		//figure elements (Figuren)
+        //foreach (FigureElement figureElement in sceneData.figureElements)
+        //{
+        //    foreach (GameObject objectFigureElement in objectsFigureElements)
+        //    {
+        //        if (figureElement.name == objectFigureElement.name)
+        //        {
+        //            objectFigureElement.transform.position = new Vector3(figureElement.x, figureElement.y, figureElement.z);
+        //            objectFigureElement.GetComponent<SceneryController>().sceneryActive = figureElement.active;
+        //            objectFigureElement.SetActive(figureElement.active);
+        //            objectFigureElement.transform.parent = GameObject.Find(figureElement.parent).transform;
+        //        }
+        //    }
+        //}
 		//light elements
         foreach (LightElement lightElement in sceneData.lightElements)
         {
@@ -231,6 +233,21 @@ public class SceneDataController : MonoBehaviour
                 if (lightElement.name == objectLightElements.name)
                 {
                     objectLightElements.transform.position = new Vector3(lightElement.x, lightElement.y, lightElement.z);
+                }
+            }
+        }
+    }
+
+    public void lightsApplyToScene(List<LightElement> lightElements)
+    {
+        foreach(LightElement le in lightElements)
+        {
+            foreach (GameObject goLightElement in objectsLightElements)
+            {
+                if (le.name == goLightElement.name)
+                {
+                    goLightElement.transform.localPosition = new Vector3(le.x, le.y, le.z);
+                    goLightElement.GetComponent<Light>().enabled = le.active;
                 }
             }
         }

@@ -4,8 +4,16 @@ using UnityEngine;
 
 public class LightController : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [HideInInspector] public GameObject gameController; // neue Zeile von Kris fÜr den SceneryController
+
+
+    private void Awake()
+    {
+        gameController = GameObject.Find("GameController"); // neue Zeile von Kris fuer den SceneryController
+    }
+
+        // Start is called before the first frame update
+        void Start()
     {
 
     }
@@ -18,13 +26,13 @@ public class LightController : MonoBehaviour
 
     public void LightActivation(bool onOffSwitch)
     {
-        GetComponent<Light>().enabled = onOffSwitch;
+        //GetComponent<Light>().enabled = onOffSwitch;
 
         //lightElements müssen erst noch mit der StaticData bekannt gemacht werden --> SceneDataController
 
-        //LightElement thisLightElement = StaticSceneData.StaticData.lightElements.Find(le => le.name == gameObject.name);
-        //thisLightElement.active = onOffSwitch;
-        
+        LightElement thisLightElement = StaticSceneData.StaticData.lightElements.Find(le => le.name == gameObject.name);
+        thisLightElement.active = onOffSwitch;
+        gameController.GetComponent<SceneDataController>().lightsApplyToScene(StaticSceneData.StaticData.lightElements);
         //Funktion im Controller, die nur die Lichter aktualisiert
         //Für jede Gruppe Schienen, Kulissen, Figuren, Lichter je eine Funktion zum updaten in der Szene.
     }
