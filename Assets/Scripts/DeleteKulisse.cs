@@ -20,7 +20,7 @@ public class DeleteKulisse : MonoBehaviour
             dragdrop.ThisSceneryElement.mirrored=false;
             dragdrop.GetComponent<RectTransform>().localScale = new Vector3(1, 1.0f, 1.0f);
         }
-        dragdrop.transform.GetChild(0).gameObject.SetActive(false);
+        dragdrop.transform.GetChild(1).gameObject.SetActive(false);
         dragdrop.ThisSceneryElement.active = false;
         dragdrop.transform.SetParent(dragdrop.parentStart.transform);
         dragdrop.ThisSceneryElement.parent = "Schiene1";

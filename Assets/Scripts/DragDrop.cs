@@ -11,6 +11,7 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
     [SerializeField] private GameObject schieneBild;
     [SerializeField] public GameObject menuExtra;
     [SerializeField] private GameObject ElementName;
+    [SerializeField] private GameObject sliderX, sliderY;
     private RectTransform rectTransform;
     private CanvasGroup canvasGroup;
     [HideInInspector] public Vector2 pos;
@@ -180,15 +181,13 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
             gameObject.transform.SetParent(parentStart.transform);
             ThisSceneryElement.active = false;                  // hier wird active false gesetzt, weil die kulisse zurueck ins shelf gesetzt wird
             rectTransform.anchoredPosition = pos;
-
         }
 
         // ------------ Dinge, die fuer die Kulissen im Controler passieren muessen
-
         Debug.Log("---- Kulissenname -------- " + ThisSceneryElement.name + " --- " + ThisSceneryElement.parent + " --- " + ThisSceneryElement.x);
         ThisSceneryElement.z = GetComponent<RectTransform>().anchoredPosition.x / 300;
         ThisSceneryElement.y = GetComponent<RectTransform>().anchoredPosition.y / 300 + 0.1f;  //die werte stimmen ungefaehr mit dem liveview ueberein
-
+        ThisSceneryElement.x = 0.06f;
 
         // ------------ uebertragen der Daten aus dem Controller auf die 3D-Kulissen
         gameController.GetComponent<SceneDataController>().CreateScene(StaticSceneData.StaticData); // dieses Zeile macht das gleiche und ist glaube besser.
@@ -203,21 +202,26 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
         SceneManager.showSettings = true;
         dragdrop.menuExtra.SetActive(true);
         dragdrop.transform.GetChild(0).gameObject.SetActive(true);
-        ElementName.GetComponent<Text>().text = gameObject.name;
+        dragdrop.transform.GetChild(1).gameObject.SetActive(true);
+        ElementName.GetComponent<Text>().text = gameObject.transform.GetChild(0).GetComponent<Text>().text;
     }
 
     public void setElementInactive(DragDrop dragdrop)
     {
         dragdrop.GetComponent<Image>().color = new Color(1f, 1f, 1f, 1f);
         dragdrop.transform.GetChild(0).gameObject.SetActive(false);
+        dragdrop.transform.GetChild(1).gameObject.SetActive(false);
         SceneManager.showSettings = false;
         dragdrop.menuExtra.SetActive(false);
     }
 
     public void OnClick()
     {
-        SceneManager.dragDrop = this; // hier wird dem dragDrop-Objekt im SceneManager die aktuelle Kulisse uebergeben!
-        Debug.Log("showSettings: " + SceneManager.showSettings);
+        SceneManager.dragDrop = this; // hier wird dem dragDrop-Objekt im SceneManager die aktuelle Kulisse uebergeben
+        Debug.Log("posX: " + this.GetComponent<RectTransform>().anchoredPosition.x/200+", SliderValue: "+sliderX.GetComponent<Slider>().value);
+        sliderX.GetComponent<Slider>().value = GetComponent<RectTransform>().anchoredPosition.x/200;
+        sliderY.GetComponent<Slider>().value = GetComponent<RectTransform>().anchoredPosition.y/100;
+
         if (schieneKulisse != 0)
         {
             for (int i = 0; i < this.transform.parent.childCount; i++)

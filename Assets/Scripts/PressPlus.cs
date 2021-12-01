@@ -17,8 +17,8 @@ public class PressPlus : MonoBehaviour
         dragdrop.ThisSceneryElement.zPos += 1;
         dragdrop.ThisSceneryElement.x += .01f;
         dragdrop.transform.SetSiblingIndex(dragdrop.ThisSceneryElement.zPos);
-        Debug.Log("dragdrop: "+dragdrop.name+", kulisse pos x: "+dragdrop.ThisSceneryElement.x+", Index Sibling: "+dragdrop.ThisSceneryElement.zPos);
-        Debug.Log("sibling index : " + dragdrop.transform.GetSiblingIndex());
+        //Debug.Log("dragdrop: "+dragdrop.name+", kulisse pos x: "+dragdrop.ThisSceneryElement.x+", Index Sibling: "+dragdrop.ThisSceneryElement.zPos);
+        //Debug.Log("sibling index : " + dragdrop.transform.GetSiblingIndex());
         dragdrop.gameController.GetComponent<SceneDataController>().CreateScene(StaticSceneData.StaticData);
         }
         

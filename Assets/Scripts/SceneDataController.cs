@@ -114,6 +114,7 @@ public class SceneDataController : MonoBehaviour
             SceneryElement sceneSceneryElement = new SceneryElement
             {
                 name = objectSceneryElement.name,
+                //description = objectSceneryElement.transform.parent.GetChild(0).GetComponent<Text>().text,
                 x = objectSceneryElement.transform.position.x,
                 y = objectSceneryElement.transform.position.y,
                 z = objectSceneryElement.transform.position.z,
