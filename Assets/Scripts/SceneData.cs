@@ -99,4 +99,31 @@ public class StaticSceneData
             staticData = value;
         }
     }
+
+    public static void Rails3D()
+    {
+        GameObject goGameController = GameObject.Find("GameController");
+        goGameController.GetComponent<SceneDataController>().RailsApplyToScene(StaticData.railElements);
+    }
+    public static void Sceneries3D()
+    {
+        GameObject goGameController = GameObject.Find("GameController");
+        goGameController.GetComponent<SceneDataController>().SceneriesApplyToScene(StaticData.sceneryElements);
+    }
+    public static void Lights3D()
+    {
+        GameObject goGameController = GameObject.Find("GameController");
+        goGameController.GetComponent<SceneDataController>().LightsApplyToScene(StaticData.lightElements);
+    }
+    public static void Figures3D()
+    {
+        GameObject goGameController = GameObject.Find("GameController");
+        goGameController.GetComponent<SceneDataController>().FiguresApplyToScene(StaticData.figureElements);
+    }
+
+    public static void everything3D()
+    {
+        GameObject goGameController = GameObject.Find("GameController");
+        goGameController.GetComponent<SceneDataController>().CreateScene(StaticData);
+    }
 }

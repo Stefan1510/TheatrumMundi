@@ -12,7 +12,7 @@ public class SaveFileController : MonoBehaviour
     private List<Button> _buttonsFileList = new List<Button>();
     public Text textFileMetaData;
     public Text textFileContentData;
-
+    private SceneData tempSceneData;
     //// Start is called before the first frame update
     void Start()
     {
@@ -40,6 +40,11 @@ public class SaveFileController : MonoBehaviour
             //GenerateFileButton(filePath);
         }
         StartCoroutine(LoadFilesFromServer());
+    }
+
+    public void LoadSceneFromTempToStatic()
+    {
+        StaticSceneData.StaticData = tempSceneData;
     }
 
     public void LoadSceneFromFile(string fileName)
@@ -117,13 +122,13 @@ public class SaveFileController : MonoBehaviour
         WWW www = new WWW("https://lightframefx.de/extras/theatrum-mundi/Saves/" + fileName);
         yield return www;
         _jsonString = www.text;
-        SceneData sceneData = this.GetComponent<SceneDataController>().CreateSceneDataFromJSON(_jsonString);
-        this.GetComponent<SceneDataController>().CreateScene(sceneData);
+        tempSceneData = this.GetComponent<SceneDataController>().CreateSceneDataFromJSON(_jsonString);
+        this.GetComponent<SceneDataController>().CreateScene(tempSceneData);
         string sceneMetaData = "";
-        sceneMetaData += sceneData.fileName + "\n\n";
-        sceneMetaData += "erstellt: " + sceneData.fileDate + "\n\n";
-        sceneMetaData += "Ersteller: " + sceneData.fileAuthor + "\n\n";
-        sceneMetaData += "Kommentar:\n" + sceneData.fileComment;
+        sceneMetaData += tempSceneData.fileName + "\n\n";
+        sceneMetaData += "erstellt: " + tempSceneData.fileDate + "\n\n";
+        sceneMetaData += "Ersteller: " + tempSceneData.fileAuthor + "\n\n";
+        sceneMetaData += "Kommentar:\n" + tempSceneData.fileComment;
         textFileMetaData.text = sceneMetaData;
         string sceneContentData = "";
         sceneContentData += "Dateiinformationen:\n\n";

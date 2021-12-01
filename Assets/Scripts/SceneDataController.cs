@@ -21,6 +21,7 @@ public class SceneDataController : MonoBehaviour
     [HideInInspector] public string recentSceneDataSerialized;
     [HideInInspector] public int countActiveSceneryElements = 0;
     [HideInInspector] public int countActiveLightElements = 0;
+    [HideInInspector] public int countActiveFigureElements = 0;
 
     [HideInInspector] public SceneData recentSceneData;
     [HideInInspector] public SceneData tempSceneData;
@@ -158,13 +159,13 @@ public class SceneDataController : MonoBehaviour
                 y = objectLightElement.transform.position.y,
                 z = objectLightElement.transform.position.z,
                 active = false,
-				railnumber=1,
-				r=1,
-				g=1,
-				b=1,
-				intensity=1.0f,
-				angle_h=90,
-				angle_v=120
+                railnumber = 1,
+                r = 1,
+                g = 1,
+                b = 1,
+                intensity = 1.0f,
+                angle_h = 90,
+                angle_v = 120
             };
             sceneData.lightElements.Add(sceneLightElement);
         }
@@ -180,68 +181,61 @@ public class SceneDataController : MonoBehaviour
         sceneFileDate = sceneData.fileDate;
         sceneFileComment = sceneData.fileComment;
         SetFileMetaDataToScene();
-        countActiveSceneryElements = 0;
-        countActiveLightElements = 0;
         //Debug.Log(sceneData.railElements[0]);
-		//rail elements
-        foreach (RailElement railElement in sceneData.railElements)
+
+        //rail elements
+        RailsApplyToScene(sceneData.railElements);
+
+        //scenery elements (kulissen)
+        SceneriesApplyToScene(sceneData.sceneryElements);
+
+        //light elements
+        LightsApplyToScene(sceneData.lightElements);
+
+        //figure elements (Figuren)
+        FiguresApplyToScene(sceneData.figureElements);
+    }
+
+    public void RailsApplyToScene(List<RailElement> railElements)
+    {
+        foreach (RailElement re in railElements)
         {
-            foreach (GameObject objectRailElement in objectsRailElements)
+            foreach (GameObject goRailElement in objectsRailElements)
             {
-                if (railElement.name == objectRailElement.name)
+                if (re.name == goRailElement.name)
                 {
-                    objectRailElement.transform.localPosition = new Vector3(railElement.x, railElement.y, railElement.z);
+                    goRailElement.transform.localPosition = new Vector3(re.x, re.y, re.z);
                 }
             }
         }
-		//scenery elements (kulissen)
-        foreach (SceneryElement sceneryElement in sceneData.sceneryElements)
+    }
+
+    public void SceneriesApplyToScene(List<SceneryElement> sceneryElements)
+    {
+        countActiveSceneryElements = 0;
+        foreach (SceneryElement se in sceneryElements)
         {
-            foreach (GameObject objectSceneryElement in objectsSceneryElements)
+            foreach (GameObject goSceneryElement in objectsSceneryElements)
             {
-                if (sceneryElement.name == objectSceneryElement.name)
+                if (se.name == goSceneryElement.name)
                 {
-                    objectSceneryElement.transform.parent = GameObject.Find(sceneryElement.parent).transform;
-                    objectSceneryElement.transform.localPosition = new Vector3(sceneryElement.x, sceneryElement.y, sceneryElement.z);
-                    objectSceneryElement.GetComponent<SceneryController>().sceneryActive = sceneryElement.active;
-                    objectSceneryElement.SetActive(sceneryElement.active);
-                    if (sceneryElement.active)
+                    goSceneryElement.transform.parent = GameObject.Find(se.parent).transform;
+                    goSceneryElement.transform.localPosition = new Vector3(se.x, se.y, se.z);
+                    //goSceneryElement.GetComponent<SceneryController>().sceneryActive = se.active;
+                    goSceneryElement.SetActive(se.active);
+                    if (se.active)
                     {
                         countActiveSceneryElements++;
                     }
                 }
             }
         }
-		//figure elements (Figuren)
-        //foreach (FigureElement figureElement in sceneData.figureElements)
-        //{
-        //    foreach (GameObject objectFigureElement in objectsFigureElements)
-        //    {
-        //        if (figureElement.name == objectFigureElement.name)
-        //        {
-        //            objectFigureElement.transform.position = new Vector3(figureElement.x, figureElement.y, figureElement.z);
-        //            objectFigureElement.GetComponent<SceneryController>().sceneryActive = figureElement.active;
-        //            objectFigureElement.SetActive(figureElement.active);
-        //            objectFigureElement.transform.parent = GameObject.Find(figureElement.parent).transform;
-        //        }
-        //    }
-        //}
-		//light elements
-        foreach (LightElement lightElement in sceneData.lightElements)
-        {
-            foreach (GameObject objectLightElements in objectsLightElements)
-            {
-                if (lightElement.name == objectLightElements.name)
-                {
-                    objectLightElements.transform.position = new Vector3(lightElement.x, lightElement.y, lightElement.z);
-                }
-            }
-        }
     }
 
-    public void lightsApplyToScene(List<LightElement> lightElements)
+    public void LightsApplyToScene(List<LightElement> lightElements)
     {
-        foreach(LightElement le in lightElements)
+        countActiveLightElements = 0;
+        foreach (LightElement le in lightElements)
         {
             foreach (GameObject goLightElement in objectsLightElements)
             {
@@ -249,6 +243,27 @@ public class SceneDataController : MonoBehaviour
                 {
                     goLightElement.transform.localPosition = new Vector3(le.x, le.y, le.z);
                     goLightElement.GetComponent<Light>().enabled = le.active;
+                    if (le.active)
+                    {
+                        countActiveLightElements++;
+                    }
+                }
+            }
+        }
+    }
+
+    public void FiguresApplyToScene(List<FigureElement> figureElements)
+    {
+        foreach (FigureElement fe in figureElements)
+        {
+            foreach (GameObject goFigureElement in objectsFigureElements)
+            {
+                if (fe.name == goFigureElement.name)
+                {
+                    //            objectFigureElement.transform.position = new Vector3(figureElement.x, figureElement.y, figureElement.z);
+                    //            objectFigureElement.GetComponent<SceneryController>().sceneryActive = figureElement.active;
+                    //            objectFigureElement.SetActive(figureElement.active);
+                    //            objectFigureElement.transform.parent = GameObject.Find(figureElement.parent).transform;
                 }
             }
         }

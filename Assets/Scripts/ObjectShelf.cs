@@ -64,6 +64,7 @@ public class ObjectShelf : MonoBehaviour
 		//lvcamera=GameObject.Find("LVCam");
 		//Debug.Log("lvc");
 		//lvcamera.transform.position=new Vector3(8f,4f,5f);
+		StaticSceneData.everything3D();
 	}
 	public void ButtonShelf02()
 	{
@@ -83,6 +84,7 @@ public class ObjectShelf : MonoBehaviour
 		//HeadlineBuehne.SetActive(true);
 		//HeadlineKulisse.SetActive(false);
 		//HeadlineLicht.SetActive(false);
+		StaticSceneData.everything3D();
 	}
 	public void ButtonShelf03()
 	{
@@ -97,6 +99,7 @@ public class ObjectShelf : MonoBehaviour
 		HeadlineShelf02.gameObject.SetActive(false);
 		HeadlineShelf03.gameObject.SetActive(true);
 		HeadlineShelf04.gameObject.SetActive(false);
+		StaticSceneData.everything3D();
 	}
 	
 	public void ButtonShelf04()
