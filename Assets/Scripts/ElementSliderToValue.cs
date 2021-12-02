@@ -14,9 +14,10 @@ public class ElementSliderToValue : MonoBehaviour
         Debug.Log("value: "+ xPos.GetComponent<InputField>().text);
         xPos.GetComponent<InputField>().text = GetComponent<Slider>().value.ToString();
         dragdrop.GetComponent<RectTransform>().anchoredPosition = new Vector2(this.GetComponent<Slider>().value*200, dragdrop.GetComponent<RectTransform>().anchoredPosition.y);
-        
+
         //3D-Kulisse
-        //dragdrop.ThisSceneryElement.x = GetComponent<RectTransform>().anchoredPosition.x / 300;
+        dragdrop.ThisSceneryElement.x = GetComponent<RectTransform>().anchoredPosition.x / 300;
         //dragdrop.gameController.GetComponent<SceneDataController>().CreateScene(StaticSceneData.StaticData);
+        StaticSceneData.Sceneries3D();
     }
 }

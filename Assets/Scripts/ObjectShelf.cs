@@ -19,11 +19,16 @@ public class ObjectShelf : MonoBehaviour
 	public Text HeadlineShelf02;
 	public Text HeadlineShelf03;
 	public Text HeadlineShelf04;
-	
+
+	public GameObject MenueButton01;
+	public GameObject MenueButton02;
+	public GameObject MenueButton03;
+	public GameObject MenueButton04;
+
 	//private GameObject lvcamera;
-	
-    // Start is called before the first frame update
-    void Start()
+
+	// Start is called before the first frame update
+	void Start()
     {
         //Debug.Log("testprint");
 		//define the buttons
@@ -40,6 +45,11 @@ public class ObjectShelf : MonoBehaviour
 		HeadlineShelf02.gameObject.SetActive(false);
 		HeadlineShelf03.gameObject.SetActive(false);
 		HeadlineShelf04.gameObject.SetActive(false);
+
+		MenueButton01.SetActive(false);
+		MenueButton02.SetActive(true);
+		MenueButton03.SetActive(true);
+		MenueButton04.SetActive(true);
     }
 	
 	public void ButtonShelf01()
@@ -64,6 +74,12 @@ public class ObjectShelf : MonoBehaviour
 		//lvcamera=GameObject.Find("LVCam");
 		//Debug.Log("lvc");
 		//lvcamera.transform.position=new Vector3(8f,4f,5f);
+
+		MenueButton01.SetActive(false);
+		MenueButton02.SetActive(true);
+		MenueButton03.SetActive(true);
+		MenueButton04.SetActive(true);
+
 		StaticSceneData.everything3D();
 	}
 	public void ButtonShelf02()
@@ -83,7 +99,13 @@ public class ObjectShelf : MonoBehaviour
 		//show headline of buehne
 		//HeadlineBuehne.SetActive(true);
 		//HeadlineKulisse.SetActive(false);
-		//HeadlineLicht.SetActive(false);
+		//HeadlineLicht.SetActive(false););
+
+		MenueButton01.SetActive(true);
+		MenueButton02.SetActive(false);
+		MenueButton03.SetActive(true);
+		MenueButton04.SetActive(true);
+
 		StaticSceneData.everything3D();
 	}
 	public void ButtonShelf03()
@@ -99,6 +121,12 @@ public class ObjectShelf : MonoBehaviour
 		HeadlineShelf02.gameObject.SetActive(false);
 		HeadlineShelf03.gameObject.SetActive(true);
 		HeadlineShelf04.gameObject.SetActive(false);
+
+		MenueButton01.SetActive(true);
+		MenueButton02.SetActive(true);
+		MenueButton03.SetActive(false);
+		MenueButton04.SetActive(true);
+
 		StaticSceneData.everything3D();
 	}
 	
@@ -115,6 +143,11 @@ public class ObjectShelf : MonoBehaviour
 		HeadlineShelf02.gameObject.SetActive(false);
 		HeadlineShelf03.gameObject.SetActive(false);
 		HeadlineShelf04.gameObject.SetActive(true);
+
+		MenueButton01.SetActive(true);
+		MenueButton02.SetActive(true);
+		MenueButton03.SetActive(true);
+        MenueButton04.SetActive(false);
 	}
 
     // Update is called once per frame

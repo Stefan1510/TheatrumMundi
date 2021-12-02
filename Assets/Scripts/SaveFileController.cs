@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Networking;
 
 public class SaveFileController : MonoBehaviour
 {
@@ -13,9 +14,12 @@ public class SaveFileController : MonoBehaviour
     public Text textFileMetaData;
     public Text textFileContentData;
     private SceneData tempSceneData;
+    private string _selectedFile;
+    private string _directorySaves;
     //// Start is called before the first frame update
     void Start()
     {
+        _directorySaves = "Saves";
         StartCoroutine(LoadFilesFromServer());
     }
 
@@ -47,9 +51,20 @@ public class SaveFileController : MonoBehaviour
         StaticSceneData.StaticData = tempSceneData;
     }
 
+    public void DeleteFile()
+    {
+        if (_selectedFile != "")
+        {
+            StartCoroutine(DeleteFileFromServer(_selectedFile));
+        }
+        StartCoroutine(LoadFilesFromServer());
+    }
+
     public void LoadSceneFromFile(string fileName)
     {
+        _selectedFile = fileName;
         StartCoroutine(LoadFileFromWWW(fileName));
+        //Debug.Log("_____________ selected File: " + _selectedFile);
     }
 
     private void GenerateFileButton(string fileName)
@@ -139,5 +154,24 @@ public class SaveFileController : MonoBehaviour
         sceneContentData += "Musik: ";
         textFileContentData.text = sceneContentData;
     }
+    private IEnumerator DeleteFileFromServer(string FileName)
+    {
+        WWWForm form = new WWWForm();
+
+        form.AddField("pathDirectory", _directorySaves);
+        form.AddField("pathFile", FileName);
+
+        UnityWebRequest www = UnityWebRequest.Post("https://lightframefx.de/extras/theatrum-mundi/DeleteFile.php", form);
+        yield return www.SendWebRequest();
+        if (www.result == UnityWebRequest.Result.ConnectionError || www.result == UnityWebRequest.Result.ProtocolError)
+        {
+            Debug.Log("Script Not Successfull");
+        }
+        else
+        {
+            Debug.Log("Script Successfull");
+        }
+    }
+
 
 }
