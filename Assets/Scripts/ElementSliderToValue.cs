@@ -16,8 +16,7 @@ public class ElementSliderToValue : MonoBehaviour
         dragdrop.GetComponent<RectTransform>().anchoredPosition = new Vector2(this.GetComponent<Slider>().value*200, dragdrop.GetComponent<RectTransform>().anchoredPosition.y);
 
         //3D-Kulisse
-        dragdrop.ThisSceneryElement.x = GetComponent<RectTransform>().anchoredPosition.x / 300;
-        //dragdrop.gameController.GetComponent<SceneDataController>().CreateScene(StaticSceneData.StaticData);
+        dragdrop.ThisSceneryElement.z = GetComponent<RectTransform>().GetComponent<Slider>().value / 1.5f;
         StaticSceneData.Sceneries3D();
     }
 }

@@ -49,6 +49,8 @@ public class SaveFileController : MonoBehaviour
     public void LoadSceneFromTempToStatic()
     {
         StaticSceneData.StaticData = tempSceneData;
+        //UIController.SceneriesApplyToUI();
+        GetComponent<UIController>().SceneriesApplyToUI();
     }
 
     public void DeleteFile()

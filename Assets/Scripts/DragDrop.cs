@@ -152,7 +152,8 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
             {
                 this.schieneKulisse = statusReiter;
                 ThisSceneryElement.active = true;
-                ThisSceneryElement.parent = "Schiene" + statusReiter.ToString();    
+                ThisSceneryElement.parent = "Schiene" + statusReiter.ToString();
+                ThisSceneryElement.railnumber = statusReiter;
             }
             else if (SceneManager.triggerActive == statusReiter)
             {
@@ -160,11 +161,13 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
                 this.schieneKulisse = statusReiter;
                 ThisSceneryElement.active = true;
                 ThisSceneryElement.parent = "Schiene" + statusReiter.ToString();
+                ThisSceneryElement.railnumber = statusReiter;
             }
             else
             {
                 gameObject.transform.SetParent(parentStart.transform);
                 ThisSceneryElement.parent = "Schiene1";
+                ThisSceneryElement.railnumber = 1;
                 rectTransform.anchoredPosition = pos;
                 this.schieneKulisse = 0;
             }

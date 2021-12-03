@@ -80,7 +80,7 @@ public class ObjectShelf : MonoBehaviour
 		MenueButton03.SetActive(true);
 		MenueButton04.SetActive(true);
 
-		StaticSceneData.everything3D();
+		StaticSceneData.Everything3D();
 	}
 	public void ButtonShelf02()
 	{
@@ -106,7 +106,7 @@ public class ObjectShelf : MonoBehaviour
 		MenueButton03.SetActive(true);
 		MenueButton04.SetActive(true);
 
-		StaticSceneData.everything3D();
+		StaticSceneData.Everything3D();
 	}
 	public void ButtonShelf03()
 	{
@@ -127,7 +127,7 @@ public class ObjectShelf : MonoBehaviour
 		MenueButton03.SetActive(false);
 		MenueButton04.SetActive(true);
 
-		StaticSceneData.everything3D();
+		StaticSceneData.Everything3D();
 	}
 	
 	public void ButtonShelf04()

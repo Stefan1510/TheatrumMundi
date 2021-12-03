@@ -27,6 +27,7 @@ public class SceneryElement
     public float y;
     public float z;
     public string parent;
+    public int railnumber;
     public bool active;
 	public int zPos;//0=backgound, 1=mid-pos, 2=front
 	public bool mirrored;
@@ -121,7 +122,7 @@ public class StaticSceneData
         goGameController.GetComponent<SceneDataController>().FiguresApplyToScene(StaticData.figureElements);
     }
 
-    public static void everything3D()
+    public static void Everything3D()
     {
         GameObject goGameController = GameObject.Find("GameController");
         goGameController.GetComponent<SceneDataController>().CreateScene(StaticData);

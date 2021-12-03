@@ -23,7 +23,7 @@ public class SwitchMenues : MonoBehaviour
     {
         ObjectMenueConfigMain.SetActive(false);
         ObjectMenueDirectorMain.SetActive(true);
-        StaticSceneData.everything3D();
+        StaticSceneData.Everything3D();
     }
     public void SwitchToMenueConfig()
     {
