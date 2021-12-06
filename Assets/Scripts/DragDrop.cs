@@ -189,8 +189,8 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
         // ------------ Dinge, die fuer die Kulissen im Controler passieren muessen
         Debug.Log("---- Kulissenname -------- " + ThisSceneryElement.name + " --- " + ThisSceneryElement.parent + " --- " + ThisSceneryElement.x);
         ThisSceneryElement.z = GetComponent<RectTransform>().anchoredPosition.x / 300;
-        ThisSceneryElement.y = GetComponent<RectTransform>().anchoredPosition.y / 300 + 0.1f;  //die werte stimmen ungefaehr mit dem liveview ueberein
-        ThisSceneryElement.x = 0.06f;
+        ThisSceneryElement.y = GetComponent<RectTransform>().anchoredPosition.y / 300 - 0.1f;  //die werte stimmen ungefaehr mit dem liveview ueberein
+        ThisSceneryElement.x = 0.062f;
 
         // ------------ uebertragen der Daten aus dem Controller auf die 3D-Kulissen
         gameController.GetComponent<SceneDataController>().CreateScene(StaticSceneData.StaticData); // dieses Zeile macht das gleiche und ist glaube besser.
