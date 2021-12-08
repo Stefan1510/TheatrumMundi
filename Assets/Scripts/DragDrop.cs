@@ -64,7 +64,6 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
         setReiterActive(statusReiter);  // die funktion darf erst nach Awake ausgefuehrt werden, weil sonst die erste Schleife 
                                         // alles auf false setzt und die weiteren Reiter nicht mehr gefunden werden! 
                                         // also erst Awake fuer alle und dann aktiven Reiter setzen
-        //Debug.Log("StatusReiter: " + statusReiter);
         ThisSceneryElement = StaticSceneData.StaticData.sceneryElements.Find(x => x.name == gameObject.name.Substring(6));
     }
 
@@ -100,8 +99,6 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
         rectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
         // durch Skalierung d. Canvas teilen, sonst Bewegung d. Objekts nicht gleich der Mausbewegung
 
-        //Debug.Log("parent: "+gameObject.transform.parent);
-        //Debug.Log("PosX: " + GetComponent<RectTransform>().anchoredPosition.x + ", PosY: " + GetComponent<RectTransform>().anchoredPosition.y);
         //Debug.Log("Trigger Active: "+SceneManager.triggerActive+ ", Reiter: "+", Anzahl Kulissen: "+", this.Schiene: "+this.schieneKulisse+"schieneActive: "+GetComponent<TriggerSchiene>().schieneActive);
 
         if (SceneManager.triggerActive != 0 && this.schieneKulisse != SceneManager.triggerActive)
@@ -109,32 +106,8 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
             statusReiter = SceneManager.triggerActive;
             this.schieneKulisse = SceneManager.triggerActive;
             setReiterActive(SceneManager.triggerActive);
-            //activeReiter.AddKulisse(this);
         }
 
-        /*else if (this.schieneKulisse != statusReiter && SceneManager.triggerEinstellungen)
-        {
-            //activeReiter.AddKulisse(this);
-            this.schieneKulisse = statusReiter;
-        }
-
-        else if (this.schieneKulisse != statusReiter && SceneManager.triggerEinstellungen == false && GetComponent<TriggerSchiene>().schieneActive)
-        {
-            //activeReiter.AddKulisse(this);
-            this.schieneKulisse = statusReiter;
-
-        }
-
-        else if (SceneManager.triggerEinstellungen == false && this.schieneKulisse != 0 && SceneManager.triggerActive == 0 && GetComponent<TriggerSchiene>().schieneActive == false)
-        {
-            //activeReiter.RemoveKulisse(this);
-
-            this.schieneKulisse = 0;
-
-            ThisSceneryElement.active = false;
-            //Debug.Log("jetzt wird schieneKulisse 0 und die Kulisse removed!"+", von Reiter: "+activeReiter+"+", this: "+this);
-            //Debug.Log("ENTFERNT: Kulisse: " + this.name + ", von Active Reiter: " + activeReiter.name + ", Liste: " + activeReiter.kulissen.Count + ", trigger Einstellungen: " + SceneManager.triggerEinstellungen);
-        }*/
     }
 
     public void OnEndDrag(PointerEventData eventData)
@@ -166,6 +139,7 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
             else
             {
                 gameObject.transform.SetParent(parentStart.transform);
+                ThisSceneryElement.active = false;
                 ThisSceneryElement.parent = "Schiene1";
                 ThisSceneryElement.railnumber = 1;
                 rectTransform.anchoredPosition = pos;
@@ -187,16 +161,16 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
         }
 
         // ------------ Dinge, die fuer die Kulissen im Controler passieren muessen
-        Debug.Log("---- Kulissenname -------- " + ThisSceneryElement.name + " --- " + ThisSceneryElement.parent + " --- " + ThisSceneryElement.x);
+        //Debug.Log("---- Kulissenname -------- " + ThisSceneryElement.name + " --- " + ThisSceneryElement.parent + " --- " + ThisSceneryElement.x);
         ThisSceneryElement.z = GetComponent<RectTransform>().anchoredPosition.x / 300;
-        ThisSceneryElement.y = GetComponent<RectTransform>().anchoredPosition.y / 300 - 0.1f;  //die werte stimmen ungefaehr mit dem liveview ueberein
+        ThisSceneryElement.y = GetComponent<RectTransform>().anchoredPosition.y / 300;  //die werte stimmen ungefaehr mit dem liveview ueberein
         ThisSceneryElement.x = 0.062f;
 
         // ------------ uebertragen der Daten aus dem Controller auf die 3D-Kulissen
         gameController.GetComponent<SceneDataController>().CreateScene(StaticSceneData.StaticData); // dieses Zeile macht das gleiche und ist glaube besser.
 
-        Debug.Log("parent: "+gameObject.transform.parent);
-        Debug.Log("Trigger Active: "+SceneManager.triggerActive+ ", schieneActive: "+GetComponent<TriggerSchiene>().schieneActive);
+        //Debug.Log("parent: "+gameObject.transform.parent);
+        //Debug.Log("Trigger Active: "+SceneManager.triggerActive+ ", schieneActive: "+GetComponent<TriggerSchiene>().schieneActive);
     }
 
     public void setElementActive(DragDrop dragdrop)
@@ -221,7 +195,7 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
     public void OnClick()
     {
         SceneManager.dragDrop = this; // hier wird dem dragDrop-Objekt im SceneManager die aktuelle Kulisse uebergeben
-        Debug.Log("posX: " + this.GetComponent<RectTransform>().anchoredPosition.x/200+", SliderValue: "+sliderX.GetComponent<Slider>().value);
+        //Debug.Log("posX: " + this.GetComponent<RectTransform>().anchoredPosition.x/200+", SliderValue: "+sliderX.GetComponent<Slider>().value);
         sliderX.GetComponent<Slider>().value = GetComponent<RectTransform>().anchoredPosition.x/200;
         sliderY.GetComponent<Slider>().value = GetComponent<RectTransform>().anchoredPosition.y/100;
 
