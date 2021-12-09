@@ -23,11 +23,12 @@ public class sliderValueToInputValue : MonoBehaviour
 	
 	float shiftScaleFac=50.0f;
 	float shiftScaleFac3d=0.5f;
-	
+    RailElement thisRailElement;
     // Start is called before the first frame update
+
     void Start()
-    {		
-		slider=this.GetComponent<Slider>();
+	{
+		slider =this.GetComponent<Slider>();
 		//Debug.Log("+++Name of Slider: " +slider.ToString());
 		//Debug.Log("===START: " +slider.value);
 		currSliderVal=slider.value;
@@ -63,7 +64,7 @@ public class sliderValueToInputValue : MonoBehaviour
 			Debug.Log("attachedInputValue was not set in the inspector");
 		}
     }
-	
+
 	public void OnSliderChange()
 	{
 		attachedInputValue.text=slider.value.ToString("0.00");
@@ -161,8 +162,13 @@ public class sliderValueToInputValue : MonoBehaviour
 		}
 		try
 		{
-			rail3D.transform.localPosition=v3;
-		}
+            //rail3D.transform.localPosition = v3;
+			thisRailElement = StaticSceneData.StaticData.railElements.Find(re => re.name == rail3D.name);
+			thisRailElement.x = v3.x;
+			thisRailElement.y = v3.y;
+			thisRailElement.z = v3.z;
+			StaticSceneData.Rails3D();
+        }
 		catch (NullReferenceException ex)
 		{
 			Debug.Log("rail3D was not set in the inspector");

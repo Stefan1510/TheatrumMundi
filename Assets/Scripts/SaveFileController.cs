@@ -32,7 +32,8 @@ public class SaveFileController : MonoBehaviour
     public void SaveSceneToFile()
     {
         SceneData sceneDataSave = this.GetComponent<SceneDataController>().CreateSceneData();
-        string sceneDataSaveString = this.GetComponent<SceneDataController>().CreateJsonFromSceneData(sceneDataSave);
+        //string sceneDataSaveString = this.GetComponent<SceneDataController>().CreateJsonFromSceneData(sceneDataSave);
+        string sceneDataSaveString = this.GetComponent<SceneDataController>().CreateJsonFromSceneData(StaticSceneData.StaticData);
         //var path = EditorUtility.SaveFilePanel("Save Settings as JSON", "", ".json", "json");
 
         string filePath = sceneDataSave.fileName + ".json";
@@ -43,7 +44,6 @@ public class SaveFileController : MonoBehaviour
             StartCoroutine(WriteToServer(sceneDataSaveString, filePath));
             //GenerateFileButton(filePath);
         }
-        StartCoroutine(LoadFilesFromServer());
     }
 
     public void LoadSceneFromTempToStatic()
@@ -132,6 +132,7 @@ public class SaveFileController : MonoBehaviour
         yield return www;
 
         Debug.Log("www: " + www.text);
+        yield return StartCoroutine(LoadFilesFromServer());
     }
 
     private IEnumerator LoadFileFromWWW(string fileName)

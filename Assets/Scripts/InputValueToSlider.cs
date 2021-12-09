@@ -13,9 +13,12 @@ public class InputValueToSlider : MonoBehaviour
     {
         myInputField=this.GetComponent<InputField>();
 		//Debug.Log(">>>");
-		attachedSlider.value=float.Parse(myInputField.text); //for float
-		//Debug.Log("<<<");
-    }
+		//if (myInputField.text != "")
+		//{
+		//	attachedSlider.value = float.Parse(myInputField.text); //for float
+		//}
+		////Debug.Log("<<<");
+	}
 	
 	public void OnValueChange()
 	{
