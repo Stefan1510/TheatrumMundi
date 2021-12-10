@@ -43060,6 +43060,26 @@ MonoBehaviour:
   - {fileID: 176710208}
   - {fileID: 52990848}
   - {fileID: 880866341}
+  goButtonSceneryElements:
+  - {fileID: 680269241}
+  - {fileID: 1574452578}
+  - {fileID: 96907572}
+  - {fileID: 1513245928}
+  - {fileID: 554394923}
+  - {fileID: 616116045}
+  - {fileID: 1663708068}
+  - {fileID: 1512397476}
+  - {fileID: 1825252736}
+  - {fileID: 464162076}
+  - {fileID: 397130446}
+  - {fileID: 513412829}
+  - {fileID: 1798995814}
+  - {fileID: 1324903992}
+  - {fileID: 207764090}
+  - {fileID: 2013160485}
+  - {fileID: 191876070}
+  - {fileID: 673148753}
+  - {fileID: 832207204}
 --- !u!1 &1281123222
 GameObject:
   m_ObjectHideFlags: 0

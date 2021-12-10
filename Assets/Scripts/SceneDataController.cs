@@ -12,7 +12,7 @@ public class SceneDataController : MonoBehaviour
     public InputField inputFieldFileComment;
     public GameObject[] objectsRailElements;
     public GameObject[] objectsSceneryElements;
-	public GameObject[] objectsFigureElements;
+    public GameObject[] objectsFigureElements;
     public GameObject[] objectsLightElements;
     [HideInInspector] public string sceneFileName;
     [HideInInspector] public string sceneFileAuthor;
@@ -39,7 +39,7 @@ public class SceneDataController : MonoBehaviour
         //recentSceneData.sceneryElements = new List<SceneryElement>();
         //recentSceneData.figureElements = new List<FigureElement>();
         //recentSceneData.lightElements = new List<LightElement>();
-        foreach(GameObject re in objectsRailElements)
+        foreach (GameObject re in objectsRailElements)
         {
             Debug.Log("-----+++++" + re.name);
         }
@@ -55,7 +55,7 @@ public class SceneDataController : MonoBehaviour
         Debug.Log("------- staticSceneDataJSON");
 
         StaticSceneData.StaticData = CreateSceneData();
-        
+
         Debug.Log("------- staticSceneDataJSON" + StaticSceneData.StaticData.ToString());
         Debug.Log("------- staticSceneDataJSON" + CreateJsonFromSceneData(StaticSceneData.StaticData));
 
@@ -89,7 +89,7 @@ public class SceneDataController : MonoBehaviour
         //sceneData.lightElements.Clear();
         sceneData.railElements = new List<RailElement>();
         sceneData.sceneryElements = new List<SceneryElement>();
-		sceneData.figureElements = new List<FigureElement>();
+        sceneData.figureElements = new List<FigureElement>();
         sceneData.lightElements = new List<LightElement>();
 
         foreach (GameObject objectRailElement in objectsRailElements)
@@ -100,16 +100,16 @@ public class SceneDataController : MonoBehaviour
                 x = objectRailElement.transform.localPosition.x,
                 y = objectRailElement.transform.localPosition.y,
                 z = objectRailElement.transform.localPosition.z,
-				//width=objectRailElement.GetComponent<SceneryController>().bounds.Length,
-				//width=objectRailElement.GetComponent<Renderer>().bounds.size.x,
-				//height=objectRailElement.GetComponent<Renderer>().bounds.size.y,
-				velocity=1.0f,
-				direction="toRight"
+                //width=objectRailElement.GetComponent<SceneryController>().bounds.Length,
+                //width=objectRailElement.GetComponent<Renderer>().bounds.size.x,
+                //height=objectRailElement.GetComponent<Renderer>().bounds.size.y,
+                velocity = 1.0f,
+                direction = "toRight"
             };
             sceneData.railElements.Add(sceneRailElement);
         }
-		
-		//scenery aka kulissen
+
+        //scenery aka kulissen
         foreach (GameObject objectSceneryElement in objectsSceneryElements)
         {
             SceneryElement sceneSceneryElement = new SceneryElement
@@ -222,13 +222,29 @@ public class SceneDataController : MonoBehaviour
                     se.railnumber = int.Parse(se.parent.Substring(7));
                     //Debug.Log("-----" + se.railnumber + "-----");
                     goSceneryElement.transform.parent = GameObject.Find(se.parent).transform;
-                    goSceneryElement.transform.localPosition = new Vector3(se.x, se.y, se.z);
+                    goSceneryElement.transform.localPosition = new Vector3(se.x+(se.zPos*0.01f), se.y, se.z);
                     //goSceneryElement.GetComponent<SceneryController>().sceneryActive = se.active;
                     goSceneryElement.SetActive(se.active);
+                    if (se.mirrored)
+                    {
+                        if (goSceneryElement.transform.localScale.x > 0)
+                        {
+                            goSceneryElement.transform.localScale = new Vector3(-goSceneryElement.transform.localScale.x, goSceneryElement.transform.localScale.y, goSceneryElement.transform.localScale.z);
+                        }
+                    }
+                    else
+                    {
+                        if (goSceneryElement.transform.localScale.x < 0)
+                        {
+                            goSceneryElement.transform.localScale = new Vector3(-goSceneryElement.transform.localScale.x, goSceneryElement.transform.localScale.y, goSceneryElement.transform.localScale.z);
+                        }
+                    }
+                    //Debug.Log("Objekt: "+goSceneryElement+", Schiene: "+goSceneryElement.transform.parent+", Railnumber: "+se.railnumber+", active: "+goSceneryElement.active+", se.active: "+se.active);
                     if (se.active)
                     {
                         countActiveSceneryElements++;
                     }
+
                 }
             }
         }
@@ -278,7 +294,7 @@ public class SceneDataController : MonoBehaviour
         return JsonData;
     }
 
-    public SceneData CreateSceneDataFromJSON (string JsonData)
+    public SceneData CreateSceneDataFromJSON(string JsonData)
     {
         SceneData sceneData = JsonUtility.FromJson<SceneData>(JsonData);
         return sceneData;
