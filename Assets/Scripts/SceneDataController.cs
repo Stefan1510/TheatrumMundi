@@ -49,6 +49,7 @@ public class SceneDataController : MonoBehaviour
     {
         foreach (GameObject objectSceneryElement in objectsSceneryElements)
         {
+            Debug.Log("SceneDataController Name: "+objectSceneryElement.name);
             objectSceneryElement.transform.SetParent(GameObject.Find("Schiene1").transform);
             objectSceneryElement.SetActive(false);
         }
