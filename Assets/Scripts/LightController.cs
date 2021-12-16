@@ -1,10 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
 public class LightController : MonoBehaviour
 {
-
+    public Toggle toggleLb;
+    public Slider sliderLbBrightness;
+    public Slider sliderLbPosition;
+    public Slider sliderLbHeight;
+    public Slider sliderLbHorizontal;
+    public Slider sliderLbVertival;
     //private void Awake()
     //{
 
@@ -31,6 +36,11 @@ public class LightController : MonoBehaviour
         thisLightElement.active = onOffSwitch;
         //gameController.GetComponent<SceneDataController>().LightsApplyToScene(StaticSceneData.StaticData.lightElements);
         StaticSceneData.Lights3D();
+    }
+
+    public void ChangeBrightness(float brightnessValue)
+    {
+        GetComponent<Light>().intensity = brightnessValue;
     }
 
     public void LightAmbientChange(float intensity)
