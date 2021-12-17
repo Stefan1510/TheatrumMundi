@@ -8,7 +8,7 @@ public class ReiterButton : MonoBehaviour
     {
         DragDrop dragdrop = SceneManager.dragDrop;
 
-        for(int i=0 ; i<this.transform.childCount ; i++)
+        for (int i = 0; i < this.transform.childCount; i++)
         {
             dragdrop.setElementInactive(this.transform.GetChild(i).GetComponent<DragDrop>());
         }
@@ -20,35 +20,43 @@ public class ReiterButton : MonoBehaviour
 
         if (gameObject.name == "Reiter1")
         {
+            SceneManager.statusReiter = 1;
             dragdrop.setReiterActive(1);
         }
         else if (gameObject.name == "Reiter2")
         {
+            SceneManager.statusReiter = 2;
             dragdrop.setReiterActive(2);
         }
         else if (gameObject.name == "Reiter3")
         {
+            SceneManager.statusReiter = 3;
             dragdrop.setReiterActive(3);
         }
         else if (gameObject.name == "Reiter4")
         {
             dragdrop.setReiterActive(4);
+            SceneManager.statusReiter = 4;
         }
         else if (gameObject.name == "Reiter5")
         {
             dragdrop.setReiterActive(5);
+            SceneManager.statusReiter = 5;
         }
         else if (gameObject.name == "Reiter6")
         {
             dragdrop.setReiterActive(6);
+            SceneManager.statusReiter = 6;
         }
         else if (gameObject.name == "Reiter7")
         {
             dragdrop.setReiterActive(7);
+            SceneManager.statusReiter = 7;
         }
         else if (gameObject.name == "Reiter8")
         {
             dragdrop.setReiterActive(8);
+            SceneManager.statusReiter = 8;
         }
     }
 

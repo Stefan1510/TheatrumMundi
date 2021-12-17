@@ -66,7 +66,7 @@ public class SaveFileController : MonoBehaviour
     {
         _selectedFile = fileName;
         StartCoroutine(LoadFileFromWWW(fileName));
-        Debug.Log("_____________ selected File: " + _selectedFile);
+        //Debug.Log("_____________ selected File: " + _selectedFile);
     }
 
     private void GenerateFileButton(string fileName)

@@ -99,13 +99,17 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
         rectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
         // durch Skalierung d. Canvas teilen, sonst Bewegung d. Objekts nicht gleich der Mausbewegung
 
-        //Debug.Log("Trigger Active: "+SceneManager.triggerActive+ ", Reiter: "+", Anzahl Kulissen: "+", this.Schiene: "+this.schieneKulisse+"schieneActive: "+GetComponent<TriggerSchiene>().schieneActive);
+        Debug.Log("Status Reiter: "+statusReiter+ ", this.Schiene: "+this.schieneKulisse+"schieneActive: "+GetComponent<TriggerSchiene>().schieneActive);
 
         if (SceneManager.triggerActive != 0 && this.schieneKulisse != SceneManager.triggerActive)
         {
             statusReiter = SceneManager.triggerActive;
             this.schieneKulisse = SceneManager.triggerActive;
             setReiterActive(SceneManager.triggerActive);
+        }
+        if(GetComponent<TriggerSchiene>().schieneActive)
+        {
+            this.schieneKulisse = statusReiter;
         }
 
     }

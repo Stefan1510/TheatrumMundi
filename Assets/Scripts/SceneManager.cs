@@ -12,4 +12,6 @@ public static class SceneManager
     public static bool deleteButtonPressed = new bool();
     public static bool showSettings = new bool();
 
+    public static int statusReiter = new int();
+
 }
