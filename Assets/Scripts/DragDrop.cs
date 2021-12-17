@@ -23,7 +23,7 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
     [HideInInspector] public GameObject scenerysettings;
     [HideInInspector] public GameObject gameController; // neue Zeile von Kris fÜr den SceneryController
 
-    [HideInInspector] public int statusReiter;
+    //[HideInInspector] public int statusReiter;
     [HideInInspector] public int schieneKulisse;
 
     private void Awake()
@@ -50,7 +50,7 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
         canvasGroup = GetComponent<CanvasGroup>();
         pos = rectTransform.anchoredPosition;
 
-        statusReiter = 1;           // statusReiter ist der aktuell geoeffnete Reiter
+        //statusReiter = 1;           // statusReiter ist der aktuell geoeffnete Reiter
         schieneKulisse = 0;         // schieneKulisse ist 0, wenn sie im Shelf liegt, also keinem Reiter angehoert!
 
         SceneManager.dragDrop = this; // hier wird dem dragDrop-Objekt im SceneManager die aktuelle Kulisse uebergeben!
@@ -61,7 +61,7 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
 
     public void Start()
     {
-        setReiterActive(statusReiter);  // die funktion darf erst nach Awake ausgefuehrt werden, weil sonst die erste Schleife 
+        setReiterActive(SceneManager.statusReiter);  // die funktion darf erst nach Awake ausgefuehrt werden, weil sonst die erste Schleife 
                                         // alles auf false setzt und die weiteren Reiter nicht mehr gefunden werden! 
                                         // also erst Awake fuer alle und dann aktiven Reiter setzen
         ThisSceneryElement = StaticSceneData.StaticData.sceneryElements.Find(x => x.name == gameObject.name.Substring(6));
@@ -99,17 +99,17 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
         rectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
         // durch Skalierung d. Canvas teilen, sonst Bewegung d. Objekts nicht gleich der Mausbewegung
 
-        Debug.Log("Status Reiter: "+statusReiter+ ", this.Schiene: "+this.schieneKulisse+"schieneActive: "+GetComponent<TriggerSchiene>().schieneActive);
+        Debug.Log("Status Reiter: "+SceneManager.statusReiter+ ", this.Schiene: "+this.schieneKulisse+"schieneActive: "+GetComponent<TriggerSchiene>().schieneActive);
 
         if (SceneManager.triggerActive != 0 && this.schieneKulisse != SceneManager.triggerActive)
         {
-            statusReiter = SceneManager.triggerActive;
+            SceneManager.statusReiter = SceneManager.triggerActive;
             this.schieneKulisse = SceneManager.triggerActive;
             setReiterActive(SceneManager.triggerActive);
         }
         if(GetComponent<TriggerSchiene>().schieneActive)
         {
-            this.schieneKulisse = statusReiter;
+            this.schieneKulisse = SceneManager.statusReiter;
         }
 
     }
@@ -121,24 +121,24 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
 
         GetComponent<Image>().color = new Color(1f, 1f, 1f, 1f);
 
-        if (statusReiter != 0)
+        if (SceneManager.statusReiter != 0)
         {
-            gameObject.transform.SetParent(collection[(statusReiter - 1)].transform);   // collection geht von 0-7, deswegen 'statusReiter-1'
+            gameObject.transform.SetParent(collection[(SceneManager.statusReiter - 1)].transform);   // collection geht von 0-7, deswegen 'statusReiter-1'
 
             if (GetComponent<TriggerSchiene>().schieneActive)
             {
-                this.schieneKulisse = statusReiter;
+                this.schieneKulisse = SceneManager.statusReiter;
                 ThisSceneryElement.active = true;
-                ThisSceneryElement.parent = "Schiene" + statusReiter.ToString();
-                ThisSceneryElement.railnumber = statusReiter;
+                ThisSceneryElement.parent = "Schiene" + SceneManager.statusReiter.ToString();
+                ThisSceneryElement.railnumber = SceneManager.statusReiter;
             }
-            else if (SceneManager.triggerActive == statusReiter)
+            else if (SceneManager.triggerActive == SceneManager.statusReiter)
             {
                 GetComponent<RectTransform>().anchoredPosition = schieneBild.GetComponent<RectTransform>().anchoredPosition;
-                this.schieneKulisse = statusReiter;
+                this.schieneKulisse = SceneManager.statusReiter;
                 ThisSceneryElement.active = true;
-                ThisSceneryElement.parent = "Schiene" + statusReiter.ToString();
-                ThisSceneryElement.railnumber = statusReiter;
+                ThisSceneryElement.parent = "Schiene" + SceneManager.statusReiter.ToString();
+                ThisSceneryElement.railnumber = SceneManager.statusReiter;
             }
             else
             {

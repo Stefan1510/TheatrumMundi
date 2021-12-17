@@ -22,6 +22,7 @@ public class SceneDataController : MonoBehaviour
     [HideInInspector] public int countActiveSceneryElements = 0;
     [HideInInspector] public int countActiveLightElements = 0;
     [HideInInspector] public int countActiveFigureElements = 0;
+    [HideInInspector] public int currentTime;
 
     [HideInInspector] public SceneData recentSceneData;
     [HideInInspector] public SceneData tempSceneData;
@@ -47,9 +48,10 @@ public class SceneDataController : MonoBehaviour
 
     private void Start()
     {
+        SceneManager.statusReiter = 1;
         foreach (GameObject objectSceneryElement in objectsSceneryElements)
         {
-            //Debug.Log("SceneDataController Name: "+objectSceneryElement.name);
+            Debug.Log("SceneDataController Name: "+objectSceneryElement.name);
             objectSceneryElement.transform.SetParent(GameObject.Find("Schiene1").transform);
             objectSceneryElement.SetActive(false);
         }
@@ -92,6 +94,7 @@ public class SceneDataController : MonoBehaviour
         sceneData.sceneryElements = new List<SceneryElement>();
         sceneData.figureElements = new List<FigureElement>();
         sceneData.lightElements = new List<LightElement>();
+        
 
         foreach (GameObject objectRailElement in objectsRailElements)
         {
