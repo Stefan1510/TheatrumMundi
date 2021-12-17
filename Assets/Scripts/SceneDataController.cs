@@ -44,10 +44,6 @@ public class SceneDataController : MonoBehaviour
         {
             Debug.Log("-----+++++" + re.name);
         }
-    }
-
-    private void Start()
-    {
         SceneManager.statusReiter = 1;
         foreach (GameObject objectSceneryElement in objectsSceneryElements)
         {
@@ -58,6 +54,10 @@ public class SceneDataController : MonoBehaviour
         Debug.Log("------- staticSceneDataJSON");
 
         StaticSceneData.StaticData = CreateSceneData();
+    }
+
+    private void Start()
+    {
 
         Debug.Log("------- staticSceneDataJSON" + StaticSceneData.StaticData.ToString());
         Debug.Log("------- staticSceneDataJSON" + CreateJsonFromSceneData(StaticSceneData.StaticData));

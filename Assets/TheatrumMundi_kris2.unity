@@ -20,7 +20,7 @@ RenderSettings:
   m_FogDensity: 0.01
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
-  m_AmbientSkyColor: {r: 0.49803922, g: 0.49803922, b: 0.49803922, a: 1}
+  m_AmbientSkyColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
   m_AmbientIntensity: 1
@@ -538,6 +538,118 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 10069021}
   m_CullTransparentMesh: 1
+--- !u!1 &15105009
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 15105010}
+  - component: {fileID: 15105012}
+  - component: {fileID: 15105011}
+  m_Layer: 0
+  m_Name: SpotLB_1 (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &15105010
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 15105009}
+  m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0.07, y: 1, z: 0.125}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 543450652319384077}
+  m_RootOrder: 8
+  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
+--- !u!114 &15105011
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 15105009}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8269c06f2a581ca4aba8d28e495ad0ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  toggleLb: {fileID: 1758573202}
+  sliderLbBrightness: {fileID: 1748858300}
+  sliderLbPosition: {fileID: 1744994117}
+  sliderLbHeight: {fileID: 767472684}
+  sliderLbHorizontal: {fileID: 563628291}
+  sliderLbVertical: {fileID: 0}
+--- !u!108 &15105012
+Light:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 15105009}
+  m_Enabled: 0
+  serializedVersion: 10
+  m_Type: 0
+  m_Shape: 0
+  m_Color: {r: 0.87058824, g: 0.6117647, b: 0.3254902, a: 1}
+  m_Intensity: 2
+  m_Range: 4
+  m_SpotAngle: 40
+  m_InnerSpotAngle: 1
+  m_CookieSize: 10
+  m_Shadows:
+    m_Type: 0
+    m_Resolution: -1
+    m_CustomResolution: -1
+    m_Strength: 1
+    m_Bias: 0.02
+    m_NormalBias: 0.4
+    m_NearPlane: 0.1
+    m_CullingMatrixOverride:
+      e00: 1
+      e01: 0
+      e02: 0
+      e03: 0
+      e10: 0
+      e11: 1
+      e12: 0
+      e13: 0
+      e20: 0
+      e21: 0
+      e22: 1
+      e23: 0
+      e30: 0
+      e31: 0
+      e32: 0
+      e33: 1
+    m_UseCullingMatrixOverride: 0
+  m_Cookie: {fileID: 2800000, guid: 8045952c80d76674e98086dcaa379eb7, type: 3}
+  m_DrawHalo: 0
+  m_Flare: {fileID: 0}
+  m_RenderMode: 0
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RenderingLayerMask: 1
+  m_Lightmapping: 4
+  m_LightShadowCasterMode: 0
+  m_AreaSize: {x: 1, y: 1}
+  m_BounceIntensity: 1
+  m_ColorTemperature: 6570
+  m_UseColorTemperature: 0
+  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_UseBoundingSphereOverride: 0
+  m_UseViewFrustumForShadowCasterCull: 1
+  m_ShadowRadius: 0
+  m_ShadowAngle: 0
 --- !u!1 &19906327
 GameObject:
   m_ObjectHideFlags: 0
@@ -4212,7 +4324,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: eb0ffec7c94fbf54fba5e663f87c1442,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 3.07
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: eb0ffec7c94fbf54fba5e663f87c1442,
         type: 3}
@@ -5727,7 +5839,6 @@ MonoBehaviour:
   parentStart: {fileID: 0}
   scenerysettings: {fileID: 0}
   gameController: {fileID: 0}
-  statusReiter: 0
   schieneKulisse: 0
 --- !u!114 &191876079
 MonoBehaviour:
@@ -6625,7 +6736,6 @@ MonoBehaviour:
   parentStart: {fileID: 0}
   scenerysettings: {fileID: 0}
   gameController: {fileID: 0}
-  statusReiter: 0
   schieneKulisse: 0
 --- !u!114 &207764099
 MonoBehaviour:
@@ -10822,13 +10932,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 325150343}
-  m_LocalRotation: {x: 0.24184473, y: -0.66446304, z: 0.24184473, w: 0.66446304}
-  m_LocalPosition: {x: 3, y: 0.3, z: 1.2}
+  m_LocalRotation: {x: -0.09960053, y: -0.80670726, z: -0.14224432, w: 0.5648625}
+  m_LocalPosition: {x: 1.5, y: 0.2, z: 1.6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1067178917}
   m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 40, y: -90, z: 0}
+  m_LocalEulerAnglesHint: {x: -20, y: -110, z: 0}
 --- !u!108 &325150345
 Light:
   m_ObjectHideFlags: 0
@@ -10840,14 +10950,14 @@ Light:
   serializedVersion: 10
   m_Type: 0
   m_Shape: 0
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 0.5
-  m_Range: 2
-  m_SpotAngle: 140
+  m_Color: {r: 1, g: 0.78431374, b: 0.60784316, a: 1}
+  m_Intensity: 2
+  m_Range: 3
+  m_SpotAngle: 90
   m_InnerSpotAngle: 1
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 2
+    m_Type: 0
     m_Resolution: 0
     m_CustomResolution: -1
     m_Strength: 1
@@ -10900,15 +11010,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 325150343}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8269c06f2a581ca4aba8d28e495ad0ec, type: 3}
+  m_Script: {fileID: 11500000, guid: a67ecf0af15793345a7b65d598f1a74b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  toggleLb: {fileID: 0}
-  sliderLbBrightness: {fileID: 0}
-  sliderLbPosition: {fileID: 0}
-  sliderLbHeight: {fileID: 0}
-  sliderLbHorizontal: {fileID: 0}
-  sliderLbVertival: {fileID: 0}
+  toggleBb: {fileID: 1090496490}
 --- !u!1 &325840619
 GameObject:
   m_ObjectHideFlags: 0
@@ -13334,7 +13439,6 @@ MonoBehaviour:
   parentStart: {fileID: 0}
   scenerysettings: {fileID: 0}
   gameController: {fileID: 0}
-  statusReiter: 0
   schieneKulisse: 0
 --- !u!114 &397130455
 MonoBehaviour:
@@ -13886,17 +13990,17 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 3219cffb99bb92f4dbe1b91f4ffa4054,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.091
+      value: 1.05
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 3219cffb99bb92f4dbe1b91f4ffa4054,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -0.048
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 3219cffb99bb92f4dbe1b91f4ffa4054,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.06
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 3219cffb99bb92f4dbe1b91f4ffa4054,
         type: 3}
@@ -15365,7 +15469,6 @@ GameObject:
   m_Component:
   - component: {fileID: 457963225}
   - component: {fileID: 457963227}
-  - component: {fileID: 457963226}
   m_Layer: 5
   m_Name: SliderLB_1_Position
   m_TagString: Untagged
@@ -15396,24 +15499,6 @@ RectTransform:
   m_AnchoredPosition: {x: 155, y: -60}
   m_SizeDelta: {x: 140, y: 20}
   m_Pivot: {x: 0, y: 1}
---- !u!114 &457963226
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 457963224}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8269c06f2a581ca4aba8d28e495ad0ec, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  toggleLb: {fileID: 0}
-  sliderLbBrightness: {fileID: 0}
-  sliderLbPosition: {fileID: 0}
-  sliderLbHeight: {fileID: 0}
-  sliderLbHorizontal: {fileID: 0}
-  sliderLbVertival: {fileID: 0}
 --- !u!114 &457963227
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15856,7 +15941,6 @@ MonoBehaviour:
   parentStart: {fileID: 0}
   scenerysettings: {fileID: 0}
   gameController: {fileID: 0}
-  statusReiter: 0
   schieneKulisse: 0
 --- !u!114 &464162085
 MonoBehaviour:
@@ -16929,7 +17013,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: eb0ffec7c94fbf54fba5e663f87c1442,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 3.07
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: eb0ffec7c94fbf54fba5e663f87c1442,
         type: 3}
@@ -17599,7 +17683,6 @@ MonoBehaviour:
   parentStart: {fileID: 0}
   scenerysettings: {fileID: 0}
   gameController: {fileID: 0}
-  statusReiter: 0
   schieneKulisse: 0
 --- !u!114 &513412838
 MonoBehaviour:
@@ -19426,7 +19509,6 @@ MonoBehaviour:
   parentStart: {fileID: 0}
   scenerysettings: {fileID: 0}
   gameController: {fileID: 0}
-  statusReiter: 0
   schieneKulisse: 0
 --- !u!114 &554394932
 MonoBehaviour:
@@ -20045,13 +20127,37 @@ MonoBehaviour:
   m_FillRect: {fileID: 2076465259}
   m_HandleRect: {fileID: 257490972}
   m_Direction: 0
-  m_MinValue: 0
-  m_MaxValue: 1
+  m_MinValue: -256
+  m_MaxValue: 256
   m_WholeNumbers: 0
-  m_Value: 0.5
+  m_Value: 256
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1247299431}
+        m_TargetAssemblyTypeName: LightController, Assembly-CSharp
+        m_MethodName: ChangeHorizontal
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 15105011}
+        m_TargetAssemblyTypeName: LightController, Assembly-CSharp
+        m_MethodName: ChangeHorizontal
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &567494730
 GameObject:
   m_ObjectHideFlags: 0
@@ -20676,7 +20782,6 @@ GameObject:
   m_Component:
   - component: {fileID: 580609821}
   - component: {fileID: 580609823}
-  - component: {fileID: 580609822}
   m_Layer: 5
   m_Name: SliderLB_1_Vertical
   m_TagString: Untagged
@@ -20707,24 +20812,6 @@ RectTransform:
   m_AnchoredPosition: {x: 155, y: -240}
   m_SizeDelta: {x: 140, y: 20}
   m_Pivot: {x: 0, y: 1}
---- !u!114 &580609822
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 580609820}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8269c06f2a581ca4aba8d28e495ad0ec, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  toggleLb: {fileID: 0}
-  sliderLbBrightness: {fileID: 0}
-  sliderLbPosition: {fileID: 0}
-  sliderLbHeight: {fileID: 0}
-  sliderLbHorizontal: {fileID: 0}
-  sliderLbVertival: {fileID: 0}
 --- !u!114 &580609823
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20945,7 +21032,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: eb0ffec7c94fbf54fba5e663f87c1442,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 3.05
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: eb0ffec7c94fbf54fba5e663f87c1442,
         type: 3}
@@ -22372,7 +22459,6 @@ MonoBehaviour:
   parentStart: {fileID: 0}
   scenerysettings: {fileID: 0}
   gameController: {fileID: 0}
-  statusReiter: 0
   schieneKulisse: 0
 --- !u!114 &616116054
 MonoBehaviour:
@@ -24794,7 +24880,6 @@ MonoBehaviour:
   parentStart: {fileID: 0}
   scenerysettings: {fileID: 0}
   gameController: {fileID: 0}
-  statusReiter: 0
   schieneKulisse: 0
 --- !u!114 &673148762
 MonoBehaviour:
@@ -24949,7 +25034,6 @@ GameObject:
   m_Component:
   - component: {fileID: 677221954}
   - component: {fileID: 677221956}
-  - component: {fileID: 677221955}
   m_Layer: 5
   m_Name: SliderLB_1_Position
   m_TagString: Untagged
@@ -24980,24 +25064,6 @@ RectTransform:
   m_AnchoredPosition: {x: 155, y: -60}
   m_SizeDelta: {x: 140, y: 20}
   m_Pivot: {x: 0, y: 1}
---- !u!114 &677221955
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 677221953}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8269c06f2a581ca4aba8d28e495ad0ec, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  toggleLb: {fileID: 0}
-  sliderLbBrightness: {fileID: 0}
-  sliderLbPosition: {fileID: 0}
-  sliderLbHeight: {fileID: 0}
-  sliderLbHorizontal: {fileID: 0}
-  sliderLbVertival: {fileID: 0}
 --- !u!114 &677221956
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25229,7 +25295,6 @@ MonoBehaviour:
   parentStart: {fileID: 0}
   scenerysettings: {fileID: 0}
   gameController: {fileID: 0}
-  statusReiter: 0
   schieneKulisse: 0
 --- !u!114 &680269250
 MonoBehaviour:
@@ -26643,7 +26708,6 @@ GameObject:
   m_Component:
   - component: {fileID: 715963773}
   - component: {fileID: 715963775}
-  - component: {fileID: 715963774}
   m_Layer: 5
   m_Name: SliderLB_1_Brightness
   m_TagString: Untagged
@@ -26674,24 +26738,6 @@ RectTransform:
   m_AnchoredPosition: {x: 155, y: -20}
   m_SizeDelta: {x: 140, y: 20}
   m_Pivot: {x: 0, y: 1}
---- !u!114 &715963774
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 715963772}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8269c06f2a581ca4aba8d28e495ad0ec, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  toggleLb: {fileID: 0}
-  sliderLbBrightness: {fileID: 0}
-  sliderLbPosition: {fileID: 0}
-  sliderLbHeight: {fileID: 0}
-  sliderLbHorizontal: {fileID: 0}
-  sliderLbVertival: {fileID: 0}
 --- !u!114 &715963775
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -29193,13 +29239,25 @@ MonoBehaviour:
   m_FillRect: {fileID: 2027667227}
   m_HandleRect: {fileID: 424526326}
   m_Direction: 0
-  m_MinValue: 0
-  m_MaxValue: 1
+  m_MinValue: -0.05
+  m_MaxValue: 0.05
   m_WholeNumbers: 0
-  m_Value: 0.5
+  m_Value: 0
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1247299431}
+        m_TargetAssemblyTypeName: LightController, Assembly-CSharp
+        m_MethodName: ChangeHeight
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &772132811
 GameObject:
   m_ObjectHideFlags: 0
@@ -31726,7 +31784,6 @@ MonoBehaviour:
   parentStart: {fileID: 0}
   scenerysettings: {fileID: 0}
   gameController: {fileID: 0}
-  statusReiter: 0
   schieneKulisse: 0
 --- !u!114 &832207213
 MonoBehaviour:
@@ -32165,13 +32222,37 @@ MonoBehaviour:
   m_FillRect: {fileID: 996958937}
   m_HandleRect: {fileID: 567494731}
   m_Direction: 0
-  m_MinValue: 0
-  m_MaxValue: 1
+  m_MinValue: -256
+  m_MaxValue: 256
   m_WholeNumbers: 0
-  m_Value: 0.5
+  m_Value: 256
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1247299431}
+        m_TargetAssemblyTypeName: LightController, Assembly-CSharp
+        m_MethodName: ChangeVertical
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 15105011}
+        m_TargetAssemblyTypeName: LightController, Assembly-CSharp
+        m_MethodName: ChangeVertical
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &838238175
 GameObject:
   m_ObjectHideFlags: 0
@@ -33455,7 +33536,6 @@ GameObject:
   m_Component:
   - component: {fileID: 863979558}
   - component: {fileID: 863979560}
-  - component: {fileID: 863979559}
   m_Layer: 5
   m_Name: SliderLB_1_Brightness
   m_TagString: Untagged
@@ -33486,24 +33566,6 @@ RectTransform:
   m_AnchoredPosition: {x: 155, y: -20}
   m_SizeDelta: {x: 140, y: 20}
   m_Pivot: {x: 0, y: 1}
---- !u!114 &863979559
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 863979557}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8269c06f2a581ca4aba8d28e495ad0ec, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  toggleLb: {fileID: 0}
-  sliderLbBrightness: {fileID: 0}
-  sliderLbPosition: {fileID: 0}
-  sliderLbHeight: {fileID: 0}
-  sliderLbHorizontal: {fileID: 0}
-  sliderLbVertival: {fileID: 0}
 --- !u!114 &863979560
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -34476,7 +34538,6 @@ GameObject:
   m_Component:
   - component: {fileID: 890509627}
   - component: {fileID: 890509629}
-  - component: {fileID: 890509628}
   m_Layer: 5
   m_Name: SliderLB_1_Height
   m_TagString: Untagged
@@ -34507,24 +34568,6 @@ RectTransform:
   m_AnchoredPosition: {x: 155, y: -100}
   m_SizeDelta: {x: 140, y: 20}
   m_Pivot: {x: 0, y: 1}
---- !u!114 &890509628
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 890509626}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8269c06f2a581ca4aba8d28e495ad0ec, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  toggleLb: {fileID: 0}
-  sliderLbBrightness: {fileID: 0}
-  sliderLbPosition: {fileID: 0}
-  sliderLbHeight: {fileID: 0}
-  sliderLbHorizontal: {fileID: 0}
-  sliderLbVertival: {fileID: 0}
 --- !u!114 &890509629
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -35738,7 +35781,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: eb0ffec7c94fbf54fba5e663f87c1442,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 3.02
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: eb0ffec7c94fbf54fba5e663f87c1442,
         type: 3}
@@ -37548,13 +37591,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 973548362}
-  m_LocalRotation: {x: 0.24184473, y: -0.66446304, z: 0.24184473, w: 0.66446304}
-  m_LocalPosition: {x: 3, y: 0.3, z: -1.2}
+  m_LocalRotation: {x: -0.09960053, y: -0.80670726, z: -0.14224432, w: 0.5648625}
+  m_LocalPosition: {x: 1.5, y: 0.2, z: -1.6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1067178917}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 40, y: -90, z: 0}
+  m_LocalEulerAnglesHint: {x: -20, y: -110, z: 0}
 --- !u!108 &973548364
 Light:
   m_ObjectHideFlags: 0
@@ -37566,14 +37609,14 @@ Light:
   serializedVersion: 10
   m_Type: 0
   m_Shape: 0
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 0.5
-  m_Range: 2
-  m_SpotAngle: 140
+  m_Color: {r: 1, g: 0.78431374, b: 0.60784316, a: 1}
+  m_Intensity: 2
+  m_Range: 3
+  m_SpotAngle: 90
   m_InnerSpotAngle: 1
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 2
+    m_Type: 0
     m_Resolution: 0
     m_CustomResolution: -1
     m_Strength: 1
@@ -37626,15 +37669,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 973548362}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8269c06f2a581ca4aba8d28e495ad0ec, type: 3}
+  m_Script: {fileID: 11500000, guid: a67ecf0af15793345a7b65d598f1a74b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  toggleLb: {fileID: 0}
-  sliderLbBrightness: {fileID: 0}
-  sliderLbPosition: {fileID: 0}
-  sliderLbHeight: {fileID: 0}
-  sliderLbHorizontal: {fileID: 0}
-  sliderLbVertival: {fileID: 0}
+  toggleBb: {fileID: 1090496490}
 --- !u!1 &975155745
 GameObject:
   m_ObjectHideFlags: 0
@@ -42898,7 +42936,55 @@ MonoBehaviour:
   m_Group: {fileID: 0}
   onValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 973548365}
+        m_TargetAssemblyTypeName: lightBbController, Assembly-CSharp
+        m_MethodName: LightActivation
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1722208746}
+        m_TargetAssemblyTypeName: lightBbController, Assembly-CSharp
+        m_MethodName: LightActivation
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1366675011}
+        m_TargetAssemblyTypeName: lightBbController, Assembly-CSharp
+        m_MethodName: LightActivation
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 325150346}
+        m_TargetAssemblyTypeName: lightBbController, Assembly-CSharp
+        m_MethodName: LightActivation
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_IsOn: 0
 --- !u!1 &1091480732
 GameObject:
@@ -44325,7 +44411,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1149551290}
   - component: {fileID: 1149551292}
-  - component: {fileID: 1149551291}
   m_Layer: 5
   m_Name: SliderLB_1_Height
   m_TagString: Untagged
@@ -44356,24 +44441,6 @@ RectTransform:
   m_AnchoredPosition: {x: 155, y: -100}
   m_SizeDelta: {x: 140, y: 20}
   m_Pivot: {x: 0, y: 1}
---- !u!114 &1149551291
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1149551289}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8269c06f2a581ca4aba8d28e495ad0ec, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  toggleLb: {fileID: 0}
-  sliderLbBrightness: {fileID: 0}
-  sliderLbPosition: {fileID: 0}
-  sliderLbHeight: {fileID: 0}
-  sliderLbHorizontal: {fileID: 0}
-  sliderLbVertival: {fileID: 0}
 --- !u!114 &1149551292
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -47627,7 +47694,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1247299429}
   m_LocalRotation: {x: -0.26672927, y: -0.44037747, z: -0.13885047, w: 0.8459573}
-  m_LocalPosition: {x: 0.07, y: 0.02, z: -2.02}
+  m_LocalPosition: {x: 0.07, y: 0.1, z: -2.02}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 543450652319384077}
@@ -47645,12 +47712,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8269c06f2a581ca4aba8d28e495ad0ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  toggleLb: {fileID: 0}
+  toggleLb: {fileID: 1758573202}
   sliderLbBrightness: {fileID: 1748858300}
   sliderLbPosition: {fileID: 1744994117}
   sliderLbHeight: {fileID: 767472684}
   sliderLbHorizontal: {fileID: 563628291}
-  sliderLbVertival: {fileID: 836744546}
+  sliderLbVertical: {fileID: 836744546}
 --- !u!108 &1247299432
 Light:
   m_ObjectHideFlags: 0
@@ -47662,14 +47729,14 @@ Light:
   serializedVersion: 10
   m_Type: 0
   m_Shape: 0
-  m_Color: {r: 1, g: 0.8662736, b: 0.62352943, a: 1}
-  m_Intensity: 1
-  m_Range: 5
+  m_Color: {r: 0.87058824, g: 0.6117647, b: 0.3254902, a: 1}
+  m_Intensity: 2
+  m_Range: 4
   m_SpotAngle: 100
   m_InnerSpotAngle: 1
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 2
+    m_Type: 0
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -47694,7 +47761,7 @@ Light:
       e32: 0
       e33: 1
     m_UseCullingMatrixOverride: 0
-  m_Cookie: {fileID: 0}
+  m_Cookie: {fileID: 2800000, guid: 8045952c80d76674e98086dcaa379eb7, type: 3}
   m_DrawHalo: 0
   m_Flare: {fileID: 0}
   m_RenderMode: 0
@@ -47723,7 +47790,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1248385764}
   - component: {fileID: 1248385766}
-  - component: {fileID: 1248385765}
   m_Layer: 5
   m_Name: SliderLB_1_Horizontal
   m_TagString: Untagged
@@ -47754,24 +47820,6 @@ RectTransform:
   m_AnchoredPosition: {x: 155, y: -200}
   m_SizeDelta: {x: 140, y: 20}
   m_Pivot: {x: 0, y: 1}
---- !u!114 &1248385765
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1248385763}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8269c06f2a581ca4aba8d28e495ad0ec, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  toggleLb: {fileID: 0}
-  sliderLbBrightness: {fileID: 0}
-  sliderLbPosition: {fileID: 0}
-  sliderLbHeight: {fileID: 0}
-  sliderLbHorizontal: {fileID: 0}
-  sliderLbVertival: {fileID: 0}
 --- !u!114 &1248385766
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -49587,6 +49635,7 @@ MonoBehaviour:
   countActiveSceneryElements: 0
   countActiveLightElements: 0
   countActiveFigureElements: 0
+  currentTime: 0
 --- !u!114 &1280239970
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -50106,7 +50155,6 @@ MonoBehaviour:
   parentStart: {fileID: 0}
   scenerysettings: {fileID: 0}
   gameController: {fileID: 0}
-  statusReiter: 0
   schieneKulisse: 0
 --- !u!114 &1285648415
 MonoBehaviour:
@@ -51897,7 +51945,6 @@ MonoBehaviour:
   parentStart: {fileID: 0}
   scenerysettings: {fileID: 0}
   gameController: {fileID: 0}
-  statusReiter: 0
   schieneKulisse: 0
 --- !u!114 &1324904001
 MonoBehaviour:
@@ -53122,7 +53169,6 @@ MonoBehaviour:
   parentStart: {fileID: 0}
   scenerysettings: {fileID: 0}
   gameController: {fileID: 0}
-  statusReiter: 0
   schieneKulisse: 0
 --- !u!114 &1353366756
 MonoBehaviour:
@@ -53198,7 +53244,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1354292927}
   - component: {fileID: 1354292929}
-  - component: {fileID: 1354292928}
   m_Layer: 5
   m_Name: SliderLB_1_Vertical
   m_TagString: Untagged
@@ -53229,24 +53274,6 @@ RectTransform:
   m_AnchoredPosition: {x: 155, y: -240}
   m_SizeDelta: {x: 140, y: 20}
   m_Pivot: {x: 0, y: 1}
---- !u!114 &1354292928
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1354292926}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8269c06f2a581ca4aba8d28e495ad0ec, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  toggleLb: {fileID: 0}
-  sliderLbBrightness: {fileID: 0}
-  sliderLbPosition: {fileID: 0}
-  sliderLbHeight: {fileID: 0}
-  sliderLbHorizontal: {fileID: 0}
-  sliderLbVertival: {fileID: 0}
 --- !u!114 &1354292929
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -53650,13 +53677,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1366675008}
-  m_LocalRotation: {x: 0.24184473, y: -0.66446304, z: 0.24184473, w: 0.66446304}
-  m_LocalPosition: {x: 3, y: 0.3, z: 0.4}
+  m_LocalRotation: {x: -0.09960053, y: -0.80670726, z: -0.14224432, w: 0.5648625}
+  m_LocalPosition: {x: 1.6, y: 0.2, z: 0.6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1067178917}
   m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 40, y: -90, z: 0}
+  m_LocalEulerAnglesHint: {x: -20, y: -110, z: 0}
 --- !u!108 &1366675010
 Light:
   m_ObjectHideFlags: 0
@@ -53668,14 +53695,14 @@ Light:
   serializedVersion: 10
   m_Type: 0
   m_Shape: 0
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 0.5
-  m_Range: 2
-  m_SpotAngle: 140
+  m_Color: {r: 1, g: 0.78431374, b: 0.60784316, a: 1}
+  m_Intensity: 2
+  m_Range: 3
+  m_SpotAngle: 90
   m_InnerSpotAngle: 1
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 2
+    m_Type: 0
     m_Resolution: 0
     m_CustomResolution: -1
     m_Strength: 1
@@ -53728,15 +53755,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1366675008}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8269c06f2a581ca4aba8d28e495ad0ec, type: 3}
+  m_Script: {fileID: 11500000, guid: a67ecf0af15793345a7b65d598f1a74b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  toggleLb: {fileID: 0}
-  sliderLbBrightness: {fileID: 0}
-  sliderLbPosition: {fileID: 0}
-  sliderLbHeight: {fileID: 0}
-  sliderLbHorizontal: {fileID: 0}
-  sliderLbVertival: {fileID: 0}
+  toggleBb: {fileID: 1090496490}
 --- !u!1 &1371503889
 GameObject:
   m_ObjectHideFlags: 0
@@ -57937,7 +57959,6 @@ MonoBehaviour:
   parentStart: {fileID: 0}
   scenerysettings: {fileID: 0}
   gameController: {fileID: 0}
-  statusReiter: 0
   schieneKulisse: 0
 --- !u!114 &1467329893
 MonoBehaviour:
@@ -59292,7 +59313,6 @@ MonoBehaviour:
   parentStart: {fileID: 0}
   scenerysettings: {fileID: 0}
   gameController: {fileID: 0}
-  statusReiter: 0
   schieneKulisse: 0
 --- !u!114 &1512397485
 MonoBehaviour:
@@ -59538,7 +59558,6 @@ MonoBehaviour:
   parentStart: {fileID: 0}
   scenerysettings: {fileID: 0}
   gameController: {fileID: 0}
-  statusReiter: 0
   schieneKulisse: 0
 --- !u!114 &1513245937
 MonoBehaviour:
@@ -60108,7 +60127,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1527783729}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8269c06f2a581ca4aba8d28e495ad0ec, type: 3}
   m_Name: 
@@ -60118,7 +60137,7 @@ MonoBehaviour:
   sliderLbPosition: {fileID: 0}
   sliderLbHeight: {fileID: 0}
   sliderLbHorizontal: {fileID: 0}
-  sliderLbVertival: {fileID: 0}
+  sliderLbVertical: {fileID: 0}
 --- !u!108 &1527783732
 Light:
   m_ObjectHideFlags: 0
@@ -61649,7 +61668,6 @@ MonoBehaviour:
   parentStart: {fileID: 0}
   scenerysettings: {fileID: 0}
   gameController: {fileID: 0}
-  statusReiter: 0
   schieneKulisse: 0
 --- !u!114 &1574452587
 MonoBehaviour:
@@ -62014,7 +62032,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1578233613}
   - component: {fileID: 1578233615}
-  - component: {fileID: 1578233614}
   m_Layer: 5
   m_Name: SliderLB_1_Horizontal
   m_TagString: Untagged
@@ -62045,24 +62062,6 @@ RectTransform:
   m_AnchoredPosition: {x: 155, y: -200}
   m_SizeDelta: {x: 140, y: 20}
   m_Pivot: {x: 0, y: 1}
---- !u!114 &1578233614
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1578233612}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8269c06f2a581ca4aba8d28e495ad0ec, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  toggleLb: {fileID: 0}
-  sliderLbBrightness: {fileID: 0}
-  sliderLbPosition: {fileID: 0}
-  sliderLbHeight: {fileID: 0}
-  sliderLbHorizontal: {fileID: 0}
-  sliderLbVertival: {fileID: 0}
 --- !u!114 &1578233615
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -65502,7 +65501,6 @@ MonoBehaviour:
   parentStart: {fileID: 0}
   scenerysettings: {fileID: 0}
   gameController: {fileID: 0}
-  statusReiter: 0
   schieneKulisse: 0
 --- !u!114 &1663708076
 MonoBehaviour:
@@ -67941,13 +67939,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1722208743}
-  m_LocalRotation: {x: 0.24184473, y: -0.66446304, z: 0.24184473, w: 0.66446304}
-  m_LocalPosition: {x: 3, y: 0.3, z: -0.4}
+  m_LocalRotation: {x: -0.09960053, y: -0.80670726, z: -0.14224432, w: 0.5648625}
+  m_LocalPosition: {x: 1.6, y: 0.2, z: -0.6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1067178917}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 40, y: -90, z: 0}
+  m_LocalEulerAnglesHint: {x: -20, y: -110, z: 0}
 --- !u!108 &1722208745
 Light:
   m_ObjectHideFlags: 0
@@ -67959,14 +67957,14 @@ Light:
   serializedVersion: 10
   m_Type: 0
   m_Shape: 0
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 0.5
-  m_Range: 2
-  m_SpotAngle: 140
+  m_Color: {r: 1, g: 0.78431374, b: 0.60784316, a: 1}
+  m_Intensity: 2
+  m_Range: 3
+  m_SpotAngle: 90
   m_InnerSpotAngle: 1
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 2
+    m_Type: 0
     m_Resolution: 0
     m_CustomResolution: -1
     m_Strength: 1
@@ -68019,15 +68017,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1722208743}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8269c06f2a581ca4aba8d28e495ad0ec, type: 3}
+  m_Script: {fileID: 11500000, guid: a67ecf0af15793345a7b65d598f1a74b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  toggleLb: {fileID: 0}
-  sliderLbBrightness: {fileID: 0}
-  sliderLbPosition: {fileID: 0}
-  sliderLbHeight: {fileID: 0}
-  sliderLbHorizontal: {fileID: 0}
-  sliderLbVertival: {fileID: 0}
+  toggleBb: {fileID: 1090496490}
 --- !u!1 &1722299197
 GameObject:
   m_ObjectHideFlags: 0
@@ -68705,13 +68698,25 @@ MonoBehaviour:
   m_FillRect: {fileID: 336344889}
   m_HandleRect: {fileID: 324441474}
   m_Direction: 0
-  m_MinValue: 0
+  m_MinValue: -1
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0.5
+  m_Value: 0
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1247299431}
+        m_TargetAssemblyTypeName: LightController, Assembly-CSharp
+        m_MethodName: ChangePosition
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1747544835
 GameObject:
   m_ObjectHideFlags: 0
@@ -68914,7 +68919,7 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 5
   m_WholeNumbers: 0
-  m_Value: 1
+  m_Value: 2
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
@@ -70707,7 +70712,6 @@ MonoBehaviour:
   parentStart: {fileID: 0}
   scenerysettings: {fileID: 0}
   gameController: {fileID: 0}
-  statusReiter: 0
   schieneKulisse: 0
 --- !u!114 &1798995823
 MonoBehaviour:
@@ -72197,7 +72201,6 @@ MonoBehaviour:
   parentStart: {fileID: 0}
   scenerysettings: {fileID: 0}
   gameController: {fileID: 0}
-  statusReiter: 0
   schieneKulisse: 0
 --- !u!114 &1825252745
 MonoBehaviour:
@@ -79182,7 +79185,6 @@ MonoBehaviour:
   parentStart: {fileID: 0}
   scenerysettings: {fileID: 0}
   gameController: {fileID: 0}
-  statusReiter: 0
   schieneKulisse: 0
 --- !u!114 &2013160494
 MonoBehaviour:
@@ -81361,7 +81363,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2077056169}
   - component: {fileID: 2077056171}
-  - component: {fileID: 2077056170}
   m_Layer: 5
   m_Name: SliderLightAmbient
   m_TagString: Untagged
@@ -81392,24 +81393,6 @@ RectTransform:
   m_AnchoredPosition: {x: 60, y: -80}
   m_SizeDelta: {x: 200, y: 20}
   m_Pivot: {x: 0, y: 1}
---- !u!114 &2077056170
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2077056168}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8269c06f2a581ca4aba8d28e495ad0ec, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  toggleLb: {fileID: 0}
-  sliderLbBrightness: {fileID: 0}
-  sliderLbPosition: {fileID: 0}
-  sliderLbHeight: {fileID: 0}
-  sliderLbHorizontal: {fileID: 0}
-  sliderLbVertival: {fileID: 0}
 --- !u!114 &2077056171
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -81457,12 +81440,12 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0.5
+  m_Value: 0.2
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2077056170}
-        m_TargetAssemblyTypeName: LightController, Assembly-CSharp
+      - m_Target: {fileID: 973548365}
+        m_TargetAssemblyTypeName: lightBbController, Assembly-CSharp
         m_MethodName: LightAmbientChange
         m_Mode: 0
         m_Arguments:
@@ -84444,6 +84427,7 @@ Transform:
   - {fileID: 543450651606966396}
   - {fileID: 1247299430}
   - {fileID: 1527783730}
+  - {fileID: 15105010}
   m_Father: {fileID: 0}
   m_RootOrder: 26
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
