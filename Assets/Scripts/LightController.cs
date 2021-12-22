@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,7 +6,7 @@ using UnityEngine.UI;
 public class LightController : MonoBehaviour
 {
     public Toggle toggleLb;
-    public Slider sliderLbBrightness;
+    public Slider sliderLbIntensity;
     public Slider sliderLbPosition;
     public Slider sliderLbHeight;
     public Slider sliderLbHorizontal;
@@ -14,6 +15,8 @@ public class LightController : MonoBehaviour
     private float _startHeight;
 
     private Texture2D _lbCookie;
+    private Texture2D _lbCookieOriginal;
+    private Color[] _lbCookieColors;
     private int _lbCookieWidth;
     private int _lbCookieHeight;
     private Color[] _lbColors_on;
@@ -21,6 +24,8 @@ public class LightController : MonoBehaviour
     private Color[] _lbColors_smooth;
     private int _lbAngleHorizontal;
     private int _lbAngleVertical;
+
+    [HideInInspector] public LightElement thisLightElement;
     //private void Awake()
     //{
 
@@ -29,18 +34,24 @@ public class LightController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        thisLightElement = StaticSceneData.StaticData.lightElements.Find(le => le.name == gameObject.name);
         _startPosition = transform.localPosition.z;
         _startHeight = transform.localPosition.y;
-        _lbCookie = (Texture2D)GetComponent<Light>().cookie;
-        _lbCookieWidth = _lbCookie.width;
-        _lbCookieHeight = _lbCookie.height;
+        _lbCookieOriginal = (Texture2D)GetComponent<Light>().cookie;
+        _lbCookieWidth = _lbCookieOriginal.width;
+        _lbCookieHeight = _lbCookieOriginal.height;
+        _lbCookie = _lbCookieOriginal;
+        _lbCookie = new Texture2D(_lbCookieOriginal.width, _lbCookieOriginal.height);
+        _lbCookie.wrapModeU = TextureWrapMode.Clamp;
+        _lbCookie.SetPixels(_lbCookieOriginal.GetPixels());
+        _lbCookieColors = new Color[_lbCookieWidth * _lbCookieHeight];
         _lbColors_on = new Color[_lbCookieWidth * _lbCookieHeight];
         _lbColors_off = new Color[_lbCookieWidth * _lbCookieHeight];
         _lbColors_smooth = new Color[_lbCookieWidth];
 
         _lbColors_on = changeColors(_lbColors_on, new Color(1f, 1f, 1f, 1f));
         _lbColors_off = changeColors(_lbColors_off, new Color(0f, 0f, 0f, 0f));
-        ChangeHorizontal(256f);
+        ChangeHorizontal(256);
     }
 
     //// Update is called once per frame
@@ -49,35 +60,65 @@ public class LightController : MonoBehaviour
 
     //}
 
+    public void Sayhi()
+    {
+        Debug.Log(gameObject.name + " says 'Hi!'");
+    }
+
     public void LightActivation(bool onOffSwitch)
     {
 
         //lightElements müssen erst noch mit der StaticData bekannt gemacht werden --> SceneDataController
 
-        LightElement thisLightElement = StaticSceneData.StaticData.lightElements.Find(le => le.name == gameObject.name);
         thisLightElement.active = onOffSwitch;
-        //gameController.GetComponent<SceneDataController>().LightsApplyToScene(StaticSceneData.StaticData.lightElements);
-        StaticSceneData.Lights3D();
+        GetComponent<Light>().enabled = onOffSwitch;
+        //StaticSceneData.Lights3D();
     }
 
-    public void ChangeBrightness(float brightnessValue)
+    public void ChangeIntensity(float intensityValue)
     {
-        GetComponent<Light>().intensity = brightnessValue;
+        thisLightElement.intensity = intensityValue;
+        GetComponent<Light>().intensity = intensityValue;
+        //StaticSceneData.Lights3D();
     }
 
     public void ChangePosition(float PositionValue)
     {
+        thisLightElement.z = PositionValue;
         transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, _startPosition + PositionValue);
+        //StaticSceneData.Lights3D();
     }
 
     public void ChangeHeight(float HeightValue)
     {
+        thisLightElement.y = HeightValue;
         transform.localPosition = new Vector3(transform.localPosition.x, _startHeight + HeightValue, transform.localPosition.z);
+        //StaticSceneData.Lights3D();
     }
 
-    public void ChangeHorizontal(float HorizontalValue)
+    public void ChangeHorizontalValue(float HorizontalValue)
     {
-        float grayScale = 0.0f;
+        //ChangeHorizontal(HorizontalValue);
+        thisLightElement.angle_h = (int)HorizontalValue;
+        ChangeHorizontal(thisLightElement.angle_h);
+        //StaticSceneData.Lights3D();
+    }
+
+    public void ChangeVerticalValue(float VerticalValue)
+    {
+        //ChangeVertical(VerticalValue);
+        thisLightElement.angle_v = (int)VerticalValue;
+
+        if (thisLightElement.stagePosition == 2)
+            ChangeVertical(thisLightElement.angle_v);
+        else
+            ChangeVerticalLeft(thisLightElement.angle_v);
+        //StaticSceneData.Lights3D();
+    }
+
+    public void ChangeHorizontal(int HorizontalValue)
+    {
+        //Debug.Log("PING ChangeHorizontal");
         int attenuation = 256;
         HorizontalValue = _lbCookieWidth / 2 - HorizontalValue; //wie weit geht das Licht zu, hier noch auf beiden Seiten
         _lbAngleHorizontal = Mathf.Max(1, (int)(HorizontalValue) - attenuation);
@@ -87,12 +128,25 @@ public class LightController : MonoBehaviour
         GetComponent<Light>().cookie = _lbCookie;
     }
 
-    public void ChangeVertical(float VerticalValue)
+    public void ChangeVertical(int VerticalValue)
     {
         int attenuation = 256;
         VerticalValue = _lbCookieWidth / 2 - VerticalValue; //wie weit geht das Licht zu, hier noch auf beiden Seiten
         _lbAngleVertical = Mathf.Max(1, (int)(VerticalValue) - attenuation);
         ChangeCookie();
+
+        _lbCookie.Apply();
+        GetComponent<Light>().cookie = _lbCookie;
+    }
+
+    public void ChangeVerticalLeft(int VerticalValue)
+    {
+        int attenuation = 256;
+        VerticalValue = _lbCookieWidth / 2 - VerticalValue; //wie weit geht das Licht zu, hier noch auf beiden Seiten
+        _lbAngleVertical = Mathf.Max(1, (int)(VerticalValue) - attenuation);
+        ChangeCookie();
+
+        FlipTexture(ref _lbCookie);
 
         _lbCookie.Apply();
         GetComponent<Light>().cookie = _lbCookie;
@@ -125,7 +179,6 @@ public class LightController : MonoBehaviour
             _lbCookie.SetPixels(i, i, _lbCookieWidth - 2 * i - _lbAngleVertical, 1, _lbColors_smooth);
             _lbCookie.SetPixels(i, _lbCookieHeight - _lbAngleHorizontal - i, _lbCookieWidth - 2 * i - _lbAngleVertical, 1, _lbColors_smooth);
         }
-
     }
 
     Color[] changeColors(Color[] colorArray, Color changeToColor)
@@ -136,4 +189,26 @@ public class LightController : MonoBehaviour
         }
         return colorArray;
     }
+
+    public static void FlipTexture(ref Texture2D texture)
+    {
+        int textureWidth = texture.width;
+        int textureHeight = texture.height;
+
+        Color32[] pixels = texture.GetPixels32();
+
+        for (int y = 0; y < textureHeight; y++)
+        {
+            int yo = y * textureWidth;
+            for (int il = yo, ir = yo + textureWidth - 1; il < ir; il++, ir--)
+            {
+                Color32 col = pixels[il];
+                pixels[il] = pixels[ir];
+                pixels[ir] = col;
+            }
+        }
+        texture.SetPixels32(pixels);
+        texture.Apply();
+    }
+
 }

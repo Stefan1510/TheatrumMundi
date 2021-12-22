@@ -4,6 +4,13 @@ using UnityEngine;
 
 
 [System.Serializable]
+public class objectsLightElement
+{
+    public GameObject goLightElement;
+    public int lightStagePosition;   //{ 0- BeforeRail, 1- leftRail, 2- rightRail};
+}
+
+[System.Serializable]
 public class RailElement
 {
 	//schiene
@@ -63,12 +70,13 @@ public class LightElement
     public bool active;
     //have some more parameters
 	public int railnumber;
-	public int r;
-	public int g;
-	public int b;
+	public float r;
+	public float g;
+	public float b;
 	public float intensity;
 	public int angle_h;
 	public int angle_v;
+    public int stagePosition;  //{ 0- BeforeRail, 1- leftRail, 2- rightRail};
 }
 
 //[System.Serializable]

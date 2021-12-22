@@ -13,7 +13,8 @@ public class SceneDataController : MonoBehaviour
     public GameObject[] objectsRailElements;
     public GameObject[] objectsSceneryElements;
     public GameObject[] objectsFigureElements;
-    public GameObject[] objectsLightElements;
+    //public GameObject[] objectsLightElements;
+    public objectsLightElement[] objectsLightElements;
     [HideInInspector] public string sceneFileName;
     [HideInInspector] public string sceneFileAuthor;
     [HideInInspector] public string sceneFileDate;
@@ -154,22 +155,24 @@ public class SceneDataController : MonoBehaviour
         }
 
         //light
-        foreach (GameObject objectLightElement in objectsLightElements)
+        foreach (objectsLightElement objectLightElement in objectsLightElements)
         {
+            GameObject gameObjectLe = objectLightElement.goLightElement;
             LightElement sceneLightElement = new LightElement
             {
-                name = objectLightElement.name,
-                x = objectLightElement.transform.position.x,
-                y = objectLightElement.transform.position.y,
-                z = objectLightElement.transform.position.z,
+                name = gameObjectLe.name,
+                x = gameObjectLe.transform.localPosition.x,
+                y = gameObjectLe.transform.localPosition.y,
+                z = gameObjectLe.transform.localPosition.z,
                 active = false,
                 railnumber = 1,
-                r = 1,
-                g = 1,
-                b = 1,
-                intensity = 1.0f,
-                angle_h = 90,
-                angle_v = 120
+                r = gameObjectLe.GetComponent<Light>().color.r,
+                g = gameObjectLe.GetComponent<Light>().color.g,
+                b = gameObjectLe.GetComponent<Light>().color.b,
+                intensity = gameObjectLe.GetComponent<Light>().intensity,
+                angle_h = 256,
+                angle_v = 256,
+                stagePosition = objectLightElement.lightStagePosition
             };
             sceneData.lightElements.Add(sceneLightElement);
         }
@@ -259,15 +262,37 @@ public class SceneDataController : MonoBehaviour
         countActiveLightElements = 0;
         foreach (LightElement le in lightElements)
         {
-            foreach (GameObject goLightElement in objectsLightElements)
+            foreach (objectsLightElement objectLightElement in objectsLightElements)
             {
-                if (le.name == goLightElement.name)
+                if (le.name == objectLightElement.goLightElement.name)
                 {
-                    goLightElement.transform.localPosition = new Vector3(le.x, le.y, le.z);
-                    goLightElement.GetComponent<Light>().enabled = le.active;
+                    GameObject gameObjectLe = objectLightElement.goLightElement;
+                    gameObjectLe.transform.localPosition = new Vector3(le.x, le.y, le.z);
+                    gameObjectLe.GetComponent<Light>().enabled = le.active;
                     if (le.active)
                     {
                         countActiveLightElements++;
+                    }
+                    gameObjectLe.GetComponent<Light>().intensity = le.intensity;
+                    switch (objectLightElement.lightStagePosition)
+                    {
+                        case 0:
+                            break;
+                        case 1:
+                            Debug.Log("lights3D " + gameObjectLe.name);
+                            gameObjectLe.GetComponent<LightController>().Sayhi();
+                            gameObjectLe.GetComponent<LightController>().ChangeHorizontal(le.angle_h);
+                            gameObjectLe.GetComponent<LightController>().ChangeVertical(le.angle_v);
+                            gameObjectLe.GetComponent<LightController>().ChangePosition(le.z);
+                            gameObjectLe.GetComponent<LightController>().ChangeHeight(le.y);
+                            
+                            break;
+                        case 2:
+                            gameObjectLe.GetComponent<LightController>().ChangeHorizontal(le.angle_h);
+                            gameObjectLe.GetComponent<LightController>().ChangeVerticalLeft(le.angle_v);
+                            gameObjectLe.GetComponent<LightController>().ChangePosition(le.z);
+                            gameObjectLe.GetComponent<LightController>().ChangeHeight(le.y);
+                            break;
                     }
                 }
             }
