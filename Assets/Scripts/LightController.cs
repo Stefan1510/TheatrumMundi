@@ -109,7 +109,7 @@ public class LightController : MonoBehaviour
         //ChangeVertical(VerticalValue);
         thisLightElement.angle_v = (int)VerticalValue;
 
-        if (thisLightElement.stagePosition == 2)
+        if (thisLightElement.stagePosition == 1)
             ChangeVertical(thisLightElement.angle_v);
         else
             ChangeVerticalLeft(thisLightElement.angle_v);
