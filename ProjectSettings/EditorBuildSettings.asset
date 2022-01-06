@@ -5,10 +5,10 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
+  - enabled: 1
     path: Assets/TheatrumMundi.unity
     guid: 73ab7355c81e69543a4afded4620eee7
-  - enabled: 1
+  - enabled: 0
     path: Assets/TheatrumMundi_kris.unity
     guid: 61e0f2c750db5c34ca7836ab00f63a85
   m_configObjects: {}

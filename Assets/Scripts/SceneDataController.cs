@@ -162,8 +162,8 @@ public class SceneDataController : MonoBehaviour
             {
                 name = gameObjectLe.name,
                 x = gameObjectLe.transform.localPosition.x,
-                y = gameObjectLe.transform.localPosition.y,
-                z = gameObjectLe.transform.localPosition.z,
+                y = 0,
+                z = 0,
                 active = false,
                 railnumber = 1,
                 r = gameObjectLe.GetComponent<Light>().color.r,
@@ -174,6 +174,19 @@ public class SceneDataController : MonoBehaviour
                 angle_v = 256,
                 stagePosition = objectLightElement.lightStagePosition
             };
+
+            switch (objectLightElement.lightStagePosition)
+            {
+                case 0:
+                    sceneLightElement.y = gameObjectLe.transform.localPosition.y;
+                    sceneLightElement.z = gameObjectLe.transform.localPosition.z;
+                    break;
+                case 1:
+                    break;
+                case 2:
+                    break;
+            }
+
             sceneData.lightElements.Add(sceneLightElement);
         }
 
@@ -285,7 +298,7 @@ public class SceneDataController : MonoBehaviour
                             gameObjectLe.GetComponent<LightController>().ChangeVertical(le.angle_v);
                             gameObjectLe.GetComponent<LightController>().ChangePosition(le.z);
                             gameObjectLe.GetComponent<LightController>().ChangeHeight(le.y);
-                            
+
                             break;
                         case 2:
                             gameObjectLe.GetComponent<LightController>().ChangeHorizontal(le.angle_h);

@@ -12,6 +12,7 @@ public class LightBbController : MonoBehaviour
     {
         //Debug.Log(name);
         thisLightElement = StaticSceneData.StaticData.lightElements.Find(le => le.name == gameObject.name);
+        LightAmbientChange(0.2f);
         //Debug.Log(thisLightElement.name);
         //LightActivation(toggleBb.isOn);
     }
