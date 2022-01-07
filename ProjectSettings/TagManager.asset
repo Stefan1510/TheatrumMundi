@@ -9,6 +9,7 @@ TagManager:
   - DropdownRailSelection
   - KulissenButton
   - Collection
+  - RenderCam
   layers:
   - Default
   - TransparentFX

@@ -2977,11 +2977,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   toggleLb: {fileID: 0}
-  sliderLbBrightness: {fileID: 0}
+  sliderLbIntensity: {fileID: 0}
   sliderLbPosition: {fileID: 0}
   sliderLbHeight: {fileID: 0}
   sliderLbHorizontal: {fileID: 0}
-  sliderLbVertival: {fileID: 0}
+  sliderLbVertical: {fileID: 0}
+  thisLightElement:
+    name: 
+    x: 0
+    y: 0
+    z: 0
+    active: 0
+    railnumber: 0
+    r: 0
+    g: 0
+    b: 0
+    intensity: 0
+    angle_h: 0
+    angle_v: 0
+    stagePosition: 0
 --- !u!1 &99707327
 GameObject:
   m_ObjectHideFlags: 0
@@ -7167,7 +7181,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1636444202}
   m_HandleRect: {fileID: 1636444201}
   m_Direction: 0
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -10514,11 +10528,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   toggleLb: {fileID: 0}
-  sliderLbBrightness: {fileID: 0}
+  sliderLbIntensity: {fileID: 0}
   sliderLbPosition: {fileID: 0}
   sliderLbHeight: {fileID: 0}
   sliderLbHorizontal: {fileID: 0}
-  sliderLbVertival: {fileID: 0}
+  sliderLbVertical: {fileID: 0}
+  thisLightElement:
+    name: 
+    x: 0
+    y: 0
+    z: 0
+    active: 0
+    railnumber: 0
+    r: 0
+    g: 0
+    b: 0
+    intensity: 0
+    angle_h: 0
+    angle_v: 0
+    stagePosition: 0
 --- !u!1 &322721804
 GameObject:
   m_ObjectHideFlags: 0
@@ -13397,11 +13425,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   toggleLb: {fileID: 0}
-  sliderLbBrightness: {fileID: 0}
+  sliderLbIntensity: {fileID: 0}
   sliderLbPosition: {fileID: 0}
   sliderLbHeight: {fileID: 0}
   sliderLbHorizontal: {fileID: 0}
-  sliderLbVertival: {fileID: 0}
+  sliderLbVertical: {fileID: 0}
+  thisLightElement:
+    name: 
+    x: 0
+    y: 0
+    z: 0
+    active: 0
+    railnumber: 0
+    r: 0
+    g: 0
+    b: 0
+    intensity: 0
+    angle_h: 0
+    angle_v: 0
+    stagePosition: 0
 --- !u!108 &417989168
 Light:
   m_ObjectHideFlags: 0
@@ -13960,11 +14002,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   toggleLb: {fileID: 0}
-  sliderLbBrightness: {fileID: 0}
+  sliderLbIntensity: {fileID: 0}
   sliderLbPosition: {fileID: 0}
   sliderLbHeight: {fileID: 0}
   sliderLbHorizontal: {fileID: 0}
-  sliderLbVertival: {fileID: 0}
+  sliderLbVertical: {fileID: 0}
+  thisLightElement:
+    name: 
+    x: 0
+    y: 0
+    z: 0
+    active: 0
+    railnumber: 0
+    r: 0
+    g: 0
+    b: 0
+    intensity: 0
+    angle_h: 0
+    angle_v: 0
+    stagePosition: 0
 --- !u!108 &446450139
 Light:
   m_ObjectHideFlags: 0
@@ -17559,11 +17615,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   toggleLb: {fileID: 0}
-  sliderLbBrightness: {fileID: 0}
+  sliderLbIntensity: {fileID: 0}
   sliderLbPosition: {fileID: 0}
   sliderLbHeight: {fileID: 0}
   sliderLbHorizontal: {fileID: 0}
-  sliderLbVertival: {fileID: 0}
+  sliderLbVertical: {fileID: 0}
+  thisLightElement:
+    name: 
+    x: 0
+    y: 0
+    z: 0
+    active: 0
+    railnumber: 0
+    r: 0
+    g: 0
+    b: 0
+    intensity: 0
+    angle_h: 0
+    angle_v: 0
+    stagePosition: 0
 --- !u!108 &534099187
 Light:
   m_ObjectHideFlags: 0
@@ -23263,11 +23333,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   toggleLb: {fileID: 0}
-  sliderLbBrightness: {fileID: 0}
+  sliderLbIntensity: {fileID: 0}
   sliderLbPosition: {fileID: 0}
   sliderLbHeight: {fileID: 0}
   sliderLbHorizontal: {fileID: 0}
-  sliderLbVertival: {fileID: 0}
+  sliderLbVertical: {fileID: 0}
+  thisLightElement:
+    name: 
+    x: 0
+    y: 0
+    z: 0
+    active: 0
+    railnumber: 0
+    r: 0
+    g: 0
+    b: 0
+    intensity: 0
+    angle_h: 0
+    angle_v: 0
+    stagePosition: 0
 --- !u!1 &670005002
 GameObject:
   m_ObjectHideFlags: 0
@@ -34088,11 +34172,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   toggleLb: {fileID: 0}
-  sliderLbBrightness: {fileID: 0}
+  sliderLbIntensity: {fileID: 0}
   sliderLbPosition: {fileID: 0}
   sliderLbHeight: {fileID: 0}
   sliderLbHorizontal: {fileID: 0}
-  sliderLbVertival: {fileID: 0}
+  sliderLbVertical: {fileID: 0}
+  thisLightElement:
+    name: 
+    x: 0
+    y: 0
+    z: 0
+    active: 0
+    railnumber: 0
+    r: 0
+    g: 0
+    b: 0
+    intensity: 0
+    angle_h: 0
+    angle_v: 0
+    stagePosition: 0
 --- !u!108 &929841025
 Light:
   m_ObjectHideFlags: 0
@@ -34262,11 +34360,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   toggleLb: {fileID: 0}
-  sliderLbBrightness: {fileID: 0}
+  sliderLbIntensity: {fileID: 0}
   sliderLbPosition: {fileID: 0}
   sliderLbHeight: {fileID: 0}
   sliderLbHorizontal: {fileID: 0}
-  sliderLbVertival: {fileID: 0}
+  sliderLbVertical: {fileID: 0}
+  thisLightElement:
+    name: 
+    x: 0
+    y: 0
+    z: 0
+    active: 0
+    railnumber: 0
+    r: 0
+    g: 0
+    b: 0
+    intensity: 0
+    angle_h: 0
+    angle_v: 0
+    stagePosition: 0
 --- !u!1 &933746879
 GameObject:
   m_ObjectHideFlags: 0
@@ -41682,11 +41794,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   toggleLb: {fileID: 0}
-  sliderLbBrightness: {fileID: 0}
+  sliderLbIntensity: {fileID: 0}
   sliderLbPosition: {fileID: 0}
   sliderLbHeight: {fileID: 0}
   sliderLbHorizontal: {fileID: 0}
-  sliderLbVertival: {fileID: 0}
+  sliderLbVertical: {fileID: 0}
+  thisLightElement:
+    name: 
+    x: 0
+    y: 0
+    z: 0
+    active: 0
+    railnumber: 0
+    r: 0
+    g: 0
+    b: 0
+    intensity: 0
+    angle_h: 0
+    angle_v: 0
+    stagePosition: 0
 --- !u!1 &1137987342
 GameObject:
   m_ObjectHideFlags: 0
@@ -44053,6 +44179,89 @@ RectTransform:
   m_AnchoredPosition: {x: -5, y: 0}
   m_SizeDelta: {x: -20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &1216729246
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1216729249}
+  - component: {fileID: 1216729248}
+  - component: {fileID: 1216729247}
+  m_Layer: 0
+  m_Name: RenderCam
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!81 &1216729247
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1216729246}
+  m_Enabled: 0
+--- !u!20 &1216729248
+Camera:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1216729246}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_ClearFlags: 1
+  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_projectionMatrixMode: 1
+  m_GateFitMode: 2
+  m_FOVAxisMode: 0
+  m_SensorSize: {x: 36, y: 24}
+  m_LensShift: {x: 0, y: 0}
+  m_FocalLength: 50
+  m_NormalizedViewPortRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+  near clip plane: 0.21
+  far clip plane: 1000
+  field of view: 13.4
+  orthographic: 0
+  orthographic size: 5
+  m_Depth: 0
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RenderingPath: -1
+  m_TargetTexture: {fileID: 8400000, guid: e72f31d0b9dc8dc4ab49a1c06c604359, type: 2}
+  m_TargetDisplay: 0
+  m_TargetEye: 3
+  m_HDR: 1
+  m_AllowMSAA: 1
+  m_AllowDynamicResolution: 0
+  m_ForceIntoRT: 0
+  m_OcclusionCulling: 1
+  m_StereoConvergence: 10
+  m_StereoSeparation: 0.022
+--- !u!4 &1216729249
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1216729246}
+  m_LocalRotation: {x: -0.027205952, y: -0.70658326, z: -0.027205952, w: 0.70658326}
+  m_LocalPosition: {x: 8.1, y: 0.16, z: -0.01}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 39
+  m_LocalEulerAnglesHint: {x: -4.41, y: -90, z: 0}
 --- !u!1 &1216844383
 GameObject:
   m_ObjectHideFlags: 0
@@ -44905,11 +45114,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   toggleLb: {fileID: 0}
-  sliderLbBrightness: {fileID: 0}
+  sliderLbIntensity: {fileID: 0}
   sliderLbPosition: {fileID: 0}
   sliderLbHeight: {fileID: 0}
   sliderLbHorizontal: {fileID: 0}
-  sliderLbVertival: {fileID: 0}
+  sliderLbVertical: {fileID: 0}
+  thisLightElement:
+    name: 
+    x: 0
+    y: 0
+    z: 0
+    active: 0
+    railnumber: 0
+    r: 0
+    g: 0
+    b: 0
+    intensity: 0
+    angle_h: 0
+    angle_v: 0
+    stagePosition: 0
 --- !u!108 &1247299432
 Light:
   m_ObjectHideFlags: 0
@@ -46492,16 +46715,26 @@ MonoBehaviour:
   - {fileID: 1072686385}
   - {fileID: 1829804481}
   objectsLightElements:
-  - {fileID: 417989165}
-  - {fileID: 2072423808}
-  - {fileID: 1502400329}
-  - {fileID: 929841022}
-  - {fileID: 319460167}
-  - {fileID: 1135877107}
-  - {fileID: 668021554}
-  - {fileID: 931378510}
-  - {fileID: 1824745153}
-  - {fileID: 99321409}
+  - goLightElement: {fileID: 0}
+    lightStagePosition: 0
+  - goLightElement: {fileID: 0}
+    lightStagePosition: 0
+  - goLightElement: {fileID: 0}
+    lightStagePosition: 0
+  - goLightElement: {fileID: 0}
+    lightStagePosition: 0
+  - goLightElement: {fileID: 0}
+    lightStagePosition: 0
+  - goLightElement: {fileID: 0}
+    lightStagePosition: 0
+  - goLightElement: {fileID: 0}
+    lightStagePosition: 0
+  - goLightElement: {fileID: 0}
+    lightStagePosition: 0
+  - goLightElement: {fileID: 0}
+    lightStagePosition: 0
+  - goLightElement: {fileID: 0}
+    lightStagePosition: 0
   sceneFileName: 
   sceneFileAuthor: 
   sceneFileDate: 
@@ -49634,11 +49867,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   toggleLb: {fileID: 0}
-  sliderLbBrightness: {fileID: 0}
+  sliderLbIntensity: {fileID: 0}
   sliderLbPosition: {fileID: 0}
   sliderLbHeight: {fileID: 0}
   sliderLbHorizontal: {fileID: 0}
-  sliderLbVertival: {fileID: 0}
+  sliderLbVertical: {fileID: 0}
+  thisLightElement:
+    name: 
+    x: 0
+    y: 0
+    z: 0
+    active: 0
+    railnumber: 0
+    r: 0
+    g: 0
+    b: 0
+    intensity: 0
+    angle_h: 0
+    angle_v: 0
+    stagePosition: 0
 --- !u!108 &1342526151
 Light:
   m_ObjectHideFlags: 0
@@ -51773,7 +52020,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 582918990}
   m_HandleRect: {fileID: 582918989}
   m_Direction: 2
-  m_Value: 1.0000001
+  m_Value: 1
   m_Size: 0.3490909
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -55860,11 +56107,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   toggleLb: {fileID: 0}
-  sliderLbBrightness: {fileID: 0}
+  sliderLbIntensity: {fileID: 0}
   sliderLbPosition: {fileID: 0}
   sliderLbHeight: {fileID: 0}
   sliderLbHorizontal: {fileID: 0}
-  sliderLbVertival: {fileID: 0}
+  sliderLbVertical: {fileID: 0}
+  thisLightElement:
+    name: 
+    x: 0
+    y: 0
+    z: 0
+    active: 0
+    railnumber: 0
+    r: 0
+    g: 0
+    b: 0
+    intensity: 0
+    angle_h: 0
+    angle_v: 0
+    stagePosition: 0
 --- !u!108 &1502400332
 Light:
   m_ObjectHideFlags: 0
@@ -56999,11 +57260,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   toggleLb: {fileID: 0}
-  sliderLbBrightness: {fileID: 0}
+  sliderLbIntensity: {fileID: 0}
   sliderLbPosition: {fileID: 0}
   sliderLbHeight: {fileID: 0}
   sliderLbHorizontal: {fileID: 0}
-  sliderLbVertival: {fileID: 0}
+  sliderLbVertical: {fileID: 0}
+  thisLightElement:
+    name: 
+    x: 0
+    y: 0
+    z: 0
+    active: 0
+    railnumber: 0
+    r: 0
+    g: 0
+    b: 0
+    intensity: 0
+    angle_h: 0
+    angle_v: 0
+    stagePosition: 0
 --- !u!108 &1527783732
 Light:
   m_ObjectHideFlags: 0
@@ -57578,11 +57853,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   toggleLb: {fileID: 0}
-  sliderLbBrightness: {fileID: 0}
+  sliderLbIntensity: {fileID: 0}
   sliderLbPosition: {fileID: 0}
   sliderLbHeight: {fileID: 0}
   sliderLbHorizontal: {fileID: 0}
-  sliderLbVertival: {fileID: 0}
+  sliderLbVertical: {fileID: 0}
+  thisLightElement:
+    name: 
+    x: 0
+    y: 0
+    z: 0
+    active: 0
+    railnumber: 0
+    r: 0
+    g: 0
+    b: 0
+    intensity: 0
+    angle_h: 0
+    angle_v: 0
+    stagePosition: 0
 --- !u!108 &1553299003
 Light:
   m_ObjectHideFlags: 0
@@ -59548,11 +59837,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   toggleLb: {fileID: 0}
-  sliderLbBrightness: {fileID: 0}
+  sliderLbIntensity: {fileID: 0}
   sliderLbPosition: {fileID: 0}
   sliderLbHeight: {fileID: 0}
   sliderLbHorizontal: {fileID: 0}
-  sliderLbVertival: {fileID: 0}
+  sliderLbVertical: {fileID: 0}
+  thisLightElement:
+    name: 
+    x: 0
+    y: 0
+    z: 0
+    active: 0
+    railnumber: 0
+    r: 0
+    g: 0
+    b: 0
+    intensity: 0
+    angle_h: 0
+    angle_v: 0
+    stagePosition: 0
 --- !u!108 &1613392719
 Light:
   m_ObjectHideFlags: 0
@@ -65660,11 +65963,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   toggleLb: {fileID: 0}
-  sliderLbBrightness: {fileID: 0}
+  sliderLbIntensity: {fileID: 0}
   sliderLbPosition: {fileID: 0}
   sliderLbHeight: {fileID: 0}
   sliderLbHorizontal: {fileID: 0}
-  sliderLbVertival: {fileID: 0}
+  sliderLbVertical: {fileID: 0}
+  thisLightElement:
+    name: 
+    x: 0
+    y: 0
+    z: 0
+    active: 0
+    railnumber: 0
+    r: 0
+    g: 0
+    b: 0
+    intensity: 0
+    angle_h: 0
+    angle_v: 0
+    stagePosition: 0
 --- !u!108 &1776180846
 Light:
   m_ObjectHideFlags: 0
@@ -67978,11 +68295,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   toggleLb: {fileID: 0}
-  sliderLbBrightness: {fileID: 0}
+  sliderLbIntensity: {fileID: 0}
   sliderLbPosition: {fileID: 0}
   sliderLbHeight: {fileID: 0}
   sliderLbHorizontal: {fileID: 0}
-  sliderLbVertival: {fileID: 0}
+  sliderLbVertical: {fileID: 0}
+  thisLightElement:
+    name: 
+    x: 0
+    y: 0
+    z: 0
+    active: 0
+    railnumber: 0
+    r: 0
+    g: 0
+    b: 0
+    intensity: 0
+    angle_h: 0
+    angle_v: 0
+    stagePosition: 0
 --- !u!1 &1825252736
 GameObject:
   m_ObjectHideFlags: 0
@@ -76444,11 +76775,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   toggleLb: {fileID: 0}
-  sliderLbBrightness: {fileID: 0}
+  sliderLbIntensity: {fileID: 0}
   sliderLbPosition: {fileID: 0}
   sliderLbHeight: {fileID: 0}
   sliderLbHorizontal: {fileID: 0}
-  sliderLbVertival: {fileID: 0}
+  sliderLbVertical: {fileID: 0}
+  thisLightElement:
+    name: 
+    x: 0
+    y: 0
+    z: 0
+    active: 0
+    railnumber: 0
+    r: 0
+    g: 0
+    b: 0
+    intensity: 0
+    angle_h: 0
+    angle_v: 0
+    stagePosition: 0
 --- !u!108 &2072423811
 Light:
   m_ObjectHideFlags: 0
@@ -76751,11 +77096,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   toggleLb: {fileID: 0}
-  sliderLbBrightness: {fileID: 0}
+  sliderLbIntensity: {fileID: 0}
   sliderLbPosition: {fileID: 0}
   sliderLbHeight: {fileID: 0}
   sliderLbHorizontal: {fileID: 0}
-  sliderLbVertival: {fileID: 0}
+  sliderLbVertical: {fileID: 0}
+  thisLightElement:
+    name: 
+    x: 0
+    y: 0
+    z: 0
+    active: 0
+    railnumber: 0
+    r: 0
+    g: 0
+    b: 0
+    intensity: 0
+    angle_h: 0
+    angle_v: 0
+    stagePosition: 0
 --- !u!114 &2077056171
 MonoBehaviour:
   m_ObjectHideFlags: 0
