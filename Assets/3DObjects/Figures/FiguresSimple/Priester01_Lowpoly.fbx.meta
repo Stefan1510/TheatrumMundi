@@ -11,6 +11,11 @@ ModelImporter:
     second: WalkLoop|Armature.002Action
   externalObjects:
   - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: messing
+    second: {fileID: 2100000, guid: 4b03a8640da6a8445b6cfd92ecb8834b, type: 2}
+  - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: Priester_col
