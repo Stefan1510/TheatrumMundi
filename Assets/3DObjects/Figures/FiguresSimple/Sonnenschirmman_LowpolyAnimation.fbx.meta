@@ -12,16 +12,6 @@ ModelImporter:
       assembly: UnityEngine.CoreModule
       name: messing
     second: {fileID: 2100000, guid: 4b03a8640da6a8445b6cfd92ecb8834b, type: 2}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Sonnenschirmmann_Fahrwerk_col
-    second: {fileID: 2800000, guid: ed35353409837354998c4d4021052af8, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Sonnenschirmmann_col
-    second: {fileID: 2800000, guid: 0da76fddb0d9e774aaca83d7b44dff1d, type: 3}
   materials:
     materialImportMode: 2
     materialName: 0
