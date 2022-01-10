@@ -22,6 +22,8 @@ public class timelineOpenCloseV2 : MonoBehaviour
 	double maxX;
 	double minY;
 	double maxY;
+	string maxTimeLength;
+	int maxTimeInSec;
 	Vector2 sizeDeltaAsFactor;
 	//public Button myButton;
 	Vector2 objectDefaultPosition;
@@ -65,10 +67,12 @@ public class timelineOpenCloseV2 : MonoBehaviour
 		movingObject=false;
 		draggingObject=false;
 		objectOnTimeline=false;
-		minX=301.0f;
-		maxX=1623.0f;
-		minY=428.0f;
-		maxY=438.0f;
+		minX=301.0f;	//timeline-minX
+		maxX=1623.0f;	//timeline-maxX
+		minY=428.0f;	//timeline-minY
+		maxY=438.0f;	//timeline-maxY
+		maxTimeLength="10:14";
+		maxTimeInSec=614;
 		sizeDeltaAsFactor=new Vector2(1.0f,1.0f);
 		Debug.Log("++++++timeline calling");
 		
@@ -297,7 +301,17 @@ public class timelineOpenCloseV2 : MonoBehaviour
 	}
 	public void scaleObject(GameObject fig,float x,float y)
 	{
+		//scale the object
 		fig.GetComponent<RectTransform>().sizeDelta=new Vector2(x,y);
+		//scale the collider, if object has one
+		if (fig.GetComponent<BoxCollider2D>()==true)
+		{
+			fig.GetComponent<BoxCollider2D>().size=new Vector2(x,y);
+		}
+		else
+		{
+			//do nothing
+		}
 	}
 	public void scaleObjectsOfList(List<GameObject> objects, float x, float y)
 	{
@@ -324,10 +338,19 @@ public class timelineOpenCloseV2 : MonoBehaviour
 	}
 	public void set3DObject()
 	{
-		fig1StartPos=fig1StartPos+0.005f;
+		//fig1StartPos=fig1StartPos+0.005f;
 		figure1.transform.position=new Vector3(rail1StartPos.x,figure1.transform.position.y,(float)fig1StartPos);		//start-pos on the left side in timeline
-		fig2StartPos=fig2StartPos-0.005f;
+		//fig2StartPos=fig2StartPos-0.005f;
 		figure2.transform.position=new Vector3(rail3StartPos.x,figure2.transform.position.y,(float)fig2StartPos);		//start-pos on the right side in timeline
+	}
+	public void animate3DObjectByTime(GameObject fig3D, int startSec, double animLength, int timerTime)
+	{
+		double figPos=0;
+		if ((timerTime>=startSec)&&(timerTime<=(startSec+(int)animLength)))
+		{
+			figPos=figPos+0.005f;
+			figure1.transform.position=new Vector3(rail3StartPos.x,figure1.transform.position.y,(float)figPos);
+		}
 	}
 	public bool isInList(List<GameObject> objects,GameObject obj)
 	{
@@ -355,6 +378,26 @@ public class timelineOpenCloseV2 : MonoBehaviour
 		else
 			return false;
 	}
+	public void createRectangle(GameObject obj, Vector2 pos, Vector2 size)
+	{
+		int alpha=1;
+		Vector3 col=new Vector3(255,120,60);
+		Image rect=obj.AddComponent<Image>();
+		rect.color=new Color(col.x,col.y,col.z);
+		rect.transform.position=pos;
+	}
+	public int calculateFigureStartTimeInSec(GameObject fig, double animLength, int maxTimeLengthInSec, double railMinX, double railMaxX)
+	{
+		int sec=0;
+		double tmpX=fig.transform.position.x;
+		Vector2 tmpSize=fig.GetComponent<BoxCollider2D>().size;
+		double tmpMinX=(double)tmpX-(tmpSize.x/2.0f);	//if tmpX is the midpoint of figure
+		double tmpMaxX=tmpMinX+animLength;	//length of figure is related to rail speed, here named as animationLength
+		//get figure minX related to timelineMinX
+		double percentageOfRail=tmpMinX/railMaxX;	//e.g.: 0,3823124 (38%)
+		sec=(int)(((double)maxTimeLengthInSec)*percentageOfRail);
+		return sec;
+	}
 	// Update is called once per frame
     void Update()
     {
@@ -365,6 +408,11 @@ public class timelineOpenCloseV2 : MonoBehaviour
 			//identifiy which gameobject do you clicked
 			string objectClicked=identifyClickedObject();	//method fills up the current clicked index
 			Debug.Log("you clicked object: "+objectClicked);
+			//GameObject tmpGO=new GameObject();
+			//tmpGO=GameObject.Find(objectClicked);
+			//if (tmpGO.GetComponent<BoxCollider2D>()==true)
+			//	Debug.Log("Object has a collider-obj!");
+			//Debug.Log("current collidersize: "+tmpGO.GetComponent<BoxCollider2D>().size);
 			
 			//check if you hit the timeslider
 			//Debug.Log("timeslider hit? "+moveTimeSlider(timeSliderImage));
@@ -502,6 +550,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
 			//if you hit the timeline > object snap to timeline and is locked in y-movement-direction
 			bool hitTimeline=false;
 			hitTimeline=checkHittingTimeline(figureObjects[currentClickedObjectIndex], timelineImage, getMousePos);
+			Debug.Log("mouseclick: "+hitTimeline);
 			if(hitTimeline)
 			{
 				//open timeline, if its not open
@@ -518,8 +567,20 @@ public class timelineOpenCloseV2 : MonoBehaviour
 				setObjectOnTimeline(figureObjects[currentClickedObjectIndex],figureObjects[currentClickedObjectIndex].transform.position.x,this.transform.position.y);
 				//set placed figures to timelineobjects-list
 				updateObjectList(timelineObjects,figureObjects[currentClickedObjectIndex]);
+				//createRectangle(figureObjects[currentClickedObjectIndex], new Vector2(50.0f,50.0f), new Vector2(50.0f,50.0f));
+				
+				//calculate the time the animation starts to run
+				double startSec=calculateFigureStartTimeInSec(figureObjects[currentClickedObjectIndex], 100.0f, maxTimeInSec, minX, maxX);
+				//set 3d object to default position
 				set3DObject();
+				//animate the 3d object controlled by time
+				animate3DObjectByTime(figureObjects[currentClickedObjectIndex], (int)startSec, 100.0f, (int)(AnimationTimer.GetTime()));
+				
 				//set up flags
+			}
+			else
+			{
+				openCloseTimelineByDrag("close", timelineImage);
 			}
 		}
 		/*

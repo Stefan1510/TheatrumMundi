@@ -197,7 +197,17 @@ public class slideTimeSlider : MonoBehaviour
 		//Debug.Log("full timeByPos-round: "+currTimeInSeconds);
 		return currTimeInSeconds;
 	}
-    public bool hitTimeSlider(Image myTL)
+    public int getXposByTime(double minX,double maxX,int maxLength,int timerTime)	//maxLength=seconds, timerTime=seconds
+	{
+		//Debug.Log("method: minX: "+minX+" maxX: "+maxX+" maxLength: "+maxLength+" timerTime: "+timerTime);
+		int xpos=0;
+		double tp=((double)timerTime)/((double)maxLength); //percentage of current timerTime
+		double tmp=maxX-minX; //length of timeline
+		xpos=(int)((tmp*tp)+minX);
+		//Debug.Log("method: tp: "+tp+" tmp: "+tmp+" xpos: "+xpos);
+		return xpos;
+	}
+	public bool hitTimeSlider(Image myTL)
 	{
 		Vector2 mousePos=Input.mousePosition;
 		//Debug.Log("timeslider mouse-pos: "+mousePos);
@@ -238,7 +248,7 @@ public class slideTimeSlider : MonoBehaviour
 		if (Input.GetMouseButtonDown(0)) //left mouse button down
 		{
 			//check if you hit the timeslider
-			Debug.Log("mytimeslider hit? "+hitTimeSlider(timeSliderImage));
+			//Debug.Log("mytimeslider hit? "+hitTimeSlider(timeSliderImage));
 			
 			//Debug.Log("left mouse button down");
 			//Debug.Log("xpos mouse : "+getMousePos);
@@ -273,7 +283,30 @@ public class slideTimeSlider : MonoBehaviour
 				//Debug.Log("seconds by pos: " +timeByPos);
 				//Debug.Log("minutes: " +minStr);
 				timeSliderText.text=minStr;
+				//set time by timer
+				float newTime=0.0f;
+				//lenght is the maximum time as string in format: "01:56" min
+				//newTimer needs seconds
+				newTime=timeByPos;
+				//Debug.Log("Seconds: "+newTime.ToString());
+				AnimationTimer.SetTime(newTime);
+				
 			}
+		}
+		else
+		{
+			//if you not drag the slider: set slider to current timer-time
+			//get time by timer
+			float timerTime=0.0f;
+			timerTime=AnimationTimer.GetTime();
+			
+			//set slider at this position
+			int maxSec=convertMinutesToSeconds(length);
+			int xPosByTime=getXposByTime(minX,maxX,maxSec,(int)timerTime);
+			//Debug.Log("Timer-Event: "+timerTime+" xpos: "+xPosByTime); //in ms
+			string minStr=convertSecondsToMinutes((int)timerTime);
+			this.transform.position=new Vector2(xPosByTime,this.transform.position.y);
+			timeSliderText.text=minStr;
 		}
 		if (Input.GetMouseButtonUp(0)) //left mouse button up
 		{
