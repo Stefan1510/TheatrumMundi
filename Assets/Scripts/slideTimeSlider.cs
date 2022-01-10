@@ -197,7 +197,29 @@ public class slideTimeSlider : MonoBehaviour
 		//Debug.Log("full timeByPos-round: "+currTimeInSeconds);
 		return currTimeInSeconds;
 	}
-    // Update is called once per frame
+    public bool hitTimeSlider(Image myTL)
+	{
+		Vector2 mousePos=Input.mousePosition;
+		//Debug.Log("timeslider mouse-pos: "+mousePos);
+		//Debug.Log("timeslider-image "+myTL);
+		//test if you move the slider or click elsewhere in the timelinearea
+		//calculate bounding-box related to the timeline-pos
+		Vector2 tlPos=new Vector2(myTL.transform.position.x,myTL.transform.position.y);
+		Vector2 colSize=new Vector2(myTL.GetComponent<BoxCollider2D>().size.x,myTL.GetComponent<BoxCollider2D>().size.y);
+		//Debug.Log("timeslider colBox: "+myTL.GetComponent<BoxCollider2D>().size);
+		//Debug.Log("timeslider pos: "+myTL.transform.position);
+		//if mouse hits the timeline while dragging an object
+		//my implementation of object-boundingbox
+		if(((mousePos.x <= (tlPos.x+(colSize.x/2.0f))) && (mousePos.x > (tlPos.x-(colSize.x/2.0f)))) &&
+		((mousePos.y <= (tlPos.y+(colSize.y/2.0f))) && (mousePos.y > (tlPos.y-(colSize.y/2.0f)))))
+		{
+			Debug.Log("timeslider hit!");
+			return true;
+		}
+		else
+			return false;
+	}
+	// Update is called once per frame
     void Update()
     {
 		//Output the current screen window width in the console
@@ -215,9 +237,13 @@ public class slideTimeSlider : MonoBehaviour
 		
 		if (Input.GetMouseButtonDown(0)) //left mouse button down
 		{
+			//check if you hit the timeslider
+			Debug.Log("mytimeslider hit? "+hitTimeSlider(timeSliderImage));
+			
 			//Debug.Log("left mouse button down");
 			//Debug.Log("xpos mouse : "+getMousePos);
-			if (GetComponent<Collider>()==Physics2D.OverlapPoint(getMousePos))	//if you touch the slider with the mouse
+			//if (GetComponent<Collider>()==Physics2D.OverlapPoint(getMousePos))	//if you touch the slider with the mouse
+			if (hitTimeSlider(timeSliderImage))		//if you touch the slider with the mouse within his collider
 			{
 				moving=true;
 			}
