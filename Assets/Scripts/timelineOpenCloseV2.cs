@@ -47,6 +47,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
 	double fig1StartPos;
 	double fig2StartPos;
 	Vector3 rail1StartPos;
+	Vector3 rail1EndPos;
 	Vector3 rail2StartPos;
 	Vector3 rail3StartPos;
 	Vector3 rail4StartPos;
@@ -129,13 +130,15 @@ public class timelineOpenCloseV2 : MonoBehaviour
 		//Debug.Log(">>>figure elements existing: "+figure1.name);
 		fig1StartPos=-1.75f;
 		fig2StartPos=1.88f;
-		Vector3 rail1StartPos=new Vector3(0.0f,-0.009f,-2.0f);
-		Vector3 rail2StartPos=new Vector3(-0.119f,0.146f,-2.0f);
-		Vector3 rail3StartPos=new Vector3(-0.319f,0.146f,-2.0f);
-		Vector3 rail4StartPos=new Vector3(-0.439f,0.146f,-2.0f);
-		Vector3 rail5StartPos=new Vector3(-0.642f,0.146f,-2.0f);
-		Vector3 rail6StartPos=new Vector3(-0.759f,0.146f,-2.0f);
-		
+		rail1StartPos=new Vector3(0.0f,-0.009f,-2.0f);
+		rail1EndPos=new Vector3(0.0f,-0.009f,2.0f);
+		rail2StartPos=new Vector3(-0.119f,0.146f,-2.0f);
+		rail3StartPos=new Vector3(-0.319f,0.146f,-2.0f);
+		rail4StartPos=new Vector3(-0.439f,0.146f,-2.0f);
+		rail5StartPos=new Vector3(-0.642f,0.146f,-2.0f);
+		rail6StartPos=new Vector3(-0.759f,0.146f,-2.0f);
+		//Debug.Log("start... "+rail1StartPos);
+		//Debug.Log("start... "+rail1EndPos);
 		//list of objects in the timeline
 		//create an empty list
 		List<GameObject> timelineObjects=new List<GameObject>();
@@ -343,13 +346,26 @@ public class timelineOpenCloseV2 : MonoBehaviour
 		//fig2StartPos=fig2StartPos-0.005f;
 		figure2.transform.position=new Vector3(rail3StartPos.x,figure2.transform.position.y,(float)fig2StartPos);		//start-pos on the right side in timeline
 	}
-	public void animate3DObjectByTime(GameObject fig3D, int startSec, double animLength, int timerTime)
+	public void animate3DObjectByTime(GameObject fig3D, int startSec, double animLength, double timerTime, double railStartZ, double railEndZ)
 	{
 		Debug.Log("method: fig: "+fig3D+" 3dobj: "+figure1+" startSec: "+startSec+" animLength: "+animLength+" timerTime: "+timerTime);
-		double figPos=0;
+		double figPos=figure1.transform.position.z;
+		double figStartPos=railStartZ;
+		animLength=44.0f;
 		if ((timerTime>=startSec)&&(timerTime<=(startSec+(int)animLength)))
 		{
-			figPos=figPos+0.005f;
+			//calculate the rail-length
+			double railLength=(Mathf.Abs((float)railStartZ)+Mathf.Abs((float)railEndZ));	//range: -2 to +2 = length of 4
+			//calculate the relation of timer time to object time
+			//double percentageOfTime=(double)timerTime/((double)startSec+animLength);		//e.g. 66/(57+100) -> wrong
+			double percentageOfTime=((double)timerTime-(double)startSec)/animLength;		//e.g. 66-57=9 -> we are currently at 9/100
+			//calculate the railpos related to the time-percentage
+			//double railPos=railLength*percentageOfTime;									//0,41 at timer: 66 -> wrong
+			double railPos=(railLength*percentageOfTime)+figStartPos;						// 4=100, 9/100 from 4: 36/400
+			//figPos=figPos-0.05f;
+			figPos=railPos;
+			Debug.Log("if: rail-length: "+railLength+" figStartPos: "+figStartPos+" percentage: "+percentageOfTime+" railPos: "+railPos+" timerTime: "+timerTime);
+			Debug.Log("if: figPos: "+figPos);
 			figure1.transform.position=new Vector3(rail3StartPos.x,figure1.transform.position.y,(float)figPos);
 		}
 	}
@@ -572,11 +588,10 @@ public class timelineOpenCloseV2 : MonoBehaviour
 				//createRectangle(figureObjects[currentClickedObjectIndex], new Vector2(50.0f,50.0f), new Vector2(50.0f,50.0f));
 				
 				//calculate the time the animation starts to run
-				double startSec=calculateFigureStartTimeInSec(figureObjects[currentClickedObjectIndex], 100.0f, maxTimeInSec, minX, maxX);
+				//double startSec=calculateFigureStartTimeInSec(figureObjects[currentClickedObjectIndex], 100.0f, maxTimeInSec, minX, maxX);
 				//set 3d object to default position
 				set3DObject();
-				//animate the 3d object controlled by time
-				animate3DObjectByTime(figureObjects[currentClickedObjectIndex], (int)startSec, 100.0f, (int)(AnimationTimer.GetTime()));
+				//animation of 3d object not during dragging object on timeline ->outside of dragging
 				
 				//set up flags
 			}
@@ -715,6 +730,8 @@ public class timelineOpenCloseV2 : MonoBehaviour
 			clickingObject=false;
 			movingObject=false;
 			draggingObject=false;
+			
+			
 			/*
 			// ------------ Dinge, die f�r die Kulissen im Controler passieren m�ssen
 
@@ -728,6 +745,13 @@ public class timelineOpenCloseV2 : MonoBehaviour
 			gameController.GetComponent<SceneDataController>().CreateScene(StaticSceneData.StaticData); // dieses Zeile macht das gleiche und ist glaube besser.
 			*/
 		}
+		Debug.Log("update ");
+		Debug.Log("update. ");
+		Debug.Log("update.. ");
+		Debug.Log("update... ");
+		//animate the 3d object controlled by time
+		double startSec=calculateFigureStartTimeInSec(figureObjects[currentClickedObjectIndex], 100.0f, maxTimeInSec, minX, maxX);
+		animate3DObjectByTime(figureObjects[currentClickedObjectIndex], (int)startSec, 100.0f, AnimationTimer.GetTime(), rail1StartPos.z, rail1EndPos.z);
 		/*
 		//
 		if (Input.GetMouseButtonUp(0) && (!movingObject))
