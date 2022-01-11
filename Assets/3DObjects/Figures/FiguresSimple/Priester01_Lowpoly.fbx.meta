@@ -19,12 +19,12 @@ ModelImporter:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: Priester_col
-    second: {fileID: 2800000, guid: 2c627c2d60eeff64484cbfb2b9b1ad10, type: 3}
+    second: {fileID: 2800000, guid: ef104ba7815cc0c49a825c52fe01ed92, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: Sonnenschirmmann_Fahrwerk_col
-    second: {fileID: 2800000, guid: 212e090b38f56f24b845c9d76ac8eaf7, type: 3}
+    second: {fileID: 2800000, guid: 7290eb7d00b871d4184a8c21e883459e, type: 3}
   materials:
     materialImportMode: 2
     materialName: 0
