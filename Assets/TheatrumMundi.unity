@@ -3642,10 +3642,10 @@ RectTransform:
   m_Father: {fileID: 1641402386}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 225, y: -375}
-  m_SizeDelta: {x: 150, y: 150}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &97666483
 GameObject:
@@ -5783,12 +5783,6 @@ RectTransform:
   m_AnchoredPosition: {x: 957.03314, y: -288.09802}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!1 &157378646 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: cb196e775caeeb44886613c5121bec46,
-    type: 3}
-  m_PrefabInstance: {fileID: 185906820}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &158250174
 GameObject:
   m_ObjectHideFlags: 0
@@ -12792,6 +12786,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a67ecf0af15793345a7b65d598f1a74b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  toggleBb: {fileID: 0}
+  thisLightElement:
+    name: 
+    x: 0
+    y: 0
+    z: 0
+    active: 0
+    railnumber: 0
+    r: 0
+    g: 0
+    b: 0
+    intensity: 0
+    angle_h: 0
+    angle_v: 0
+    stagePosition: 0
 --- !u!1 &325840619
 GameObject:
   m_ObjectHideFlags: 0
@@ -14155,12 +14164,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 373617242}
   m_CullTransparentMesh: 1
---- !u!1 &378630035 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: dbe3ff39b6f67ef419bf3a056592c32d,
-    type: 3}
-  m_PrefabInstance: {fileID: 117270390}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &378753671
 GameObject:
   m_ObjectHideFlags: 0
@@ -20740,10 +20743,10 @@ RectTransform:
   m_Father: {fileID: 1641402386}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 75, y: -225}
-  m_SizeDelta: {x: 150, y: 150}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &526990524
 GameObject:
@@ -28541,10 +28544,10 @@ RectTransform:
   m_Father: {fileID: 1641402386}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 225, y: -75}
-  m_SizeDelta: {x: 150, y: 150}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &690139130
 GameObject:
@@ -36643,10 +36646,10 @@ RectTransform:
   m_Father: {fileID: 1641402386}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 225, y: -225}
-  m_SizeDelta: {x: 150, y: 150}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &847804988
 GameObject:
@@ -37737,10 +37740,10 @@ RectTransform:
   m_Father: {fileID: 1641402386}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 75, y: -375}
-  m_SizeDelta: {x: 150, y: 150}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &865866170
 GameObject:
@@ -38593,12 +38596,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 888115635}
   m_CullTransparentMesh: 1
---- !u!1 &888977630 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 667e21196a330e748acc9371517cc193,
-    type: 3}
-  m_PrefabInstance: {fileID: 1668338473}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &890630431
 GameObject:
   m_ObjectHideFlags: 0
@@ -42033,6 +42030,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a67ecf0af15793345a7b65d598f1a74b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  toggleBb: {fileID: 0}
+  thisLightElement:
+    name: 
+    x: 0
+    y: 0
+    z: 0
+    active: 0
+    railnumber: 0
+    r: 0
+    g: 0
+    b: 0
+    intensity: 0
+    angle_h: 0
+    angle_v: 0
+    stagePosition: 0
 --- !u!1 &975155745
 GameObject:
   m_ObjectHideFlags: 0
@@ -46816,7 +46828,7 @@ GameObject:
   - component: {fileID: 1081911550}
   - component: {fileID: 1081911549}
   m_Layer: 5
-  m_Name: ButtonPause
+  m_Name: ButtonStop
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -46887,7 +46899,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1228481266}
         m_TargetAssemblyTypeName: PlayerControls, Assembly-CSharp
-        m_MethodName: ButtonPause
+        m_MethodName: ButtonStop
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -46917,7 +46929,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: a2cc9d244cc77f741b78888408f60a31, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 51f7557d344796548b00a288b9f2913c, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -50319,12 +50331,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!1 &1174934897 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: b113907c82bae0043843c702e8b0c69e,
-    type: 3}
-  m_PrefabInstance: {fileID: 944954638}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1175284288
 GameObject:
   m_ObjectHideFlags: 0
@@ -51453,10 +51459,10 @@ RectTransform:
   m_Father: {fileID: 1641402386}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 75, y: -75}
-  m_SizeDelta: {x: 150, y: 150}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1001 &1206788520
 PrefabInstance:
@@ -52260,7 +52266,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TimerText: {fileID: 308093519}
   PlayButton: {fileID: 645654008}
-  PauseButton: {fileID: 1081911549}
+  StopButton: {fileID: 1081911549}
   PauseSprite: {fileID: 21300000, guid: a2cc9d244cc77f741b78888408f60a31, type: 3}
   PlaySprite: {fileID: 21300000, guid: 0730ffa5a88b0cb4b9aa420515422b48, type: 3}
   StopSprite: {fileID: 21300000, guid: 51f7557d344796548b00a288b9f2913c, type: 3}
@@ -54511,38 +54517,7 @@ MonoBehaviour:
   - {fileID: 1270359409}
   - {fileID: 1455874889}
   - {fileID: 106200891}
-  objectsFigureElements:
-  - {fileID: 826313955}
-  - {fileID: 548115247}
-  - {fileID: 912083116}
-  - {fileID: 1448134038}
-  - {fileID: 1353146124}
-  - {fileID: 121852125}
-  - {fileID: 2122101843}
-  - {fileID: 1669845446}
-  - {fileID: 116323877}
-  - {fileID: 1232288780}
-  - {fileID: 412782385}
-  - {fileID: 1355488324}
-  - {fileID: 18766160}
-  - {fileID: 1911654737}
-  - {fileID: 1041936849}
-  - {fileID: 1638515373}
-  - {fileID: 2070169184}
-  - {fileID: 1838779314}
-  - {fileID: 1489539884}
-  - {fileID: 271366309}
-  - {fileID: 1638381445}
-  - {fileID: 1694074244}
-  - {fileID: 822978590}
-  - {fileID: 840606808}
-  - {fileID: 2134053308}
-  - {fileID: 157378646}
-  - {fileID: 1887044959}
-  - {fileID: 1174934897}
-  - {fileID: 1730431859}
-  - {fileID: 378630035}
-  - {fileID: 888977630}
+  objectsFigureElements: []
   objectsLightElements:
   - goLightElement: {fileID: 973548362}
     lightStagePosition: 0
@@ -59359,6 +59334,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a67ecf0af15793345a7b65d598f1a74b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  toggleBb: {fileID: 0}
+  thisLightElement:
+    name: 
+    x: 0
+    y: 0
+    z: 0
+    active: 0
+    railnumber: 0
+    r: 0
+    g: 0
+    b: 0
+    intensity: 0
+    angle_h: 0
+    angle_v: 0
+    stagePosition: 0
 --- !u!1 &1371503889
 GameObject:
   m_ObjectHideFlags: 0
@@ -74715,6 +74705,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a67ecf0af15793345a7b65d598f1a74b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  toggleBb: {fileID: 0}
+  thisLightElement:
+    name: 
+    x: 0
+    y: 0
+    z: 0
+    active: 0
+    railnumber: 0
+    r: 0
+    g: 0
+    b: 0
+    intensity: 0
+    angle_h: 0
+    angle_v: 0
+    stagePosition: 0
 --- !u!1 &1722299197
 GameObject:
   m_ObjectHideFlags: 0
@@ -75050,12 +75055,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1729761608}
   m_CullTransparentMesh: 1
---- !u!1 &1730431859 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 3ea3f62a98810ad4da96af56e31663d7,
-    type: 3}
-  m_PrefabInstance: {fileID: 2056794129}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1733494851
 GameObject:
   m_ObjectHideFlags: 0
@@ -81445,12 +81444,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1882572852}
   m_CullTransparentMesh: 1
---- !u!1 &1887044959 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 82ce4a95c07590849a613b6e1f3434ab,
-    type: 3}
-  m_PrefabInstance: {fileID: 1045576987}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1889065968
 GameObject:
   m_ObjectHideFlags: 0
@@ -88731,12 +88724,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2066820646}
   m_CullTransparentMesh: 1
---- !u!1 &2070169184 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 3d8a31fdddb31db4e912534f43163cd9,
-    type: 3}
-  m_PrefabInstance: {fileID: 286490428}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2073238431
 GameObject:
   m_ObjectHideFlags: 0

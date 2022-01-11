@@ -7,7 +7,7 @@ public class PlayerControls : MonoBehaviour
 {
     public Text TimerText;
     public Button PlayButton;
-    public Button PauseButton;
+    public Button StopButton;
     public Sprite PauseSprite;
     public Sprite PlaySprite;
     public Sprite StopSprite;
@@ -17,7 +17,7 @@ public class PlayerControls : MonoBehaviour
     void Start()
     {
         PlayButton.transform.GetComponent<Image>().sprite = PlaySprite;
-        PauseButton.transform.GetComponent<Image>().sprite = PauseSprite;
+        StopButton.transform.GetComponent<Image>().sprite = StopSprite;
     }
 
     // Update is called once per frame
@@ -43,29 +43,30 @@ public class PlayerControls : MonoBehaviour
         {
             case AnimationTimer.TimerState.stopped:
                 AnimationTimer.StartTimer();
-                PlayButton.transform.GetComponent<Image>().sprite = StopSprite;
-                break;
-            case AnimationTimer.TimerState.playing:
-                AnimationTimer.StopTimer();
-                PlayButton.transform.GetComponent<Image>().sprite = PlaySprite;
-                break;
-            case AnimationTimer.TimerState.paused:
-                AnimationTimer.StartTimer();
-                PlayButton.transform.GetComponent<Image>().sprite = StopSprite;
-                break;
-        }
-    }
-    public void ButtonPause()
-    {
-        switch (AnimationTimer.GetTimerState())
-        {
-            case AnimationTimer.TimerState.stopped:
+                PlayButton.transform.GetComponent<Image>().sprite = PauseSprite;
                 break;
             case AnimationTimer.TimerState.playing:
                 AnimationTimer.PauseTimer();
                 PlayButton.transform.GetComponent<Image>().sprite = PlaySprite;
                 break;
             case AnimationTimer.TimerState.paused:
+                AnimationTimer.StartTimer();
+                PlayButton.transform.GetComponent<Image>().sprite = PauseSprite;
+                break;
+        }
+    }
+    public void ButtonStop()
+    {
+        switch (AnimationTimer.GetTimerState())
+        {
+            case AnimationTimer.TimerState.stopped:
+                break;
+            case AnimationTimer.TimerState.playing:
+                AnimationTimer.StopTimer();
+                PlayButton.transform.GetComponent<Image>().sprite = PlaySprite;
+                break;
+            case AnimationTimer.TimerState.paused:
+                AnimationTimer.StopTimer();
                 break;
         }
     }

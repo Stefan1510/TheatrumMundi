@@ -153,7 +153,7 @@ public class SaveFileController : MonoBehaviour
         sceneContentData += "Dateiinformationen:\n\n";
         sceneContentData += "Kulissen: " + this.GetComponent<SceneDataController>().countActiveSceneryElements.ToString() + "\n\n";
         sceneContentData += "Fuguren: " + "\n\n";
-        sceneContentData += "L�nge: " + "\n\n";
+        sceneContentData += "Länge: " + "\n\n";
         sceneContentData += "Lichter: " + "\n\n";
         sceneContentData += "Musik: ";
         textFileContentData.text = sceneContentData;
