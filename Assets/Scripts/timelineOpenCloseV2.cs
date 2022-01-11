@@ -345,6 +345,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
 	}
 	public void animate3DObjectByTime(GameObject fig3D, int startSec, double animLength, int timerTime)
 	{
+		Debug.Log("method: fig: "+fig3D+" 3dobj: "+figure1+" startSec: "+startSec+" animLength: "+animLength+" timerTime: "+timerTime);
 		double figPos=0;
 		if ((timerTime>=startSec)&&(timerTime<=(startSec+(int)animLength)))
 		{
@@ -389,13 +390,14 @@ public class timelineOpenCloseV2 : MonoBehaviour
 	public int calculateFigureStartTimeInSec(GameObject fig, double animLength, int maxTimeLengthInSec, double railMinX, double railMaxX)
 	{
 		int sec=0;
-		double tmpX=fig.transform.position.x;
+		double tmpX=fig.transform.position.x-railMinX;	//x-pos is screenX from left border, railMinX is the rail-startpoint
 		Vector2 tmpSize=fig.GetComponent<BoxCollider2D>().size;
 		double tmpMinX=(double)tmpX-(tmpSize.x/2.0f);	//if tmpX is the midpoint of figure
 		double tmpMaxX=tmpMinX+animLength;	//length of figure is related to rail speed, here named as animationLength
 		//get figure minX related to timelineMinX
-		double percentageOfRail=tmpMinX/railMaxX;	//e.g.: 0,3823124 (38%)
+		double percentageOfRail=tmpMinX/(railMaxX-railMinX);	//max-min=real length, percentage: e.g. 0,3823124 (38%)
 		sec=(int)(((double)maxTimeLengthInSec)*percentageOfRail);
+		//Debug.Log("method: fig: "+fig+" tmpX: "+tmpX+" tmpSize: "+tmpSize+" tmpMinX: "+tmpMinX+" railMaxX: "+railMaxX+" percentage: "+percentageOfRail+" sec: "+sec);
 		return sec;
 	}
 	// Update is called once per frame
