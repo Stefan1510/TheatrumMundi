@@ -36,14 +36,20 @@ public class timelineOpenCloseV2 : MonoBehaviour
 	public GameObject mainMenue;
 	
 	GameObject[] figureObjects;
+	GameObject[] figureObjects3D;
 	int currentClickedObjectIndex;
 	
 	public List<GameObject> timelineObjects;
+	public List<GameObject> timelineObjects3D;
 	
 	public GameObject gameController;
 	private FigureElement ThisFigureElement;	//element to set 3d object
-	public GameObject figure1;
-	public GameObject figure2;
+	public GameObject figure1;		//adliger, element 0
+	public GameObject figure2;		//hirte, element 1
+	public GameObject figure3;		//hirte02, element 2
+	public GameObject figure4;		//elephant, element 3
+	public GameObject figure5;		//esel, element 4
+	public GameObject figure6;		//giraffe, element 5
 	double fig1StartPos;
 	double fig2StartPos;
 	Vector3 rail1StartPos;
@@ -89,7 +95,8 @@ public class timelineOpenCloseV2 : MonoBehaviour
 		
 		//load all objects given in the figuresShelf
 		//Debug.Log("objectscount: "+objectLibrary.transform.childCount);
-		figureObjects=new GameObject[objectLibrary.transform.childCount]; //instead of a count like "3"
+		figureObjects=new GameObject[objectLibrary.transform.childCount]; 		//instead of a count like "3"
+		figureObjects3D=new GameObject[figureObjects.Length]; 	//instead of a count like "3"
 		objectShelfPosition=new Vector2[figureObjects.Length];
 		objectShelfParent=new GameObject[figureObjects.Length];
 		for(int i=0;i<objectLibrary.transform.childCount;i++)
@@ -104,7 +111,14 @@ public class timelineOpenCloseV2 : MonoBehaviour
 			//store default parentName
 			objectShelfParent[i]=new GameObject(figureObjects[i].transform.parent.gameObject.name);
 		}
+		figureObjects3D[0]=figure1;
+		figureObjects3D[1]=figure2;
+		figureObjects3D[2]=figure3;
+		figureObjects3D[3]=figure4;
+		figureObjects3D[4]=figure5;
+		figureObjects3D[5]=figure6;
 		Debug.Log("++++++figures loaded: "+figureObjects.Length);
+		Debug.Log("++++++figures3D loaded: "+figureObjects3D.Length);
 		
 		//example for the first element
 		objectDefaultPosition=figureObjects[0].transform.position;
@@ -142,6 +156,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
 		//list of objects in the timeline
 		//create an empty list
 		List<GameObject> timelineObjects=new List<GameObject>();
+		List<GameObject> timelineObjects3D=new List<GameObject>();
     }
 
 	public string identifyClickedObject()
@@ -339,18 +354,20 @@ public class timelineOpenCloseV2 : MonoBehaviour
 			objects.Add(obj);
 		}
 	}
-	public void set3DObject()
+	public void set3DObject(int idx, GameObject[] obj3D)
 	{
 		//fig1StartPos=fig1StartPos+0.005f;
-		figure1.transform.position=new Vector3(rail1StartPos.x,figure1.transform.position.y,(float)fig1StartPos);		//start-pos on the left side in timeline
+		//figure1.transform.position=new Vector3(rail1StartPos.x,figure1.transform.position.y,(float)fig1StartPos);		//start-pos on the left side in timeline
+		obj3D[idx].transform.position=new Vector3(rail1StartPos.x,0.0f,(float)fig1StartPos*(-1.0f));
 		//fig2StartPos=fig2StartPos-0.005f;
-		figure2.transform.position=new Vector3(rail3StartPos.x,figure2.transform.position.y,(float)fig2StartPos);		//start-pos on the right side in timeline
+		//figure2.transform.position=new Vector3(rail3StartPos.x,figure2.transform.position.y,(float)fig2StartPos);		//start-pos on the right side in timeline
 	}
 	public void animate3DObjectByTime(GameObject fig3D, int startSec, double animLength, double timerTime, double railStartZ, double railEndZ)
 	{
 		Debug.Log("method: fig: "+fig3D+" 3dobj: "+figure1+" startSec: "+startSec+" animLength: "+animLength+" timerTime: "+timerTime);
-		double figPos=figure1.transform.position.z;
-		double figStartPos=railStartZ;
+		Debug.Log("fig3d props: "+fig3D.transform.position);
+		double figPos=fig3D.transform.position.z;
+		double figStartPos=railStartZ*(-1.0f);		//*-1.0 changes startpoint and animation-direction
 		animLength=44.0f;
 		if ((timerTime>=startSec)&&(timerTime<=(startSec+(int)animLength)))
 		{
@@ -361,12 +378,12 @@ public class timelineOpenCloseV2 : MonoBehaviour
 			double percentageOfTime=((double)timerTime-(double)startSec)/animLength;		//e.g. 66-57=9 -> we are currently at 9/100
 			//calculate the railpos related to the time-percentage
 			//double railPos=railLength*percentageOfTime;									//0,41 at timer: 66 -> wrong
-			double railPos=(railLength*percentageOfTime)+figStartPos;						// 4=100, 9/100 from 4: 36/400
+			double railPos=(railLength*percentageOfTime)*(-1.0f)+figStartPos;						// 4=100, 9/100 from 4: 36/400
 			//figPos=figPos-0.05f;
 			figPos=railPos;
 			Debug.Log("if: rail-length: "+railLength+" figStartPos: "+figStartPos+" percentage: "+percentageOfTime+" railPos: "+railPos+" timerTime: "+timerTime);
 			Debug.Log("if: figPos: "+figPos);
-			figure1.transform.position=new Vector3(rail3StartPos.x,figure1.transform.position.y,(float)figPos);
+			fig3D.transform.position=new Vector3(rail3StartPos.x,fig3D.transform.position.y,(float)figPos);
 		}
 	}
 	public bool isInList(List<GameObject> objects,GameObject obj)
@@ -415,6 +432,15 @@ public class timelineOpenCloseV2 : MonoBehaviour
 		sec=(int)(((double)maxTimeLengthInSec)*percentageOfRail);
 		//Debug.Log("method: fig: "+fig+" tmpX: "+tmpX+" tmpSize: "+tmpSize+" tmpMinX: "+tmpMinX+" railMaxX: "+railMaxX+" percentage: "+percentageOfRail+" sec: "+sec);
 		return sec;
+	}
+	public bool checkFigureObjectShouldPlaying(GameObject fig, int startTime, double animLength, double timerTime)
+	{
+		if ((timerTime>=startTime)&&(timerTime<=(startTime+(animLength/2.0))))	///2.0 because animLength=Pixel -> animLength/2~time
+		{
+			return true;
+		}
+		else
+			return false;
 	}
 	// Update is called once per frame
     void Update()
@@ -590,7 +616,8 @@ public class timelineOpenCloseV2 : MonoBehaviour
 				//calculate the time the animation starts to run
 				//double startSec=calculateFigureStartTimeInSec(figureObjects[currentClickedObjectIndex], 100.0f, maxTimeInSec, minX, maxX);
 				//set 3d object to default position
-				set3DObject();
+				set3DObject(currentClickedObjectIndex,figureObjects3D);
+				updateObjectList(timelineObjects3D,figureObjects3D[currentClickedObjectIndex]);
 				//animation of 3d object not during dragging object on timeline ->outside of dragging
 				
 				//set up flags
@@ -749,9 +776,39 @@ public class timelineOpenCloseV2 : MonoBehaviour
 		Debug.Log("update. ");
 		Debug.Log("update.. ");
 		Debug.Log("update... ");
+		Debug.Log("figObj: "+figureObjects[currentClickedObjectIndex].ToString());
 		//animate the 3d object controlled by time
-		double startSec=calculateFigureStartTimeInSec(figureObjects[currentClickedObjectIndex], 100.0f, maxTimeInSec, minX, maxX);
-		animate3DObjectByTime(figureObjects[currentClickedObjectIndex], (int)startSec, 100.0f, AnimationTimer.GetTime(), rail1StartPos.z, rail1EndPos.z);
+		//double startSec=calculateFigureStartTimeInSec(figureObjects[currentClickedObjectIndex], 100.0f, maxTimeInSec, minX, maxX);
+		int idx=0;
+		for(int i=0;i<timelineObjects.Count;i++)
+		{
+			idx=idx+1;
+			double startSec=calculateFigureStartTimeInSec(timelineObjects[i], 100.0f, maxTimeInSec, minX, maxX);
+			//Debug.Log("startSec: "+startSec);
+			bool tests=checkFigureObjectShouldPlaying(timelineObjects[i], (int)startSec, 100.0f, AnimationTimer.GetTime());
+			//Debug.Log("tests: "+tests);
+			if (tests)
+			{
+				animate3DObjectByTime(timelineObjects3D[i], (int)startSec, 100.0f, AnimationTimer.GetTime(), rail1StartPos.z, rail1EndPos.z);
+			}
+		}
+		//animate3DObjectByTime(figureObjects[currentClickedObjectIndex], (int)startSec, 100.0f, AnimationTimer.GetTime(), rail1StartPos.z, rail1EndPos.z);
+		
+		/*string st="";
+		st=figureObjects[currentClickedObjectIndex].name;
+		Debug.Log("st: "+st);
+		if (st=="ButtonFigObj01")
+		{
+			Debug.Log("case: "+st);
+			animate3DObjectByTime(figureObjects3D[0], (int)startSec, 100.0f, AnimationTimer.GetTime(), rail1StartPos.z, rail1EndPos.z);
+		}
+		if (st=="ButtonFigObj02")
+		{
+			Debug.Log("case: "+st);
+			animate3DObjectByTime(figureObjects3D[1], (int)startSec, 100.0f, AnimationTimer.GetTime(), rail1StartPos.z, rail1EndPos.z);
+		}
+		*/
+		
 		/*
 		//
 		if (Input.GetMouseButtonUp(0) && (!movingObject))
