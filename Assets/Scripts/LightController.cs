@@ -12,6 +12,7 @@ public class LightController : MonoBehaviour
     public Slider sliderLbHorizontal;
     public Slider sliderLbVertical;
     private float _startPosition;
+    private float _startYAngle;
     private float _startHeight;
 
     private Texture2D _lbCookie;
@@ -36,6 +37,7 @@ public class LightController : MonoBehaviour
     {
         thisLightElement = StaticSceneData.StaticData.lightElements.Find(le => le.name == gameObject.name);
         _startPosition = transform.localPosition.z;
+        _startYAngle = transform.localEulerAngles.y;
         _startHeight = transform.localPosition.y;
         _lbCookieOriginal = (Texture2D)GetComponent<Light>().cookie;
         _lbCookieWidth = _lbCookieOriginal.width;
@@ -84,8 +86,11 @@ public class LightController : MonoBehaviour
 
     public void ChangePosition(float PositionValue)
     {
+        Debug.Log(name + " YAngle: " + _startYAngle);
         thisLightElement.z = PositionValue;
+        float angleYValue = PositionValue * 10;
         transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, _startPosition + PositionValue);
+        transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, _startYAngle - angleYValue, transform.localEulerAngles.z);
         //StaticSceneData.Lights3D();
     }
 
