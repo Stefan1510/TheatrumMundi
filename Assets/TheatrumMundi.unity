@@ -12372,7 +12372,7 @@ RectTransform:
   m_Father: {fileID: 2015475392}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 0.39411765}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
@@ -19571,7 +19571,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: -840}
+  m_SizeDelta: {x: 0, y: 670}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &503995816
 MonoBehaviour:
@@ -21400,8 +21400,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 316498327}
   m_HandleRect: {fileID: 316498326}
   m_Direction: 2
-  m_Value: 0
-  m_Size: 1
+  m_Value: 1
+  m_Size: 0.60588235
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -58765,7 +58765,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 10, y: -170}
+  m_AnchoredPosition: {x: 10, y: -960}
   m_SizeDelta: {x: 508, y: 360}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1361729900
@@ -66974,7 +66974,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 10, y: -180}
+  m_AnchoredPosition: {x: 10, y: -1330}
   m_SizeDelta: {x: 508, y: 360}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1559231006
@@ -73198,7 +73198,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 10, y: -160}
+  m_AnchoredPosition: {x: 10, y: -590}
   m_SizeDelta: {x: 508, y: 360}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1684594950
@@ -73317,7 +73317,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 10, y: -150}
+  m_AnchoredPosition: {x: 10, y: -220}
   m_SizeDelta: {x: 508, y: 360}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1685989248
@@ -78804,9 +78804,14 @@ MonoBehaviour:
   objectLibrary: {fileID: 1641402385}
   mainMenue: {fileID: 0}
   timelineObjects: []
+  timelineObjects3D: []
   gameController: {fileID: 0}
-  figure1: {fileID: 1072686385}
+  figure1: {fileID: 826313955}
   figure2: {fileID: 1072686385}
+  figure3: {fileID: 912083116}
+  figure4: {fileID: 840606808}
+  figure5: {fileID: 271366309}
+  figure6: {fileID: 822978590}
 --- !u!61 &1815358632
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -87352,7 +87357,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &2017399187
 MonoBehaviour:
   m_ObjectHideFlags: 0
