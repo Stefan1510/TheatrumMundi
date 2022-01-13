@@ -6384,6 +6384,7 @@ MonoBehaviour:
   sliderLbHeight: {fileID: 734880339}
   sliderLbHorizontal: {fileID: 1122055224}
   sliderLbVertical: {fileID: 1758481278}
+  UiSetting_LB_Image: {fileID: 0}
   thisLightElement:
     name: 
     x: 0
@@ -7955,6 +7956,109 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &182663314
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 182663315}
+  - component: {fileID: 182663318}
+  - component: {fileID: 182663317}
+  - component: {fileID: 182663316}
+  m_Layer: 5
+  m_Name: ui_setting_LB_1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &182663315
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 182663314}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 1369675486}
+  m_Father: {fileID: 387539580}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 136, y: -146}
+  m_SizeDelta: {x: 112, y: 56}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &182663316
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 182663314}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69126105bbff18a4ca7cfd3a9557fe57, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UiSetting_LB: {fileID: 182663317}
+  UiSetting_LB_Light: {fileID: 1369675487}
+  UiSetting_LB_on_Sprite: {fileID: 21300000, guid: 5c442af3d01617f469079ca79ed66470,
+    type: 3}
+  UiSetting_LB_off_Sprite: {fileID: 21300000, guid: 971ba0277c6b6d14993df569e5ee3d1b,
+    type: 3}
+  UiSetting_LB_active_Sprite: {fileID: 21300000, guid: dc071427c43d36e4397192a35c9acb4a,
+    type: 3}
+  UiSetting_LB_Light_on_Sprite: {fileID: 21300000, guid: 9952ba0c6e3e7e846b678741467acdd1,
+    type: 3}
+  UiSetting_LB_Light_off_Sprite: {fileID: 21300000, guid: 3ff7746081dbb404081a4be868ea3a85,
+    type: 3}
+  UiSetting_LB_Light_active_Sprite: {fileID: 21300000, guid: 02717f700f0835844895493aaa9ba710,
+    type: 3}
+--- !u!114 &182663317
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 182663314}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 5c442af3d01617f469079ca79ed66470, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &182663318
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 182663314}
+  m_CullTransparentMesh: 1
 --- !u!1 &182814986
 GameObject:
   m_ObjectHideFlags: 0
@@ -17477,7 +17581,7 @@ GameObject:
   - component: {fileID: 387539582}
   - component: {fileID: 387539581}
   m_Layer: 5
-  m_Name: ImageLadenSpeichernBackground
+  m_Name: ImageLichtBackground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -17493,7 +17597,8 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 182663315}
   m_Father: {fileID: 1006120201}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -25343,8 +25448,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 316498327}
   m_HandleRect: {fileID: 316498326}
   m_Direction: 2
-  m_Value: 0
-  m_Size: 1
+  m_Value: 1
+  m_Size: 0.31117824
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -41999,6 +42104,7 @@ MonoBehaviour:
   sliderLbHeight: {fileID: 734880339}
   sliderLbHorizontal: {fileID: 1122055224}
   sliderLbVertical: {fileID: 1758481278}
+  UiSetting_LB_Image: {fileID: 0}
   thisLightElement:
     name: 
     x: 0
@@ -55608,6 +55714,7 @@ MonoBehaviour:
   sliderLbHeight: {fileID: 784320265}
   sliderLbHorizontal: {fileID: 97666485}
   sliderLbVertical: {fileID: 548514980}
+  UiSetting_LB_Image: {fileID: 0}
   thisLightElement:
     name: 
     x: 0
@@ -61005,6 +61112,7 @@ MonoBehaviour:
   sliderLbHeight: {fileID: 767472684}
   sliderLbHorizontal: {fileID: 563628291}
   sliderLbVertical: {fileID: 836744546}
+  UiSetting_LB_Image: {fileID: 182663317}
   thisLightElement:
     name: 
     x: 0
@@ -68365,6 +68473,81 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   m_IsOn: 1
+--- !u!1 &1369675485
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1369675486}
+  - component: {fileID: 1369675488}
+  - component: {fileID: 1369675487}
+  m_Layer: 5
+  m_Name: ui_setting_LB_1_Light
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1369675486
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1369675485}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 182663315}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 48, y: 48}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1369675487
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1369675485}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 9952ba0c6e3e7e846b678741467acdd1, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1369675488
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1369675485}
+  m_CullTransparentMesh: 1
 --- !u!1 &1371503889
 GameObject:
   m_ObjectHideFlags: 0
@@ -75902,6 +76085,7 @@ MonoBehaviour:
   sliderLbHeight: {fileID: 480670572}
   sliderLbHorizontal: {fileID: 998141519}
   sliderLbVertical: {fileID: 74667777}
+  UiSetting_LB_Image: {fileID: 0}
   thisLightElement:
     name: 
     x: 0
@@ -80527,6 +80711,7 @@ MonoBehaviour:
   sliderLbHeight: {fileID: 734880339}
   sliderLbHorizontal: {fileID: 1122055224}
   sliderLbVertical: {fileID: 1758481278}
+  UiSetting_LB_Image: {fileID: 0}
   thisLightElement:
     name: 
     x: 0
@@ -92048,6 +92233,7 @@ MonoBehaviour:
   sliderLbHeight: {fileID: 1922030629}
   sliderLbHorizontal: {fileID: 216966076}
   sliderLbVertical: {fileID: 1613622542}
+  UiSetting_LB_Image: {fileID: 0}
   thisLightElement:
     name: 
     x: 0
@@ -107593,6 +107779,7 @@ MonoBehaviour:
   sliderLbHeight: {fileID: 784320265}
   sliderLbHorizontal: {fileID: 97666485}
   sliderLbVertical: {fileID: 548514980}
+  UiSetting_LB_Image: {fileID: 0}
   thisLightElement:
     name: 
     x: 0

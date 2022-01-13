@@ -26,10 +26,11 @@ public class LightController : MonoBehaviour
     private int _lbAngleHorizontal;
     private int _lbAngleVertical;
 
-    [HideInInspector] public LightElement thisLightElement;
-    //private void Awake()
-    //{
+    public Image UiSetting_LB_Image;
 
+    [HideInInspector] public LightElement thisLightElement;
+    //private void awake()
+    //{
     //}
 
     // Start is called before the first frame update
@@ -75,6 +76,9 @@ public class LightController : MonoBehaviour
         thisLightElement.active = onOffSwitch;
         GetComponent<Light>().enabled = onOffSwitch;
         //StaticSceneData.Lights3D();
+        UiSetting_LB_Image.GetComponent<LightRepresentationController>().setActive(true);
+        UiSetting_LB_Image.GetComponent<Image>().rectTransform.Rotate(0, 0, 45);
+        
     }
 
     public void ChangeIntensity(float intensityValue)
