@@ -9,12 +9,7 @@ ModelImporter:
   - first:
       74: -6697487000862083951
     second: Armature.003|Rudern
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: messing
-    second: {fileID: 2100000, guid: 4b03a8640da6a8445b6cfd92ecb8834b, type: 2}
+  externalObjects: {}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -47,7 +42,7 @@ ModelImporter:
       takeName: Armature.003|Beten
       internalID: 0
       firstFrame: 0
-      lastFrame: 119
+      lastFrame: 139
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -76,7 +71,7 @@ ModelImporter:
       takeName: Armature.003|Rudern
       internalID: 0
       firstFrame: 0
-      lastFrame: 119
+      lastFrame: 139
       wrapMode: 0
       orientationOffsetY: 0
       level: 0

@@ -4,24 +4,9 @@ ModelImporter:
   serializedVersion: 20200
   internalIDToNameTable:
   - first:
-      74: 8450808836658823645
-    second: Armature|Armature|Armature|ArmatureAction|Armature|ArmatureAction
-  externalObjects:
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Ruderschiff02_Fahrwerk_col
-    second: {fileID: 2800000, guid: 95ef2110206d517489084cb1f2d2a87c, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Ruderschiff02_Fahrwerk_specrough
-    second: {fileID: 2800000, guid: 68530edf7c3fe494b987f64e9677a440, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Ruderschiff02_col
-    second: {fileID: 2800000, guid: 8ec9c793a89bd5d4d8554f16bda2aef9, type: 3}
+      74: 4781951162920444690
+    second: Armature|ArmatureAction
+  externalObjects: {}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -50,11 +35,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Armature|Armature|Armature|ArmatureAction|Armature|ArmatureAction
-      takeName: Armature|Armature|Armature|ArmatureAction|Armature|ArmatureAction
+      name: Armature|ArmatureAction
+      takeName: Armature|ArmatureAction
       internalID: 0
       firstFrame: 0
-      lastFrame: 119
+      lastFrame: 139
       wrapMode: 0
       orientationOffsetY: 0
       level: 0

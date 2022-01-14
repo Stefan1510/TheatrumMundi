@@ -8,22 +8,22 @@ ModelImporter:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: Schiff03_Fahrwerk_col
-    second: {fileID: 2800000, guid: aae81f251da5b6e498ef55e3cfddb34a, type: 3}
+    second: {fileID: 2800000, guid: c4cff384fc330a84d87f6cfd939f35b6, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: Schiff03_Fahrwerk_specrough
-    second: {fileID: 2800000, guid: ad44ff2be70e7274bbaa88115254d401, type: 3}
+    second: {fileID: 2800000, guid: 1d7bb2180f2fda449b8feb26111d64c1, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: Schiff03_col_1
-    second: {fileID: 2800000, guid: 02e98535bbe437f46af76dc30523aa7c, type: 3}
+    second: {fileID: 2800000, guid: 9ccb750934d0dae4a8c523004694f93f, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: Schiff03_col_2
-    second: {fileID: 2800000, guid: 8b4b783ca587bbb4fbb1f6bcdff2e0e2, type: 3}
+    second: {fileID: 2800000, guid: 26bf1cd0c082db745bc1a30c33123495, type: 3}
   materials:
     materialImportMode: 2
     materialName: 0

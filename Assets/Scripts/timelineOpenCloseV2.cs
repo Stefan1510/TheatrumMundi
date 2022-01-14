@@ -50,6 +50,15 @@ public class timelineOpenCloseV2 : MonoBehaviour
 	public GameObject figure4;		//elephant, element 3
 	public GameObject figure5;		//esel, element 4
 	public GameObject figure6;		//giraffe, element 5
+	public GameObject figure7;		//giraffe, element 5
+	public GameObject figure8;		//giraffe, element 5
+	public GameObject figure9;		//giraffe, element 5
+	public GameObject figure10;		//giraffe, element 5
+	public GameObject figure11;		//giraffe, element 5
+	public GameObject figure12;		//giraffe, element 5
+	public GameObject figure13;		//giraffe, element 5
+	public GameObject figure14;		//giraffe, element 5
+	public GameObject figure15;		//giraffe, element 5
 	double fig1StartPos;
 	double fig2StartPos;
 	Vector3 rail1StartPos;
@@ -117,6 +126,15 @@ public class timelineOpenCloseV2 : MonoBehaviour
 		figureObjects3D[3]=figure4;
 		figureObjects3D[4]=figure5;
 		figureObjects3D[5]=figure6;
+		figureObjects3D[6]=figure7;
+		figureObjects3D[7]=figure8;
+		figureObjects3D[8]=figure9;
+		figureObjects3D[9]=figure10;
+		figureObjects3D[10]=figure11;
+		figureObjects3D[11]=figure12;
+		figureObjects3D[12]=figure13;
+		figureObjects3D[13]=figure14;
+		figureObjects3D[14]=figure15;
 		Debug.Log("++++++figures loaded: "+figureObjects.Length);
 		Debug.Log("++++++figures3D loaded: "+figureObjects3D.Length);
 		
