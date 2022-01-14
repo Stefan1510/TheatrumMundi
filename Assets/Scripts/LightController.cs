@@ -76,8 +76,8 @@ public class LightController : MonoBehaviour
         thisLightElement.active = onOffSwitch;
         GetComponent<Light>().enabled = onOffSwitch;
         //StaticSceneData.Lights3D();
-        UiSetting_LB_Image.GetComponent<LightRepresentationController>().setActive(true);
-        UiSetting_LB_Image.GetComponent<Image>().rectTransform.Rotate(0, 0, 45);
+        UiSetting_LB_Image.GetComponent<LightRepresentationController>().SetActive(onOffSwitch);
+        
         
     }
 
@@ -95,6 +95,7 @@ public class LightController : MonoBehaviour
         float angleYValue = PositionValue * 10;
         transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, _startPosition + PositionValue);
         transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, _startYAngle - angleYValue, transform.localEulerAngles.z);
+        UiSetting_LB_Image.GetComponent<LightRepresentationController>().setPosition_UiSetting_LB_Light(PositionValue);
         //StaticSceneData.Lights3D();
     }
 
@@ -102,6 +103,7 @@ public class LightController : MonoBehaviour
     {
         thisLightElement.y = HeightValue;
         transform.localPosition = new Vector3(transform.localPosition.x, _startHeight + HeightValue, transform.localPosition.z);
+        UiSetting_LB_Image.GetComponent<LightRepresentationController>().setHeight_UiSetting_LB_side_Light(HeightValue);
         //StaticSceneData.Lights3D();
     }
 
