@@ -6254,7 +6254,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: eb0ffec7c94fbf54fba5e663f87c1442,
         type: 3}
       propertyPath: m_Name
-      value: Lampe1 (3)
+      value: Lampe4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: eb0ffec7c94fbf54fba5e663f87c1442, type: 3}
@@ -12852,6 +12852,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _panelElementToDeactivate: {fileID: 1294506135}
   _graphicToggleLbBackground: {fileID: 1701674522}
+  UiSetting_LB_Image: {fileID: 0}
 --- !u!114 &267349611
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -23772,7 +23773,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: eb0ffec7c94fbf54fba5e663f87c1442,
         type: 3}
       propertyPath: m_Name
-      value: Lampe1 (2)
+      value: Lampe3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: eb0ffec7c94fbf54fba5e663f87c1442, type: 3}
@@ -24471,6 +24472,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _panelElementToDeactivate: {fileID: 287231924}
   _graphicToggleLbBackground: {fileID: 1671575590}
+  UiSetting_LB_Image: {fileID: 0}
 --- !u!114 &511395884
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26814,6 +26816,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _panelElementToDeactivate: {fileID: 474582978}
   _graphicToggleLbBackground: {fileID: 858731400}
+  UiSetting_LB_Image: {fileID: 0}
 --- !u!114 &544813785
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -29459,7 +29462,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: eb0ffec7c94fbf54fba5e663f87c1442,
         type: 3}
       propertyPath: m_Name
-      value: Lampe1 (1)
+      value: Lampe2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: eb0ffec7c94fbf54fba5e663f87c1442, type: 3}
@@ -29651,6 +29654,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _panelElementToDeactivate: {fileID: 722240748}
   _graphicToggleLbBackground: {fileID: 1441581444}
+  UiSetting_LB_Image: {fileID: 0}
 --- !u!1 &593519599
 GameObject:
   m_ObjectHideFlags: 0
@@ -71056,6 +71060,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _panelElementToDeactivate: {fileID: 2124086581}
   _graphicToggleLbBackground: {fileID: 691583371}
+  UiSetting_LB_Image: {fileID: 0}
 --- !u!114 &1369153953
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -83823,6 +83828,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _panelElementToDeactivate: {fileID: 282430749}
   _graphicToggleLbBackground: {fileID: 841999439}
+  UiSetting_LB_Image: {fileID: 0}
 --- !u!114 &1629097468
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -92188,6 +92194,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _panelElementToDeactivate: {fileID: 2076617710}
   _graphicToggleLbBackground: {fileID: 1365987671}
+  UiSetting_LB_Image: {fileID: 0}
 --- !u!114 &1774898044
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -101843,6 +101850,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _panelElementToDeactivate: {fileID: 1140426912}
   _graphicToggleLbBackground: {fileID: 1647778458}
+  UiSetting_LB_Image: {fileID: 0}
 --- !u!114 &1954346730
 MonoBehaviour:
   m_ObjectHideFlags: 0
