@@ -27,5 +27,6 @@ public class LightShelf : MonoBehaviour
         _graphicToggleLbBackground.enabled = !toggleOnOff;
         LayoutRebuilder.ForceRebuildLayoutImmediate(_panelElementToDeactivate.transform.parent.GetComponentInParent<RectTransform>());
         UiSetting_LB_Image.GetComponent<LightRepresentationController>().SetSelected(toggleOnOff);
+        UiSetting_LB_Image.GetComponent<LightRepresentationController>().ToggleLightCone(toggleOnOff);
     }
 }

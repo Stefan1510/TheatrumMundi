@@ -113,6 +113,7 @@ public class LightController : MonoBehaviour
         thisLightElement.angle_h = (int)HorizontalValue;
         ChangeHorizontal(thisLightElement.angle_h);
         //StaticSceneData.Lights3D();
+        UiSetting_LB_Image.GetComponent<LightRepresentationController>().RotateHorizontal(HorizontalValue);
     }
 
     public void ChangeVerticalValue(float VerticalValue)
@@ -124,6 +125,7 @@ public class LightController : MonoBehaviour
             ChangeVertical(thisLightElement.angle_v);
         else
             ChangeVerticalLeft(thisLightElement.angle_v);
+        UiSetting_LB_Image.GetComponent<LightRepresentationController>().RotateVertical(VerticalValue);
         //StaticSceneData.Lights3D();
     }
 
