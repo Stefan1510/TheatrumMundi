@@ -48,7 +48,7 @@ public class SceneDataController : MonoBehaviour
         SceneManager.statusReiter = 1;
         foreach (GameObject objectSceneryElement in objectsSceneryElements)
         {
-            Debug.Log("SceneDataController Name: "+objectSceneryElement.name);
+            //Debug.Log("SceneDataController Name: " + objectSceneryElement.name);
             objectSceneryElement.transform.SetParent(GameObject.Find("Schiene1").transform);
             objectSceneryElement.SetActive(false);
         }
@@ -293,7 +293,7 @@ public class SceneDataController : MonoBehaviour
                             break;
                         case 1:
                             Debug.Log("lights3D " + gameObjectLe.name);
-                            gameObjectLe.GetComponent<LightController>().Sayhi();
+                            //gameObjectLe.GetComponent<LightController>().Sayhi();
                             gameObjectLe.GetComponent<LightController>().ChangeHorizontal(le.angle_h);
                             gameObjectLe.GetComponent<LightController>().ChangeVertical(le.angle_v);
                             gameObjectLe.GetComponent<LightController>().ChangePosition(le.z);

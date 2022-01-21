@@ -28,6 +28,8 @@ public class LightController : MonoBehaviour
 
     public Image UiSetting_LB_Image;
 
+    [HideInInspector] public Image PanelLbImage;
+
     [HideInInspector] public LightElement thisLightElement;
     //private void awake()
     //{
@@ -55,6 +57,10 @@ public class LightController : MonoBehaviour
         _lbColors_on = changeColors(_lbColors_on, new Color(1f, 1f, 1f, 1f));
         _lbColors_off = changeColors(_lbColors_off, new Color(0f, 0f, 0f, 0f));
         ChangeHorizontal(256);
+        ChangeIntensity(2f);
+        PanelLbImage = toggleLb.transform.parent.parent.GetComponent<Image>();
+        PanelLbImage.color = new Color(171f / 255f, 171f / 255f, 171f / 255f, 160f / 255f);
+        Debug.Log(PanelLbImage);
     }
 
     //// Update is called once per frame
@@ -77,20 +83,27 @@ public class LightController : MonoBehaviour
         GetComponent<Light>().enabled = onOffSwitch;
         //StaticSceneData.Lights3D();
         UiSetting_LB_Image.GetComponent<LightRepresentationController>().SetActive(onOffSwitch);
-        
-        
+        if (onOffSwitch)
+        {
+            PanelLbImage.color = new Color(205f / 255f, 176f / 255f, 42f / 255f, 160f / 255f);
+        }
+        else
+        {
+            PanelLbImage.color = new Color(171f / 255f, 171f / 255f, 171f / 255f, 160f / 255f);
+        }
     }
 
     public void ChangeIntensity(float intensityValue)
     {
         thisLightElement.intensity = intensityValue;
         GetComponent<Light>().intensity = intensityValue;
+        UiSetting_LB_Image.GetComponent<LightRepresentationController>().setBrightness_UiSetting_LB_Light_angle(intensityValue);
         //StaticSceneData.Lights3D();
     }
 
     public void ChangePosition(float PositionValue)
     {
-        Debug.Log(name + " YAngle: " + _startYAngle);
+        //Debug.Log(name + " YAngle: " + _startYAngle);
         thisLightElement.z = PositionValue;
         float angleYValue = PositionValue * 10;
         transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, _startPosition + PositionValue);

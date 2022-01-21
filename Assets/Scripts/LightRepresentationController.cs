@@ -33,6 +33,15 @@ public class LightRepresentationController : MonoBehaviour
     
     private bool _isSelected;
     private bool _isActive;
+
+    private float _start_UiSetting_LB_Light_angle;
+
+    private void Awake()
+    {
+        _start_UiSetting_LB_Light_angle = UiSetting_LB_Light_angle.transform.localEulerAngles.z;
+        Debug.Log(UiSetting_LB.ToString() + " - " + _start_UiSetting_LB_Light_angle);
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -108,6 +117,7 @@ public class LightRepresentationController : MonoBehaviour
     {
         UiSetting_LB_Light.rectTransform.localPosition = new Vector3(xPosition * 25, UiSetting_LB_Light.rectTransform.localPosition.y, UiSetting_LB_Light.rectTransform.localPosition.z);
         UiSetting_LB_Light_angle.transform.localPosition = new Vector3(xPosition * 25, UiSetting_LB_Light.rectTransform.localPosition.y, UiSetting_LB_Light.rectTransform.localPosition.z);
+        UiSetting_LB_Light_angle.transform.localEulerAngles = new Vector3(UiSetting_LB_Light_angle.transform.localEulerAngles.x, UiSetting_LB_Light_angle.transform.localEulerAngles.y, _start_UiSetting_LB_Light_angle + (8 * xPosition));
         UiSetting_LB_side.transform.SetAsLastSibling();
     }
 
@@ -118,13 +128,23 @@ public class LightRepresentationController : MonoBehaviour
         UiSetting_LB_side.transform.SetAsLastSibling();
     }
 
+    public void setBrightness_UiSetting_LB_Light_angle(float intensity)
+    {
+        intensity = UtilitiesTm.FloatRemap(intensity, 0f, 5f, 0.2f, 0.8f);
+        UiSetting_LB_Light_angle.GetComponent<CanvasGroup>().alpha = intensity;
+        UiSetting_LB_side_Light_angle.GetComponent<CanvasGroup>().alpha = intensity;
+        UiSetting_LB_Light_angle_fill.GetComponent<Image>().color = new Color(1f, 1f, 1f, intensity);
+        UiSetting_LB_side_Light_angle_fill.GetComponent<Image>().color = new Color(1f, 1f, 1f, intensity);
+        UiSetting_LB_side.transform.SetAsLastSibling();
+    }
+
     public void RotateVertical(float VerticalValue)
     {
         Vector3 vector3FillScale = UiSetting_LB_Light_angle_fill.transform.localScale;
         Vector3 vector3FillRotate = UiSetting_LB_Light_angle_fill.transform.localEulerAngles;
         Vector3 vector3RightRotate = UiSetting_LB_Light_angle_right.transform.localEulerAngles;
-        float scale = Remap(VerticalValue, -256, 256, 0.5f, 1.0f);
-        float rotate = Remap(VerticalValue, -256, 256, 30, 0);
+        float scale = UtilitiesTm.FloatRemap(VerticalValue, -256, 256, 0.5f, 1.0f);
+        float rotate = UtilitiesTm.FloatRemap(VerticalValue, -256, 256, 30, 0);
         UiSetting_LB_Light_angle_fill.transform.localScale = new Vector3(vector3FillScale.x, scale, vector3FillScale.z);
         UiSetting_LB_Light_angle_fill.transform.localEulerAngles = new Vector3(vector3FillRotate.x, vector3FillRotate.y, rotate/2);
         UiSetting_LB_Light_angle_right.transform.localEulerAngles = new Vector3(vector3RightRotate.x, vector3RightRotate.y, rotate);
@@ -136,8 +156,8 @@ public class LightRepresentationController : MonoBehaviour
         Vector3 vector3FillScale = UiSetting_LB_side_Light_angle_fill.transform.localScale;
         Vector3 vector3FillRotate = UiSetting_LB_side_Light_angle_fill.transform.localEulerAngles;
         Vector3 vector3RightRotate = UiSetting_LB_side_Light_angle_top.transform.localEulerAngles;
-        float scale = Remap(HorizontalValue, -256, 256, 0.5f, 1.0f);
-        float rotate = Remap(HorizontalValue, -256, 256, -30, 0);
+        float scale = UtilitiesTm.FloatRemap(HorizontalValue, -256, 256, 0.5f, 1.0f);
+        float rotate = UtilitiesTm.FloatRemap(HorizontalValue, -256, 256, -30, 0);
         UiSetting_LB_side_Light_angle_fill.transform.localScale = new Vector3(vector3FillScale.x, scale, vector3FillScale.z);
         UiSetting_LB_side_Light_angle_fill.transform.localEulerAngles = new Vector3(vector3FillRotate.x, vector3FillRotate.y, rotate/2);
         UiSetting_LB_side_Light_angle_top.transform.localEulerAngles = new Vector3(vector3RightRotate.x, vector3RightRotate.y, rotate);
@@ -149,10 +169,4 @@ public class LightRepresentationController : MonoBehaviour
         UiSetting_LB_Light_angle.SetActive(toggleOnOff);
         UiSetting_LB_side_Light_angle.SetActive(toggleOnOff);
     }
-
-    public static float Remap(float val, float in1, float in2, float out1, float out2)
-    {
-        return out1 + (val - in1) * (out2 - out1) / (in2 - in1);
-    }
-
 }
