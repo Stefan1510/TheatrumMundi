@@ -9450,7 +9450,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1072450671}
-  m_RootOrder: 17
+  m_RootOrder: 18
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -13436,11 +13436,11 @@ RectTransform:
   m_Father: {fileID: 1072450671}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 66.19, y: -159.85999}
-  m_SizeDelta: {x: 740, y: 683.392}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: -303.81, y: -388.16394}
+  m_SizeDelta: {x: 596.2086, y: 410.33176}
+  m_Pivot: {x: 0, y: 1}
 --- !u!114 &263284492
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13461,7 +13461,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: a09ca3bfc0c759d4f8d46c95e891e46a, type: 3}
+  m_Sprite: {fileID: 21300000, guid: e324526f1eaba6342bbeccdf458c95ee, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -15311,6 +15311,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d590c93e6a42444cb485a52def2118a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SliderHb: {fileID: 1710281264}
+  thisLightElement:
+    name: 
+    x: 0
+    y: 0
+    z: 0
+    active: 0
+    railnumber: 0
+    r: 0
+    g: 0
+    b: 0
+    intensity: 0
+    angle_h: 0
+    angle_v: 0
+    stagePosition: 0
 --- !u!108 &293370443
 Light:
   m_ObjectHideFlags: 0
@@ -15323,7 +15338,7 @@ Light:
   m_Type: 0
   m_Shape: 0
   m_Color: {r: 0.87058824, g: 0.6117647, b: 0.3254902, a: 1}
-  m_Intensity: 1
+  m_Intensity: 0.5
   m_Range: 6
   m_SpotAngle: 130
   m_InnerSpotAngle: 1
@@ -15439,7 +15454,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1072450671}
-  m_RootOrder: 21
+  m_RootOrder: 22
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -17391,7 +17406,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1072450671}
-  m_RootOrder: 24
+  m_RootOrder: 25
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -21319,7 +21334,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1072450671}
-  m_RootOrder: 15
+  m_RootOrder: 16
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -23600,6 +23615,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d590c93e6a42444cb485a52def2118a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SliderHb: {fileID: 1710281264}
+  thisLightElement:
+    name: 
+    x: 0
+    y: 0
+    z: 0
+    active: 0
+    railnumber: 0
+    r: 0
+    g: 0
+    b: 0
+    intensity: 0
+    angle_h: 0
+    angle_v: 0
+    stagePosition: 0
 --- !u!108 &465332254
 Light:
   m_ObjectHideFlags: 0
@@ -23612,7 +23642,7 @@ Light:
   m_Type: 0
   m_Shape: 0
   m_Color: {r: 0.87058824, g: 0.6117647, b: 0.3254902, a: 1}
-  m_Intensity: 1
+  m_Intensity: 0.5
   m_Range: 6
   m_SpotAngle: 110
   m_InnerSpotAngle: 1
@@ -27335,6 +27365,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d590c93e6a42444cb485a52def2118a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SliderHb: {fileID: 1710281264}
+  thisLightElement:
+    name: 
+    x: 0
+    y: 0
+    z: 0
+    active: 0
+    railnumber: 0
+    r: 0
+    g: 0
+    b: 0
+    intensity: 0
+    angle_h: 0
+    angle_v: 0
+    stagePosition: 0
 --- !u!108 &525866030
 Light:
   m_ObjectHideFlags: 0
@@ -27347,7 +27392,7 @@ Light:
   m_Type: 0
   m_Shape: 0
   m_Color: {r: 0.87058824, g: 0.6117647, b: 0.3254902, a: 1}
-  m_Intensity: 1
+  m_Intensity: 0.5
   m_Range: 6
   m_SpotAngle: 110
   m_InnerSpotAngle: 1
@@ -28208,7 +28253,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 316498326}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.30142382
+  m_Size: 0.30015084
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -47420,7 +47465,7 @@ RectTransform:
   - {fileID: 2002791376}
   - {fileID: 2001834873}
   m_Father: {fileID: 1072450671}
-  m_RootOrder: 9
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -48885,7 +48930,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1072450671}
-  m_RootOrder: 20
+  m_RootOrder: 21
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -49754,6 +49799,81 @@ CanvasRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 919096529}
+  m_CullTransparentMesh: 1
+--- !u!1 &921034422
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 921034423}
+  - component: {fileID: 921034425}
+  - component: {fileID: 921034424}
+  m_Layer: 5
+  m_Name: MenueImageSchienenSetup (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &921034423
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 921034422}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1072450671}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: -303.81, y: -798.4957}
+  m_SizeDelta: {x: 740, y: 306.87204}
+  m_Pivot: {x: 0, y: 1}
+--- !u!114 &921034424
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 921034422}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: be10ce71dc843a547b8d7a8297c66f82, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &921034425
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 921034422}
   m_CullTransparentMesh: 1
 --- !u!1001 &922609680
 PrefabInstance:
@@ -52159,7 +52279,7 @@ RectTransform:
   - {fileID: 1202536689}
   - {fileID: 2125945567}
   m_Father: {fileID: 1072450671}
-  m_RootOrder: 11
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -55222,7 +55342,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1072450671}
-  m_RootOrder: 18
+  m_RootOrder: 19
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -57930,6 +58050,7 @@ RectTransform:
   - {fileID: 452629821}
   - {fileID: 1812718941}
   - {fileID: 263284491}
+  - {fileID: 921034423}
   - {fileID: 1589283835}
   - {fileID: 1261192914}
   - {fileID: 1752427881}
@@ -58141,7 +58262,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1072450671}
-  m_RootOrder: 23
+  m_RootOrder: 24
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -59643,6 +59764,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d590c93e6a42444cb485a52def2118a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SliderHb: {fileID: 1710281264}
+  thisLightElement:
+    name: 
+    x: 0
+    y: 0
+    z: 0
+    active: 0
+    railnumber: 0
+    r: 0
+    g: 0
+    b: 0
+    intensity: 0
+    angle_h: 0
+    angle_v: 0
+    stagePosition: 0
 --- !u!108 &1096678077
 Light:
   m_ObjectHideFlags: 0
@@ -59655,7 +59791,7 @@ Light:
   m_Type: 0
   m_Shape: 0
   m_Color: {r: 0.87058824, g: 0.6117647, b: 0.3254902, a: 1}
-  m_Intensity: 1
+  m_Intensity: 0.5
   m_Range: 5
   m_SpotAngle: 130
   m_InnerSpotAngle: 1
@@ -61248,6 +61384,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d590c93e6a42444cb485a52def2118a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SliderHb: {fileID: 1710281264}
+  thisLightElement:
+    name: 
+    x: 0
+    y: 0
+    z: 0
+    active: 0
+    railnumber: 0
+    r: 0
+    g: 0
+    b: 0
+    intensity: 0
+    angle_h: 0
+    angle_v: 0
+    stagePosition: 0
 --- !u!108 &1131054608
 Light:
   m_ObjectHideFlags: 0
@@ -61260,7 +61411,7 @@ Light:
   m_Type: 0
   m_Shape: 0
   m_Color: {r: 0.87058824, g: 0.6117647, b: 0.3254902, a: 1}
-  m_Intensity: 1
+  m_Intensity: 0.5
   m_Range: 6
   m_SpotAngle: 130
   m_InnerSpotAngle: 1
@@ -61470,7 +61621,7 @@ RectTransform:
   - {fileID: 1005083501}
   - {fileID: 1520823437}
   m_Father: {fileID: 1072450671}
-  m_RootOrder: 10
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -67401,7 +67552,7 @@ RectTransform:
   - {fileID: 1009587388}
   - {fileID: 1524342386}
   m_Father: {fileID: 1072450671}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -68873,6 +69024,16 @@ MonoBehaviour:
     lightStagePosition: 1
   - goLightElement: {fileID: 837885001}
     lightStagePosition: 2
+  - goLightElement: {fileID: 1131054605}
+    lightStagePosition: 3
+  - goLightElement: {fileID: 293370440}
+    lightStagePosition: 3
+  - goLightElement: {fileID: 465332251}
+    lightStagePosition: 3
+  - goLightElement: {fileID: 525866027}
+    lightStagePosition: 3
+  - goLightElement: {fileID: 1096678074}
+    lightStagePosition: 3
   sceneFileName: 
   sceneFileAuthor: 
   sceneFileDate: 
@@ -76992,7 +77153,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1890357588}
   m_HandleRect: {fileID: 1890357587}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -79294,7 +79455,7 @@ RectTransform:
   - {fileID: 554755116}
   - {fileID: 741678856}
   m_Father: {fileID: 1072450671}
-  m_RootOrder: 8
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -84173,7 +84334,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1072450671}
-  m_RootOrder: 22
+  m_RootOrder: 23
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -85600,7 +85761,7 @@ RectTransform:
   - {fileID: 110819559}
   - {fileID: 1576436905}
   m_Father: {fileID: 1072450671}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -86403,7 +86564,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1072450671}
-  m_RootOrder: 16
+  m_RootOrder: 17
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -88280,7 +88441,7 @@ RectTransform:
   - {fileID: 1862497655}
   - {fileID: 205293858}
   m_Father: {fileID: 1072450671}
-  m_RootOrder: 14
+  m_RootOrder: 15
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90.63}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -92091,7 +92252,7 @@ RectTransform:
   - {fileID: 1152993162}
   - {fileID: 1224255315}
   m_Father: {fileID: 1072450671}
-  m_RootOrder: 12
+  m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90.63}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -95176,7 +95337,7 @@ RectTransform:
   - {fileID: 1633916951}
   - {fileID: 1670914477}
   m_Father: {fileID: 1072450671}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -103536,7 +103697,7 @@ RectTransform:
   - {fileID: 10069022}
   - {fileID: 1079616996}
   m_Father: {fileID: 1072450671}
-  m_RootOrder: 13
+  m_RootOrder: 14
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90.63}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -111470,7 +111631,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1072450671}
-  m_RootOrder: 19
+  m_RootOrder: 20
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -116737,7 +116898,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8269c06f2a581ca4aba8d28e495ad0ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  toggleLb: {fileID: 1629097468}
+  toggleLb: {fileID: 1768294865}
   sliderLbIntensity: {fileID: 1274594781}
   sliderLbPosition: {fileID: 500503308}
   sliderLbHeight: {fileID: 1594479982}

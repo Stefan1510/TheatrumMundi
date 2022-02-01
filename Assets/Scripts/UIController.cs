@@ -92,6 +92,10 @@ public class UIController : MonoBehaviour
                             gameObjectLe.GetComponent<LightController>().sliderLbHorizontal.value = le.angle_h;
                             gameObjectLe.GetComponent<LightController>().sliderLbVertical.value = le.angle_v;
                             break;
+                        case 3:
+                            gameObjectLe.GetComponent<LightHbController>().thisLightElement = StaticSceneData.StaticData.lightElements.Find(DataLe => DataLe.name == le.name);
+                            gameObjectLe.GetComponent<LightHbController>().SliderHb.value = le.intensity;
+                            break;
                     }
                 }
             }
