@@ -88,6 +88,7 @@ public class SceneDataController : MonoBehaviour
         sceneData.fileAuthor = sceneFileAuthor;
         sceneData.fileComment = sceneFileComment;
         sceneData.fileDate = sceneFileDate;
+        Debug.Log(CreateJsonFromSceneData(sceneData));
         //sceneData.railElements.Clear();
         //sceneData.sceneryElements.Clear();
         //sceneData.lightElements.Clear();
@@ -162,9 +163,9 @@ public class SceneDataController : MonoBehaviour
             {
                 name = gameObjectLe.name,
                 x = gameObjectLe.transform.localPosition.x,
-                y = 0,
-                z = 0,
-                active = false,
+                y = gameObjectLe.transform.localPosition.y,
+                z = gameObjectLe.transform.localPosition.z,
+                active = gameObjectLe.GetComponent<Light>().isActiveAndEnabled,
                 railnumber = 1,
                 r = gameObjectLe.GetComponent<Light>().color.r,
                 g = gameObjectLe.GetComponent<Light>().color.g,
@@ -185,6 +186,8 @@ public class SceneDataController : MonoBehaviour
                     break;
                 case 2:
                     break;
+                case 3:
+                    break;
             }
 
             sceneData.lightElements.Add(sceneLightElement);
@@ -200,7 +203,7 @@ public class SceneDataController : MonoBehaviour
         sceneFileAuthor = sceneData.fileAuthor;
         sceneFileDate = sceneData.fileDate;
         sceneFileComment = sceneData.fileComment;
-        SetFileMetaDataToScene();
+        //SetFileMetaDataToScene();
         //Debug.Log(sceneData.railElements[0]);
 
         //rail elements
@@ -298,13 +301,14 @@ public class SceneDataController : MonoBehaviour
                             gameObjectLe.GetComponent<LightController>().ChangeVertical(le.angle_v);
                             gameObjectLe.GetComponent<LightController>().ChangePosition(le.z);
                             gameObjectLe.GetComponent<LightController>().ChangeHeight(le.y);
-
                             break;
                         case 2:
                             gameObjectLe.GetComponent<LightController>().ChangeHorizontal(le.angle_h);
                             gameObjectLe.GetComponent<LightController>().ChangeVerticalLeft(le.angle_v);
                             gameObjectLe.GetComponent<LightController>().ChangePosition(le.z);
                             gameObjectLe.GetComponent<LightController>().ChangeHeight(le.y);
+                            break;
+                        case 3:
                             break;
                     }
                 }

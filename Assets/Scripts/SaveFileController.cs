@@ -33,6 +33,10 @@ public class SaveFileController : MonoBehaviour
     {
         SceneData sceneDataSave = this.GetComponent<SceneDataController>().CreateSceneData();
         //string sceneDataSaveString = this.GetComponent<SceneDataController>().CreateJsonFromSceneData(sceneDataSave);
+        StaticSceneData.StaticData.fileName = sceneDataSave.fileName;
+        StaticSceneData.StaticData.fileAuthor = sceneDataSave.fileAuthor;
+        StaticSceneData.StaticData.fileComment = sceneDataSave.fileComment;
+        StaticSceneData.StaticData.fileDate = sceneDataSave.fileDate;
         string sceneDataSaveString = this.GetComponent<SceneDataController>().CreateJsonFromSceneData(StaticSceneData.StaticData);
         //var path = EditorUtility.SaveFilePanel("Save Settings as JSON", "", ".json", "json");
 
@@ -152,9 +156,9 @@ public class SaveFileController : MonoBehaviour
         string sceneContentData = "";
         sceneContentData += "Dateiinformationen:\n\n";
         sceneContentData += "Kulissen: " + this.GetComponent<SceneDataController>().countActiveSceneryElements.ToString() + "\n\n";
-        sceneContentData += "Fuguren: " + "\n\n";
+        sceneContentData += "Figuren: " + "\n\n";
         sceneContentData += "Länge: " + "\n\n";
-        sceneContentData += "Lichter: " + "\n\n";
+        sceneContentData += "Lichter: " + this.GetComponent<SceneDataController>().countActiveLightElements.ToString() + "\n\n";
         sceneContentData += "Musik: ";
         textFileContentData.text = sceneContentData;
     }
