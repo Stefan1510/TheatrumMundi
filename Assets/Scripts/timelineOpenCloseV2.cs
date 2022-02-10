@@ -42,6 +42,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
 	public GameObject objectLibrary;
 	GameObject mainMenue;
 	GameObject timeSettings;
+	GameObject figCounterCircle;
 	
 	GameObject[] figureObjects;
 	GameObject[] figureObjects3D;
@@ -185,6 +186,8 @@ public class timelineOpenCloseV2 : MonoBehaviour
 		mainMenue=GameObject.Find("timelineArea");
 		timeSettings=GameObject.Find("ImageTimeSettingsArea");
 		timeSettings.SetActive(false);
+		figCounterCircle=GameObject.Find("ImageCountFigObj01");
+		figCounterCircle.transform.GetChild(0).GetComponent<Text>().text="0";
 		
 		//get figure element
 		//gameController = GameObject.Find("GameController");
@@ -354,7 +357,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
 	{
 		//activate the timeSettings at the bottom of the timeslider
 		//this method is called in the timelineOpen-methods
-		if (tlOpen)
+		if ((tlOpen)) // && (ts.activeSelf==false)
 		{
 			ts.SetActive(true);
 		}
@@ -878,6 +881,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
 					int countName=0;
 					countName=countCopiesOfObject(figureObjects[currentClickedObjectIndex],timelineInstanceObjects);
 					newCopyOfFigure.name=figureObjects[currentClickedObjectIndex].name+"_instance"+countName;
+					figCounterCircle.transform.GetChild(0).GetComponent<Text>().text=(countName+1).ToString();
 					//parent
 					newCopyOfFigure.transform.SetParent(figureObjects[currentClickedObjectIndex].transform.parent.gameObject.transform);
 					//position
