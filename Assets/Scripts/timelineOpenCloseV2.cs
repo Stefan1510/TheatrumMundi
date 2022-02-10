@@ -41,6 +41,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
 	
 	public GameObject objectLibrary;
 	GameObject mainMenue;
+	GameObject timeSettings;
 	
 	GameObject[] figureObjects;
 	GameObject[] figureObjects3D;
@@ -182,6 +183,8 @@ public class timelineOpenCloseV2 : MonoBehaviour
 		//this is the root-parent
 		//mainMenue=GameObject.Find("MenueDirectorMain");
 		mainMenue=GameObject.Find("timelineArea");
+		timeSettings=GameObject.Find("ImageTimeSettingsArea");
+		timeSettings.SetActive(false);
 		
 		//get figure element
 		//gameController = GameObject.Find("GameController");
@@ -310,6 +313,9 @@ public class timelineOpenCloseV2 : MonoBehaviour
 			//scale up the text
 			tl.transform.GetChild(0).gameObject.GetComponent<Text>().rectTransform.localScale = new Vector3(1,1,1);
 		}
+		
+		openCloseTimeSettings(timelineOpen, timeSettings);
+		
 	}
     public void openCloseTimelineByDrag(string open, Image tl)
 	{
@@ -339,6 +345,22 @@ public class timelineOpenCloseV2 : MonoBehaviour
 			//scale up the text
 			tl.transform.GetChild(0).gameObject.GetComponent<Text>().rectTransform.localScale = new Vector3(1,1,1);
 			//scale up all objects on timeline
+		}
+		
+		openCloseTimeSettings(timelineOpen, timeSettings);
+		
+	}
+	public void openCloseTimeSettings(bool tlOpen, GameObject ts)
+	{
+		//activate the timeSettings at the bottom of the timeslider
+		//this method is called in the timelineOpen-methods
+		if (tlOpen)
+		{
+			ts.SetActive(true);
+		}
+		else
+		{
+			ts.SetActive(false);
 		}
 	}
 	public void saveParent(GameObject obj)
