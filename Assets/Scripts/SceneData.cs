@@ -79,6 +79,16 @@ public class LightElement
     public int stagePosition;  //{ 0- BeforeRail, 1- leftRail, 2- rightRail};
 }
 
+[System.Serializable]
+public class LightingSet
+{
+    public float moment;
+    public float r;
+    public float g;
+    public float b;
+    public float intensity;
+}
+
 //[System.Serializable]
 public class SceneData
 {
@@ -91,6 +101,7 @@ public class SceneData
     public List<SceneryElement> sceneryElements;
 	public List<FigureElement> figureElements;
     public List<LightElement> lightElements;
+    public List<LightingSet> lightingSets;
 }
 
 public class StaticSceneData

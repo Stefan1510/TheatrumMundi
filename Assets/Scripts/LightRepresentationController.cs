@@ -35,10 +35,12 @@ public class LightRepresentationController : MonoBehaviour
     private bool _isActive;
 
     private float _start_UiSetting_LB_Light_angle;
+    private float _start_UiSetting_LB_side_Light_angle;
 
     private void Awake()
     {
         _start_UiSetting_LB_Light_angle = UiSetting_LB_Light_angle.transform.localEulerAngles.z;
+        _start_UiSetting_LB_side_Light_angle = UiSetting_LB_side_Light_angle.transform.localEulerAngles.z;
         Debug.Log(UiSetting_LB.ToString() + " - " + _start_UiSetting_LB_Light_angle);
     }
 
@@ -125,6 +127,7 @@ public class LightRepresentationController : MonoBehaviour
     {
         UiSetting_LB_side_Light.rectTransform.localPosition = new Vector3(UiSetting_LB_side_Light.rectTransform.localPosition.x, yPosition * 300, UiSetting_LB_side_Light.rectTransform.localPosition.z);
         UiSetting_LB_side_Light_angle.transform.localPosition = new Vector3(UiSetting_LB_side_Light.rectTransform.localPosition.x, yPosition * 300, UiSetting_LB_side_Light.rectTransform.localPosition.z);
+        UiSetting_LB_side_Light_angle.transform.localEulerAngles = new Vector3(UiSetting_LB_side_Light.transform.localEulerAngles.x, UiSetting_LB_side_Light.transform.localEulerAngles.y, _start_UiSetting_LB_side_Light_angle - (100 * yPosition));
         UiSetting_LB_side.transform.SetAsLastSibling();
     }
 
@@ -140,27 +143,27 @@ public class LightRepresentationController : MonoBehaviour
 
     public void RotateVertical(float VerticalValue)
     {
-        Vector3 vector3FillScale = UiSetting_LB_Light_angle_fill.transform.localScale;
-        Vector3 vector3FillRotate = UiSetting_LB_Light_angle_fill.transform.localEulerAngles;
-        Vector3 vector3RightRotate = UiSetting_LB_Light_angle_right.transform.localEulerAngles;
+        Vector3 vector3FillScale = UiSetting_LB_side_Light_angle_fill.transform.localScale;
+        Vector3 vector3FillRotate = UiSetting_LB_side_Light_angle_fill.transform.localEulerAngles;
+        Vector3 vector3RightRotate = UiSetting_LB_side_Light_angle_top.transform.localEulerAngles;
         float scale = UtilitiesTm.FloatRemap(VerticalValue, -256, 256, 0.5f, 1.0f);
-        float rotate = UtilitiesTm.FloatRemap(VerticalValue, -256, 256, 30, 0);
-        UiSetting_LB_Light_angle_fill.transform.localScale = new Vector3(vector3FillScale.x, scale, vector3FillScale.z);
-        UiSetting_LB_Light_angle_fill.transform.localEulerAngles = new Vector3(vector3FillRotate.x, vector3FillRotate.y, rotate/2);
-        UiSetting_LB_Light_angle_right.transform.localEulerAngles = new Vector3(vector3RightRotate.x, vector3RightRotate.y, rotate);
+        float rotate = UtilitiesTm.FloatRemap(VerticalValue, -256, 256, -30, 0);
+        UiSetting_LB_side_Light_angle_fill.transform.localScale = new Vector3(vector3FillScale.x, scale, vector3FillScale.z);
+        UiSetting_LB_side_Light_angle_fill.transform.localEulerAngles = new Vector3(vector3FillRotate.x, vector3FillRotate.y, rotate/2);
+        UiSetting_LB_side_Light_angle_top.transform.localEulerAngles = new Vector3(vector3RightRotate.x, vector3RightRotate.y, rotate);
         UiSetting_LB_side.transform.SetAsLastSibling();
     }
 
     public void RotateHorizontal(float HorizontalValue)
     {
-        Vector3 vector3FillScale = UiSetting_LB_side_Light_angle_fill.transform.localScale;
-        Vector3 vector3FillRotate = UiSetting_LB_side_Light_angle_fill.transform.localEulerAngles;
-        Vector3 vector3RightRotate = UiSetting_LB_side_Light_angle_top.transform.localEulerAngles;
+        Vector3 vector3FillScale = UiSetting_LB_Light_angle_fill.transform.localScale;
+        Vector3 vector3FillRotate = UiSetting_LB_Light_angle_fill.transform.localEulerAngles;
+        Vector3 vector3RightRotate = UiSetting_LB_Light_angle_right.transform.localEulerAngles;
         float scale = UtilitiesTm.FloatRemap(HorizontalValue, -256, 256, 0.5f, 1.0f);
-        float rotate = UtilitiesTm.FloatRemap(HorizontalValue, -256, 256, -30, 0);
-        UiSetting_LB_side_Light_angle_fill.transform.localScale = new Vector3(vector3FillScale.x, scale, vector3FillScale.z);
-        UiSetting_LB_side_Light_angle_fill.transform.localEulerAngles = new Vector3(vector3FillRotate.x, vector3FillRotate.y, rotate/2);
-        UiSetting_LB_side_Light_angle_top.transform.localEulerAngles = new Vector3(vector3RightRotate.x, vector3RightRotate.y, rotate);
+        float rotate = UtilitiesTm.FloatRemap(HorizontalValue, -256, 256, 30, 0);
+        UiSetting_LB_Light_angle_fill.transform.localScale = new Vector3(vector3FillScale.x, scale, vector3FillScale.z);
+        UiSetting_LB_Light_angle_fill.transform.localEulerAngles = new Vector3(vector3FillRotate.x, vector3FillRotate.y, rotate/2);
+        UiSetting_LB_Light_angle_right.transform.localEulerAngles = new Vector3(vector3RightRotate.x, vector3RightRotate.y, rotate);
         UiSetting_LB_side.transform.SetAsLastSibling();
     }
 

@@ -14,6 +14,7 @@ public class LightController : MonoBehaviour
     private float _startPosition;
     private float _startYAngle;
     private float _startHeight;
+    private float _startXAngle;
 
     private Texture2D _lbCookie;
     private Texture2D _lbCookieOriginal;
@@ -58,6 +59,8 @@ public class LightController : MonoBehaviour
         _lbColors_off = changeColors(_lbColors_off, new Color(0f, 0f, 0f, 0f));
         ChangeHorizontal(256);
         ChangeIntensity(2f);
+        ChangePosition(0);
+        ChangeHeight(0);
         PanelLbImage = toggleLb.transform.parent.parent.GetComponent<Image>();
         PanelLbImage.color = new Color(171f / 255f, 171f / 255f, 171f / 255f, 160f / 255f);
         Debug.Log(PanelLbImage);
@@ -115,31 +118,33 @@ public class LightController : MonoBehaviour
     public void ChangeHeight(float HeightValue)
     {
         thisLightElement.y = HeightValue;
+        float angleXValue = HeightValue * 10;
         transform.localPosition = new Vector3(transform.localPosition.x, _startHeight + HeightValue, transform.localPosition.z);
+        transform.localEulerAngles = new Vector3(_startXAngle + angleXValue, transform.localEulerAngles.y, transform.localEulerAngles.z);
         UiSetting_LB_Image.GetComponent<LightRepresentationController>().setHeight_UiSetting_LB_side_Light(HeightValue);
         //StaticSceneData.Lights3D();
     }
 
     public void ChangeHorizontalValue(float HorizontalValue)
     {
-        //ChangeHorizontal(HorizontalValue);
-        thisLightElement.angle_h = (int)HorizontalValue;
-        ChangeHorizontal(thisLightElement.angle_h);
-        //StaticSceneData.Lights3D();
-        UiSetting_LB_Image.GetComponent<LightRepresentationController>().RotateHorizontal(HorizontalValue);
-    }
-
-    public void ChangeVerticalValue(float VerticalValue)
-    {
         //ChangeVertical(VerticalValue);
-        thisLightElement.angle_v = (int)VerticalValue;
+        thisLightElement.angle_v = (int)HorizontalValue;
 
         if (thisLightElement.stagePosition == 1)
             ChangeVertical(thisLightElement.angle_v);
         else
             ChangeVerticalLeft(thisLightElement.angle_v);
-        UiSetting_LB_Image.GetComponent<LightRepresentationController>().RotateVertical(VerticalValue);
+        UiSetting_LB_Image.GetComponent<LightRepresentationController>().RotateVertical(HorizontalValue);
         //StaticSceneData.Lights3D();
+    }
+
+    public void ChangeVerticalValue(float VerticalValue)
+    {
+        //ChangeHorizontal(HorizontalValue);
+        thisLightElement.angle_h = (int)VerticalValue;
+        ChangeHorizontal(thisLightElement.angle_h);
+        //StaticSceneData.Lights3D();
+        UiSetting_LB_Image.GetComponent<LightRepresentationController>().RotateHorizontal(VerticalValue);
     }
 
     public void ChangeHorizontal(int HorizontalValue)
