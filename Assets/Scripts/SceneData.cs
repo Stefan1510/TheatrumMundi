@@ -83,9 +83,9 @@ public class LightElement
 public class LightingSet
 {
     public float moment;
-    public float r;
-    public float g;
-    public float b;
+    public byte r;
+    public byte g;
+    public byte b;
     public float intensity;
 }
 

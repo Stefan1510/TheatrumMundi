@@ -96,7 +96,7 @@ public class SceneDataController : MonoBehaviour
         sceneData.sceneryElements = new List<SceneryElement>();
         sceneData.figureElements = new List<FigureElement>();
         sceneData.lightElements = new List<LightElement>();
-        
+        sceneData.lightingSets = new List<LightingSet>();
 
         foreach (GameObject objectRailElement in objectsRailElements)
         {
@@ -192,6 +192,8 @@ public class SceneDataController : MonoBehaviour
 
             sceneData.lightElements.Add(sceneLightElement);
         }
+
+        sceneData.lightingSets.Add(new LightingSet());
 
         recentSceneData = sceneData;
         return sceneData;
