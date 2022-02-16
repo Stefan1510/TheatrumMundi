@@ -8,6 +8,8 @@ public class LightAnimationRepresentation : MonoBehaviour
     private Texture2D _textureLightRepresentation;
     //[SerializeField] private Slider _sliderTime;
     [SerializeField] private Slider _sliderIntensity;
+    [SerializeField] private Image _imagePositionKnob;
+    private List<Image> _imagePositionKnobCollection;
     private Color32[] _lightColors;
     private Color32[] _lightColorsColumn;
     private float _maxTime;
@@ -16,13 +18,15 @@ public class LightAnimationRepresentation : MonoBehaviour
     void Start()
     {
         //_maxTime = (int)_sliderTime.maxValue;
-        _maxTime = 60*10;
+        _maxTime = 10 * 60 + 10;
         _maxIntensity = _sliderIntensity.maxValue;
         Debug.Log(_maxTime);
         _textureLightRepresentation = new Texture2D((int)_maxTime * 10, (int)_maxTime * 1, TextureFormat.RGBA32, false); // wird durch Panel RectTransform stretch stretch automatisch gescaled
         //_textureLightRepresentation.filterMode = FilterMode.Trilinear;
         _lightColors = new Color32[_textureLightRepresentation.width * _textureLightRepresentation.height];
         _lightColorsColumn = new Color32[_textureLightRepresentation.height];
+        _imagePositionKnob.gameObject.SetActive(false);
+        _imagePositionKnobCollection = new List<Image>();
         ChangeImage();
     }
 
@@ -34,6 +38,7 @@ public class LightAnimationRepresentation : MonoBehaviour
 
     public void ChangeImage()
     {
+
         _lightColors = ChangeColors(_lightColors, new Color32(255, 255, 255, 255));
         _textureLightRepresentation.SetPixels32(_lightColors);
         Color32 colorStart = new Color(StaticSceneData.StaticData.lightingSets[0].r, StaticSceneData.StaticData.lightingSets[0].g, StaticSceneData.StaticData.lightingSets[0].b);
@@ -47,12 +52,13 @@ public class LightAnimationRepresentation : MonoBehaviour
         int secondCount = 0;
         int listLength = StaticSceneData.StaticData.lightingSets.Count;
 
+        Debug.Log("listLength " + listLength);
         Color32 colorGradient;
         for (int lightStates = 0; lightStates < listLength - 1; lightStates++)
         {
             //Debug.Log("bluip, in der Schelife");
-            colorStart = new Color(StaticSceneData.StaticData.lightingSets[lightStates].r, StaticSceneData.StaticData.lightingSets[lightStates].g, StaticSceneData.StaticData.lightingSets[lightStates].b);   // holen der "früheren" Farbe aus der Datenhaltung
-            colorEnd = new Color(StaticSceneData.StaticData.lightingSets[lightStates + 1].r, StaticSceneData.StaticData.lightingSets[lightStates + 1].g, StaticSceneData.StaticData.lightingSets[lightStates + 1].b); // holen der "späteren" Farbe aus der Datenhaltung
+            colorStart = new Color32(StaticSceneData.StaticData.lightingSets[lightStates].r, StaticSceneData.StaticData.lightingSets[lightStates].g, StaticSceneData.StaticData.lightingSets[lightStates].b, 255);   // holen der "früheren" Farbe aus der Datenhaltung
+            colorEnd = new Color32(StaticSceneData.StaticData.lightingSets[lightStates + 1].r, StaticSceneData.StaticData.lightingSets[lightStates + 1].g, StaticSceneData.StaticData.lightingSets[lightStates + 1].b, 255); // holen der "späteren" Farbe aus der Datenhaltung
             float momentStartF = StaticSceneData.StaticData.lightingSets[lightStates].moment; // holen des "früheren" Moments aus der Datenhaltung
             momentStart = (int)UtilitiesTm.FloatRemap(momentStartF, 0, _maxTime, 0, _textureLightRepresentation.width);    // mappen des "früheren" Moments von zwischen TimeSlider auf zwischen PanelWeite
             float momentEndF = StaticSceneData.StaticData.lightingSets[lightStates + 1].moment; // holen des "späteren" Moments aus der Datenhaltung
@@ -67,11 +73,13 @@ public class LightAnimationRepresentation : MonoBehaviour
                 float intensityGradientF = Mathf.Lerp(intensityStart, intensityEnd, _interpolationStep);
                 intensityGradient = UtilitiesTm.FloatRemap(intensityGradientF, 0, _maxIntensity, 0, _textureLightRepresentation.height);
                 _lightColorsColumn = ChangeColors(_lightColorsColumn, colorGradient);
+                //Debug.Log("secondCount " + secondCount + " -intensityGradient " + intensityGradient + " -_lightColorsColumn " + _lightColorsColumn);
                 _textureLightRepresentation.SetPixels32(secondCount, 0, 1, (int)intensityGradient, _lightColorsColumn);
             }
 
+            
         }
-        colorEnd = new Color(StaticSceneData.StaticData.lightingSets[listLength - 1].r, StaticSceneData.StaticData.lightingSets[listLength - 1].g, StaticSceneData.StaticData.lightingSets[listLength - 1].b);
+        colorEnd = new Color32(StaticSceneData.StaticData.lightingSets[listLength - 1].r, StaticSceneData.StaticData.lightingSets[listLength - 1].g, StaticSceneData.StaticData.lightingSets[listLength - 1].b, 255);
         Debug.Log(listLength + " - r  " + colorEnd.r + " - g  " + colorEnd.g + " - b  " + colorEnd.b + " - intensityGradient " + intensityGradient);
         Color32[] lastColorBlock = new Color32[(_textureLightRepresentation.width - momentEnd - 1) * (int)intensityGradient];
         lastColorBlock = ChangeColors(lastColorBlock, colorEnd);
@@ -79,8 +87,28 @@ public class LightAnimationRepresentation : MonoBehaviour
         Debug.Log("_________________________________________________________");
         _textureLightRepresentation.Apply();
         GetComponent<Image>().sprite = Sprite.Create(_textureLightRepresentation, new Rect(0, 0, _textureLightRepresentation.width, _textureLightRepresentation.height), new Vector2(0.5f, 0.5f));
+        UpdateKnobPositions();
     }
 
+    public void UpdateKnobPositions()
+    {
+        foreach(Image image in _imagePositionKnobCollection)
+        {
+            Destroy(image.gameObject);
+        }
+        _imagePositionKnobCollection.Clear();
+        float panelWidth = GetComponent<RectTransform>().rect.width;
+        float maxTime = AnimationTimer.GetMaxTime();
+        foreach (LightingSet lightingSet in StaticSceneData.StaticData.lightingSets)
+        {
+            Image knobInstance = Instantiate(_imagePositionKnob, _imagePositionKnob.transform.parent);
+            knobInstance.gameObject.SetActive(true);
+            float knobPos = UtilitiesTm.FloatRemap(lightingSet.moment, 0, maxTime, 0, panelWidth);
+            knobInstance.transform.localPosition = new Vector3(knobPos, knobInstance.transform.localPosition.y, knobInstance.transform.localPosition.z);
+            knobInstance.GetComponent<Image>().color = new Color32(lightingSet.r, lightingSet.g, lightingSet.b, 255);
+            _imagePositionKnobCollection.Add(knobInstance);
+        }
+    }
 
     Color32[] ChangeColors(Color32[] colorArray, Color32 changeToColor)
     {

@@ -9,7 +9,7 @@ public class SetLightColors : MonoBehaviour
     public Slider SliderIntensity;
 
     //[SerializeField] private Slider _sliderTime;
-    [SerializeField] private Image _imagePositionKnob;
+    //[SerializeField] private Image _imagePositionKnob;
     [SerializeField] private GameObject _representationPanel;
 
     private float _time;
@@ -21,25 +21,25 @@ public class SetLightColors : MonoBehaviour
 
     void Start()
     {
-        Color32 lightStartColor = new Color(ObjectsLights[0].GetComponent<Light>().color.r, ObjectsLights[0].GetComponent<Light>().color.g, ObjectsLights[0].GetComponent<Light>().color.b);
-        StaticSceneData.StaticData.lightingSets.Add(new LightingSet
+        //_imagePositionKnob.gameObject.SetActive(false);
+        //Color32 lightStartColor = new Color(ObjectsLights[0].GetComponent<Light>().color.r, ObjectsLights[0].GetComponent<Light>().color.g, ObjectsLights[0].GetComponent<Light>().color.b);
+        StaticSceneData.StaticData.lightingSets[0]=new LightingSet
         {
             moment = 0,
-            r = lightStartColor.r,
-            g = lightStartColor.g,
-            b = lightStartColor.b,
-            intensity = ObjectsLights[0].GetComponent<Light>().intensity
-        });
-        _imagePositionKnob.gameObject.SetActive(false);
+            r = 255,
+            g = 231,
+            b = 121,
+            intensity = 2
+        };
 
         StaticSceneData.StaticData.lightingSets.Sort((x, y) => x.moment.CompareTo(y.moment));   // sortiert die LightPropertiesList anhand der Eigenschaft moment
 
-        float knobPos = AnimationTimer.GetTime();
-        knobPos = UtilitiesTm.FloatRemap(knobPos, AnimationTimer.GetMinTime(), AnimationTimer.GetMaxTime(), 0, _representationPanel.GetComponent<RectTransform>().rect.width);
-        Image knobIntstance = Instantiate(_imagePositionKnob, _imagePositionKnob.transform.parent);
-        knobIntstance.gameObject.SetActive(true);
-        knobIntstance.transform.localPosition = new Vector3(knobPos, knobIntstance.transform.localPosition.y, knobIntstance.transform.localPosition.z);
-        knobIntstance.GetComponent<Image>().color = new Color(StaticSceneData.StaticData.lightingSets[0].r, StaticSceneData.StaticData.lightingSets[0].g, StaticSceneData.StaticData.lightingSets[0].b);
+        //float knobPos = AnimationTimer.GetTime();
+        //knobPos = UtilitiesTm.FloatRemap(knobPos, AnimationTimer.GetMinTime(), AnimationTimer.GetMaxTime(), 0, _representationPanel.GetComponent<RectTransform>().rect.width);
+        //Image knobIntstance = Instantiate(_imagePositionKnob, _imagePositionKnob.transform.parent);
+        //knobIntstance.gameObject.SetActive(true);
+        //knobIntstance.transform.localPosition = new Vector3(knobPos, knobIntstance.transform.localPosition.y, knobIntstance.transform.localPosition.z);
+        //knobIntstance.GetComponent<Image>().color = new Color(StaticSceneData.StaticData.lightingSets[0].r, StaticSceneData.StaticData.lightingSets[0].g, StaticSceneData.StaticData.lightingSets[0].b);
     }
 
     public void ButtonClick(int buttonColor)
@@ -49,23 +49,23 @@ public class SetLightColors : MonoBehaviour
         int momentIndex = StaticSceneData.StaticData.lightingSets.FindIndex(mom => mom.moment == colorMoment);
         Debug.Log("mommentIndex: " + momentIndex);
         //Debug.Log("sizeDeltsa.x "+_representationPanel.GetComponent<RectTransform>().rect.width);
-        float knobPos = UtilitiesTm.FloatRemap(colorMoment, AnimationTimer.GetMinTime(), AnimationTimer.GetMaxTime(), 0, _representationPanel.GetComponent<RectTransform>().rect.width);
-        Image knobIntstance = Instantiate(_imagePositionKnob, _imagePositionKnob.transform.parent);
-        knobIntstance.gameObject.SetActive(true);
-        knobIntstance.transform.localPosition = new Vector3(knobPos, knobIntstance.transform.localPosition.y, knobIntstance.transform.localPosition.z);
+        //float knobPos = UtilitiesTm.FloatRemap(colorMoment, AnimationTimer.GetMinTime(), AnimationTimer.GetMaxTime(), 0, _representationPanel.GetComponent<RectTransform>().rect.width);
+        //Image knobIntstance = Instantiate(_imagePositionKnob, _imagePositionKnob.transform.parent);
+        //knobIntstance.gameObject.SetActive(true);
+        //knobIntstance.transform.localPosition = new Vector3(knobPos, knobIntstance.transform.localPosition.y, knobIntstance.transform.localPosition.z);
         LightingSet thisLightingSet = new LightingSet { moment = colorMoment, r = 255, g = 231, b = 121, intensity = intensityValue };
         switch (buttonColor)
         {
             case 0:     //yellow
-                knobIntstance.GetComponent<Image>().color = new Color32(255, 231, 121, 255);
+                //knobIntstance.GetComponent<Image>().color = new Color32(255, 231, 121, 255);
                 thisLightingSet = new LightingSet { moment = colorMoment, r = 255, g = 231, b = 121, intensity = intensityValue };
                 break;
             case 1:     //red
-                knobIntstance.GetComponent<Image>().color = new Color32(255, 105, 104, 255);
+                //knobIntstance.GetComponent<Image>().color = new Color32(255, 105, 104, 255);
                 thisLightingSet = new LightingSet { moment = colorMoment, r = 255, g = 105, b = 104, intensity = intensityValue };
                 break;
             case 2:     //blue
-                knobIntstance.GetComponent<Image>().color = new Color32(0, 174, 239, 255);
+                //knobIntstance.GetComponent<Image>().color = new Color32(0, 174, 239, 255);
                 thisLightingSet = new LightingSet { moment = colorMoment, r = 0, g = 174, b = 255, intensity = intensityValue };
                 break;
         }
@@ -81,12 +81,47 @@ public class SetLightColors : MonoBehaviour
         _representationPanel.GetComponent<LightAnimationRepresentation>().ChangeImage();
     }
 
+
+    void ChangeLightColor ()
+    {
+        float TimeNow = AnimationTimer.GetTime();
+        int _listLength = StaticSceneData.StaticData.lightingSets.Count;
+        Color32 colorNow;
+        float _interpolationStep;
+        float _lightIntensity;
+        for (int i = 0; i < _listLength - 1; i++)
+        {
+            if ((StaticSceneData.StaticData.lightingSets[i].moment <= TimeNow) && (TimeNow < StaticSceneData.StaticData.lightingSets[i + 1].moment))
+            {
+                _interpolationStep = (TimeNow - StaticSceneData.StaticData.lightingSets[i].moment) / (StaticSceneData.StaticData.lightingSets[i + 1].moment - StaticSceneData.StaticData.lightingSets[i].moment);
+                //Debug.Log(_interpolationStep);
+                Color32 color1 = new Color32(StaticSceneData.StaticData.lightingSets[i].r, StaticSceneData.StaticData.lightingSets[i].g, StaticSceneData.StaticData.lightingSets[i].b, 255);
+                Color32 color2 = new Color32(StaticSceneData.StaticData.lightingSets[i+1].r, StaticSceneData.StaticData.lightingSets[i+1].g, StaticSceneData.StaticData.lightingSets[i+1].b, 255);
+                colorNow = Color32.Lerp(color1, color2, _interpolationStep);
+                _lightIntensity = Mathf.Lerp(StaticSceneData.StaticData.lightingSets[i].intensity, StaticSceneData.StaticData.lightingSets[i + 1].intensity, _interpolationStep);
+                foreach (GameObject goL in ObjectsLights)
+                {
+                    goL.GetComponent<Light>().color = new Color32(colorNow.r, colorNow.g, colorNow.b, 255);
+                    goL.GetComponent<Light>().intensity = _lightIntensity;
+                }
+            }
+        }
+    }
+
     // Update is called once per frame
     void Update()
     {
-        //_time = AnimationTimer.GetTime();
+        _time = AnimationTimer.GetTime();
 
-        //if (AnimationTimer.GetTimerState() == AnimationTimer.TimerState.playing)
+
+        if (AnimationTimer.GetTimerState() == AnimationTimer.TimerState.playing)
+        {
+            ChangeLightColor();
+        }
+        //else if()
+        //{
+
+        //}
         //{
         //    if (_time <= _sliderTime.maxValue)
         //    {
