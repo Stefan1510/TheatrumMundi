@@ -8,6 +8,28 @@ ModelImporter:
     second: Armature|ArmatureAction.001
   externalObjects:
   - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: faden_dick
+    second: {fileID: 2100000, guid: 383273d23c2ca8d45a7c0b0ce455e079, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: mat_Elefant
+    second: {fileID: 2100000, guid: e194ff29baf8f8a4d8ab3d9012f196ab, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: mat_Fahrwerk_Elefant
+    second: {fileID: 3737444638866073025, guid: cb196e775caeeb44886613c5121bec46,
+      type: 3}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: messing
+    second: {fileID: 1512424364927536053, guid: 6c9349c8ca1dc464f9afffbe2ceefcdf,
+      type: 3}
+  - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: Elefant_Fahrwerk_col
