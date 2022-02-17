@@ -9,16 +9,20 @@ public class LightAnimationRepresentation : MonoBehaviour
     //[SerializeField] private Slider _sliderTime;
     [SerializeField] private Slider _sliderIntensity;
     [SerializeField] private Image _imagePositionKnob;
+    [SerializeField] private GameObject _representationPanel;
     private List<Image> _imagePositionKnobCollection;
     private Color32[] _lightColors;
     private Color32[] _lightColorsColumn;
     private float _maxTime;
     private float _maxIntensity;
+    private bool _gameObjectStarted = false;
     // Start is called before the first frame update
     void Start()
     {
+        _gameObjectStarted = true;
         //_maxTime = (int)_sliderTime.maxValue;
-        _maxTime = 10 * 60 + 10;
+        //_maxTime = 10 * 60 + 10;
+        _maxTime = AnimationTimer.GetMaxTime();
         _maxIntensity = _sliderIntensity.maxValue;
         Debug.Log(_maxTime);
         _textureLightRepresentation = new Texture2D((int)_maxTime * 10, (int)_maxTime * 1, TextureFormat.RGBA32, false); // wird durch Panel RectTransform stretch stretch automatisch gescaled
@@ -28,6 +32,14 @@ public class LightAnimationRepresentation : MonoBehaviour
         _imagePositionKnob.gameObject.SetActive(false);
         _imagePositionKnobCollection = new List<Image>();
         ChangeImage();
+    }
+
+    private void OnEnable()
+    {
+        if(_gameObjectStarted)
+        {
+            ChangeImage();
+        }
     }
 
     //// Update is called once per frame
@@ -86,7 +98,7 @@ public class LightAnimationRepresentation : MonoBehaviour
         _textureLightRepresentation.SetPixels32(secondCount, 0, (_textureLightRepresentation.width - momentEnd - 1), (int)intensityGradient, lastColorBlock);
         Debug.Log("_________________________________________________________");
         _textureLightRepresentation.Apply();
-        GetComponent<Image>().sprite = Sprite.Create(_textureLightRepresentation, new Rect(0, 0, _textureLightRepresentation.width, _textureLightRepresentation.height), new Vector2(0.5f, 0.5f));
+        _representationPanel.GetComponent<Image>().sprite = Sprite.Create(_textureLightRepresentation, new Rect(0, 0, _textureLightRepresentation.width, _textureLightRepresentation.height), new Vector2(0.5f, 0.5f));
         UpdateKnobPositions();
     }
 
@@ -97,14 +109,17 @@ public class LightAnimationRepresentation : MonoBehaviour
             Destroy(image.gameObject);
         }
         _imagePositionKnobCollection.Clear();
-        float panelWidth = GetComponent<RectTransform>().rect.width;
+        float panelWidth = _representationPanel.GetComponent<RectTransform>().rect.width;
         float maxTime = AnimationTimer.GetMaxTime();
+        float panelHeight = _representationPanel.GetComponent<RectTransform>().rect.height;
+        float maxIntensity = _sliderIntensity.maxValue;
         foreach (LightingSet lightingSet in StaticSceneData.StaticData.lightingSets)
         {
             Image knobInstance = Instantiate(_imagePositionKnob, _imagePositionKnob.transform.parent);
             knobInstance.gameObject.SetActive(true);
-            float knobPos = UtilitiesTm.FloatRemap(lightingSet.moment, 0, maxTime, 0, panelWidth);
-            knobInstance.transform.localPosition = new Vector3(knobPos, knobInstance.transform.localPosition.y, knobInstance.transform.localPosition.z);
+            float knobPosX = UtilitiesTm.FloatRemap(lightingSet.moment, 0, maxTime, 0, panelWidth);
+            float knobPosY = UtilitiesTm.FloatRemap(lightingSet.intensity, 0, maxIntensity, -panelHeight / 2, panelHeight / 2);
+            knobInstance.transform.localPosition = new Vector3(knobPosX, knobPosY, knobInstance.transform.localPosition.z);
             knobInstance.GetComponent<Image>().color = new Color32(lightingSet.r, lightingSet.g, lightingSet.b, 255);
             _imagePositionKnobCollection.Add(knobInstance);
         }
