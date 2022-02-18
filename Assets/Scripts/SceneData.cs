@@ -40,6 +40,15 @@ public class SceneryElement
 	public bool mirrored;
 }
 
+
+[System.Serializable]
+
+public class FigureInstanceElement
+{
+    public float instanceNr;
+    public float momentStart;
+    public float railStart;
+}
 [System.Serializable]
 public class FigureElement
 {
@@ -57,6 +66,7 @@ public class FigureElement
 	public float wheelsize;
 	public int railnumber;
 	public string direction;
+    public List<FigureInstanceElement> figureInstanceElements;
 }
 
 [System.Serializable]

@@ -63,7 +63,7 @@ public class LightController : MonoBehaviour
         ChangeHeight(0);
         PanelLbImage = toggleLb.transform.parent.parent.GetComponent<Image>();
         PanelLbImage.color = new Color(171f / 255f, 171f / 255f, 171f / 255f, 160f / 255f);
-        Debug.Log(PanelLbImage);
+        //Debug.Log(PanelLbImage);
     }
 
     //// Update is called once per frame

@@ -43,7 +43,7 @@ public class SceneDataController : MonoBehaviour
         //recentSceneData.lightElements = new List<LightElement>();
         foreach (GameObject re in objectsRailElements)
         {
-            Debug.Log("-----+++++" + re.name);
+            //Debug.Log("-----+++++" + re.name);
         }
         SceneManager.statusReiter = 1;
         foreach (GameObject objectSceneryElement in objectsSceneryElements)
@@ -145,8 +145,10 @@ public class SceneDataController : MonoBehaviour
                 //active = objectFigureElement.GetComponent<SceneryController>().sceneryActive,	//check, if this command can be set up on a better way ;)
                 //parent = objectFigureElement.transform.parent.name,
                 mirrored = false,
-                width = objectFigureElement.GetComponent<Renderer>().bounds.size.x,
-                height = objectFigureElement.GetComponent<Renderer>().bounds.size.y,
+                //width = objectFigureElement.GetComponent<Renderer>().bounds.size.x,
+                //height = objectFigureElement.GetComponent<Renderer>().bounds.size.y,
+                width = 0.27f,
+                height = 0.16f,
                 velocity = 0.0f,
                 wheelsize = 1.0f,
                 railnumber = 1,
