@@ -8,15 +8,15 @@ public class SwitchMenues : MonoBehaviour
     public GameObject ObjectMenueDirectorMain;
 
     //// Start is called before the first frame update
-    //void Start()
-    //{
-        
-    //}
+    void Start()
+    {
+        SwitchToMenueConfig();
+    }
 
     //// Update is called once per frame
     //void Update()
     //{
-        
+
     //}
 
     public void SwitchToMenueDirector()

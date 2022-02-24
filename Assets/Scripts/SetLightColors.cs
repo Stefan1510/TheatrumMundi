@@ -7,6 +7,7 @@ public class SetLightColors : MonoBehaviour
 {
     public GameObject[] ObjectsLights;
     public Slider SliderIntensity;
+    private objectsLightElement[] objectsLight;
 
     //[SerializeField] private Slider _sliderTime;
     //[SerializeField] private Image _imagePositionKnob;
@@ -16,7 +17,7 @@ public class SetLightColors : MonoBehaviour
     // Start is called before the first frame update
     private void Awake()
     {
-
+        objectsLight = GameObject.Find("GameController").GetComponent<SceneDataController>().objectsLightElements;
     }
 
     void Start()
@@ -99,10 +100,18 @@ public class SetLightColors : MonoBehaviour
                 Color32 color2 = new Color32(StaticSceneData.StaticData.lightingSets[i+1].r, StaticSceneData.StaticData.lightingSets[i+1].g, StaticSceneData.StaticData.lightingSets[i+1].b, 255);
                 colorNow = Color32.Lerp(color1, color2, _interpolationStep);
                 _lightIntensity = Mathf.Lerp(StaticSceneData.StaticData.lightingSets[i].intensity, StaticSceneData.StaticData.lightingSets[i + 1].intensity, _interpolationStep);
-                foreach (GameObject goL in ObjectsLights)
+                //foreach (GameObject goL in ObjectsLights)
+                //{
+                //    goL.GetComponent<Light>().color = new Color32(colorNow.r, colorNow.g, colorNow.b, 255);
+                //    goL.GetComponent<Light>().intensity = _lightIntensity;
+                //}
+                foreach (objectsLightElement element in objectsLight)
                 {
-                    goL.GetComponent<Light>().color = new Color32(colorNow.r, colorNow.g, colorNow.b, 255);
-                    goL.GetComponent<Light>().intensity = _lightIntensity;
+                    if (element.lightStagePosition == 1 || element.lightStagePosition == 2)
+                    {
+                        element.goLightElement.GetComponent<Light>().color = new Color32(colorNow.r, colorNow.g, colorNow.b, 255);
+                        element.goLightElement.GetComponent<Light>().intensity = _lightIntensity;
+                    }
                 }
             }
         }
