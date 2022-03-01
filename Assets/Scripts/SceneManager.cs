@@ -5,7 +5,7 @@ using UnityEngine;
 public static class SceneManager
 {
     public static DragDrop dragDrop;        // aktuelles dragDrop-Script ("this" in Dragdrop)
-    //public static ReiterButton activeReiter;
+    public static MusicDragDrop dragDropMusic;
     public static int triggerActive = new int();
     public static bool triggerEinstellungen = new bool();
     public static bool mouse_over = new bool();
@@ -13,5 +13,6 @@ public static class SceneManager
     public static bool showSettings = new bool();
 
     public static int statusReiter = new int();
+    public static bool timelineOpen;				//timeline open/close
 
 }

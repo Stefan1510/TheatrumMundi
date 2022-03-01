@@ -51,7 +51,7 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
         pos = rectTransform.anchoredPosition;
 
         //statusReiter = 1;           // statusReiter ist der aktuell geoeffnete Reiter
-        schieneKulisse = 0;         // schieneKulisse ist 0, wenn sie im Shelf liegt, also keinem Reiter angehoert!
+        schieneKulisse = 0;         // schieneKulisse ist 0, wenn die Kulisse im Shelf liegt, also keinem Reiter angehoert!
 
         SceneManager.dragDrop = this; // hier wird dem dragDrop-Objekt im SceneManager die aktuelle Kulisse uebergeben!
         menuExtra.SetActive(false);
@@ -65,6 +65,7 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
                                         // alles auf false setzt und die weiteren Reiter nicht mehr gefunden werden! 
                                         // also erst Awake fuer alle und dann aktiven Reiter setzen
         ThisSceneryElement = StaticSceneData.StaticData.sceneryElements.Find(x => x.name == gameObject.name.Substring(6));
+        Debug.Log("DRAGDROP++++++++++++++++++++pos: "+pos);
     }
 
 
