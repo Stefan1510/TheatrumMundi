@@ -10,6 +10,13 @@ public class objectsLightElement
     public int lightStagePosition;   //{ 0- BeforeRail, 1- leftRail, 2- rightRail, 3- BehindRails};
 }
 
+
+[System.Serializable]
+public class RailElementSpeed
+{
+    public float moment;
+    public float speed;
+}
 [System.Serializable]
 public class RailElement
 {
@@ -22,6 +29,7 @@ public class RailElement
 	public float height;
 	public float velocity;
 	public string direction;	//"toRight"=band moves from left to right, "toLeft"=band moves from left to right
+    public List<RailElementSpeed> railElementSpeeds;
 }
 
 [System.Serializable]
@@ -46,7 +54,7 @@ public class SceneryElement
 public class FigureInstanceElement
 {
     public float instanceNr;
-    public float momentStart;
+    public float moment;
     public float railStart;
 }
 [System.Serializable]

@@ -110,7 +110,8 @@ public class SceneDataController : MonoBehaviour
                 //width=objectRailElement.GetComponent<Renderer>().bounds.size.x,
                 //height=objectRailElement.GetComponent<Renderer>().bounds.size.y,
                 velocity = 1.0f,
-                direction = "toRight"
+                direction = "toRight",
+                railElementSpeeds=new List<RailElementSpeed>()                
             };
             sceneData.railElements.Add(sceneRailElement);
         }
