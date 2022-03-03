@@ -113,6 +113,7 @@ public class SceneDataController : MonoBehaviour
                 direction = "toRight",
                 railElementSpeeds=new List<RailElementSpeed>()                
             };
+            sceneRailElement.railElementSpeeds.Add(new RailElementSpeed());
             sceneData.railElements.Add(sceneRailElement);
         }
 

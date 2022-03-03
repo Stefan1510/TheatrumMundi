@@ -25,7 +25,7 @@ public class LightAnimationRepresentation : MonoBehaviour
         _maxTime = AnimationTimer.GetMaxTime();
         _maxIntensity = _sliderIntensity.maxValue;
         Debug.Log(_maxTime);
-        _textureLightRepresentation = new Texture2D((int)_maxTime * 10, (int)_maxTime * 1, TextureFormat.RGBA32, false); // wird durch Panel RectTransform stretch stretch automatisch gescaled
+        _textureLightRepresentation = new Texture2D((int)_maxTime * 10, (int)_maxTime * 1, TextureFormat.RGBA32, false); // wird durch Panel RectTransform stretch automatisch gescaled
         //_textureLightRepresentation.filterMode = FilterMode.Trilinear;
         _lightColors = new Color32[_textureLightRepresentation.width * _textureLightRepresentation.height];
         _lightColorsColumn = new Color32[_textureLightRepresentation.height];
@@ -50,7 +50,7 @@ public class LightAnimationRepresentation : MonoBehaviour
 
     public void ChangeImage()
     {
-
+        _maxTime = AnimationTimer.GetMaxTime();
         _lightColors = ChangeColors(_lightColors, new Color32(255, 255, 255, 255));
         _textureLightRepresentation.SetPixels32(_lightColors);
         Color32 colorStart = new Color(StaticSceneData.StaticData.lightingSets[0].r, StaticSceneData.StaticData.lightingSets[0].g, StaticSceneData.StaticData.lightingSets[0].b);
@@ -87,9 +87,7 @@ public class LightAnimationRepresentation : MonoBehaviour
                 _lightColorsColumn = ChangeColors(_lightColorsColumn, colorGradient);
                 //Debug.Log("secondCount " + secondCount + " -intensityGradient " + intensityGradient + " -_lightColorsColumn " + _lightColorsColumn);
                 _textureLightRepresentation.SetPixels32(secondCount, 0, 1, (int)intensityGradient, _lightColorsColumn);
-            }
-
-            
+            }            
         }
         colorEnd = new Color32(StaticSceneData.StaticData.lightingSets[listLength - 1].r, StaticSceneData.StaticData.lightingSets[listLength - 1].g, StaticSceneData.StaticData.lightingSets[listLength - 1].b, 255);
         Debug.Log(listLength + " - r  " + colorEnd.r + " - g  " + colorEnd.g + " - b  " + colorEnd.b + " - intensityGradient " + intensityGradient);
