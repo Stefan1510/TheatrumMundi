@@ -1,4 +1,5 @@
 using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,6 +7,8 @@ using UnityEngine.UI;
 public class timelineOpenCloseV2 : MonoBehaviour
 {
     Image timelineImage;
+    Outline outline;
+    AudioSource audioSource;
     public Text timelineText;
     public Image timeSliderImage;
     private BoxCollider2D timeSlider;
@@ -23,6 +26,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
     bool doSomethingOnce;           //flag for do something once in a loop
     bool editTimelineObject;        //flag for shifting/clicking an object on timeline
     bool releaseOnTimeline;         //flag if you set an object on timeline
+    bool playingMusic;
     Vector2 releaseObjMousePos;
     double minX;
     double maxX;
@@ -30,6 +34,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
     double maxY;
     string maxTimeLength;
     int maxTimeInSec;
+    int currentClip;
     Vector2 sizeDeltaAsFactor;
     //public Button myButton;
     //Vector2 objectDefaultPosition;
@@ -64,15 +69,6 @@ public class timelineOpenCloseV2 : MonoBehaviour
     public GameObject figure4;      //elephant, element 3
     public GameObject figure5;      //esel, element 4
     public GameObject figure6;      //giraffe, element 5
-                                    // public GameObject figure7;		//giraffe, element 5
-                                    // public GameObject figure8;		//giraffe, element 5
-                                    // public GameObject figure9;		//giraffe, element 5
-                                    // public GameObject figure10;		//giraffe, element 5
-                                    // public GameObject figure11;		//giraffe, element 5
-                                    // public GameObject figure12;		//giraffe, element 5
-                                    // public GameObject figure13;		//giraffe, element 5
-                                    // public GameObject figure14;		//giraffe, element 5
-                                    // public GameObject figure15;		//giraffe, element 5
     double fig1StartPos;
     double fig2StartPos;
     Vector3 railStartPos;
@@ -85,7 +81,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
 	Vector3 rail5StartPos;
 	Vector3 rail6StartPos;*/
 
-    Outline[] outline;
+    public AudioClip[] clip;         // ought to be 6 audioclips
 
     // Start is called before the first frame update
     void Awake()
@@ -105,7 +101,9 @@ public class timelineOpenCloseV2 : MonoBehaviour
         doSomethingOnce = false;
         editTimelineObject = false;
         releaseOnTimeline = false;
+        playingMusic = false;
         releaseObjMousePos = new Vector2(0.0f, 0.0f);
+        currentClip = 0;
 
 
         /*
@@ -125,8 +123,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
         objectShelfPosition = new Vector2[figureObjects.Length];
         objectShelfSize = new Vector2[figureObjects.Length];
         objectShelfParent = new GameObject[figureObjects.Length];
-		figCounterCircle = new GameObject[figureObjects.Length];
-		//musCounterCircle = new GameObject[figureObjects.Length];
+        figCounterCircle = new GameObject[figureObjects.Length];
 
         for (int i = 0; i < objectLibrary.transform.childCount; i++)
         {
@@ -139,7 +136,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
             //this creates new vectr2-objects (posistion and size of the elements in shelf)
             //f3dobjectShelfPosition[i] = figureObjects[i].GetComponent<RectTransform>().anchoredPosition;
             objectShelfSize[i] = new Vector2(figureObjects[i].GetComponent<RectTransform>().rect.width, figureObjects[i].GetComponent<RectTransform>().rect.height);
-            Debug.Log("defaultShelfPosition: " + objectShelfPosition[i] + " ++++++++++defaultShelfSize: " + objectShelfSize[i]);
+            //Debug.Log("defaultShelfPosition: " + objectShelfPosition[i] + " ++++++++++defaultShelfSize: " + objectShelfSize[i]);
             //store default parentName
             //this creates new game-objects named like the parent :(
             //objectShelfParent[i]=new GameObject(figureObjects[i].transform.parent.gameObject.name);
@@ -192,16 +189,15 @@ public class timelineOpenCloseV2 : MonoBehaviour
 
     void Start()
     {
+        audioSource = GetComponent<AudioSource>();
         timeSettings.SetActive(false);
-        
-		//figCounterCircle[0] = figureObjects[0].transform.parent.GetChild(2).gameObject;
-		//figCounterCircle[0] = GameObject.Find("ImageCountFigObj01");
-		//Debug.Log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++figCounter[i]: "+figureObjects[0].transform.parent.GetChild(2).gameObject);//+", musCounter: "+musCounterCircle[0].name);
-		for(int i=0; i<figureObjects.Length;i++)
-		{
-			figCounterCircle[i] = figureObjects[i].transform.parent.GetChild(2).gameObject;
-			figCounterCircle[i].transform.GetChild(0).GetComponent<Text>().text = "0";
-		}
+        //figCounterCircle[0] = figureObjects[0].transform.parent.GetChild(2).gameObject;
+        //figCounterCircle[0] = GameObject.Find("ImageCountFigObj01");
+        for (int i = 0; i < figureObjects.Length; i++)
+        {
+            figCounterCircle[i] = figureObjects[i].transform.parent.GetChild(2).gameObject;
+            figCounterCircle[i].transform.GetChild(0).GetComponent<Text>().text = "0";
+        }
 
         //get figure element
         //gameController = GameObject.Find("GameController");
@@ -535,6 +531,11 @@ public class timelineOpenCloseV2 : MonoBehaviour
             fig3D.transform.position = new Vector3(railStartPos.x, fig3D.transform.position.y, (float)figPos);
         }
     }
+
+    public void PlayMusic(GameObject fig3D, int startSec, double animLength, double timerTime, double railStartZ, double railEndZ)
+    {
+
+    }
     public bool isInList(List<GameObject> objects, GameObject obj)
     {
         return objects.Contains(obj);
@@ -561,13 +562,28 @@ public class timelineOpenCloseV2 : MonoBehaviour
         else
             return false;
     }
-    public void createRectangle(GameObject obj, Vector2 startPos, Vector2 size)
+    public void createRectangle(GameObject obj, Vector2 startPos, Vector2 size, Color col) // start pos brauch ich eigentlich nicht
     {
         //int alpha=1;
-        Vector3 col = new Vector3(255, 120, 60);
-        Image rect = obj.AddComponent<Image>();
-        rect.color = new Color(col.x, col.y, col.z);
-        rect.transform.position = startPos;
+        // Vector3 col = new Vector3(255, 120, 60);
+        // Image rect = obj.AddComponent<Image>();              // an object can have only one Image-Component
+        // rect.color = new Color(col.x, col.y, col.z);
+        // rect.transform.position = startPos;          
+
+        GameObject imgObject = new GameObject("RectBackground");
+        RectTransform trans = imgObject.AddComponent<RectTransform>();
+        trans.transform.SetParent(obj.transform); // setting parent
+        trans.localScale = Vector3.one;
+        trans.anchoredPosition = new Vector2(size.x * 0.4f, 0.0f);
+        trans.sizeDelta = size; // custom size
+
+        Image image = imgObject.AddComponent<Image>();
+        //Texture2D tex = Resources.Load<Texture2D>("red");
+        image.color = col;
+        var tempColor = image.color;
+        tempColor.a = 0.5f;
+        image.color = tempColor;
+        //imgObject.transform.SetParent(obj.transform);
     }
     public int calculateFigureStartTimeInSec(GameObject fig, double animLength, int maxTimeLengthInSec, double railMinX, double railMaxX)
     {
@@ -582,6 +598,20 @@ public class timelineOpenCloseV2 : MonoBehaviour
         //Debug.Log("method: fig: "+fig+" tmpX: "+tmpX+" tmpSize: "+tmpSize+" tmpMinX: "+tmpMinX+" railMaxX: "+railMaxX+" percentage: "+percentageOfRail+" sec: "+sec);
         return sec;
     }
+
+    public int calculateMusicEndTimeInSec(GameObject fig, double animLength, int maxTimeLengthInSec, double railMinX, double railMaxX)
+    {
+        int sec = 0;
+        double tmpX = fig.transform.position.x - railMinX;  //x-pos is screenX from left border, railMinX is the rail-startpoint
+        Vector2 tmpSize = fig.GetComponent<BoxCollider2D>().size;
+        double tmpMinX = (double)tmpX - (tmpSize.x / 2.0f); //if tmpX is the midpoint of figure
+        double tmpMaxX = tmpMinX + animLength;  //length of figure is related to rail speed, here named as animationLength
+                                                //get figure minX related to timelineMinX
+        double percentageOfRail = tmpMinX / (railMaxX - railMinX);  //max-min=real length, percentage: e.g. 0,3823124 (38%)
+        sec = (int)((((double)maxTimeLengthInSec) * percentageOfRail) + animLength);
+        return sec;
+    }
+
     public bool checkFigureObjectShouldPlaying(GameObject fig, int startTime, double animLength, double timerTime)
     {
         if ((timerTime >= startTime) && (timerTime <= (startTime + (animLength / 2.0))))	///2.0 because animLength=Pixel -> animLength/2~time
@@ -636,7 +666,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
         //perhaps reduce the copies count
     }
     // Update is called once per frame
-    void Update()
+    async void Update()
     {
         Vector2 getMousePos = Input.mousePosition;
 
@@ -722,13 +752,12 @@ public class timelineOpenCloseV2 : MonoBehaviour
                     clickingObject = true;  //did you click the object
                     movingObject = true;        //want to drag the object
                     movingOnTimeline = true;    //access for moving an object on timeline
-                    
+
                     /*outline[currentClickedInstanceObjectIndex]=timelineInstanceObjects3D[currentClickedInstanceObjectIndex].GetComponent<Outline>();
-                    Debug.Log("++++++++++++++++++CLICKED"+timelineInstanceObjects3D[currentClickedInstanceObjectIndex].name);
                     outline[currentClickedInstanceObjectIndex].enabled = true;*/
                     //Debug.Log("++++++++++++++++++++++Outline Enabled: "+outline.enabled);
                 }
-                
+
             }
 
             //if you hit/clicked nothing with mouse
@@ -773,11 +802,24 @@ public class timelineOpenCloseV2 : MonoBehaviour
                 //if you click an object in timeline
                 if (timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(getMousePos))
                 {
+                    //Debug.Log("++++++++++++++++++CLICKED"+timelineInstanceObjects[currentClickedInstanceObjectIndex].name+"+++++++++++++++++++++++"+timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<AudioSource>().clip.name+"playing+++++++++++++"+playingMusic);
+                    //playing Music on click (test)
+                    /*if(timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<AudioSource>() != null && playingMusic==false) 
+                    { 
+                        timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<AudioSource>().Play();
+                        playingMusic=true;
+                    }
+                    else 
+                    {
+                        timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<AudioSource>().Stop();
+                        playingMusic=false;
+                    }*/
+
                     //Debug.Log("mooving timelineInstanceObjects: " + timelineInstanceObjects[currentClickedInstanceObjectIndex].name);
                     //highlighting
-                    if(highlighted == false)
+                    if (highlighted == false)
                     {
-                        outline[currentClickedInstanceObjectIndex].enabled=true;
+                        //outline.enabled=true;
                         highlighted = true;
                     }
                     //move object
@@ -825,8 +867,8 @@ public class timelineOpenCloseV2 : MonoBehaviour
             //move object
             updateObjectPosition(figureObjects[currentClickedObjectIndex], getMousePos);
 
-			//temporarily change parent, so that object appears in front of the shelf
-			figureObjects[currentClickedObjectIndex].transform.SetParent(parentMenue.transform);
+            //temporarily change parent, so that object appears in front of the shelf
+            figureObjects[currentClickedObjectIndex].transform.SetParent(parentMenue.transform);
 
             //updateObjectPosition(newCopyOfFigure,getMousePos);
             //if you hit the timeline > object snap to timeline and is locked in y-movement-direction
@@ -858,6 +900,8 @@ public class timelineOpenCloseV2 : MonoBehaviour
                     //Debug.Log("--->scale up!");
                     scaleObjectsOfList(timelineObjects, animationLength, scaleYUp);
                 }
+                // change parent back
+                setParent(figureObjects[currentClickedObjectIndex], mainMenue);
 
                 //snapping/lock y-axis
                 //figureObjects[currentClickedObjectIndex].transform.position=new Vector3(figureObjects[currentClickedObjectIndex].transform.position.x, this.transform.position.y,0.0f);
@@ -930,174 +974,251 @@ public class timelineOpenCloseV2 : MonoBehaviour
                     //name
                     countName = countCopiesOfObject(figureObjects[currentClickedObjectIndex], timelineInstanceObjects);
                     newCopyOfFigure.name = figureObjects[currentClickedObjectIndex].name + "_instance" + countName;
-                    figCounterCircle[currentClickedObjectIndex].transform.GetChild(0).GetComponent<Text>().text = (countName + 1).ToString();
+                    if (gameObject.name == "ImageTimelineRailMusic")
+                    {
+                        createRectangle(newCopyOfFigure, newCopyOfFigure.GetComponent<RectTransform>().anchoredPosition, new Vector2(300, 50),Color.green);
+                    }
+                    else createRectangle(newCopyOfFigure, newCopyOfFigure.GetComponent<RectTransform>().anchoredPosition, new Vector2(300, 50),Color.cyan);
                     
-                    //parent
-                    newCopyOfFigure.transform.SetParent(figureObjects[currentClickedObjectIndex].transform.parent.gameObject.transform);
-                    //position
-                    newCopyOfFigure.transform.position = new Vector2(figureObjects[currentClickedObjectIndex].transform.position.x, figureObjects[currentClickedObjectIndex].transform.position.y);
-                    //set collider
+                        figCounterCircle[currentClickedObjectIndex].transform.GetChild(0).GetComponent<Text>().text = (countName + 1).ToString();
+
+                        //parent
+                        newCopyOfFigure.transform.SetParent(figureObjects[currentClickedObjectIndex].transform.parent.gameObject.transform);
+                        //position
+                        newCopyOfFigure.transform.position = new Vector2(figureObjects[currentClickedObjectIndex].transform.position.x, figureObjects[currentClickedObjectIndex].transform.position.y);
+                        //set collider
 
 
-                    //add object to list which objects are on timeline
-                    //set placed figures to timelineInstanceObjects-list
-                    updateObjectList(timelineInstanceObjects, newCopyOfFigure);
+                        //add object to list which objects are on timeline
+                        //set placed figures to timelineInstanceObjects-list
+                        updateObjectList(timelineInstanceObjects, newCopyOfFigure);
 
-                    //count the instances
-                    //	Debug.Log("number of instances on timeline: "+timelineInstanceObjects.Count);
+                        //count the instances
+                        //	Debug.Log("number of instances on timeline: "+timelineInstanceObjects.Count);
 
-                    //Debug.Log("copies of this object:"+countCopiesOfObject(newCopyOfFigure,timelineObjects));
+                        //Debug.Log("copies of this object:"+countCopiesOfObject(newCopyOfFigure,timelineObjects));
 
-                    //set default parent
-                    setParent(figureObjects[currentClickedObjectIndex], objectShelfParent[currentClickedObjectIndex]);
-                    Debug.Log("Set parent to: " + objectShelfParent);
-                    //scale to default values
-                    scaleObject(figureObjects[currentClickedObjectIndex], objectShelfSize[currentClickedObjectIndex].x, objectShelfSize[currentClickedObjectIndex].y);
+                        //set default parent
+                        setParent(figureObjects[currentClickedObjectIndex], objectShelfParent[currentClickedObjectIndex]);
+                        Debug.Log("Set parent to: " + objectShelfParent);
+                        //scale to default values
+                        scaleObject(figureObjects[currentClickedObjectIndex], objectShelfSize[currentClickedObjectIndex].x, objectShelfSize[currentClickedObjectIndex].y);
 
-                    //set back the original figure-image to shelf
-                    //Debug.Log("default shelf-pos: "+objectShelfPosition[currentClickedObjectIndex]);
-                    //Debug.Log("default shelf-empty: "+figureObjects[currentClickedObjectIndex].transform.parent.gameObject.name);
-                    //Debug.Log("default shelf-empty-pos: "+figureObjects[currentClickedObjectIndex].transform.parent.gameObject.transform.position);
+                        //set back the original figure-image to shelf
+                        //Debug.Log("default shelf-pos: "+objectShelfPosition[currentClickedObjectIndex]);
+                        //Debug.Log("default shelf-empty: "+figureObjects[currentClickedObjectIndex].transform.parent.gameObject.name);
+                        //Debug.Log("default shelf-empty-pos: "+figureObjects[currentClickedObjectIndex].transform.parent.gameObject.transform.position);
 
-                    //get position of parent-empty-object
-                    //Vector2 tmpVec=new Vector2(figureObjects[currentClickedObjectIndex].transform.parent.gameObject.transform.position.x,figureObjects[currentClickedObjectIndex].transform.parent.gameObject.transform.position.y);
+                        //get position of parent-empty-object
+                        //Vector2 tmpVec=new Vector2(figureObjects[currentClickedObjectIndex].transform.parent.gameObject.transform.position.x,figureObjects[currentClickedObjectIndex].transform.parent.gameObject.transform.position.y);
 
-                    //set this position
-                    figureObjects[currentClickedObjectIndex].GetComponent<RectTransform>().anchoredPosition = new Vector2(75.0f,-75.0f);
-                    // bring object back to position two, so that its visible
-                    figureObjects[currentClickedObjectIndex].transform.SetSiblingIndex(1);
+                        //set this position
+                        figureObjects[currentClickedObjectIndex].GetComponent<RectTransform>().anchoredPosition = new Vector2(75.0f, -75.0f);
+                        // bring object back to position two, so that its visible
+                        figureObjects[currentClickedObjectIndex].transform.SetSiblingIndex(1);
 
-                    //remove from timelineObjects-list
-                    //	Debug.Log("count timelineObjects: "+timelineObjects.Count);
-                    //	timelineObjects.Remove(figureObjects[currentClickedObjectIndex]);
-                    //	Debug.Log("count timelineObjects after remove: "+timelineObjects.Count);
+                        //remove from timelineObjects-list
+                        //	Debug.Log("count timelineObjects: "+timelineObjects.Count);
+                        //	timelineObjects.Remove(figureObjects[currentClickedObjectIndex]);
+                        //	Debug.Log("count timelineObjects after remove: "+timelineObjects.Count);
 
-                    //	Debug.Log("count timelineInstancesObjects: "+timelineInstanceObjects.Count);
+                        //	Debug.Log("count timelineInstancesObjects: "+timelineInstanceObjects.Count);
 
-                    //set 3d object to default position
-                    GameObject curr3DObject = new GameObject();
-                    curr3DObject = Instantiate(figureObjects3D[currentClickedObjectIndex]);
-                    timelineInstanceObjects3D.Add(curr3DObject);
-                    //set3DObject(currentClickedObjectIndex,figureObjects3D);
-                    set3DObjectOfInstance(timelineInstanceObjects3D[timelineInstanceObjects3D.Count - 1]); //the last added object
+                        //set 3d object to default position
+                        GameObject curr3DObject = new GameObject();
+                        curr3DObject = Instantiate(figureObjects3D[currentClickedObjectIndex]);
+                        timelineInstanceObjects3D.Add(curr3DObject);
+                        //set3DObject(currentClickedObjectIndex,figureObjects3D);
+                        set3DObjectOfInstance(timelineInstanceObjects3D[timelineInstanceObjects3D.Count - 1]); //the last added object
 
-                    //Debug.Log("original shelf-pos: "+objectShelfPosition[currentClickedObjectIndex]);
-                    /*
-                        figureObjects[currentClickedObjectIndex].transform.SetParent(objectShelfParent[currentClickedObjectIndex].transform);
-                        //Debug.Log("original parent: "+objectShelfParent[currentClickedObjectIndex]+" count: "+objectShelfParent.Length);				
+                        //Debug.Log("original shelf-pos: "+objectShelfPosition[currentClickedObjectIndex]);
+                        /*
+                            figureObjects[currentClickedObjectIndex].transform.SetParent(objectShelfParent[currentClickedObjectIndex].transform);
+                            //Debug.Log("original parent: "+objectShelfParent[currentClickedObjectIndex]+" count: "+objectShelfParent.Length);				
 
-                        //objectShelfPosition[i]=new Vector2(figureObjects[i].transform.position.x,figureObjects[i].transform.position.y);
-                        */
+                            //objectShelfPosition[i]=new Vector2(figureObjects[i].transform.position.x,figureObjects[i].transform.position.y);
+                            */
 
-                    //show the instances as a pinned number
+                        //show the instances as a pinned number
+                    }
+                }
+
+                releaseOnTimeline = false;
+                releaseObjMousePos.x = 0.0f;
+                releaseObjMousePos.y = 0.0f;
+
+                /*
+                // ------------ Dinge, die fuer die Kulissen im Controler passieren muessen
+
+                //ThisSceneryElement.parent = "Schiene" + statusReiter.ToString(); //hier bitte mal genau �berpr�fen wie die parents dann wirklich sind
+                Debug.Log("---- Figurename -------- " + ThisFigureElement.name + " --- " + ThisFigureElement.parent + " --- " + ThisFigureElement.x);
+                ThisFigureElement.z = GetComponent<RectTransform>().anchoredPosition.x/300;
+                ThisFigureElement.y = GetComponent<RectTransform>().anchoredPosition.y/300+0.1f;  //die werte stimmen ungefaehr mit dem liveview ueberein
+
+
+                // ------------ uebertragen der Daten aus dem Controller auf die 3D-Kulissen
+                gameController.GetComponent<SceneDataController>().CreateScene(StaticSceneData.StaticData); // dieses Zeile macht das gleiche und ist glaube besser.
+                */
+            }
+
+            //------------------UPDATE-LOOP---------------------------
+            //Debug.Log("update ");
+            //Debug.Log("update. ");
+            //Debug.Log("update.. ");
+            //Debug.Log("update... ");
+            //Debug.Log("figObj: "+figureObjects[currentClickedObjectIndex].ToString());
+            //animate the 3d object controlled by time
+            //double startSec=calculateFigureStartTimeInSec(figureObjects[currentClickedObjectIndex], 100.0f, maxTimeInSec, minX, maxX);
+
+            /*int idx=0;
+            for(int i=0;i<timelineObjects.Count;i++)
+            {
+                idx=idx+1;
+                double startSec=calculateFigureStartTimeInSec(timelineObjects[i], 100.0f, maxTimeInSec, minX, maxX);
+                //Debug.Log("startSec: "+startSec);
+                bool tests=checkFigureObjectShouldPlaying(timelineObjects[i], (int)startSec, 100.0f, AnimationTimer.GetTime());
+                //Debug.Log("tests: "+tests);
+                if (tests)
+                {
+                    animate3DObjectByTime(timelineObjects3D[i], (int)startSec, 100.0f, AnimationTimer.GetTime(), railStartPos.z, railEndPos.z);
+                }
+            }*/
+
+            if (gameObject.name == "ImageTimelineRail1")
+            {
+
+                //int idx = 0;
+                for (int i = 0; i < timelineInstanceObjects.Count; i++)
+                {
+                    //idx = idx + 1;
+                    double startSec = calculateFigureStartTimeInSec(timelineInstanceObjects[i], 100.0f, maxTimeInSec, minX, maxX);
+                    bool tests = checkFigureObjectShouldPlaying(timelineInstanceObjects[i], (int)startSec, 100.0f, AnimationTimer.GetTime());
+                    //Debug.Log("tests: "+tests);
+
+                    //if object should be playing (tests=true):
+                    if (tests)
+                    {
+                        animate3DObjectByTime(timelineInstanceObjects3D[i], (int)startSec, 100.0f, AnimationTimer.GetTime(), railStartPos.z, railEndPos.z);
+                        //Debug.Log("+++++++++++++++++++startSec: "+startSec+" +++++++++++++ Timertime: "+AnimationTimer.GetTime()+timelineInstanceObjects[currentClickedInstanceObjectIndex].name);
+
+                    }
+                    /*if (timelineInstanceObjects[currentClickedInstanceObjectIndex].name[6] == 'F')
+                    {
+                        Debug.Log(timelineInstanceObjects[currentClickedInstanceObjectIndex].name[6]);
+                        animate3DObjectByTime(timelineInstanceObjects3D[i], (int)startSec, 100.0f, AnimationTimer.GetTime(), railStartPos.z, railEndPos.z);
+                    }*/
+
                 }
             }
 
-            releaseOnTimeline = false;
-            releaseObjMousePos.x = 0.0f;
-            releaseObjMousePos.y = 0.0f;
+            else if (gameObject.name == "ImageTimelineRailMusic")
+            {
+
+
+                for (int i = 0; i < timelineInstanceObjects.Count; i++)
+                {
+                    double startSec = calculateFigureStartTimeInSec(timelineInstanceObjects[i], 100.0f, maxTimeInSec, minX, maxX);
+                    double endSec = calculateMusicEndTimeInSec(timelineInstanceObjects[i], 180.0f, maxTimeInSec, minX, maxX);
+
+                    //Debug.Log(", startSec: " + startSec + "endSec: " + endSec + ", Timer: " + AnimationTimer.GetTime() + ", Playmusic: " + playingMusic);
+
+                    // wenn timer im bereich musikstuecks und musik ist nicht an
+                    if (AnimationTimer.GetTime() >= startSec && AnimationTimer.GetTime() <= endSec && playingMusic == false)
+                    {
+                        playingMusic = true;
+                        currentClip = (int)Char.GetNumericValue(timelineInstanceObjects[i].name[13]);
+                        audioSource.clip = clip[currentClip];
+                        audioSource.Play();
+                        Debug.Log("++++++++++MUSIC STARTS ++++++";
+
+                    }
+                    // wenn timer im bereich des musikstuecks und musik ist an
+                    else if (AnimationTimer.GetTime() >= startSec && AnimationTimer.GetTime() <= endSec && playingMusic == true)
+                    {
+                        //Debug.Log("+++++++++++++NOTHING"+ ", Playmusic: " + playingMusic+", currentClip: " + currentClip + "++++timelineInstanceObjects[i].name "+timelineInstanceObjects[i].name);
+                    }
+                    // wenn timer ausserhalb des musikstuecks und musik ist an
+                    else if (playingMusic == true && AnimationTimer.GetTime() < startSec || AnimationTimer.GetTime() > endSec)
+                    {
+                        if (currentClip == (int)Char.GetNumericValue(timelineInstanceObjects[i].name[13]))
+                        {
+                            audioSource.Stop();
+                            playingMusic = false;
+                            Debug.Log("+++++++++++++MUSIC STOPPED");
+                        }
+
+                    }
+
+
+                }
+
+            }
+
+
+
+
+            // double startSec = calculateFigureStartTimeInSec(timelineInstanceObjects[i], 100.0f, maxTimeInSec, minX, maxX);
+            // bool testsMusic = checkFigureObjectShouldPlaying(timelineInstanceObjects[i], (int)startSec, 100.0f, AnimationTimer.GetTime());
+
+            // if (testsMusic)
+            // {
+            //     PlayMusic(figureObjects[currentClickedObjectIndex], (int)startSec, 100.0f, AnimationTimer.GetTime(), railStartPos.z, railEndPos.z);
+            //     Debug.Log(timelineInstanceObjects[currentClickedInstanceObjectIndex].name[6] + audioSource.clip.name + "current index: " + currentClickedObjectIndex);
+            //     audioSource.clip = clip[currentClickedObjectIndex];
+            //     audioSource.Play();
+            //     playingMusic = true;
+
+
+
+            //animate3DObjectByTime(figureObjects[currentClickedObjectIndex], (int)startSec, 100.0f, AnimationTimer.GetTime(), rail1StartPos.z, rail1EndPos.z);
+
+            /*string st="";
+            st=figureObjects[currentClickedObjectIndex].name;
+            Debug.Log("st: "+st);
+            if (st=="ButtonFigObj01")
+            {
+                Debug.Log("case: "+st);
+                animate3DObjectByTime(figureObjects3D[0], (int)startSec, 100.0f, AnimationTimer.GetTime(), rail1StartPos.z, rail1EndPos.z);
+            }
+            if (st=="ButtonFigObj02")
+            {
+                Debug.Log("case: "+st);
+                animate3DObjectByTime(figureObjects3D[1], (int)startSec, 100.0f, AnimationTimer.GetTime(), rail1StartPos.z, rail1EndPos.z);
+            }
+            */
 
             /*
-			// ------------ Dinge, die fuer die Kulissen im Controler passieren muessen
-
-			//ThisSceneryElement.parent = "Schiene" + statusReiter.ToString(); //hier bitte mal genau �berpr�fen wie die parents dann wirklich sind
-			Debug.Log("---- Figurename -------- " + ThisFigureElement.name + " --- " + ThisFigureElement.parent + " --- " + ThisFigureElement.x);
-			ThisFigureElement.z = GetComponent<RectTransform>().anchoredPosition.x/300;
-			ThisFigureElement.y = GetComponent<RectTransform>().anchoredPosition.y/300+0.1f;  //die werte stimmen ungefaehr mit dem liveview ueberein
-
-
-			// ------------ uebertragen der Daten aus dem Controller auf die 3D-Kulissen
-			gameController.GetComponent<SceneDataController>().CreateScene(StaticSceneData.StaticData); // dieses Zeile macht das gleiche und ist glaube besser.
-			*/
-        }
-
-        //------------------UPDATE-LOOP---------------------------
-        //Debug.Log("update ");
-        //Debug.Log("update. ");
-        //Debug.Log("update.. ");
-        //Debug.Log("update... ");
-        //Debug.Log("figObj: "+figureObjects[currentClickedObjectIndex].ToString());
-        //animate the 3d object controlled by time
-        //double startSec=calculateFigureStartTimeInSec(figureObjects[currentClickedObjectIndex], 100.0f, maxTimeInSec, minX, maxX);
-
-        /*int idx=0;
-		for(int i=0;i<timelineObjects.Count;i++)
-		{
-			idx=idx+1;
-			double startSec=calculateFigureStartTimeInSec(timelineObjects[i], 100.0f, maxTimeInSec, minX, maxX);
-			//Debug.Log("startSec: "+startSec);
-			bool tests=checkFigureObjectShouldPlaying(timelineObjects[i], (int)startSec, 100.0f, AnimationTimer.GetTime());
-			//Debug.Log("tests: "+tests);
-			if (tests)
-			{
-				animate3DObjectByTime(timelineObjects3D[i], (int)startSec, 100.0f, AnimationTimer.GetTime(), railStartPos.z, railEndPos.z);
-			}
-		}*/
-
-        int idx = 0;
-        for (int i = 0; i < timelineInstanceObjects.Count; i++)
-        {
-            idx = idx + 1;
-            double startSec = calculateFigureStartTimeInSec(timelineInstanceObjects[i], 100.0f, maxTimeInSec, minX, maxX);
-            //Debug.Log("startSec: "+startSec);
-            bool tests = checkFigureObjectShouldPlaying(timelineInstanceObjects[i], (int)startSec, 100.0f, AnimationTimer.GetTime());
-            //Debug.Log("tests: "+tests);
-            if (tests)
+            //
+            if (Input.GetMouseButtonUp(0) && (!movingObject))
             {
-                animate3DObjectByTime(timelineInstanceObjects3D[i], (int)startSec, 100.0f, AnimationTimer.GetTime(), railStartPos.z, railEndPos.z);
-            }
+                bool hitTimeline=false;
+                if(currentClickedObjectIndex>=0)
+                    hitTimeline=checkHittingTimeline(figureObjects[currentClickedObjectIndex], timelineImage, getMousePos);
+                else
+                    hitTimeline=false;
+                //set object position back to shelf
+                if ((!hitTimeline) && (currentClickedObjectIndex>=0) && (!moveTimeSlider(timeSliderImage)))
+                {
+                    //Debug.Log("timeSlider="+moveTimeSlider(timeSliderImage));
+                    string objectClicked=identifyClickedObject();	//get name of identified object
+                    bool isPresent=isInList(timelineObjects,figureObjects[currentClickedObjectIndex]);
+                    if (isPresent)
+                    {
+                        Debug.Log("you released object in space "+objectClicked+" bool: "+isPresent+" name: "+figureObjects[currentClickedObjectIndex].name);
+                        Debug.Log("empty-parent: "+objectShelfParent[currentClickedObjectIndex]);
+                        Debug.Log("empty-child: "+figureObjects[currentClickedObjectIndex].transform.GetChild(0));
+                        figureObjects[currentClickedObjectIndex].transform.position=objectShelfPosition[currentClickedObjectIndex];
+                        scaleObject(figureObjects[currentClickedObjectIndex],250.0f,250.0f);
+                        //remove object out of objectlist
+                        timelineObjects.Remove(figureObjects[currentClickedObjectIndex]);
+                        Debug.Log("timelineObjects count: "+timelineObjects.Count);
+                    }
+                    else
+                    {
+                        Debug.Log("else released object in space "+objectClicked+" bool: "+isPresent+" name: "+figureObjects[currentClickedObjectIndex].name);
+
+                    }
+                }
+            }*/
         }
-
-
-        //animate3DObjectByTime(figureObjects[currentClickedObjectIndex], (int)startSec, 100.0f, AnimationTimer.GetTime(), rail1StartPos.z, rail1EndPos.z);
-
-        /*string st="";
-		st=figureObjects[currentClickedObjectIndex].name;
-		Debug.Log("st: "+st);
-		if (st=="ButtonFigObj01")
-		{
-			Debug.Log("case: "+st);
-			animate3DObjectByTime(figureObjects3D[0], (int)startSec, 100.0f, AnimationTimer.GetTime(), rail1StartPos.z, rail1EndPos.z);
-		}
-		if (st=="ButtonFigObj02")
-		{
-			Debug.Log("case: "+st);
-			animate3DObjectByTime(figureObjects3D[1], (int)startSec, 100.0f, AnimationTimer.GetTime(), rail1StartPos.z, rail1EndPos.z);
-		}
-		*/
-
-        /*
-		//
-		if (Input.GetMouseButtonUp(0) && (!movingObject))
-		{
-			bool hitTimeline=false;
-			if(currentClickedObjectIndex>=0)
-				hitTimeline=checkHittingTimeline(figureObjects[currentClickedObjectIndex], timelineImage, getMousePos);
-			else
-				hitTimeline=false;
-			//set object position back to shelf
-			if ((!hitTimeline) && (currentClickedObjectIndex>=0) && (!moveTimeSlider(timeSliderImage)))
-			{
-				//Debug.Log("timeSlider="+moveTimeSlider(timeSliderImage));
-				string objectClicked=identifyClickedObject();	//get name of identified object
-				bool isPresent=isInList(timelineObjects,figureObjects[currentClickedObjectIndex]);
-				if (isPresent)
-				{
-					Debug.Log("you released object in space "+objectClicked+" bool: "+isPresent+" name: "+figureObjects[currentClickedObjectIndex].name);
-					Debug.Log("empty-parent: "+objectShelfParent[currentClickedObjectIndex]);
-					Debug.Log("empty-child: "+figureObjects[currentClickedObjectIndex].transform.GetChild(0));
-					figureObjects[currentClickedObjectIndex].transform.position=objectShelfPosition[currentClickedObjectIndex];
-					scaleObject(figureObjects[currentClickedObjectIndex],250.0f,250.0f);
-					//remove object out of objectlist
-					timelineObjects.Remove(figureObjects[currentClickedObjectIndex]);
-					Debug.Log("timelineObjects count: "+timelineObjects.Count);
-				}
-				else
-				{
-					Debug.Log("else released object in space "+objectClicked+" bool: "+isPresent+" name: "+figureObjects[currentClickedObjectIndex].name);
-					
-				}
-			}
-		}*/
     }
-}
