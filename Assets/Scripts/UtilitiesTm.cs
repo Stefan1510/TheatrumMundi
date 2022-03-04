@@ -74,6 +74,7 @@ public static class UtilitiesTm
         err = deltafastdirection / 2;
         //SetPixel(x, y);
         texture2D.SetPixels32(x, y, 3, 3, colors);
+        //texture2D.SetPixel(x, y, Color.black);
 
         /* Pixel berechnen */
         for (t = 0; t < deltafastdirection; ++t) /* t zaehlt die Pixel, deltafastdirection ist Anzahl der Schritte */
@@ -96,6 +97,7 @@ public static class UtilitiesTm
             }
             //SetPixel(x, y);
             texture2D.SetPixels32(x, y, 3, 3, colors);
+            //texture2D.SetPixel(x, y, Color.black);
         }
         return texture2D;
     } /* gbham() */
