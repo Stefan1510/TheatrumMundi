@@ -34,9 +34,9 @@ public class ObjectShelf : MonoBehaviour
 		//define the buttons
 		//Debug.Log("this is the main menue");
 		//mytext.text="this is text";
-		MenueShelf01.SetActive(false);
+		MenueShelf01.SetActive(true);
 		MenueShelf02.SetActive(false);
-		MenueShelf03.SetActive(true);
+		MenueShelf03.SetActive(false);
 		MenueShelf04.SetActive(false);
 		
 		LiveView.SetActive(true);
