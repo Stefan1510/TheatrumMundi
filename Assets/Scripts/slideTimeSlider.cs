@@ -290,12 +290,13 @@ public class slideTimeSlider : MonoBehaviour
 				newTime=timeByPos;
 				//Debug.Log("Seconds: "+newTime.ToString());
 				AnimationTimer.SetTime(newTime);
-				
+				//music update
+				SceneManager.updateMusic= true;
 			}
 		}
 		else
 		{
-			//if you not drag the slider: set slider to current timer-time
+			//if you dont drag the slider: set slider to current timer-time
 			//get time by timer
 			float timerTime=0.0f;
 			timerTime=AnimationTimer.GetTime();
@@ -313,6 +314,7 @@ public class slideTimeSlider : MonoBehaviour
 			//Debug.Log("left mouse button up");
 			moving=false;
 			dragging=false;
+			SceneManager.updateMusic= false;
 		}
     }
 }

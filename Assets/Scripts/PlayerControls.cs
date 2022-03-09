@@ -43,14 +43,17 @@ public class PlayerControls : MonoBehaviour
         {
             case AnimationTimer.TimerState.stopped:
                 AnimationTimer.StartTimer();
+                SceneManager.playing = true;
                 PlayButton.transform.GetComponent<Image>().sprite = PauseSprite;
                 break;
             case AnimationTimer.TimerState.playing:
                 AnimationTimer.PauseTimer();
+                SceneManager.playing = false;
                 PlayButton.transform.GetComponent<Image>().sprite = PlaySprite;
                 break;
             case AnimationTimer.TimerState.paused:
                 AnimationTimer.StartTimer();
+                SceneManager.playing = true;
                 PlayButton.transform.GetComponent<Image>().sprite = PauseSprite;
                 break;
         }

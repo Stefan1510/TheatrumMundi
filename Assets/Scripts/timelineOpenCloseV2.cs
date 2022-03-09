@@ -443,7 +443,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
         {
             //Debug.Log("object size: "+objects[i].GetComponent<RectTransform>().sizeDelta);
             //if timeline open scale ALL objects up
-            if (gameObject.name == "ImageTimelineMusic")    // for now I handle the two timelines differently, because the music objects 
+            if (gameObject.name == "ImageTimelineRailMusic")    // for now I handle the two timelines differently, because the music objects 
                                                             //have a text component with the length of the music piece as second child, so here it has to be the third child that needs to be scaled up
             {
                 if (timelineOpen)
@@ -452,6 +452,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
                     scaleObject(objects[i].transform.GetChild(2).gameObject, objects[i].transform.GetChild(2).GetComponent<RectTransform>().sizeDelta.x, scaleUp);
                     //objects[i].GetComponent<RectTransform>().sizeDelta=new Vector2(150.0f,50.0f);
                     //new Vector2(animationLength,scaleYUp);
+                    
                 }
                 else if ((timelineOpen == false) && (editObjOnTl == false))
                 {
@@ -459,6 +460,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
                     //Debug.Log("method: scale object down:");
                     scaleObject(objects[i], length, scaleDown);
                     scaleObject(objects[i].transform.GetChild(2).gameObject, objects[i].transform.GetChild(2).GetComponent<RectTransform>().sizeDelta.x, scaleDown);
+                    Debug.Log("+++++++Scaling down child(2): "+objects[i].transform.GetChild(2).gameObject);
                     //objects[i].GetComponent<RectTransform>().sizeDelta=new Vector2(150.0f,10.0f);
                 }
             }
@@ -470,6 +472,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
                     scaleObject(objects[i].transform.GetChild(1).gameObject, objects[i].transform.GetChild(1).GetComponent<RectTransform>().sizeDelta.x, scaleUp);
                     //objects[i].GetComponent<RectTransform>().sizeDelta=new Vector2(150.0f,50.0f);
                     //new Vector2(animationLength,scaleYUp);
+                    
                 }
                 else if ((timelineOpen == false) && (editObjOnTl == false))
                 {
@@ -478,6 +481,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
                     scaleObject(objects[i], length, scaleDown);
                     scaleObject(objects[i].transform.GetChild(1).gameObject, objects[i].transform.GetChild(1).GetComponent<RectTransform>().sizeDelta.x, scaleDown);
                     //objects[i].GetComponent<RectTransform>().sizeDelta=new Vector2(150.0f,10.0f);
+                    Debug.Log("+++++++Scaling down child(1): "+objects[i].transform.GetChild(1).gameObject+", gameobject: "+gameObject);
                 }
             }
         }
@@ -938,6 +942,8 @@ public class timelineOpenCloseV2 : MonoBehaviour
                 //open timeline, if its not open
                 //Debug.Log(">>>flag timelineOpen: " + SceneManager.timelineOpen);
                 openCloseTimelineByDrag("open", timelineImage);
+                if(gameObject.name == "ImageTimelineRail1") Debug.Log("ImageTimelineRail1");
+                else Debug.Log("ImageTimelineRailMusic");
                 //scale up object/figures in timeline
                 openCloseObjectInTimeline(SceneManager.timelineOpen, timelineInstanceObjects, editTimelineObject);
                 //and set animation-length
@@ -1116,7 +1122,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
             // if dropped somewhere else than timeline: bring figure back to shelf
             else if (releaseOnTimeline == false && currentClickedObjectIndex != -1)
             {
-                Debug.Log("+++++++++++gameobject: " + gameObject.name + ", index: " + currentClickedObjectIndex);
+                //Debug.Log("+++++++++++gameobject: " + gameObject.name + ", index: " + currentClickedObjectIndex);
 
                 setParent(figureObjects[currentClickedObjectIndex], objectShelfParent[currentClickedObjectIndex]);
                 // bring object back to position two, so that its visible and change position back to default
@@ -1195,61 +1201,56 @@ public class timelineOpenCloseV2 : MonoBehaviour
 
         else if (gameObject.name == "ImageTimelineRailMusic")
         {
-            int hitObject = 0;
-
-            for (int i = 0; i < timelineInstanceObjects.Count; i++)
+            if (SceneManager.playing)
             {
-                double startSec = calculateFigureStartTimeInSec(timelineInstanceObjects[i], 100.0f, maxTimeInSec, minX, maxX);
-                double endSec = calculateMusicEndTimeInSec(timelineInstanceObjects[i], 180.0f, maxTimeInSec, minX, maxX);
+                //Debug.Log("+++++++++++++++++updateMusic: " + SceneManager.updateMusic);
+                //Debug.Log("+++++++++++++++++Music is playing");
+                int hitObject = 0;
+                for (int i = 0; i < timelineInstanceObjects.Count; i++)
+                {
+                    double startSec = calculateFigureStartTimeInSec(timelineInstanceObjects[i], 100.0f, maxTimeInSec, minX, maxX);
+                    double endSec = calculateMusicEndTimeInSec(timelineInstanceObjects[i], 180.0f, maxTimeInSec, minX, maxX);
+                    float tmpTime = AnimationTimer.GetTime();
+                    //Debug.Log(", startSec: " + startSec + "endSec: " + endSec + ", Timer: " + AnimationTimer.GetTime() + ", Playmusic: " + playingMusic);
 
-                //Debug.Log(", startSec: " + startSec + "endSec: " + endSec + ", Timer: " + AnimationTimer.GetTime() + ", Playmusic: " + playingMusic);
-
-                // wenn timer im bereich musikstuecks und musik ist nicht an
-                if (AnimationTimer.GetTime() >= startSec && AnimationTimer.GetTime() <= endSec && playingMusic == false)
-                {
-                    playingMusic = true;
-                    currentClip = ((int)Char.GetNumericValue(timelineInstanceObjects[i].name[13]) - 1);
-                    audioSource.clip = clip[currentClip];
-                    audioSource.Play();
-                    hitObject = ((int)Char.GetNumericValue(timelineInstanceObjects[i].name[23]));
-                    Debug.Log("++++++++++MUSIC STARTS ++++++HitObject: " + hitObject);
-                }
-                // wenn timer im bereich des musikstuecks und musik ist an
-                else if (AnimationTimer.GetTime() >= startSec && AnimationTimer.GetTime() <= endSec && playingMusic == true)
-                {
-                    //Debug.Log("+++++++++++++NOTHING" + ", Playmusic: " + playingMusic + ", currentClip: " + currentClip + "++++timelineInstanceObjects[i].name " + timelineInstanceObjects[i].name);
-                }
-                // wenn timer ausserhalb des musikstuecks und musik ist an
-                else if (playingMusic == true && (AnimationTimer.GetTime() < startSec || AnimationTimer.GetTime() > endSec))
-                {
-                    if (currentClip == ((int)Char.GetNumericValue(timelineInstanceObjects[i].name[13]) - 1) && hitObject != ((int)Char.GetNumericValue(timelineInstanceObjects[i].name[23]) - 1))
+                    // wenn timer im bereich musikstuecks und musik ist nicht an
+                    if (AnimationTimer.GetTime() >= startSec && AnimationTimer.GetTime() <= endSec && playingMusic == false)
                     {
-                        audioSource.Stop();
-                        playingMusic = false;
-                        Debug.Log("+++++++++++++MUSIC STOPPED+musicPlaying" + playingMusic);
+                        playingMusic = true;
+
+                        audioSource.time = tmpTime - (float)startSec;
+                        currentClip = ((int)Char.GetNumericValue(timelineInstanceObjects[i].name[13]) - 1); // object index
+                        audioSource.clip = clip[currentClip];
+                        audioSource.Play();
+                        hitObject = ((int)Char.GetNumericValue(timelineInstanceObjects[i].name[23])); // instance index
+                                                                                                      //Debug.Log("++++++++++MUSIC STARTS ++++++ tmpTime: " + audioSource.time + ", current clip: " + currentClip + ", startsec: " + startSec + ", tmpTime: " + tmpTime);
+
+                    }
+                    else if (SceneManager.updateMusic)
+                    {
+                        if (AnimationTimer.GetTime() >= startSec && AnimationTimer.GetTime() <= endSec)
+                        {
+                            Debug.Log("+++++++++++++++++++TimeSlider ist im music piece and slider is being dragged.");
+                            audioSource.time = tmpTime - (float)startSec;
+                        }
+                        if ((AnimationTimer.GetTime() < startSec || AnimationTimer.GetTime() > endSec) && playingMusic == true)
+                        {
+                            Debug.Log("+++++++++++++++++++TimeSlider ist ausserhalb und .");
+                            audioSource.Stop();
+                            playingMusic = false;
+                        }
+
                     }
 
                 }
-
+            }
+            else
+            {
+                audioSource.Stop();
+                playingMusic = false;
             }
 
         }
-
-
-
-
-        // double startSec = calculateFigureStartTimeInSec(timelineInstanceObjects[i], 100.0f, maxTimeInSec, minX, maxX);
-        // bool testsMusic = checkFigureObjectShouldPlaying(timelineInstanceObjects[i], (int)startSec, 100.0f, AnimationTimer.GetTime());
-
-        // if (testsMusic)
-        // {
-        //     PlayMusic(figureObjects[currentClickedObjectIndex], (int)startSec, 100.0f, AnimationTimer.GetTime(), railStartPos.z, railEndPos.z);
-        //     Debug.Log(timelineInstanceObjects[currentClickedInstanceObjectIndex].name[6] + audioSource.clip.name + "current index: " + currentClickedObjectIndex);
-        //     audioSource.clip = clip[currentClickedObjectIndex];
-        //     audioSource.Play();
-        //     playingMusic = true;
-
-
 
         //animate3DObjectByTime(figureObjects[currentClickedObjectIndex], (int)startSec, 100.0f, AnimationTimer.GetTime(), rail1StartPos.z, rail1EndPos.z);
 
