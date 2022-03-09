@@ -289,6 +289,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
         {
             //save last correct index
             int oldClickedObject = currentClickedInstanceObjectIndex;
+            //Debug.Log("+++++++++++++++++++++Object: "+objectsOnTimeline[i].GetComponent<BoxCollider2D>()+", Mouse position: "+Physics2D.OverlapPoint(Input.mousePosition));
             //which object in grid layout is clicked
             if (objectsOnTimeline[i].GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(Input.mousePosition))
             {
@@ -443,47 +444,27 @@ public class timelineOpenCloseV2 : MonoBehaviour
         {
             //Debug.Log("object size: "+objects[i].GetComponent<RectTransform>().sizeDelta);
             //if timeline open scale ALL objects up
-            if (gameObject.name == "ImageTimelineRailMusic")    // for now I handle the two timelines differently, because the music objects 
-                                                            //have a text component with the length of the music piece as second child, so here it has to be the third child that needs to be scaled up
+
+            if (timelineOpen)
             {
-                if (timelineOpen)
-                {
-                    scaleObject(objects[i], length, scaleUp);
-                    scaleObject(objects[i].transform.GetChild(2).gameObject, objects[i].transform.GetChild(2).GetComponent<RectTransform>().sizeDelta.x, scaleUp);
-                    //objects[i].GetComponent<RectTransform>().sizeDelta=new Vector2(150.0f,50.0f);
-                    //new Vector2(animationLength,scaleYUp);
-                    
-                }
-                else if ((timelineOpen == false) && (editObjOnTl == false))
-                {
-                    //otherwise scale ALL objects down
-                    //Debug.Log("method: scale object down:");
-                    scaleObject(objects[i], length, scaleDown);
-                    scaleObject(objects[i].transform.GetChild(2).gameObject, objects[i].transform.GetChild(2).GetComponent<RectTransform>().sizeDelta.x, scaleDown);
-                    Debug.Log("+++++++Scaling down child(2): "+objects[i].transform.GetChild(2).gameObject);
-                    //objects[i].GetComponent<RectTransform>().sizeDelta=new Vector2(150.0f,10.0f);
-                }
+                scaleObject(objects[i], length, scaleUp);
+                scaleObject(objects[i].transform.GetChild(1).gameObject, objects[i].transform.GetChild(1).gameObject.GetComponent<RectTransform>().sizeDelta.x, scaleUp);
+                scaleObject(objects[i].transform.GetChild(0).gameObject, objects[i].transform.GetChild(0).gameObject.GetComponent<RectTransform>().sizeDelta.x, scaleUp);
+                //objects[i].GetComponent<RectTransform>().sizeDelta=new Vector2(150.0f,50.0f);
+                //new Vector2(animationLength,scaleYUp);
+
             }
-            else
+            else if ((timelineOpen == false) && (editObjOnTl == false))
             {
-                if (timelineOpen)
-                {
-                    scaleObject(objects[i], length, scaleUp);
-                    scaleObject(objects[i].transform.GetChild(1).gameObject, objects[i].transform.GetChild(1).GetComponent<RectTransform>().sizeDelta.x, scaleUp);
-                    //objects[i].GetComponent<RectTransform>().sizeDelta=new Vector2(150.0f,50.0f);
-                    //new Vector2(animationLength,scaleYUp);
-                    
-                }
-                else if ((timelineOpen == false) && (editObjOnTl == false))
-                {
-                    //otherwise scale ALL objects down
-                    //Debug.Log("method: scale object down:");
-                    scaleObject(objects[i], length, scaleDown);
-                    scaleObject(objects[i].transform.GetChild(1).gameObject, objects[i].transform.GetChild(1).GetComponent<RectTransform>().sizeDelta.x, scaleDown);
-                    //objects[i].GetComponent<RectTransform>().sizeDelta=new Vector2(150.0f,10.0f);
-                    Debug.Log("+++++++Scaling down child(1): "+objects[i].transform.GetChild(1).gameObject+", gameobject: "+gameObject);
-                }
+                //otherwise scale ALL objects down
+                //Debug.Log("method: scale object down:");
+                scaleObject(objects[i], length, scaleDown);
+                scaleObject(objects[i].transform.GetChild(0).gameObject, objects[i].transform.GetChild(0).gameObject.GetComponent<RectTransform>().sizeDelta.x, scaleDown);
+                scaleObject(objects[i].transform.GetChild(1).gameObject, objects[i].transform.GetChild(1).gameObject.GetComponent<RectTransform>().sizeDelta.x, scaleDown);
+                Debug.Log("+++++++Scaling down child(0): " + objects[i].transform.GetChild(0).gameObject);
+                //objects[i].GetComponent<RectTransform>().sizeDelta=new Vector2(150.0f,10.0f);
             }
+
         }
     }
 
@@ -507,6 +488,10 @@ public class timelineOpenCloseV2 : MonoBehaviour
         {
             scaleObject(objects[i], x, y);
         }
+    }
+    public void setPivot(GameObject obj, float x, float y)
+    {
+        obj.GetComponent<RectTransform>().pivot = new Vector2(x, y);
     }
     public void setObjectOnTimeline(GameObject fig, float x, float y)
     {
@@ -611,6 +596,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
         //set pivot point of sprite  to left border, so that rect aligns with sprite
         obj.GetComponent<RectTransform>().pivot = new Vector2(0.0f, 0.5f);
         trans.position = new Vector3(obj.transform.position.x, obj.transform.position.y, 0);
+        trans.SetSiblingIndex(0);
         trans.sizeDelta = new Vector2((float)tmpLength, 50.0f); // custom size
 
 
@@ -867,7 +853,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
         {
             //Debug.Log("+++++++++++++++++++++++++dragging on timeline......");
             //Debug.Log("--->before-if-index: "+currentClickedInstanceObjectIndex);
-            if (currentClickedInstanceObjectIndex != (-1))  //is set in the identifiy-methods
+            if (currentClickedInstanceObjectIndex != (-1))  //is set in the identify-methods
             {
                 //Debug.Log("--->index: "+currentClickedInstanceObjectIndex);
                 //Debug.Log("index-name: "+timelineInstanceObjects[0].name);
@@ -942,19 +928,23 @@ public class timelineOpenCloseV2 : MonoBehaviour
                 //open timeline, if its not open
                 //Debug.Log(">>>flag timelineOpen: " + SceneManager.timelineOpen);
                 openCloseTimelineByDrag("open", timelineImage);
-                if(gameObject.name == "ImageTimelineRail1") Debug.Log("ImageTimelineRail1");
-                else Debug.Log("ImageTimelineRailMusic");
+
                 //scale up object/figures in timeline
                 openCloseObjectInTimeline(SceneManager.timelineOpen, timelineInstanceObjects, editTimelineObject);
                 //and set animation-length
-                float animationLength = 100.0f;     //length of objects animation
-                float scaleYUp = 50.0f;             //size if the timeline is maximized
-                                                    //figureObjects[currentClickedObjectIndex].GetComponent<RectTransform>().sizeDelta=new Vector2(animationLength,scaleYUp);
-                                                    //scaleObject(figureObjects[currentClickedObjectIndex], animationLength, scaleYUp);
+                //float animationLength = 100.0f;     //length of objects animation
+                float scaleY = 50.0f;             //size if the timeline is maximized
+                                                  //figureObjects[currentClickedObjectIndex].GetComponent<RectTransform>().sizeDelta=new Vector2(animationLength,scaleYUp);
+                                                  //scaleObject(figureObjects[currentClickedObjectIndex], animationLength, scaleYUp);
 
-                //scale down the dragged figure
-                scaleObject(figureObjects[currentClickedObjectIndex], animationLength, scaleYUp);
+                //set pivot so that is placed in front
+                //setPivot(figureObjects[currentClickedObjectIndex].transform.GetChild(0).gameObject, 0.0f, 0.5f);
+                //scale down the dragged figure (and childobject: image)
+                scaleObject(figureObjects[currentClickedObjectIndex], scaleY, scaleY);
+                scaleObject(figureObjects[currentClickedObjectIndex].transform.GetChild(0).gameObject, scaleY, scaleY);
 
+
+                //figureObjects[currentClickedObjectIndex].transform.GetChild(0).GetComponent<RectTransform>().anchoredPosition = new Vector2(0.0f, figureObjects[currentClickedObjectIndex].transform.GetChild(0).GetComponent<RectTransform>().anchoredPosition.y);
                 /*if (timelineObjects.Count > 0)      //if you dont check this, you get an out-of-range exception
                 {
                     //Debug.Log("--->scale up!");
@@ -1005,6 +995,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
                 openCloseObjectInTimeline(SceneManager.timelineOpen, timelineInstanceObjects, editTimelineObject);
                 // scale up currentFigure
                 scaleObject(figureObjects[currentClickedObjectIndex], objectShelfSize[currentClickedObjectIndex].x, objectShelfSize[currentClickedObjectIndex].y);
+                scaleObject(figureObjects[currentClickedObjectIndex].transform.GetChild(0).gameObject, objectShelfSize[currentClickedObjectIndex].x, objectShelfSize[currentClickedObjectIndex].y);
                 releaseOnTimeline = false;
             }
         }
@@ -1044,7 +1035,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
                     newCopyOfFigure.name = figureObjects[currentClickedObjectIndex].name + "_instance" + countName;
                     if (gameObject.name == "ImageTimelineRailMusic")
                     {
-                        createRectangle(newCopyOfFigure, new Vector2(300, 50), Color.green, minX, (double)int.Parse(newCopyOfFigure.transform.GetChild(1).GetComponent<Text>().text));
+                        createRectangle(newCopyOfFigure, new Vector2(300, 50), Color.green, minX, (double)int.Parse(newCopyOfFigure.transform.GetChild(0).transform.GetChild(1).GetComponent<Text>().text));
                     }
                     else createRectangle(newCopyOfFigure, new Vector2(300, 50), Color.cyan, minX, 50.0f);
 
@@ -1071,6 +1062,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
                     Debug.Log("Set parent to: " + objectShelfParent);
                     //scale to default values
                     scaleObject(figureObjects[currentClickedObjectIndex], objectShelfSize[currentClickedObjectIndex].x, objectShelfSize[currentClickedObjectIndex].y);
+                    scaleObject(figureObjects[currentClickedObjectIndex].transform.GetChild(0).gameObject, objectShelfSize[currentClickedObjectIndex].x, objectShelfSize[currentClickedObjectIndex].y);
 
                     //set back the original figure-image to shelf
                     //Debug.Log("default shelf-pos: "+objectShelfPosition[currentClickedObjectIndex]);
@@ -1230,12 +1222,12 @@ public class timelineOpenCloseV2 : MonoBehaviour
                     {
                         if (AnimationTimer.GetTime() >= startSec && AnimationTimer.GetTime() <= endSec)
                         {
-                            Debug.Log("+++++++++++++++++++TimeSlider ist im music piece and slider is being dragged.");
+                            //Debug.Log("+++++++++++++++++++TimeSlider ist im music piece and slider is being dragged.");
                             audioSource.time = tmpTime - (float)startSec;
                         }
                         if ((AnimationTimer.GetTime() < startSec || AnimationTimer.GetTime() > endSec) && playingMusic == true)
                         {
-                            Debug.Log("+++++++++++++++++++TimeSlider ist ausserhalb und .");
+                            //Debug.Log("+++++++++++++++++++TimeSlider ist ausserhalb und .");
                             audioSource.Stop();
                             playingMusic = false;
                         }
