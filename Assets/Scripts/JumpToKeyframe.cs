@@ -5,22 +5,37 @@ using UnityEngine;
 public class JumpToKeyframe : MonoBehaviour
 {
     List<float> keyFrames;
+    private int _selection;
     // Start is called before the first frame update
     void Start()
     {
         keyFrames = new List<float>();
+        _selection = 1;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
+    //// Update is called once per frame
+    //void Update()
+    //{
         
+    //}
+
+    public void ChangeSelection(int selectSelection)
+    {
+        if (selectSelection >= 0 && selectSelection <= 3 )
+        {
+            _selection = selectSelection;
+        }
+        else
+        {
+            _selection = 1;
+        }
     }
 
     public void PreviousKeyframe()
     {
         //Debug.LogError("<-- BING! BING! BING!");
-        keyFrames = getMomentsFromLightAnimation();
+        SelectKeyFrames();
+        keyFrames.Sort();
         float timerNow = AnimationTimer.GetTime();
         float previousKeyframe = 0;
         foreach (float keyFrame in keyFrames)
@@ -36,7 +51,7 @@ public class JumpToKeyframe : MonoBehaviour
     public void NextKeyframe()
     {
         //Debug.LogError("BONG! BONG! BONG! -->");
-        keyFrames = getMomentsFromLightAnimation();
+        SelectKeyFrames();
         keyFrames.Reverse();
         float timerNow = AnimationTimer.GetTime();
         float nextKeyframe = AnimationTimer.GetMaxTime();
@@ -50,16 +65,36 @@ public class JumpToKeyframe : MonoBehaviour
         AnimationTimer.SetTime(nextKeyframe);
     }
 
-    List<float> getMomentsFromLightAnimation()
+    void GetMomentsFromRailElementSpeeds()
     {
-        List<float> moments = new List<float>();
-        List<LightingSet> lightingSets = StaticSceneData.StaticData.lightingSets;
-        foreach (LightingSet lightingSet in lightingSets)
-        {
-            moments.Add(lightingSet.moment);
-            //Debug.LogWarning(lightingSet.moment);
-        }
-        return moments;
+        // 
     }
 
+    void GetMomentsFromLightingSets()
+    {
+        List<LightingSet> lightingSets = StaticSceneData.StaticData.lightingSets;
+        keyFrames.Clear();
+        foreach (LightingSet lightingSet in lightingSets)
+        {
+            keyFrames.Add(lightingSet.moment);
+            //Debug.LogWarning(lightingSet.moment);
+        }
+    }
+
+
+    void SelectKeyFrames() //0 - railspeed; 1 - light; 2 - music
+    {
+        switch(_selection)
+        {
+            case 0:
+                GetMomentsFromRailElementSpeeds();
+                break;
+            case 1:
+                GetMomentsFromLightingSets();
+                break;
+            case 2:
+                break;
+        }
+            
+    }
 }

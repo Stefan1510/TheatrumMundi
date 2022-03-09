@@ -13,7 +13,7 @@ public class LightBbController : MonoBehaviour
     {
         //Debug.Log(name);
         thisLightElement = StaticSceneData.StaticData.lightElements.Find(le => le.name == gameObject.name);
-        LightAmbientChange(0.2f);
+        LightAmbientChange(0.0f);
         //Debug.Log(thisLightElement.name);
         //LightActivation(toggleBb.isOn);
         PanelBbImage = toggleBb.transform.parent.parent.gameObject.GetComponent<Image>();

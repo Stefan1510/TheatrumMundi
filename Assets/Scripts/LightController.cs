@@ -64,6 +64,7 @@ public class LightController : MonoBehaviour
         PanelLbImage = toggleLb.transform.parent.parent.GetComponent<Image>();
         PanelLbImage.color = new Color(171f / 255f, 171f / 255f, 171f / 255f, 160f / 255f);
         //Debug.Log(PanelLbImage);
+        LightActivation(false);
     }
 
     //// Update is called once per frame

@@ -10,7 +10,8 @@ public class SwitchMenues : MonoBehaviour
     //// Start is called before the first frame update
     void Start()
     {
-        SwitchToMenueDirector();
+        //SwitchToMenueDirector();
+        SwitchToMenueConfig();
     }
 
     //// Update is called once per frame
