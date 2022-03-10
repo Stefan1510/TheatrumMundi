@@ -24,7 +24,7 @@ public class DrawCurve : MonoBehaviour
         _gameObjectStarted = true;
         _textureCurve = new Texture2D((int)(GetComponent<RectTransform>().rect.width), (int)(GetComponent<RectTransform>().rect.height), TextureFormat.RGBA32, false); // wird durch Panel RectTransform stretch automatisch gescaled
         _backColors = new Color32[_textureCurve.width * _textureCurve.height];
-        _backColors = UtilitiesTm.ChangeColors(_backColors, new Color32(255, 127, 0, 255));
+        _backColors = UtilitiesTm.ChangeColors(_backColors, new Color32(255, 255, 255, 255));
         _curveColors = new Color32[_textureCurve.width * _textureCurve.height];
         _curveColors = UtilitiesTm.ChangeColors(_curveColors, Color.black);
         _maxTime = AnimationTimer.GetMaxTime();
