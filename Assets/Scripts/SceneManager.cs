@@ -15,5 +15,6 @@ public static class SceneManager
     public static bool timelineOpen;				//timeline open/close
     public static bool playing;
     public static bool updateMusic;
+    public static int timelineHit;
 
 }

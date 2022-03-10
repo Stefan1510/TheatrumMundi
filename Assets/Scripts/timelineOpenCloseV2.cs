@@ -27,6 +27,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
     bool editTimelineObject;        //flag for shifting/clicking an object on timeline
     bool releaseOnTimeline;         //flag if you set an object on timeline
     bool playingMusic;
+    bool hitTimeline = new bool();
     Vector2 releaseObjMousePos;
     double minX;
     double maxX;
@@ -80,6 +81,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
     /*Vector3 rail4StartPos;
 	Vector3 rail5StartPos;
 	Vector3 rail6StartPos;*/
+    float railHeight;
 
     public AudioClip[] clip;         // ought to be 6 audioclips
 
@@ -227,8 +229,8 @@ public class timelineOpenCloseV2 : MonoBehaviour
         railEndPos = new Vector3(0.0f, 0.0f, 0.0f);
         railStartPos = getRailStartEndpoint(rail3dObj, "start");
         railEndPos = getRailStartEndpoint(rail3dObj, "end");
-        Debug.Log("railStartPos: " + railStartPos + "railEndPos: " + railEndPos);
-
+        railHeight = getRailHeight(rail3dObj);
+        Debug.Log("railStartPos: " + railStartPos + "railEndPos: " + railEndPos + ", railHeight: " + railHeight);
         fig1StartPos = railStartPos.z;//-1.75f;
         fig2StartPos = railEndPos.z;//1.88f;
 
@@ -397,7 +399,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
     }
     public void setParent(GameObject obj, GameObject parentToSet)
     {
-        saveParent(obj);
+        if (obj.transform.parent != null) saveParent(obj);
         //set new parent
         //Debug.Log("new parent "+parentToSet);
         obj.transform.SetParent(parentToSet.transform);
@@ -431,7 +433,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
             Debug.Log("object hits timeline!");
             hit = true; ;
         }
-        Debug.Log("drag and hit " + hit);
+        //Debug.Log("drag and hit " + hit);
         return hit;
     }
     public void openCloseObjectInTimeline(bool timelineOpen, List<GameObject> objects, bool editObjOnTl)
@@ -471,6 +473,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
     public void scaleObject(GameObject fig, float x, float y)
     {
         //scale the object
+        Debug.Log("Scaling: " + fig+", timeline: "+gameObject+", x: "+x+", y: "+y);
         fig.GetComponent<RectTransform>().sizeDelta = new Vector2(x, y);
         //scale the collider, if object has one
         if (fig.GetComponent<BoxCollider2D>() == true)
@@ -519,13 +522,16 @@ public class timelineOpenCloseV2 : MonoBehaviour
     }
     public void set3DObjectOfInstance(GameObject obj3D)
     {
-        obj3D.transform.position = new Vector3(railStartPos.x, 0.0f, (float)fig1StartPos * (-1.0f));
+        setParent(obj3D, rail3dObj);
+        obj3D.transform.position = new Vector3(railStartPos.x, 0.0f, ((float)fig1StartPos * (-1.0f)));
     }
     public void animate3DObjectByTime(GameObject fig3D, int startSec, double animLength, double timerTime, double railStartZ, double railEndZ)
     {
+        //railHeight = getRailHeight(rail3dObj);
         //Debug.Log("method: fig: " + fig3D + " 3dobj: " + figure1 + " startSec: " + startSec + " animLength: " + animLength + " timerTime: " + timerTime);
         //Debug.Log("fig3d props: " + fig3D.transform.position);
         double figPos = fig3D.transform.position.z;
+        //float figHeight = railHeight;
         double figStartPos = railStartZ * (-1.0f);      //*-1.0 changes startpoint and animation-direction
         animLength = 44.0f;
         if ((timerTime >= startSec) && (timerTime <= (startSec + (int)animLength)))
@@ -543,7 +549,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
             //Debug.Log("if: rail-length: " + railLength + " figStartPos: " + figStartPos + " percentage: " + percentageOfTime + " railPos: " + railPos + " timerTime: " + timerTime);
             //Debug.Log("if: figPos: " + figPos);
             //fig3D.transform.position=new Vector3(rail3StartPos.x,fig3D.transform.position.y,(float)figPos);
-            fig3D.transform.position = new Vector3(railStartPos.x, fig3D.transform.position.y, (float)figPos);
+            fig3D.transform.position = new Vector3(railStartPos.x, railStartPos.y, (float)figPos);
         }
     }
 
@@ -659,6 +665,11 @@ public class timelineOpenCloseV2 : MonoBehaviour
             point = new Vector3(0.0f, 0.0f, 2.0f);
         }
         return point;
+    }
+
+    public float getRailHeight(GameObject r3DObj)
+    {
+        return rail3dObj.transform.position.y;
     }
     public int countCopiesOfObject(GameObject fig, List<GameObject> tlObjs)
     {
@@ -793,7 +804,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
 
 
                     //highlighting objects and showing delete button when clicked
-                    if (gameObject.name == "ImageTimelineRail1")
+                    if (gameObject.name == "ImageTimelineRail1" || gameObject.name == "ImageTimelineRail2" || gameObject.name == "ImageTimelineRail3")
                     {
                         outline = timelineInstanceObjects3D[currentClickedInstanceObjectIndex].GetComponent<Outline>();
                         if (highlighted == false)
@@ -914,23 +925,28 @@ public class timelineOpenCloseV2 : MonoBehaviour
 
             //updateObjectPosition(newCopyOfFigure,getMousePos);
             //if you hit the timeline > object snap to timeline and is locked in y-movement-direction
-            bool hitTimeline = false;
+
             //string nameOfHitObject="";
             hitTimeline = checkHittingTimeline(figureObjects[currentClickedObjectIndex], timelineImage, getMousePos);
             //hitTimeline=checkHittingTimeline(newCopyOfFigure, timelineImage, getMousePos);
             //Debug.Log("mouseclick: " + hitTimeline);
-            if (hitTimeline)
+
+            //Debug.Log("Timeline hit: " + SceneManager.timelineHit + ", this: " + this);
+
+            if (this.hitTimeline)
             {
+                Debug.Log("++++++++++++hit Timeline: "+gameObject.name+", figure: "+figureObjects[currentClickedObjectIndex]);
+
                 /*
                 //name of figure/object which hits the timeline
                 nameOfHittedObject=newCopyOfFigure.name;*/
 
                 //open timeline, if its not open
                 //Debug.Log(">>>flag timelineOpen: " + SceneManager.timelineOpen);
-                openCloseTimelineByDrag("open", timelineImage);
+                this.openCloseTimelineByDrag("open", timelineImage);
 
                 //scale up object/figures in timeline
-                openCloseObjectInTimeline(SceneManager.timelineOpen, timelineInstanceObjects, editTimelineObject);
+                this.openCloseObjectInTimeline(SceneManager.timelineOpen, timelineInstanceObjects, editTimelineObject);
                 //and set animation-length
                 //float animationLength = 100.0f;     //length of objects animation
                 float scaleY = 50.0f;             //size if the timeline is maximized
@@ -940,8 +956,9 @@ public class timelineOpenCloseV2 : MonoBehaviour
                 //set pivot so that is placed in front
                 //setPivot(figureObjects[currentClickedObjectIndex].transform.GetChild(0).gameObject, 0.0f, 0.5f);
                 //scale down the dragged figure (and childobject: image)
-                scaleObject(figureObjects[currentClickedObjectIndex], scaleY, scaleY);
-                scaleObject(figureObjects[currentClickedObjectIndex].transform.GetChild(0).gameObject, scaleY, scaleY);
+                this.scaleObject(this.figureObjects[currentClickedObjectIndex], scaleY, scaleY);
+                this.scaleObject(this.figureObjects[currentClickedObjectIndex].transform.GetChild(0).gameObject, scaleY, scaleY);
+
 
 
                 //figureObjects[currentClickedObjectIndex].transform.GetChild(0).GetComponent<RectTransform>().anchoredPosition = new Vector2(0.0f, figureObjects[currentClickedObjectIndex].transform.GetChild(0).GetComponent<RectTransform>().anchoredPosition.y);
@@ -956,15 +973,15 @@ public class timelineOpenCloseV2 : MonoBehaviour
                 }*/
 
                 // change parent back
-                setParent(figureObjects[currentClickedObjectIndex], mainMenue);
+                this.setParent(this.figureObjects[currentClickedObjectIndex], mainMenue);
 
                 //snapping/lock y-axis
                 //figureObjects[currentClickedObjectIndex].transform.position=new Vector3(figureObjects[currentClickedObjectIndex].transform.position.x, this.transform.position.y,0.0f);
-                setObjectOnTimeline(figureObjects[currentClickedObjectIndex], figureObjects[currentClickedObjectIndex].transform.position.x, this.transform.position.y);
+                this.setObjectOnTimeline(this.figureObjects[currentClickedObjectIndex], figureObjects[currentClickedObjectIndex].transform.position.x, this.transform.position.y);
                 //setObjectOnTimeline(newCopyOfFigure,newCopyOfFigure.transform.position.x,this.transform.position.y);
 
                 //set placed figures to timelineobjects-list
-                updateObjectList(timelineObjects, figureObjects[currentClickedObjectIndex]);
+                this.updateObjectList(timelineObjects, figureObjects[currentClickedObjectIndex]);
                 //updateObjectList(timelineObjects,newCopyOfFigure);
 
                 //createRectangle(figureObjects[currentClickedObjectIndex], new Vector2(50.0f,50.0f), new Vector2(50.0f,50.0f));
@@ -979,24 +996,26 @@ public class timelineOpenCloseV2 : MonoBehaviour
                 //updateObjectList(timelineObjects3D,newCopyOfFigure);
 
                 //save position, where object on timeline is released + set flag 
-                releaseOnTimeline = true;
-                releaseObjMousePos = new Vector2(getMousePos.x, getMousePos.y);
+                this.releaseOnTimeline = true;
+                this.releaseObjMousePos = new Vector2(getMousePos.x, getMousePos.y);
                 //Debug.Log("release object at pos: " + getMousePos + " " + Physics2D.OverlapPoint(getMousePos));
 
                 //animation of 3d object not during dragging object on timeline ->outside of dragging
 
                 //set up flags
+                //SceneManager.timelineHit = ((int)Char.GetNumericValue(gameObject.name[17]));
             }
             else
             {
                 //close timeline if you click e.g. in the shelf to get a new figure
-                openCloseTimelineByDrag("close", timelineImage);
+                this.openCloseTimelineByDrag("close", timelineImage);
                 //scale down also the figures on timeline
-                openCloseObjectInTimeline(SceneManager.timelineOpen, timelineInstanceObjects, editTimelineObject);
+                this.openCloseObjectInTimeline(SceneManager.timelineOpen, timelineInstanceObjects, editTimelineObject);
                 // scale up currentFigure
-                scaleObject(figureObjects[currentClickedObjectIndex], objectShelfSize[currentClickedObjectIndex].x, objectShelfSize[currentClickedObjectIndex].y);
-                scaleObject(figureObjects[currentClickedObjectIndex].transform.GetChild(0).gameObject, objectShelfSize[currentClickedObjectIndex].x, objectShelfSize[currentClickedObjectIndex].y);
-                releaseOnTimeline = false;
+                this.scaleObject(figureObjects[currentClickedObjectIndex], objectShelfSize[currentClickedObjectIndex].x, objectShelfSize[currentClickedObjectIndex].y);
+                this.scaleObject(figureObjects[currentClickedObjectIndex].transform.GetChild(0).gameObject, objectShelfSize[currentClickedObjectIndex].x, objectShelfSize[currentClickedObjectIndex].y);
+                this.releaseOnTimeline = false;
+                //SceneManager.timelineHit = 0;
             }
         }
 
@@ -1085,7 +1104,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
                     //	Debug.Log("count timelineInstancesObjects: "+timelineInstanceObjects.Count);
 
                     //set 3d object to default position
-                    if (gameObject.name == "ImageTimelineRail1")
+                    if (gameObject.name == "ImageTimelineRail1" || gameObject.name == "ImageTimelineRail2" || gameObject.name == "ImageTimelineRail3")
                     {
                         GameObject curr3DObject = new GameObject();
                         curr3DObject = Instantiate(figureObjects3D[currentClickedObjectIndex]);
@@ -1164,7 +1183,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
             }
         }*/
 
-        if (gameObject.name == "ImageTimelineRail1")
+        if (gameObject.name == "ImageTimelineRail1" || gameObject.name == "ImageTimelineRail2" || gameObject.name == "ImageTimelineRail3")
         {
 
             //int idx = 0;
@@ -1197,7 +1216,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
             {
                 //Debug.Log("+++++++++++++++++updateMusic: " + SceneManager.updateMusic);
                 //Debug.Log("+++++++++++++++++Music is playing");
-                int hitObject = 0;
+                //int hitObject = 0;
                 for (int i = 0; i < timelineInstanceObjects.Count; i++)
                 {
                     double startSec = calculateFigureStartTimeInSec(timelineInstanceObjects[i], 100.0f, maxTimeInSec, minX, maxX);
@@ -1211,11 +1230,11 @@ public class timelineOpenCloseV2 : MonoBehaviour
                         playingMusic = true;
 
                         audioSource.time = tmpTime - (float)startSec;
-                        currentClip = ((int)Char.GetNumericValue(timelineInstanceObjects[i].name[13]) - 1); // object index
+                        currentClip = ((int)Char.GetNumericValue(timelineInstanceObjects[i].name[7]) - 1); // object index
                         audioSource.clip = clip[currentClip];
                         audioSource.Play();
-                        hitObject = ((int)Char.GetNumericValue(timelineInstanceObjects[i].name[23])); // instance index
-                                                                                                      //Debug.Log("++++++++++MUSIC STARTS ++++++ tmpTime: " + audioSource.time + ", current clip: " + currentClip + ", startsec: " + startSec + ", tmpTime: " + tmpTime);
+                        //hitObject = ((int)Char.GetNumericValue(timelineInstanceObjects[i].name[17])); // instance index
+                        //Debug.Log("++++++++++MUSIC STARTS ++++++ tmpTime: " + audioSource.time + ", current clip: " + currentClip + ", startsec: " + startSec + ", tmpTime: " + tmpTime);
 
                     }
                     else if (SceneManager.updateMusic)
