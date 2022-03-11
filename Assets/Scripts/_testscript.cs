@@ -17,10 +17,11 @@ public class _testscript : MonoBehaviour
     void Start()
     {
         Debug.Log("Gooooooood Mooooooooorniiiiiiin TestScriiiiiipt!");
+        Debug.LogWarning("please place Object Figure Element in SceneDataController (Script) on GameController");
         figureObjects = gameObjectGameController.GetComponent<SceneDataController>().objectsFigureElements; // get all figure objects from public array at Script on GameController
         Debug.Log(figureObjects[0].name);
         thisFigureElement = StaticSceneData.StaticData.figureElements.Find(x => x.name == figureObjects[0].name); // connect first scenedata.figurelement with first figureobject from array above // could be put in a loop
-        // when changing something like position, you now can change position on figureelement in scenedata as well
+                                                                                                                  // when changing something like position, you now can change position on figureelement in scenedata as well
         Debug.Log(thisFigureElement.width);
     }
 

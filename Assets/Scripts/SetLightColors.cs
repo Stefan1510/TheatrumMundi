@@ -24,13 +24,13 @@ public class SetLightColors : MonoBehaviour
     {
         //_imagePositionKnob.gameObject.SetActive(false);
         //Color32 lightStartColor = new Color(ObjectsLights[0].GetComponent<Light>().color.r, ObjectsLights[0].GetComponent<Light>().color.g, ObjectsLights[0].GetComponent<Light>().color.b);
-        StaticSceneData.StaticData.lightingSets[0]=new LightingSet
+        StaticSceneData.StaticData.lightingSets[0] = new LightingSet
         {
             moment = 0,
             r = 255,
             g = 231,
             b = 121,
-            intensity = 2
+            intensity = 0.5f
         };
 
         StaticSceneData.StaticData.lightingSets.Sort((x, y) => x.moment.CompareTo(y.moment));   // sortiert die LightPropertiesList anhand der Eigenschaft moment
@@ -89,7 +89,8 @@ public class SetLightColors : MonoBehaviour
         int _listLength = StaticSceneData.StaticData.lightingSets.Count;
         Color32 colorNow;
         float _interpolationStep;
-        float _lightIntensity;
+        float _lightAnimationIntensity;
+        float _lightSpotIntensity;
         for (int i = 0; i < _listLength - 1; i++)
         {
             if ((StaticSceneData.StaticData.lightingSets[i].moment <= TimeNow) && (TimeNow < StaticSceneData.StaticData.lightingSets[i + 1].moment))
@@ -99,7 +100,7 @@ public class SetLightColors : MonoBehaviour
                 Color32 color1 = new Color32(StaticSceneData.StaticData.lightingSets[i].r, StaticSceneData.StaticData.lightingSets[i].g, StaticSceneData.StaticData.lightingSets[i].b, 255);
                 Color32 color2 = new Color32(StaticSceneData.StaticData.lightingSets[i+1].r, StaticSceneData.StaticData.lightingSets[i+1].g, StaticSceneData.StaticData.lightingSets[i+1].b, 255);
                 colorNow = Color32.Lerp(color1, color2, _interpolationStep);
-                _lightIntensity = Mathf.Lerp(StaticSceneData.StaticData.lightingSets[i].intensity, StaticSceneData.StaticData.lightingSets[i + 1].intensity, _interpolationStep);
+                _lightAnimationIntensity = Mathf.Lerp(StaticSceneData.StaticData.lightingSets[i].intensity, StaticSceneData.StaticData.lightingSets[i + 1].intensity, _interpolationStep);
                 //foreach (GameObject goL in ObjectsLights)
                 //{
                 //    goL.GetComponent<Light>().color = new Color32(colorNow.r, colorNow.g, colorNow.b, 255);
@@ -107,10 +108,12 @@ public class SetLightColors : MonoBehaviour
                 //}
                 foreach (objectsLightElement element in objectsLight)
                 {
-                    if (element.lightStagePosition == 1 || element.lightStagePosition == 2)
+                    if (element.lightStagePosition == 1 || element.lightStagePosition == 2 || element.lightStagePosition == 3)
                     {
                         element.goLightElement.GetComponent<Light>().color = new Color32(colorNow.r, colorNow.g, colorNow.b, 255);
-                        element.goLightElement.GetComponent<Light>().intensity = _lightIntensity;
+                        int lightIndex = StaticSceneData.StaticData.lightElements.FindIndex(le => le.name == element.goLightElement.name);
+                        _lightSpotIntensity = StaticSceneData.StaticData.lightElements[lightIndex].intensity;
+                        element.goLightElement.GetComponent<Light>().intensity = _lightAnimationIntensity *_lightSpotIntensity;
                     }
                 }
             }
