@@ -7,14 +7,18 @@ public class DirectorLightOverview : MonoBehaviour
 {
     [SerializeField] private string _thisLight;
     // Start is called before the first frame update
+    private bool _isStarted = false;
     void Start()
     {
-
+        _isStarted = true;
     }
 
     private void OnEnable()
     {
-        showLightField();
+        if (_isStarted)
+        {
+            showLightField();
+        }
     }
 
     // Update is called once per frame
@@ -27,6 +31,7 @@ public class DirectorLightOverview : MonoBehaviour
     {
         //Debug.Log(StaticSceneData.StaticData.lightElements[_thisLight].name);
         int lightIndex = StaticSceneData.StaticData.lightElements.FindIndex(le => le.name == _thisLight);
+        //Debug.Log(lightIndex + "  " + _thisLight + "  " + StaticSceneData.StaticData.lightElements[lightIndex].active);
         bool lightElementsActive = StaticSceneData.StaticData.lightElements[lightIndex].active;
         if (lightElementsActive)
         {
