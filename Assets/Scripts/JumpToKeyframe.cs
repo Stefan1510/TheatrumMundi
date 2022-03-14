@@ -10,7 +10,7 @@ public class JumpToKeyframe : MonoBehaviour
     void Start()
     {
         keyFrames = new List<float>();
-        _selection = 1;
+        ChangeSelection(1);
     }
 
     //// Update is called once per frame

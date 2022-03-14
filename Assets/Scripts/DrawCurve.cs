@@ -12,6 +12,7 @@ public class DrawCurve : MonoBehaviour
     private List<Image> _imagePositionKnobCollection;
     private Color32[] _backColors;
     private Color32[] _curveColors;
+    private Color32[] _middleLineColors;
     private float _maxTime;
     private float _minValue;
     private float _maxValue;
@@ -25,8 +26,11 @@ public class DrawCurve : MonoBehaviour
         _textureCurve = new Texture2D((int)(GetComponent<RectTransform>().rect.width), (int)(GetComponent<RectTransform>().rect.height), TextureFormat.RGBA32, false); // wird durch Panel RectTransform stretch automatisch gescaled
         _backColors = new Color32[_textureCurve.width * _textureCurve.height];
         _backColors = UtilitiesTm.ChangeColors(_backColors, new Color32(255, 255, 255, 255));
-        _curveColors = new Color32[_textureCurve.width * _textureCurve.height];
+        //_curveColors = new Color32[_textureCurve.width * _textureCurve.height];
+        _curveColors = new Color32[3 * 3];
         _curveColors = UtilitiesTm.ChangeColors(_curveColors, Color.black);
+        _middleLineColors = new Color32[_textureCurve.width * 2];
+        _middleLineColors = UtilitiesTm.ChangeColors(_middleLineColors, new Color32(224, 224, 224, 224));
         _maxTime = AnimationTimer.GetMaxTime();
         _minValue = _valueSlider.minValue;
         _maxValue = _valueSlider.maxValue;
@@ -77,6 +81,8 @@ public class DrawCurve : MonoBehaviour
     {
         _maxTime = AnimationTimer.GetMaxTime();
         _textureCurve.SetPixels32(_backColors);
+        //_textureCurve = UtilitiesTm.Bresenham(_textureCurve, 0, _textureCurve.height / 2, _textureCurve.width - 3, _textureCurve.height / 2, _middleLineColors);
+        _textureCurve.SetPixels32(0, _textureCurve.height / 2, _textureCurve.width, 2, _middleLineColors);
 
         int momentStart = (int)StaticSceneData.StaticData.railElements[3].railElementSpeeds[0].moment;
         int momentEnd = (int)StaticSceneData.StaticData.railElements[3].railElementSpeeds[0].moment;

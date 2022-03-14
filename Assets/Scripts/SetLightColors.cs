@@ -8,6 +8,7 @@ public class SetLightColors : MonoBehaviour
     public GameObject[] ObjectsLights;
     public Slider SliderIntensity;
     private objectsLightElement[] objectsLight;
+    private int _savedButtonColor;
 
     //[SerializeField] private Slider _sliderTime;
     //[SerializeField] private Image _imagePositionKnob;
@@ -24,16 +25,16 @@ public class SetLightColors : MonoBehaviour
     {
         //_imagePositionKnob.gameObject.SetActive(false);
         //Color32 lightStartColor = new Color(ObjectsLights[0].GetComponent<Light>().color.r, ObjectsLights[0].GetComponent<Light>().color.g, ObjectsLights[0].GetComponent<Light>().color.b);
-        StaticSceneData.StaticData.lightingSets[0] = new LightingSet
-        {
-            moment = 0,
-            r = 255,
-            g = 231,
-            b = 121,
-            intensity = 0.5f
-        };
+        //StaticSceneData.StaticData.lightingSets[0] = new LightingSet
+        //{
+        //    moment = 0,
+        //    r = 255,
+        //    g = 231,
+        //    b = 121,
+        //    intensity = 0.5f
+        //};
 
-        StaticSceneData.StaticData.lightingSets.Sort((x, y) => x.moment.CompareTo(y.moment));   // sortiert die LightPropertiesList anhand der Eigenschaft moment
+        //StaticSceneData.StaticData.lightingSets.Sort((x, y) => x.moment.CompareTo(y.moment));   // sortiert die LightPropertiesList anhand der Eigenschaft moment
 
         //float knobPos = AnimationTimer.GetTime();
         //knobPos = UtilitiesTm.FloatRemap(knobPos, AnimationTimer.GetMinTime(), AnimationTimer.GetMaxTime(), 0, _representationPanel.GetComponent<RectTransform>().rect.width);
@@ -41,10 +42,14 @@ public class SetLightColors : MonoBehaviour
         //knobIntstance.gameObject.SetActive(true);
         //knobIntstance.transform.localPosition = new Vector3(knobPos, knobIntstance.transform.localPosition.y, knobIntstance.transform.localPosition.z);
         //knobIntstance.GetComponent<Image>().color = new Color(StaticSceneData.StaticData.lightingSets[0].r, StaticSceneData.StaticData.lightingSets[0].g, StaticSceneData.StaticData.lightingSets[0].b);
+        _savedButtonColor = 0;
+        ButtonClick(0);
+        ChangeLightColor();
     }
 
     public void ButtonClick(int buttonColor)
     {
+        _savedButtonColor = buttonColor;
         float intensityValue = SliderIntensity.value;
         float colorMoment = AnimationTimer.GetTime();
         int momentIndex = StaticSceneData.StaticData.lightingSets.FindIndex(mom => mom.moment == colorMoment);
@@ -80,8 +85,13 @@ public class SetLightColors : MonoBehaviour
         }
         StaticSceneData.StaticData.lightingSets.Sort((x, y) => x.moment.CompareTo(y.moment));   // sortiert die LightPropertiesList anhand der Eigenschaft moment
         _representationPanel.GetComponent<LightAnimationRepresentation>().ChangeImage();
+        ChangeLightColor();
     }
 
+    public void ChangeAnimationLightIntensity()
+    {
+        ButtonClick(_savedButtonColor);
+    }
 
     void ChangeLightColor ()
     {
