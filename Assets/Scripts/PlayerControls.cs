@@ -66,10 +66,12 @@ public class PlayerControls : MonoBehaviour
                 break;
             case AnimationTimer.TimerState.playing:
                 AnimationTimer.StopTimer();
+                SceneManager.playing = false;
                 PlayButton.transform.GetComponent<Image>().sprite = PlaySprite;
                 break;
             case AnimationTimer.TimerState.paused:
                 AnimationTimer.StopTimer();
+                SceneManager.playing = false;
                 break;
         }
     }
