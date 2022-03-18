@@ -6,11 +6,13 @@ public class JumpToKeyframe : MonoBehaviour
 {
     List<float> keyFrames;
     private int _selection;
+    private int _railSelection;
     // Start is called before the first frame update
     void Start()
     {
         keyFrames = new List<float>();
         ChangeSelection(1);
+        ChangeRailSelection(0);
     }
 
     //// Update is called once per frame
@@ -30,6 +32,18 @@ public class JumpToKeyframe : MonoBehaviour
             _selection = 1;
         }
     }
+    public void ChangeRailSelection(int selectRailSelection)
+    {
+        if (selectRailSelection >= 0 && selectRailSelection <= 5)
+        {
+            _railSelection = selectRailSelection;
+        }
+        else
+        {
+            _railSelection = 0;
+        }
+    }
+
 
     public void PreviousKeyframe()
     {
@@ -67,14 +81,17 @@ public class JumpToKeyframe : MonoBehaviour
 
     void GetMomentsFromRailElementSpeeds()
     {
-        // 
+        keyFrames.Clear();
+        foreach (RailElementSpeed railElementSpeed in StaticSceneData.StaticData.railElements[_railSelection].railElementSpeeds)
+        {
+            keyFrames.Add(railElementSpeed.moment);
+        }
     }
 
     void GetMomentsFromLightingSets()
     {
-        List<LightingSet> lightingSets = StaticSceneData.StaticData.lightingSets;
         keyFrames.Clear();
-        foreach (LightingSet lightingSet in lightingSets)
+        foreach (LightingSet lightingSet in StaticSceneData.StaticData.lightingSets)
         {
             keyFrames.Add(lightingSet.moment);
             //Debug.LogWarning(lightingSet.moment);
@@ -82,7 +99,7 @@ public class JumpToKeyframe : MonoBehaviour
     }
 
 
-    void SelectKeyFrames() //0 - railspeed; 1 - light; 2 - music
+    void SelectKeyFrames() //0 - railspeed; 1 - light; 2 - music; 3 - background
     {
         switch(_selection)
         {
@@ -93,6 +110,10 @@ public class JumpToKeyframe : MonoBehaviour
                 GetMomentsFromLightingSets();
                 break;
             case 2:
+                //GetMomentsFromMusicVolume
+                break;
+            case 3:
+                //GetMomentsFromBackgroundPosition
                 break;
         }
             
