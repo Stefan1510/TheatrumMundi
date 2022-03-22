@@ -36,6 +36,6 @@ public class DeleteObject : MonoBehaviour
 		string objName="";
 		objName=this.transform.parent.gameObject.name;
 		Debug.Log("parentX: "+objName);
-		tlV2.removeObjectFromTimeline(objName);
+		//tlV2.removeObjectFromTimeline(objName);
     }
 }

@@ -463,7 +463,6 @@ public class timelineOpenCloseV2 : MonoBehaviour
                 scaleObject(objects[i], length, scaleDown);
                 scaleObject(objects[i].transform.GetChild(0).gameObject, objects[i].transform.GetChild(0).gameObject.GetComponent<RectTransform>().sizeDelta.x, scaleDown);
                 scaleObject(objects[i].transform.GetChild(1).gameObject, objects[i].transform.GetChild(1).gameObject.GetComponent<RectTransform>().sizeDelta.x, scaleDown);
-                Debug.Log("+++++++Scaling down child(0): " + objects[i].transform.GetChild(0).gameObject);
                 //objects[i].GetComponent<RectTransform>().sizeDelta=new Vector2(150.0f,10.0f);
             }
 
@@ -679,20 +678,31 @@ public class timelineOpenCloseV2 : MonoBehaviour
         }
         return c;
     }
-    public void removeObjectFromTimeline(string objName)
+    public void removeObjectFromTimeline(GameObject obj, GameObject obj3D, int index)
     {
-        GameObject founded = new GameObject();
+        /*GameObject founded = new GameObject();
         //delete object in timelineInstanceObjects
         for (int i = 0; i < timelineInstanceObjects.Count; i++)
         {
-            if (timelineInstanceObjects[i].name == objName)
+            if (timelineInstanceObjects[i].name == obj)
             {
                 founded = timelineInstanceObjects[i];
             }
         }
         timelineInstanceObjects.Remove(founded);
 
-        //perhaps reduce the copies count
+        //perhaps reduce the copies count*/
+        int tmpNr;
+        Destroy(obj);
+        timelineInstanceObjects.Remove(obj);
+        timelineInstanceObjects3D.Remove(obj3D);
+        Debug.Log("Removing: "+obj+"und 3D: "+obj3D+", instance count: "+timelineInstanceObjects3D.Count+", index: "+index);
+        /*figCounterCircle[index].transform.GetChild(0).GetComponent<Text>().text = (index - 1).ToString();
+        Debug.Log("+++tmpNr: "+figCounterCircle[index].GetComponent<Text>().text);
+        tmpNr = int.Parse(figCounterCircle[index].transform.GetChild(0).GetComponent<Text>().text);
+        
+        tmpNr -= 1;
+        figCounterCircle[index].transform.GetChild(0).GetComponent<Text>().text = tmpNr.ToString();*/
     }
     public void unhighlight(GameObject obj3D, GameObject obj)
     {
@@ -790,6 +800,8 @@ public class timelineOpenCloseV2 : MonoBehaviour
             //or check if you click an object in timeline
             if ((currentClickedInstanceObjectIndex != (-1)) && (editTimelineObject == true))
             {
+                //timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<Button>().onClick.AddListener(() => highlight(timelineInstanceObjects3D[currentClickedInstanceObjectIndex],timelineInstanceObjects[currentClickedInstanceObjectIndex]);
+
                 if (timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(getMousePos))
                 {
                     //set up some flags
@@ -798,6 +810,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
                     movingOnTimeline = true;    //access for moving an object on timeline
 
 
+                    timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).GetComponent<Button>().onClick.AddListener(() => removeObjectFromTimeline(timelineInstanceObjects[currentClickedInstanceObjectIndex],timelineInstanceObjects3D[currentClickedInstanceObjectIndex],currentClickedObjectIndex));
                     //highlighting objects and showing delete button when clicked
                     if (gameObject.name == "ImageTimelineRail1" || gameObject.name == "ImageTimelineRail2" || gameObject.name == "ImageTimelineRail3" || gameObject.name == "ImageTimelineRail4" || gameObject.name == "ImageTimelineRail5" || gameObject.name == "ImageTimelineRail6")
                     {
