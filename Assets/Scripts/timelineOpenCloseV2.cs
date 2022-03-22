@@ -64,27 +64,11 @@ public class timelineOpenCloseV2 : MonoBehaviour
 
     //public GameObject gameController;
     private FigureElement ThisFigureElement;    //element to set 3d object
-    // public GameObject figure1;      //adliger, element 0
-    // public GameObject figure2;      //hirte, element 1
-    // public GameObject figure3;      //hirte02, element 2
-    // public GameObject figure4;      //elephant, element 3
-    // public GameObject figure5;      //esel, element 4
-    // public GameObject figure6;      //giraffe, element 5
-    // public GameObject figure7;      //giraffe, element 5
-    // public GameObject figure8;      //giraffe, element 5
-    // public GameObject figure9;      //giraffe, element 5
-    // public GameObject figure10;      //giraffe, element 5
+
     double fig1StartPos;
     double fig2StartPos;
     Vector3 railStartPos;
     Vector3 railEndPos;
-    //Vector3 rail1StartPos;
-    //Vector3 rail1EndPos;
-    /*Vector3 rail2StartPos;*/
-    //Vector3 rail3StartPos;
-    /*Vector3 rail4StartPos;
-	Vector3 rail5StartPos;
-	Vector3 rail6StartPos;*/
 
     public AudioClip[] clip;         // ought to be 6 audioclips
 
@@ -449,7 +433,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
             Debug.Log("object hits timeline!");
             hit = true; ;
         }
-        Debug.Log("drag and hit " + hit);
+        //Debug.Log("drag and hit " + hit);
         return hit;
     }
     public void openCloseObjectInTimeline(bool timelineOpen, List<GameObject> objects, bool editObjOnTl)
@@ -549,7 +533,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
 
         float tmpX = 0.0f;
         tmpX = float.Parse(rail3dObj.GetComponent<Text>().text);
-        
+
         if ((timerTime >= startSec) && (timerTime <= (startSec + (int)animLength)))
         {
             //calculate the rail-length
@@ -608,7 +592,6 @@ public class timelineOpenCloseV2 : MonoBehaviour
         // rect.transform.position = startPos;          
 
         double tmpLength = (maxX - minX) / 614.0f * animLength;
-        Debug.Log("+++++++++++++++++++length Float: " + (float)tmpLength + ", length of railX: " + (maxX - minX));
 
         GameObject imgObject = new GameObject("RectBackground");
         RectTransform trans = imgObject.AddComponent<RectTransform>();
@@ -711,17 +694,17 @@ public class timelineOpenCloseV2 : MonoBehaviour
 
         //perhaps reduce the copies count
     }
-    public void unhighlight(GameObject obj)
+    public void unhighlight(GameObject obj3D, GameObject obj)
     {
-        obj.GetComponent<Outline>().enabled = false;
-        obj.transform.GetChild(0).gameObject.SetActive(false);  //show Delete-Button
+        obj3D.GetComponent<Outline>().enabled = false;
+        obj.transform.GetChild(1).GetChild(0).gameObject.SetActive(false);  //hide Delete-Button
         highlighted = false;
     }
 
-    public void highlight(GameObject obj)
+    public void highlight(GameObject obj3D, GameObject obj)
     {
-        obj.GetComponent<Outline>().enabled = true;
-        obj.transform.GetChild(0).gameObject.SetActive(true);   //hide Delete-Button
+        obj3D.GetComponent<Outline>().enabled = true;
+        obj.transform.GetChild(1).GetChild(0).gameObject.SetActive(true);   //show Delete-Button
         highlighted = true;
     }
 
@@ -744,7 +727,8 @@ public class timelineOpenCloseV2 : MonoBehaviour
             //identify which gameobject you clicked
             string objectClicked = identifyClickedObject();         //method fills up the current clicked index
                                                                     //Debug.Log("you clicked object: " + objectClicked);
-            Debug.Log("you clicked timelineobject: " + identifyClickedObjectByList(timelineInstanceObjects));
+            //Debug.Log("you clicked timelineobject: " + identifyClickedObjectByList(timelineInstanceObjects);
+            identifyClickedObjectByList(timelineInstanceObjects);
             editTimelineObject = false;                             //flag to prevent closing the timeline if you click an object in timeline
             releaseOnTimeline = false;                              //because you have not set on timeline anything
             releaseObjMousePos = new Vector2(0.0f, 0.0f);
@@ -771,8 +755,8 @@ public class timelineOpenCloseV2 : MonoBehaviour
             {
                 editTimelineObject = false;
             }
-            Debug.Log("=====> found hit at index: " + tmpI);
-            Debug.Log("=====> instance-array: " + timelineInstanceObjects.Count);
+            //Debug.Log("=====> found hit at index: " + tmpI);
+            //Debug.Log("=====> instance-array: " + timelineInstanceObjects.Count);
 
             //if you click the timeline with the mouse
             if (this.GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(getMousePos))
@@ -820,22 +804,31 @@ public class timelineOpenCloseV2 : MonoBehaviour
                         outline = timelineInstanceObjects3D[currentClickedInstanceObjectIndex].GetComponent<Outline>();
                         if (highlighted == false)
                         {
-                            highlight(timelineInstanceObjects3D[currentClickedInstanceObjectIndex]);
+                            highlight(timelineInstanceObjects3D[currentClickedInstanceObjectIndex], timelineInstanceObjects[currentClickedInstanceObjectIndex]);
+                            Debug.Log("+++++++++++++Highlight now!");
                         }
                         else if (highlighted && outline.enabled)
                         {
-                            unhighlight(timelineInstanceObjects3D[currentClickedInstanceObjectIndex]);
+                            Debug.Log("++++jawoll! Maus: "+Physics2D.OverlapPoint(getMousePos)+", collider: "+timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).GetComponent<BoxCollider2D>());
+                            if (timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(getMousePos))
+                            {
+                                
+                            }
+                            else 
+                            {
+                                unhighlight(timelineInstanceObjects3D[currentClickedInstanceObjectIndex], timelineInstanceObjects[currentClickedInstanceObjectIndex]);
+                            }
                         }
                         else
                         {
+                            Debug.Log("etwas ist gehighlited aber nicht das. ");
                             for (int i = 0; i < timelineInstanceObjects3D.Count; i++)
                             {
-                                unhighlight(timelineInstanceObjects3D[i]);
+                                unhighlight(timelineInstanceObjects3D[i], timelineInstanceObjects[i]);
                             }
-                            highlight(timelineInstanceObjects3D[currentClickedInstanceObjectIndex]);
+                            highlight(timelineInstanceObjects3D[currentClickedInstanceObjectIndex], timelineInstanceObjects[currentClickedInstanceObjectIndex]);
                         }
                     }
-
                 }
             }
 
@@ -853,7 +846,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
                 // delete highlight of everything if nothing is clicked
                 for (int i = 0; i < timelineInstanceObjects3D.Count; i++)
                 {
-                    unhighlight(timelineInstanceObjects3D[i]);
+                    unhighlight(timelineInstanceObjects3D[i], timelineInstanceObjects[i]);
                 }
             }
             if (movingOnTimeline)
