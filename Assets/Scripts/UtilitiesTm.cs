@@ -18,6 +18,13 @@ public static class UtilitiesTm
         return colorArray;
     }
 
+    public static string FloaTTimeToString(float seconds)
+    {
+        string strSeconds = (seconds % 60).ToString("00");
+        string strMinutes = (seconds/60).ToString("00");
+        return strMinutes + ":" + strSeconds;
+    }
+
     public static int sgn(int x)
     {
         return (x > 0) ? 1 : (x < 0) ? -1 : 0;
