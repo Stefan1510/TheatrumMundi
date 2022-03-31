@@ -6,7 +6,27 @@ ModelImporter:
   - first:
       74: -1422011007694221501
     second: Armature|ArmatureAction.001
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material
+    second: {fileID: 2100000, guid: 2f1a0f02a104a614fbdf41a87ba4e9ad, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: mat_Sklaven_02
+    second: {fileID: 2100000, guid: e5f87675d775a9f4ea324c213947489e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: messing
+    second: {fileID: 2100000, guid: 1fe7374ce308ee642b1385f69c5e2a05, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: wood_light_proc
+    second: {fileID: 2100000, guid: f4e599b0d2d6b2448b012385d6503c0b, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

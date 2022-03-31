@@ -6,7 +6,7 @@ public class MirrorElement : MonoBehaviour
 {
     public void OnMirror()
     {
-        DragDrop dragdrop = SceneManager.dragDrop;
+        DragDrop dragdrop = SceneManaging.dragDrop;
 
 
         if(dragdrop.ThisSceneryElement.mirrored)

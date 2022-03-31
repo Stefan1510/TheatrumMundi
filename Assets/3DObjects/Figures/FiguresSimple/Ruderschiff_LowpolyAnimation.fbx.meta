@@ -9,7 +9,22 @@ ModelImporter:
   - first:
       74: -6697487000862083951
     second: Armature.003|Rudern
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: mat_Fahrwerk
+    second: {fileID: 2100000, guid: 72dcfae8b1362b949abda1c4bbf6162e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: mat_Ruderschiff
+    second: {fileID: 2100000, guid: 4d5ec8a7124a56943a612ce3baa8ba27, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: messing
+    second: {fileID: 2100000, guid: b1fa80062db124142ac2977db154eb6d, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

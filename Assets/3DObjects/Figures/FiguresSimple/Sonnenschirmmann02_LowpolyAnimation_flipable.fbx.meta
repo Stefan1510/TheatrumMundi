@@ -6,7 +6,32 @@ ModelImporter:
   - first:
       74: -1422011007694221501
     second: Armature|ArmatureAction.001
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: mat_Faden
+    second: {fileID: 2100000, guid: a343d691ce890ae47a7565bdd91b3c39, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: mat_Faden.001
+    second: {fileID: 2100000, guid: 3071a78fc6ee5c54589eba150a9962ee, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: mat_Sonnenschirmmann02
+    second: {fileID: 2100000, guid: e4659fdfd9149df44b2224ca18d039fb, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: messing
+    second: {fileID: 2100000, guid: a9d1e6dd7122c66418a972cdad1f22fc, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: wood_light_proc
+    second: {fileID: 2100000, guid: b5d0f11cee50cd947a82dae222fc4fff, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

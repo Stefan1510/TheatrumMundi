@@ -43,17 +43,17 @@ public class PlayerControls : MonoBehaviour
         {
             case AnimationTimer.TimerState.stopped:
                 AnimationTimer.StartTimer();
-                SceneManager.playing = true;
+                SceneManaging.playing = true;
                 PlayButton.transform.GetComponent<Image>().sprite = PauseSprite;
                 break;
             case AnimationTimer.TimerState.playing:
                 AnimationTimer.PauseTimer();
-                SceneManager.playing = false;
+                SceneManaging.playing = false;
                 PlayButton.transform.GetComponent<Image>().sprite = PlaySprite;
                 break;
             case AnimationTimer.TimerState.paused:
                 AnimationTimer.StartTimer();
-                SceneManager.playing = true;
+                SceneManaging.playing = true;
                 PlayButton.transform.GetComponent<Image>().sprite = PauseSprite;
                 break;
         }
@@ -66,12 +66,12 @@ public class PlayerControls : MonoBehaviour
                 break;
             case AnimationTimer.TimerState.playing:
                 AnimationTimer.StopTimer();
-                SceneManager.playing = false;
+                SceneManaging.playing = false;
                 PlayButton.transform.GetComponent<Image>().sprite = PlaySprite;
                 break;
             case AnimationTimer.TimerState.paused:
                 AnimationTimer.StopTimer();
-                SceneManager.playing = false;
+                SceneManaging.playing = false;
                 break;
         }
     }

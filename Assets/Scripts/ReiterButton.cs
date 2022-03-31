@@ -6,7 +6,7 @@ public class ReiterButton : MonoBehaviour
 {
     public void OnClick()
     {
-        DragDrop dragdrop = SceneManager.dragDrop;
+        DragDrop dragdrop = SceneManaging.dragDrop;
 
         for (int i = 0; i < this.transform.childCount; i++)
         {
@@ -20,73 +20,73 @@ public class ReiterButton : MonoBehaviour
 
         if (gameObject.name == "Reiter1")
         {
-            SceneManager.statusReiter = 1;
+            SceneManaging.statusReiter = 1;
             dragdrop.setReiterActive(1);
         }
         else if (gameObject.name == "Reiter2")
         {
-            SceneManager.statusReiter = 2;
+            SceneManaging.statusReiter = 2;
             dragdrop.setReiterActive(2);
         }
         else if (gameObject.name == "Reiter3")
         {
-            SceneManager.statusReiter = 3;
+            SceneManaging.statusReiter = 3;
             dragdrop.setReiterActive(3);
         }
         else if (gameObject.name == "Reiter4")
         {
             dragdrop.setReiterActive(4);
-            SceneManager.statusReiter = 4;
+            SceneManaging.statusReiter = 4;
         }
         else if (gameObject.name == "Reiter5")
         {
             dragdrop.setReiterActive(5);
-            SceneManager.statusReiter = 5;
+            SceneManaging.statusReiter = 5;
         }
         else if (gameObject.name == "Reiter6")
         {
             dragdrop.setReiterActive(6);
-            SceneManager.statusReiter = 6;
+            SceneManaging.statusReiter = 6;
         }
         else if (gameObject.name == "Reiter7")
         {
             dragdrop.setReiterActive(7);
-            SceneManager.statusReiter = 7;
+            SceneManaging.statusReiter = 7;
         }
         else if (gameObject.name == "Reiter8")
         {
             dragdrop.setReiterActive(8);
-            SceneManager.statusReiter = 8;
+            SceneManaging.statusReiter = 8;
         }
     }
 
     public void OnPointerEnter()
     {
-        //SceneManager.mouse_over = true;
+        //SceneManaging.mouse_over = true;
         //Debug.Log("entering "+gameObject);
-        if (gameObject.name == "Reiter1") SceneManager.triggerActive = 1;
-        else if (gameObject.name == "Reiter2") SceneManager.triggerActive = 2;
-        else if (gameObject.name == "Reiter3") SceneManager.triggerActive = 3;
-        else if (gameObject.name == "Reiter4") SceneManager.triggerActive = 4;
-        else if (gameObject.name == "Reiter5") SceneManager.triggerActive = 5;
-        else if (gameObject.name == "Reiter6") SceneManager.triggerActive = 6;
-        else if (gameObject.name == "Reiter7") SceneManager.triggerActive = 7;
-        else if (gameObject.name == "Reiter8") SceneManager.triggerActive = 8;
-        else if (gameObject.name == "Einstellungen") SceneManager.triggerEinstellungen = true;
-        else SceneManager.triggerActive = 0;
-        //Debug.Log("triggerACtive: " + SceneManager.triggerActive+", triggerEinstellung: "+SceneManager.triggerEinstellungen);
-        //SceneManager.dragDrop.setReiterActive(SceneManager.dragDrop.statusReiter);
+        if (gameObject.name == "Reiter1") SceneManaging.triggerActive = 1;
+        else if (gameObject.name == "Reiter2") SceneManaging.triggerActive = 2;
+        else if (gameObject.name == "Reiter3") SceneManaging.triggerActive = 3;
+        else if (gameObject.name == "Reiter4") SceneManaging.triggerActive = 4;
+        else if (gameObject.name == "Reiter5") SceneManaging.triggerActive = 5;
+        else if (gameObject.name == "Reiter6") SceneManaging.triggerActive = 6;
+        else if (gameObject.name == "Reiter7") SceneManaging.triggerActive = 7;
+        else if (gameObject.name == "Reiter8") SceneManaging.triggerActive = 8;
+        else if (gameObject.name == "Einstellungen") SceneManaging.triggerEinstellungen = true;
+        else SceneManaging.triggerActive = 0;
+        //Debug.Log("triggerACtive: " + SceneManaging.triggerActive+", triggerEinstellung: "+SceneManaging.triggerEinstellungen);
+        //SceneManaging.dragDrop.setReiterActive(SceneManaging.dragDrop.statusReiter);
     }
 
     public void OnPointerExit()
     {
         if (gameObject.name == "Einstellungen")
         {
-            SceneManager.triggerEinstellungen = false;
+            SceneManaging.triggerEinstellungen = false;
         }
         else
         {
-            SceneManager.triggerActive = 0;
+            SceneManaging.triggerActive = 0;
             //Debug.Log("TriggerActive = 0");
         }
 

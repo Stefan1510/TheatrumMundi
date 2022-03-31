@@ -291,7 +291,7 @@ public class slideTimeSlider : MonoBehaviour
 				//Debug.Log("Seconds: "+newTime.ToString());
 				AnimationTimer.SetTime(newTime);
 				//music update
-				SceneManager.updateMusic= true;
+				SceneManaging.updateMusic= true;
 			}
 		}
 		else
@@ -314,7 +314,7 @@ public class slideTimeSlider : MonoBehaviour
 			//Debug.Log("left mouse button up");
 			moving=false;
 			dragging=false;
-			SceneManager.updateMusic= false;
+			SceneManaging.updateMusic= false;
 		}
     }
 }

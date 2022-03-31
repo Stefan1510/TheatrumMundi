@@ -6,7 +6,27 @@ ModelImporter:
   - first:
       74: 2264077025236624520
     second: Armature.001|Armature.001Action
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: mat_Faden.001
+    second: {fileID: 2100000, guid: 769e20d817ac7d1408b93c1daca15763, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: mat_Fahrwerk
+    second: {fileID: 2100000, guid: 72c030e2e4a78a44883c6171fcb4d120, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: mat_Frau
+    second: {fileID: 2100000, guid: 2ba89eafe77596b4fa87f9fbf4246481, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: messing
+    second: {fileID: 2100000, guid: b4f6b135e477c2f479a090e10e08af3c, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

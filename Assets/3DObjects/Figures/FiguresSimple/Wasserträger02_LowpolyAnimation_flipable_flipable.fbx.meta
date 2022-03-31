@@ -12,7 +12,27 @@ ModelImporter:
   - first:
       74: 6989065330185400995
     second: Armature.002|WalkLoop
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material
+    second: {fileID: 2100000, guid: 4f6bff1d9213c014bbc3572c0f148496, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: mat_Fahrwerk_Hirte
+    second: {fileID: 2100000, guid: 539a032da9d0c6d4aa3bb6f2ba7405bb, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: messing
+    second: {fileID: 2100000, guid: b2aae07b3ee12184eb2f98e3a8e66a9b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: messing.001
+    second: {fileID: 2100000, guid: 49cb2801c05bb29489ff39072fccfd9a, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

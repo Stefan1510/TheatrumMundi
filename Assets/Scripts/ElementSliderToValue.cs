@@ -8,7 +8,7 @@ public class ElementSliderToValue : MonoBehaviour
     [SerializeField] GameObject xPos;
     public void ChangeElementPosition()
     {
-        DragDrop dragdrop = SceneManager.dragDrop;
+        DragDrop dragdrop = SceneManaging.dragDrop;
         
         //2D-Kulisse
         Debug.Log("value: "+ xPos.GetComponent<InputField>().text);

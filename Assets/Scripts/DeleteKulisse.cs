@@ -7,13 +7,13 @@ public class DeleteKulisse : MonoBehaviour
 {
     private void Awake()
     {
-        SceneManager.showSettings = false;
+        SceneManaging.showSettings = false;
         gameObject.SetActive(false);
     }
 
     void OnClick()
     {
-        DragDrop dragdrop = SceneManager.dragDrop;
+        DragDrop dragdrop = SceneManaging.dragDrop;
 
         if(dragdrop.ThisSceneryElement.mirrored) 
         {

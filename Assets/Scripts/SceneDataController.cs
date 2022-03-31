@@ -45,7 +45,7 @@ public class SceneDataController : MonoBehaviour
         {
             //Debug.Log("-----+++++" + re.name);
         }
-        SceneManager.statusReiter = 1;
+        SceneManaging.statusReiter = 1;
         foreach (GameObject objectSceneryElement in objectsSceneryElements)
         {
             //Debug.Log("SceneDataController Name: " + objectSceneryElement.name);

@@ -6,7 +6,22 @@ ModelImporter:
   - first:
       74: -8945691123924629249
     second: Armature|Idle
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material
+    second: {fileID: 2100000, guid: 3fd86bcb52bb47646b7977b4281b88d2, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: mat_fahrwerk
+    second: {fileID: 2100000, guid: f4e43b64bbbd52b49815a00416aac8e5, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: messing
+    second: {fileID: 2100000, guid: 68bd0ecbe2024ab42841a0af75a8422c, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

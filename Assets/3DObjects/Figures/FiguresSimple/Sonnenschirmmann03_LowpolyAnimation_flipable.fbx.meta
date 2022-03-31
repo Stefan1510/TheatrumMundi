@@ -6,7 +6,22 @@ ModelImporter:
   - first:
       74: -1422011007694221501
     second: Armature|ArmatureAction.001
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: mat_Fahrwerk
+    second: {fileID: 2100000, guid: 8183fb9bee7e7654b8a8cddb316c9406, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: mat_Sonnenschirmann03
+    second: {fileID: 2100000, guid: f847ceac6ae83fe4695924c8a3fe0d9c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: messing
+    second: {fileID: 2100000, guid: 29facd50c62b2a143a2d5f04b5180efc, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

@@ -9,6 +9,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
     Image timelineImage;
     Outline outline;
     AudioSource audioSource;
+    public GameObject[] rails;
     public Text timelineText;
     public Image timeSliderImage;
     private BoxCollider2D timeSlider;
@@ -18,8 +19,8 @@ public class timelineOpenCloseV2 : MonoBehaviour
     bool clickingTimeline;          //if timeline is clicked
     bool movingOnTimeline;          //is the mouse over the timeline
     bool draggingOnTimeline;        //dragging the mouse over the timeline
-    bool highlighted;               //global variable since only one object can be highlighted - everything is unhighlighted
-    bool clickingObject;            //do you only click the object
+    //bool highlighted;               //global variable since only one object can be highlighted - everything else is unhighlighted
+    //bool clickingObject;            //if you only click the object
     bool movingObject;              //is the mouse over the object
     bool draggingObject;            //dragging an object with mouse
     bool objectOnTimeline;          //is object on timeline
@@ -47,7 +48,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
     Vector2 objectSceneSize;
 
     public GameObject objectLibrary;
-    public GameObject mainMenue, parentMenue;
+    public GameObject parentMenue; // mainMenue
     GameObject timeSettings;
     GameObject[] figCounterCircle;
 
@@ -78,12 +79,12 @@ public class timelineOpenCloseV2 : MonoBehaviour
         timelineImage = this.GetComponent<Image>();
         //timeSliderImage=GetComponent<Image>();
         //timeSlider=timeSliderImage.GetComponent<BoxCollider2D>();
-        SceneManager.timelineOpen = false;
+        SceneManaging.timelineOpen = false;
         clickingTimeline = false;
         movingOnTimeline = false;
         draggingOnTimeline = false;
-        highlighted = false;
-        clickingObject = false;
+        //highlighted = false;
+        //clickingObject = false;
         movingObject = false;
         draggingObject = false;
         objectOnTimeline = false;
@@ -234,6 +235,23 @@ public class timelineOpenCloseV2 : MonoBehaviour
         sizeDeltaAsFactor = new Vector2(1.0f, 1.0f);
         Debug.Log("++++++timeline calling");
 
+        // disable animations and disable emission
+        for(int i=0 ; i<figureObjects3D.Length ; i++)
+        {
+            try
+            {
+                figureObjects3D[i].GetComponent<Animator>().enabled = false;
+            } catch (MissingComponentException ex) {}
+            
+            for(int j=0 ; j<figureObjects3D[i].transform.childCount;j++)
+            {
+                try
+                {
+                    figureObjects3D[i].transform.GetChild(j).GetComponent<SkinnedMeshRenderer>().material.DisableKeyword ("_EMISSION");
+                }
+                catch (MissingComponentException ex) {}
+            }
+        } 
     }
 
     public string identifyClickedObject()   //old
@@ -311,7 +329,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
         if (flag == false)
         {
             //set global flag
-            SceneManager.timelineOpen = true;
+            SceneManaging.timelineOpen = true;
             //scale up timeline
             tl.rectTransform.sizeDelta = new Vector2(tl.rectTransform.rect.width, heightOpened);
             //scale up the collider
@@ -323,7 +341,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
         else if (flag == true && editObjOnTl == false)
         {
             //set global flag
-            SceneManager.timelineOpen = false;
+            SceneManaging.timelineOpen = false;
             //scale down timeline
             tl.rectTransform.sizeDelta = new Vector2(tl.rectTransform.rect.width, heightClosed);
             //scale down the collider
@@ -331,7 +349,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
             //scale up the text
             tl.transform.GetChild(0).gameObject.GetComponent<Text>().rectTransform.localScale = new Vector3(1, 1, 1);
         }
-        openCloseTimeSettings(SceneManager.timelineOpen, timeSettings);
+        openCloseTimeSettings(SceneManaging.timelineOpen, timeSettings);
 
     }
     public void openCloseTimelineByDrag(string open, Image tl)
@@ -341,7 +359,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
 
         if (open == "open")
         {
-            SceneManager.timelineOpen = true;
+            SceneManaging.timelineOpen = true;
             //scale up timeline
             tl.rectTransform.sizeDelta = new Vector2(tl.rectTransform.rect.width, heightOpened);
             //scale up the collider
@@ -354,7 +372,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
         else
         {
             //if open=="close"
-            SceneManager.timelineOpen = false;
+            SceneManaging.timelineOpen = false;
             //scale down timeline
             tl.rectTransform.sizeDelta = new Vector2(tl.rectTransform.rect.width, heightClosed);
             //scale down the collider
@@ -363,7 +381,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
             tl.transform.GetChild(0).gameObject.GetComponent<Text>().rectTransform.localScale = new Vector3(1, 1, 1);
             //scale up all objects on timeline
         }
-        openCloseTimeSettings(SceneManager.timelineOpen, timeSettings);
+        openCloseTimeSettings(SceneManaging.timelineOpen, timeSettings);
 
     }
     public void openCloseTimeSettings(bool tlOpen, GameObject ts)
@@ -406,7 +424,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
     {
         //set parent
         //obj.transform.SetParent(mainMenue.transform);
-        setParent(obj, mainMenue);
+        setParent(obj, gameObject);
         //move object
         obj.transform.position = new Vector2(mousePos.x, mousePos.y);
         //set up flags
@@ -447,6 +465,27 @@ public class timelineOpenCloseV2 : MonoBehaviour
 
             if (timelineOpen)
             {
+                scaleObjectHeight(objects[i], length, scaleUp);
+                scaleObjectHeight(objects[i].transform.GetChild(1).gameObject, objects[i].transform.GetChild(1).gameObject.GetComponent<RectTransform>().sizeDelta.x, scaleUp);
+                scaleObjectHeight(objects[i].transform.GetChild(0).gameObject, objects[i].transform.GetChild(0).gameObject.GetComponent<RectTransform>().sizeDelta.x, scaleUp);
+                objects[i].GetComponent<RectTransform>().anchoredPosition = new Vector2(objects[i].GetComponent<RectTransform>().anchoredPosition.x, -40.0f);
+                //objects[i].GetComponent<RectTransform>().sizeDelta=new Vector2(150.0f,50.0f);
+                //new Vector2(animationLength,scaleYUp);
+
+            }
+            else if ((timelineOpen == false) && (editObjOnTl == false))
+            {
+                //otherwise scale ALL objects down
+                //Debug.Log("method: scale object down:");
+                scaleObjectHeight(objects[i], length, scaleDown);
+                scaleObjectHeight(objects[i].transform.GetChild(0).gameObject, objects[i].transform.GetChild(0).gameObject.GetComponent<RectTransform>().sizeDelta.x, scaleDown);
+                scaleObjectHeight(objects[i].transform.GetChild(1).gameObject, objects[i].transform.GetChild(1).gameObject.GetComponent<RectTransform>().sizeDelta.x, scaleDown);
+                objects[i].GetComponent<RectTransform>().anchoredPosition = new Vector2(objects[i].GetComponent<RectTransform>().anchoredPosition.x, -6.0f);
+                //objects[i].GetComponent<RectTransform>().sizeDelta=new Vector2(150.0f,10.0f);
+            }
+
+            /*if (timelineOpen)
+            {
                 scaleObject(objects[i], length, scaleUp);
                 scaleObject(objects[i].transform.GetChild(1).gameObject, objects[i].transform.GetChild(1).gameObject.GetComponent<RectTransform>().sizeDelta.x, scaleUp);
                 scaleObject(objects[i].transform.GetChild(0).gameObject, objects[i].transform.GetChild(0).gameObject.GetComponent<RectTransform>().sizeDelta.x, scaleUp);
@@ -462,11 +501,25 @@ public class timelineOpenCloseV2 : MonoBehaviour
                 scaleObject(objects[i].transform.GetChild(0).gameObject, objects[i].transform.GetChild(0).gameObject.GetComponent<RectTransform>().sizeDelta.x, scaleDown);
                 scaleObject(objects[i].transform.GetChild(1).gameObject, objects[i].transform.GetChild(1).gameObject.GetComponent<RectTransform>().sizeDelta.x, scaleDown);
                 //objects[i].GetComponent<RectTransform>().sizeDelta=new Vector2(150.0f,10.0f);
-            }
+            }*/
 
         }
     }
 
+    public void scaleObjectHeight(GameObject fig, float x, float y)
+    {
+        //scale the object
+        fig.GetComponent<RectTransform>().sizeDelta = new Vector2(x, y);
+        //scale the collider, if object has one
+        if (fig.GetComponent<BoxCollider2D>() == true)
+        {
+            fig.GetComponent<BoxCollider2D>().size = new Vector2(x, y);
+        }
+        else
+        {
+            //do nothing
+        }
+    }
     public void scaleObject(GameObject fig, float x, float y)
     {
         //scale the object
@@ -671,31 +724,17 @@ public class timelineOpenCloseV2 : MonoBehaviour
         }
         return c;
     }
-    public void removeObjectFromTimeline(GameObject obj, GameObject obj3D, int index)
+    public void removeObjectFromTimeline(GameObject obj, GameObject obj3D)
     {
-        /*GameObject founded = new GameObject();
-        //delete object in timelineInstanceObjects
-        for (int i = 0; i < timelineInstanceObjects.Count; i++)
-        {
-            if (timelineInstanceObjects[i].name == obj)
-            {
-                founded = timelineInstanceObjects[i];
-            }
-        }
-        timelineInstanceObjects.Remove(founded);
-
-        //perhaps reduce the copies count*/
-        int tmpNr;
+        int tmpNr = int.Parse(obj.transform.GetChild(1).name.Substring(12));
+        int currentCounterNr = int.Parse(figCounterCircle[tmpNr - 1].transform.GetChild(0).GetComponent<Text>().text);
         Destroy(obj);
+        Destroy(obj3D);
         timelineInstanceObjects.Remove(obj);
         timelineInstanceObjects3D.Remove(obj3D);
-        Debug.Log("Removing: " + obj + "und 3D: " + obj3D + ", instance count: " + timelineInstanceObjects3D.Count + ", index: " + index);
-        /*figCounterCircle[index].transform.GetChild(0).GetComponent<Text>().text = (index - 1).ToString();
-        Debug.Log("+++tmpNr: "+figCounterCircle[index].GetComponent<Text>().text);
-        tmpNr = int.Parse(figCounterCircle[index].transform.GetChild(0).GetComponent<Text>().text);
-        
-        tmpNr -= 1;
-        figCounterCircle[index].transform.GetChild(0).GetComponent<Text>().text = tmpNr.ToString();*/
+        //Debug.Log("tmpNr: " + tmpNr + "currentCounterNr: " + currentCounterNr + ", Instances: " + timelineInstanceObjects.Count);
+        Debug.Log("+++Removed: " + obj);
+        figCounterCircle[tmpNr - 1].transform.GetChild(0).GetComponent<Text>().text = (currentCounterNr - 1).ToString();
     }
     public void unhighlight(GameObject obj3D, GameObject obj)
     {
@@ -705,9 +744,9 @@ public class timelineOpenCloseV2 : MonoBehaviour
             //Debug.Log("Child: "+obj3D.transform.GetChild(i));
             try
             {
-                /*obj3D.transform.GetChild(i).GetComponent<SkinnedMeshRenderer>().material.EnableKeyword ("_EMISSION");
-                obj3D.transform.GetChild(i).GetComponent<SkinnedMeshRenderer>().material.SetColor("_Emission_Color", Color.cyan);*/
-                obj3D.transform.GetChild(i).GetComponent<SkinnedMeshRenderer>().material.SetColor("_Color", Color.white);
+                obj3D.transform.GetChild(i).GetComponent<SkinnedMeshRenderer>().material.DisableKeyword("_EMISSION");
+                obj3D.transform.GetChild(i).GetComponent<SkinnedMeshRenderer>().material.SetColor("_Emission_Color", Color.black);
+                //obj3D.transform.GetChild(i).GetComponent<SkinnedMeshRenderer>().material.SetColor("_Color", Color.white);
             }
             catch (MissingComponentException ex)
             {
@@ -716,7 +755,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
 
         }
         obj.transform.GetChild(1).GetChild(0).gameObject.SetActive(false);  //hide Delete-Button
-        highlighted = false;
+        SceneManaging.highlighted = false;
     }
 
     public void highlight(GameObject obj3D, GameObject obj)
@@ -727,9 +766,9 @@ public class timelineOpenCloseV2 : MonoBehaviour
             //Debug.Log("Child: "+obj3D.transform.GetChild(i));
             try
             {
-                /*obj3D.transform.GetChild(i).GetComponent<SkinnedMeshRenderer>().material.EnableKeyword ("_EMISSION");
-                obj3D.transform.GetChild(i).GetComponent<SkinnedMeshRenderer>().material.SetColor("_Emission_Color", Color.cyan);*/
-                obj3D.transform.GetChild(i).GetComponent<SkinnedMeshRenderer>().material.SetColor("_Color", Color.cyan);
+                obj3D.transform.GetChild(i).GetComponent<SkinnedMeshRenderer>().material.EnableKeyword("_EMISSION");
+                obj3D.transform.GetChild(i).GetComponent<SkinnedMeshRenderer>().material.SetColor("_Emission_Color", Color.cyan);
+                //obj3D.transform.GetChild(i).GetComponent<SkinnedMeshRenderer>().material.SetColor("_Color", Color.cyan);
             }
             catch (MissingComponentException ex)
             {
@@ -738,12 +777,13 @@ public class timelineOpenCloseV2 : MonoBehaviour
 
         }
         obj.transform.GetChild(1).GetChild(0).gameObject.SetActive(true);   //show Delete-Button
-        highlighted = true;
+        SceneManaging.highlighted = true;
     }
 
     // Update is called once per frame
-    async void Update()
+    void Update()
     {
+        //Debug.Log("Instances: " + timelineInstanceObjects.Count + ", 3D: " + timelineInstanceObjects3D.Count);
         Vector2 getMousePos = Input.mousePosition;
 
         if (Input.GetMouseButtonDown(0)) //left mouse button down
@@ -760,7 +800,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
             //identify which gameobject you clicked
             string objectClicked = identifyClickedObject();         //method fills up the current clicked index
                                                                     //Debug.Log("you clicked object: " + objectClicked);
-                                                                    //Debug.Log("you clicked timelineobject: " + identifyClickedObjectByList(timelineInstanceObjects);
+            Debug.Log("you clicked timelineobject: " + identifyClickedObjectByList(timelineInstanceObjects) + ", Maus: " + Physics2D.OverlapPoint(getMousePos));
             identifyClickedObjectByList(timelineInstanceObjects);
             editTimelineObject = false;                             //flag to prevent closing the timeline if you click an object in timeline
             releaseOnTimeline = false;                              //because you have not set on timeline anything
@@ -796,10 +836,10 @@ public class timelineOpenCloseV2 : MonoBehaviour
             {
                 //open or close timeline
                 //openCloseTimelineByClick(timelineOpen, timelineImage);
-                openCloseTimelineByClick(SceneManager.timelineOpen, timelineImage, editTimelineObject);
+                openCloseTimelineByClick(SceneManaging.timelineOpen, timelineImage, editTimelineObject);
                 //minimize or maximize objects on timeline
                 //openCloseObjectInTimeline(timelineOpen, timelineObjects);
-                openCloseObjectInTimeline(SceneManager.timelineOpen, timelineInstanceObjects, editTimelineObject);
+                openCloseObjectInTimeline(SceneManaging.timelineOpen, timelineInstanceObjects, editTimelineObject);
                 movingOnTimeline = true;        //drag on the timeline
                                                 //clickingTimeline=true;	//may be the same as timelineOpen
             }
@@ -811,7 +851,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
                 if (figureObjects[currentClickedObjectIndex].GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(getMousePos))
                 {
                     //set up some flags
-                    clickingObject = true;  //for clicking
+                    //clickingObject = true;    //for clicking
                     movingObject = true;        //for dragging
 
                     //save default values
@@ -823,29 +863,27 @@ public class timelineOpenCloseV2 : MonoBehaviour
             //or check if you click an object in timeline
             if ((currentClickedInstanceObjectIndex != (-1)) && (editTimelineObject == true))
             {
-                //timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<Button>().onClick.AddListener(() => highlight(timelineInstanceObjects3D[currentClickedInstanceObjectIndex],timelineInstanceObjects[currentClickedInstanceObjectIndex]);
-
                 if (timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(getMousePos))
                 {
                     //set up some flags
-                    clickingObject = true;  //did you click the object
+                    //clickingObject = true;  //did you click the object
                     movingObject = true;        //want to drag the object
                     movingOnTimeline = true;    //access for moving an object on timeline
 
+                    timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).GetComponent<Button>().onClick.AddListener(() => removeObjectFromTimeline(timelineInstanceObjects[currentClickedInstanceObjectIndex], timelineInstanceObjects3D[currentClickedInstanceObjectIndex]));//, currentClickedObjectIndex));
 
-                    timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).GetComponent<Button>().onClick.AddListener(() => removeObjectFromTimeline(timelineInstanceObjects[currentClickedInstanceObjectIndex], timelineInstanceObjects3D[currentClickedInstanceObjectIndex], currentClickedObjectIndex));
                     //highlighting objects and showing delete button when clicked
-                    if (gameObject.name == "ImageTimelineRail1" || gameObject.name == "ImageTimelineRail2" || gameObject.name == "ImageTimelineRail3" || gameObject.name == "ImageTimelineRail4" || gameObject.name == "ImageTimelineRail5" || gameObject.name == "ImageTimelineRail6")
+                    if (gameObject.name != "ImageTimelineRailMusic")
                     {
-                        outline = timelineInstanceObjects3D[currentClickedInstanceObjectIndex].GetComponent<Outline>();
-                        if (highlighted == false)
+                        //outline = timelineInstanceObjects3D[currentClickedInstanceObjectIndex].GetComponent<Outline>();
+                        if (SceneManaging.highlighted == false)
                         {
                             highlight(timelineInstanceObjects3D[currentClickedInstanceObjectIndex], timelineInstanceObjects[currentClickedInstanceObjectIndex]);
-                            Debug.Log("+++++++++++++Highlight now!");
+                            //Debug.Log("+++++++++++++Highlight now!");
                         }
-                        else if (highlighted && outline.enabled)
+                        else if (SceneManaging.highlighted) // && outline.enabled)
                         {
-                            Debug.Log("++++jawoll! Maus: " + Physics2D.OverlapPoint(getMousePos) + ", collider: " + timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).GetComponent<BoxCollider2D>());
+                            //Debug.Log("++++jawoll! Maus: " + Physics2D.OverlapPoint(getMousePos) + ", collider: " + timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).GetComponent<BoxCollider2D>());
                             if (timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(getMousePos))
                             {
 
@@ -857,7 +895,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
                         }
                         else
                         {
-                            Debug.Log("etwas ist gehighlited aber nicht das. ");
+                            //Debug.Log("etwas ist gehighlited aber nicht das. ");
                             for (int i = 0; i < timelineInstanceObjects3D.Count; i++)
                             {
                                 unhighlight(timelineInstanceObjects3D[i], timelineInstanceObjects[i]);
@@ -900,7 +938,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
         }
 
         // if timeline is open and something is being dragged
-        if (draggingOnTimeline && editTimelineObject && SceneManager.timelineOpen)
+        if (draggingOnTimeline && editTimelineObject && SceneManaging.timelineOpen)
         {
             //Debug.Log("+++++++++++++++++++++++++dragging on timeline......");
             //Debug.Log("--->before-if-index: "+currentClickedInstanceObjectIndex);
@@ -913,11 +951,13 @@ public class timelineOpenCloseV2 : MonoBehaviour
 
                 //if you click an object in timeline (for dragging)
 
-                    //Debug.Log("moving timelineInstanceObjects: " + timelineInstanceObjects[currentClickedInstanceObjectIndex].name);
-                    //move object
-                    updateObjectPosition(timelineInstanceObjects[currentClickedInstanceObjectIndex], getMousePos);
-                    //snapping/lock y-axis
-                    setObjectOnTimeline(timelineInstanceObjects[currentClickedInstanceObjectIndex], timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.position.x, this.transform.position.y);
+                //Debug.Log("moving timelineInstanceObjects: " + timelineInstanceObjects[currentClickedInstanceObjectIndex].name);
+                //move object
+                updateObjectPosition(timelineInstanceObjects[currentClickedInstanceObjectIndex], getMousePos);
+                //snapping/lock y-axis
+                setObjectOnTimeline(timelineInstanceObjects[currentClickedInstanceObjectIndex], timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.position.x, this.transform.position.y);
+
+                Debug.Log("Maus: " + getMousePos);
             }
             /*
             // if timeline is hit
@@ -998,17 +1038,17 @@ public class timelineOpenCloseV2 : MonoBehaviour
 
             if (hitTimeline)
             {
-                SceneManager.timelineHit = tmp;
+                SceneManaging.timelineHit = tmp;
                 /*
                 //name of figure/object which hits the timeline
                 nameOfHittedObject=newCopyOfFigure.name;*/
 
                 //open timeline, if its not open
-                //Debug.Log(">>>flag timelineOpen: " + SceneManager.timelineOpen);
+                //Debug.Log(">>>flag timelineOpen: " + SceneManaging.timelineOpen);
                 openCloseTimelineByDrag("open", timelineImage);
 
                 //scale up object/figures in timeline
-                openCloseObjectInTimeline(SceneManager.timelineOpen, timelineInstanceObjects, editTimelineObject);
+                openCloseObjectInTimeline(SceneManaging.timelineOpen, timelineInstanceObjects, editTimelineObject);
                 //and set animation-length
                 //float animationLength = 100.0f;     //length of objects animation
                 float scaleY = 80.0f;             //size if the timeline is maximized
@@ -1034,7 +1074,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
                 }*/
 
                 // change parent back
-                setParent(figureObjects[currentClickedObjectIndex], mainMenue);
+                setParent(figureObjects[currentClickedObjectIndex], gameObject);
 
                 //snapping/lock y-axis
                 //figureObjects[currentClickedObjectIndex].transform.position=new Vector3(figureObjects[currentClickedObjectIndex].transform.position.x, this.transform.position.y,0.0f);
@@ -1067,7 +1107,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
             }
             else
             {
-                if (SceneManager.timelineHit == tmp)
+                if (SceneManaging.timelineHit == tmp)
                 {
                     scaleObject(figureObjects[currentClickedObjectIndex], objectShelfSize[currentClickedObjectIndex].x, objectShelfSize[currentClickedObjectIndex].y);
                     scaleObject(figureObjects[currentClickedObjectIndex].transform.GetChild(0).gameObject, objectShelfSize[currentClickedObjectIndex].x, objectShelfSize[currentClickedObjectIndex].y);
@@ -1075,7 +1115,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
                 //close timeline if you click e.g. in the shelf to get a new figure
                 openCloseTimelineByDrag("close", timelineImage);
                 //scale down also the figures on timeline
-                openCloseObjectInTimeline(SceneManager.timelineOpen, timelineInstanceObjects, editTimelineObject);
+                openCloseObjectInTimeline(SceneManaging.timelineOpen, timelineInstanceObjects, editTimelineObject);
                 // scale up currentFigure
 
                 releaseOnTimeline = false;
@@ -1090,7 +1130,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
             clickingTimeline = false;
             movingOnTimeline = false;
             draggingOnTimeline = false;
-            clickingObject = false;
+            //clickingObject = false;
             movingObject = false;
             draggingObject = false;
             doSomethingOnce = false;
@@ -1236,9 +1276,9 @@ public class timelineOpenCloseV2 : MonoBehaviour
 
         if (gameObject.name == "ImageTimelineRailMusic")
         {
-            if (SceneManager.playing)
+            if (SceneManaging.playing)
             {
-                //Debug.Log("+++++++++++++++++updateMusic: " + SceneManager.updateMusic);
+                //Debug.Log("+++++++++++++++++updateMusic: " + SceneManaging.updateMusic);
                 //Debug.Log("+++++++++++++++++Music is playing");
                 int hitObject = 0;
                 for (int i = 0; i < timelineInstanceObjects.Count; i++)
@@ -1261,7 +1301,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
                         //Debug.Log("++++++++++MUSIC STARTS ++++++ tmpTime: " + audioSource.time + ", current clip: " + currentClip + ", startsec: " + startSec + ", tmpTime: " + tmpTime);
 
                     }
-                    else if (SceneManager.updateMusic)
+                    else if (SceneManaging.updateMusic)
                     {
                         if (AnimationTimer.GetTime() >= startSec && AnimationTimer.GetTime() <= endSec)
                         {

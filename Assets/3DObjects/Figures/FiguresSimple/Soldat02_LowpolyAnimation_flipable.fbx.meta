@@ -6,7 +6,27 @@ ModelImporter:
   - first:
       74: 5138602965388526686
     second: Armature.002|Armature.002Action
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: mat_Faden.001
+    second: {fileID: 2100000, guid: 4af96b806a8c02e4e9e53ec8b1ac7b17, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: mat_Soldat02
+    second: {fileID: 2100000, guid: 886c6e4c759413f47b274062e395c694, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: mat_Soldat02_Fahrwerk
+    second: {fileID: 2100000, guid: 616221985120549449d4cf732ce295b8, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: messing
+    second: {fileID: 2100000, guid: a98dba4035138ef4bbdf9a73911cabae, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

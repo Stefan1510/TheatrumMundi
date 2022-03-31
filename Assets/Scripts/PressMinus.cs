@@ -6,7 +6,7 @@ public class PressMinus : MonoBehaviour
 {
     public void OnClick()
     {
-        DragDrop dragdrop = SceneManager.dragDrop;
+        DragDrop dragdrop = SceneManaging.dragDrop;
         
         if (dragdrop == null)
         {
