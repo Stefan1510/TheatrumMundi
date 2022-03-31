@@ -11,17 +11,17 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: mat_Fahrwerk
-    second: {fileID: 2100000, guid: e3efb868a80eb6640a7499f9c9cfd9ed, type: 2}
+    second: {fileID: 2100000, guid: 2424ff797b8046d4b815f26e0188189f, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: mat_Sklaven01
-    second: {fileID: 2100000, guid: dedbd2d89a3389c4c95cbd9686ed205b, type: 2}
+    second: {fileID: 2100000, guid: 957e1092aab1c6d4d8bafdcb99854487, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: messing
-    second: {fileID: 2100000, guid: 07cf4bce89074a6418c8c1e99786965c, type: 2}
+    second: {fileID: 2100000, guid: 717508a535b9a184cbd7acf8653c0c65, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

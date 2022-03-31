@@ -5,20 +5,15 @@ ModelImporter:
   internalIDToNameTable: []
   externalObjects:
   - first:
-      type: UnityEngine:Texture2D
+      type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Schiff04_Fahrwerk_col
-    second: {fileID: 2800000, guid: ccb4b4169e7b8e648bd1c94a25d225c1, type: 3}
+      name: Material.001
+    second: {fileID: 2100000, guid: 3bca924cf6ca0c94e8fb0649ac1a0350, type: 2}
   - first:
-      type: UnityEngine:Texture2D
+      type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Schiff04_Fahrwerk_specrough
-    second: {fileID: 2800000, guid: f9b3ee68b991e64459b2406382286f4d, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Schiff04_col
-    second: {fileID: 2800000, guid: 81a27f53e8b9ebd41b7846518369ad2b, type: 3}
+      name: mat_Fahrwerk
+    second: {fileID: 2100000, guid: db3d94bdb51f6ff4b93ef67a1ec33fbf, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

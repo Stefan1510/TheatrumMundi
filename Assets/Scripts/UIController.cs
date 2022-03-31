@@ -8,6 +8,7 @@ public class UIController : MonoBehaviour
     public GameObject[] goCollection = null;
     public GameObject[] goButtonSceneryElements;
     private objectsLightElement[] objectsLightElements;
+    public timelineOpenCloseV2[] Rails;
 
 
     //// Start is called before the first frame update

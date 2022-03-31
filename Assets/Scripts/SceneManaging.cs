@@ -12,10 +12,11 @@ public static class SceneManaging
     public static bool showSettings = new bool();
 
     public static int statusReiter = new int();
-    public static bool timelineOpen;				//timeline open/close
+    public static bool anyTimelineOpen;				//timeline open/close
     public static bool playing;
     public static bool updateMusic;
     public static int timelineHit;
     public static bool highlighted = false;                 //global variable since only one object can be highlighted - everything else is unhighlighted
+
 
 }

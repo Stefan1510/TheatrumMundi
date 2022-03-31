@@ -11,22 +11,22 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Material
-    second: {fileID: 2100000, guid: 2f1a0f02a104a614fbdf41a87ba4e9ad, type: 2}
+    second: {fileID: 2100000, guid: e077c0a4a9181ca41bbe15815636e835, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: mat_Sklaven_02
-    second: {fileID: 2100000, guid: e5f87675d775a9f4ea324c213947489e, type: 2}
+    second: {fileID: 2100000, guid: f1bb579680ed0b540be037d2da3cc2e1, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: messing
-    second: {fileID: 2100000, guid: 1fe7374ce308ee642b1385f69c5e2a05, type: 2}
+    second: {fileID: 2100000, guid: 717508a535b9a184cbd7acf8653c0c65, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: wood_light_proc
-    second: {fileID: 2100000, guid: f4e599b0d2d6b2448b012385d6503c0b, type: 2}
+    second: {fileID: 2100000, guid: 36f6f35cc35d72e4c9fe53432eb1f75d, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
