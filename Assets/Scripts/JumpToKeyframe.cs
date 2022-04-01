@@ -11,8 +11,8 @@ public class JumpToKeyframe : MonoBehaviour
     void Start()
     {
         keyFrames = new List<float>();
-        ChangeSelection(1);
-        ChangeRailSelection(0);
+        ChangeSelection(1);         //0 - railspeed; 1 - light; 2 - music; 3 - background
+        ChangeRailSelection(0);     //der index der Rails in der Rail-Liste
     }
 
     //// Update is called once per frame
