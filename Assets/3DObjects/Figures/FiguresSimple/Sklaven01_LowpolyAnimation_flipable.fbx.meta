@@ -16,7 +16,7 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: mat_Sklaven01
-    second: {fileID: 2100000, guid: 957e1092aab1c6d4d8bafdcb99854487, type: 2}
+    second: {fileID: 2100000, guid: c25c0a3ad49e96840a6fccc938f12d8d, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule

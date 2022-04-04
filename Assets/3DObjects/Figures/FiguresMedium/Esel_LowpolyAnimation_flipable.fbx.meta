@@ -12,7 +12,32 @@ ModelImporter:
   - first:
       74: -236022367644965580
     second: Armature|Idle (1)
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: faden_dick
+    second: {fileID: 2100000, guid: b57b5a77c3ca6a7439a9ae0fbfa99d6d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: mat_Faden
+    second: {fileID: 2100000, guid: a0fb348f22feebe46ba974a073c235f5, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: mat_Fahrwerk
+    second: {fileID: 2100000, guid: ee46f9748caa8334fb1a11f004149a50, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: mat_Figur
+    second: {fileID: 2100000, guid: 92248485bb095d949bed8f13120e86c9, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: messing
+    second: {fileID: 2100000, guid: eac8dedbfbac5eb42bbf97659cc94ccb, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

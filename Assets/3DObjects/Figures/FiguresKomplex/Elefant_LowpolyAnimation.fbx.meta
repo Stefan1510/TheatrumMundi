@@ -21,14 +21,12 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: mat_Fahrwerk_Elefant
-    second: {fileID: 3737444638866073025, guid: cb196e775caeeb44886613c5121bec46,
-      type: 3}
+    second: {fileID: 2100000, guid: 2f30394ee0108684fb3c06217966145c, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: messing
-    second: {fileID: 1512424364927536053, guid: 6c9349c8ca1dc464f9afffbe2ceefcdf,
-      type: 3}
+    second: {fileID: 2100000, guid: a439843d1d39775479341d9de8c2a1f5, type: 2}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
