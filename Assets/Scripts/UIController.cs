@@ -10,11 +10,12 @@ public class UIController : MonoBehaviour
     public GameObject[] goButtonFigureObjects;
     private objectsLightElement[] objectsLightElements;
     public timelineOpenCloseV2[] Rails;
-    
 
+    public RailLightManager RailLight;
+    public timelineOpenCloseV2 RailMusic;
 
-    //// Start is called before the first frame update
-    void Start()
+        //// Start is called before the first frame update
+        void Start()
     {
         objectsLightElements = GetComponent<SceneDataController>().objectsLightElements;
     }
@@ -29,7 +30,7 @@ public class UIController : MonoBehaviour
     {
         //string buttonName;
         //GameObject goButtonScenery;
-        
+
         goMenueKulissen.SetActive(true);
         foreach (SceneryElement se in StaticSceneData.StaticData.sceneryElements)
         {
@@ -45,7 +46,7 @@ public class UIController : MonoBehaviour
                         buttonSe.GetComponent<DragDrop>().schieneKulisse = se.railnumber;
                         SceneManaging.statusReiter = se.railnumber;
                     }
-                    else 
+                    else
                     {
                         buttonSe.transform.SetParent(buttonSe.GetComponent<DragDrop>().parentStart.transform);
                         buttonSe.GetComponent<RectTransform>().anchoredPosition = buttonSe.GetComponent<DragDrop>().pos;

@@ -29,7 +29,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
     bool releaseOnTimeline;         //flag if you set an object on timeline
     bool playingMusic;
     bool isInstance;
-    bool isTimelineOpen;
+    public bool isTimelineOpen;
     Vector2 releaseObjMousePos;
     double minX;
     double maxX;
@@ -49,7 +49,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
     //Vector2 objectDefaultSize;
     Vector2 objectSceneSize;
 
-    //public GameObject objectLibrary;
+    public GameObject objectLibrary;
     public GameObject parentMenue; // mainMenue
     GameObject timeSettings;
     GameObject[] figCounterCircle;
@@ -64,8 +64,6 @@ public class timelineOpenCloseV2 : MonoBehaviour
     public List<GameObject> timelineInstanceObjects;
     public List<GameObject> timelineObjects3D;
     public List<GameObject> timelineInstanceObjects3D;
-
-    //public GameObject gameController;
     private FigureElement ThisFigureElement;    //element to set 3d object
 
     double fig1StartPos;
@@ -115,17 +113,17 @@ public class timelineOpenCloseV2 : MonoBehaviour
 
         //load all objects given in the figuresShelf
         //Debug.Log("objectscount: "+objectLibrary.transform.childCount);
-        figureObjects = new GameObject[gameController.GetComponent<UIController>().goButtonFigureObjects.Length];         //instead of a count like "3"
+        figureObjects = new GameObject[objectLibrary.transform.childCount];         //instead of a count like "3"
         figureObjects3D = new GameObject[figureObjects.Length];     //instead of a count like "3"
         objectShelfPosition = new Vector2[figureObjects.Length];
         objectShelfSize = new Vector2[figureObjects.Length];
         objectShelfParent = new GameObject[figureObjects.Length];
         figCounterCircle = new GameObject[figureObjects.Length];
 
-        for (int i = 0; i < gameController.GetComponent<UIController>().goButtonFigureObjects.Length; i++)
+        for (int i = 0; i < objectLibrary.transform.childCount; i++)
         {
             //collect objects
-            figureObjects[i] = (gameController.GetComponent<UIController>().goButtonFigureObjects[i].transform.GetChild(1).gameObject);
+            figureObjects[i] = (objectLibrary.transform.GetChild(i).transform.GetChild(1).gameObject);
             //Debug.Log("one figure: "+figureObjects[0]);					//returns the empty
             //Debug.Log("one figure: "+figureObjects[0].GetChild(1));		//returns the childs of this empty e.g. the button
 
@@ -190,6 +188,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
 
     void Start()
     {
+        scaleObject(gameObject, 1335, 15);//openCloseTimelineByClick(true,timelineImage,false);
         audioSource = GetComponent<AudioSource>();
         timeSettings.SetActive(false);
         //outline.enabled = false;
@@ -353,6 +352,17 @@ public class timelineOpenCloseV2 : MonoBehaviour
             //timelineText.rectTransform.localScale = new Vector3(1,0.2f,1);
             //minimize or maximize objects on timeline
             openCloseObjectInTimeline(true, timelineInstanceObjects, editTimelineObject);
+            if (gameObject.name == "ImageTimelineRailMusic")
+            {
+                ImageTimelineSelection.SetRailNumber(6);
+                ImageTimelineSelection.SetRailType(2);  // for rail-rails
+            }
+            else
+            {
+                ImageTimelineSelection.SetRailNumber((int)Char.GetNumericValue(timelineImage.name[17]) - 1);
+                ImageTimelineSelection.SetRailType(0);  // for rail-rails
+            }
+
         }
         else if (isAnyTimelineOpen() && editObjOnTl == false)
         {
@@ -382,6 +392,12 @@ public class timelineOpenCloseV2 : MonoBehaviour
                     openCloseObjectInTimeline(false, gameController.GetComponent<UIController>().Rails[i].timelineInstanceObjects, editTimelineObject);
                     Debug.Log("++++ Scaling down Rail: " + gameController.GetComponent<UIController>().Rails[i]);
                 }
+                gameController.GetComponent<UIController>().RailLight.GetComponent<RectTransform>().sizeDelta = new Vector2(tl.rectTransform.rect.width, heightClosed);
+                gameController.GetComponent<UIController>().RailLight.GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightClosed);
+                gameController.GetComponent<UIController>().RailLight.isTimelineOpen = false;
+                gameController.GetComponent<UIController>().RailMusic.GetComponent<RectTransform>().sizeDelta = new Vector2(tl.rectTransform.rect.width, heightClosed);
+                gameController.GetComponent<UIController>().RailMusic.GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightClosed);
+                gameController.GetComponent<UIController>().RailMusic.isTimelineOpen = false;
                 // open clicked rail
                 Debug.Log("++++ geklickte Schiene wird geöffnet: " + tl);
                 //scale up timeline
@@ -390,6 +406,16 @@ public class timelineOpenCloseV2 : MonoBehaviour
                 tl.GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightOpened);
                 openCloseObjectInTimeline(true, timelineInstanceObjects, editTimelineObject);
                 isTimelineOpen = true;
+                if (gameObject.name == "ImageTimelineRailMusic")
+                {
+                    ImageTimelineSelection.SetRailNumber(6);
+                    ImageTimelineSelection.SetRailType(2);  // for rail-rails
+                }
+                else
+                {
+                    ImageTimelineSelection.SetRailNumber((int)Char.GetNumericValue(timelineImage.name[17]) - 1);
+                    ImageTimelineSelection.SetRailType(0);  // for rail-rails
+                }
             }
 
         }
@@ -412,7 +438,18 @@ public class timelineOpenCloseV2 : MonoBehaviour
             //scale down the text
             tl.transform.GetChild(0).gameObject.GetComponent<Text>().rectTransform.localScale = new Vector3(1, 0.2f, 1);
             //timelineText.rectTransform.localScale = new Vector3(1,0.2f,1);
-            //scale down all objects on timeline
+            //scale up all objects on timeline
+            openCloseObjectInTimeline(isTimelineOpen, timelineInstanceObjects, editTimelineObject);
+            if (gameObject.name == "ImageTimelineRailMusic")
+            {
+                ImageTimelineSelection.SetRailNumber(6);
+                ImageTimelineSelection.SetRailType(2);  // for rail-rails
+            }
+            else
+            {
+                ImageTimelineSelection.SetRailNumber((int)Char.GetNumericValue(timelineImage.name[17]) - 1);
+                ImageTimelineSelection.SetRailType(0);  // for rail-rails
+            }
         }
         else
         {
@@ -426,6 +463,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
             //scale up the text
             tl.transform.GetChild(0).gameObject.GetComponent<Text>().rectTransform.localScale = new Vector3(1, 1, 1);
             //scale up all objects on timeline
+            openCloseObjectInTimeline(isTimelineOpen, timelineInstanceObjects, editTimelineObject);
         }
         openCloseTimeSettings(isAnyTimelineOpen(), timeSettings);
     }
@@ -440,6 +478,8 @@ public class timelineOpenCloseV2 : MonoBehaviour
                 val = true;
             }
         }
+        if (gameController.GetComponent<UIController>().RailMusic.isTimelineOpen == true) val = true;
+        if (gameController.GetComponent<UIController>().RailLight.isTimelineOpen == true) val = true;
         return val;
     }
 
@@ -844,7 +884,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log("draggingOnTimeline: "+draggingOnTimeline+", editTimelineObj: "+ editTimelineObject+", draggingObj: " +draggingObject +", isInstance: "+ isInstance);
+        //Debug.Log("draggingOnTimeline: " + draggingOnTimeline + ", editTimelineObj: " + editTimelineObject + ", draggingObj: " + draggingObject + ", isInstance: " + isInstance);
         Vector2 getMousePos = Input.mousePosition;
 
         if (Input.GetMouseButtonDown(0)) //left mouse button down
@@ -1031,7 +1071,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
                 //scale up the dragged figure (and childobject: image)
                 scaleObject(timelineInstanceObjects[currentClickedInstanceObjectIndex], 150, 150);
                 timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(0).gameObject.SetActive(false);
-                scaleObject(timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).gameObject,150,150);
+                scaleObject(timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).gameObject, 150, 150);
                 //snapping disable
                 updateObjectPosition(timelineInstanceObjects[currentClickedInstanceObjectIndex], getMousePos);
             }
@@ -1070,7 +1110,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
         }
 
         // dragging an object from shelf to timeline
-        if (draggingObject && editTimelineObject == false && isInstance==false)
+        if (draggingObject && editTimelineObject == false && isInstance == false)
         {
             Debug.Log("dragging a shelf-selected object on timeline.");
             //move object
