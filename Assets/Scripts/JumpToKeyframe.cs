@@ -11,15 +11,19 @@ public class JumpToKeyframe : MonoBehaviour
     void Start()
     {
         keyFrames = new List<float>();
-        ChangeSelection(1);         //0 - railspeed; 1 - light; 2 - music; 3 - background
-        ChangeRailSelection(0);     //der index der Rails in der Rail-Liste
+        ChangeSelection(ImageTimelineSelection.GetRailType());         //0 - railspeed; 1 - light; 2 - music; 3 - background
+        ChangeRailSelection(ImageTimelineSelection.GetRailNumber());     //der index der Rails in der Rail-Liste
     }
 
-    //// Update is called once per frame
-    //void Update()
-    //{
-        
-    //}
+    // Update is called once per frame
+    void Update()
+    {
+        if (ImageTimelineSelection.UpdateNecessary())
+        {
+            ChangeSelection(ImageTimelineSelection.GetRailType());
+            ChangeRailSelection(ImageTimelineSelection.GetRailNumber());
+        }
+    }
 
     public void ChangeSelection(int selectSelection)
     {

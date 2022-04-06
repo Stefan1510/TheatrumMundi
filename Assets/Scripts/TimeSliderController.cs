@@ -16,6 +16,7 @@ public class TimeSliderController : MonoBehaviour
     [SerializeField] private GameObject _panelLightControls;
 
     [SerializeField] private Slider sliderTestTestTestSlider;
+    [SerializeField] private Slider sliderTestTestTestSlider2;
 
     private Slider _thisSlider;
     // Start is called before the first frame update
@@ -31,6 +32,7 @@ public class TimeSliderController : MonoBehaviour
         ChangeControlsFromTimelineSelection();
 
         sliderTestTestTestSlider.onValueChanged.AddListener((float testTestTest) => TestTestTestTest(testTestTest));
+        sliderTestTestTestSlider2.onValueChanged.AddListener((float testTestTest) => TestTestTestTest2(testTestTest));
 
     }
 
@@ -38,6 +40,11 @@ public class TimeSliderController : MonoBehaviour
     {
         int selection = (int)testTestTest;
         ImageTimelineSelection.SetRailType(selection);
+    }
+    void TestTestTestTest2(float testTestTest)
+    {
+        int selection = (int)testTestTest;
+        ImageTimelineSelection.SetRailNumber(selection);
     }
 
 
@@ -61,7 +68,7 @@ public class TimeSliderController : MonoBehaviour
     void SwitchKeyConfigControls(bool value)
     {
         _panelControls.SetActive(value);
-        Debug.LogWarning("_toggleKeyConfigControlls " + value);
+        //Debug.LogWarning("_toggleKeyConfigControlls " + value);
     }
 
     void ChangeControlsFromTimelineSelection()

@@ -5,7 +5,7 @@ using UnityEngine;
 public static class ImageTimelineSelection
 {
     private static int _tlRailType = 0;     //0 - railspeed; 1 - light; 2 - music; 3 - background
-    private static int _tlRailNumber = 0;   //der index der Rails in der Rail-Liste
+    private static int _tlRailNumber = 3;   //der index der Rails in der Rail-Liste
     private static bool _updateNecessary = false;
 
     public static int GetRailType()

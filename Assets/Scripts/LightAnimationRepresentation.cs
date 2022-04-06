@@ -16,6 +16,13 @@ public class LightAnimationRepresentation : MonoBehaviour
     private float _maxTime;
     private float _maxIntensity;
     private bool _gameObjectStarted = false;
+
+
+    private void Awake()
+    {
+        _maxIntensity = _sliderIntensity.maxValue;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -23,7 +30,6 @@ public class LightAnimationRepresentation : MonoBehaviour
         //_maxTime = (int)_sliderTime.maxValue;
         //_maxTime = 10 * 60 + 10;
         _maxTime = AnimationTimer.GetMaxTime();
-        _maxIntensity = _sliderIntensity.maxValue;
         Debug.Log(_maxTime);
         _textureLightRepresentation = new Texture2D((int)_maxTime * 10, (int)_maxTime * 1, TextureFormat.RGBA32, false); // wird durch Panel RectTransform stretch automatisch gescaled
         //_textureLightRepresentation.filterMode = FilterMode.Trilinear;
@@ -36,7 +42,7 @@ public class LightAnimationRepresentation : MonoBehaviour
 
     private void OnEnable()
     {
-        if(_gameObjectStarted)
+        if (_gameObjectStarted)
         {
             ChangeImage();
         }

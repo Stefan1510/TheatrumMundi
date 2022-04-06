@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class SetLightColors : MonoBehaviour
 {
-    public GameObject[] ObjectsLights;
+    public GameObject GameController;
     public Slider SliderIntensity;
     private objectsLightElement[] objectsLight;
     private int _savedButtonColor;
@@ -18,7 +18,8 @@ public class SetLightColors : MonoBehaviour
     // Start is called before the first frame update
     private void Awake()
     {
-        objectsLight = GameObject.Find("GameController").GetComponent<SceneDataController>().objectsLightElements;
+        //objectsLight = GameObject.Find("GameController").GetComponent<SceneDataController>().objectsLightElements;
+        objectsLight = GameController.GetComponent<SceneDataController>().objectsLightElements;
     }
 
     void Start()
