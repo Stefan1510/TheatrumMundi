@@ -136,11 +136,12 @@ public class SetLightColors : MonoBehaviour
     {
         _time = AnimationTimer.GetTime();
 
+        ChangeLightColor();
 
-        if (AnimationTimer.GetTimerState() == AnimationTimer.TimerState.playing)
-        {
-            ChangeLightColor();
-        }
+        //if (AnimationTimer.GetTimerState() == AnimationTimer.TimerState.playing)
+        //{
+        //    ChangeLightColor();
+        //}
         //else if()
         //{
 
