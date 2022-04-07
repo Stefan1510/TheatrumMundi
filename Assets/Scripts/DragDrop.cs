@@ -16,12 +16,13 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
     private CanvasGroup canvasGroup;
     [HideInInspector] public Vector2 pos;
     public SceneryElement ThisSceneryElement;
+    public float CoulisseWidth;
 
     [HideInInspector] public GameObject parentStart;
     [HideInInspector] GameObject[] collection = new GameObject[8];
     [HideInInspector] GameObject[] reiterActive = new GameObject[8];
     [HideInInspector] public GameObject scenerysettings;
-    [HideInInspector] public GameObject gameController; // neue Zeile von Kris fÜr den SceneryController
+    [HideInInspector] public GameObject gameController; 
 
     //[HideInInspector] public int statusReiter;
     [HideInInspector] public int schieneKulisse;
@@ -93,6 +94,9 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
         canvasGroup.blocksRaycasts = false;
         gameObject.transform.SetParent(scenerysettings.transform);
         GetComponent<Image>().color = new Color(.5f, 1f, 0.3f, 1f);
+        Debug.Log("Schiene Width: "+schieneBild.GetComponent<RectTransform>().rect.width+", Kulisse Width: "+gameObject.GetComponent<RectTransform>().rect.width+", kulisse soll width: "+schieneBild.GetComponent<RectTransform>().rect.width/410*CoulisseWidth); 
+        float valueScale = schieneBild.GetComponent<RectTransform>().rect.width/410*CoulisseWidth/gameObject.GetComponent<RectTransform>().rect.width;
+        rectTransform.localScale = new Vector2(valueScale,valueScale);
     }
 
     public void OnDrag(PointerEventData eventData)
