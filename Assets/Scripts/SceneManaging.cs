@@ -18,5 +18,5 @@ public static class SceneManaging
     public static int timelineHit;
     public static bool highlighted = false;                 //global variable since only one object can be highlighted - everything else is unhighlighted
 
-
+    public static int objectsTimeline;
 }
