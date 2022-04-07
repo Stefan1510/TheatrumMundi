@@ -65,7 +65,7 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
                                         // alles auf false setzt und die weiteren Reiter nicht mehr gefunden werden! 
                                         // also erst Awake fuer alle und dann aktiven Reiter setzen
         ThisSceneryElement = StaticSceneData.StaticData.sceneryElements.Find(x => x.name == gameObject.name.Substring(6));
-        Debug.Log("DRAGDROP++++++++++++++++++++pos: "+pos);
+        //Debug.Log("DRAGDROP++++++++++++++++++++pos: "+pos);
     }
 
 
@@ -100,7 +100,7 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
         rectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
         // durch Skalierung d. Canvas teilen, sonst Bewegung d. Objekts nicht gleich der Mausbewegung
 
-        Debug.Log("Status Reiter: "+SceneManaging.statusReiter+ ", this.Schiene: "+this.schieneKulisse+"schieneActive: "+GetComponent<TriggerSchiene>().schieneActive);
+        //Debug.Log("Status Reiter: "+SceneManaging.statusReiter+ ", this.Schiene: "+this.schieneKulisse+"schieneActive: "+GetComponent<TriggerSchiene>().schieneActive);
 
         if (SceneManaging.triggerActive != 0 && this.schieneKulisse != SceneManaging.triggerActive)
         {

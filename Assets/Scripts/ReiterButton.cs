@@ -63,7 +63,7 @@ public class ReiterButton : MonoBehaviour
     public void OnPointerEnter()
     {
         //SceneManaging.mouse_over = true;
-        //Debug.Log("entering "+gameObject);
+        Debug.Log("entering "+gameObject);
         if (gameObject.name == "Reiter1") SceneManaging.triggerActive = 1;
         else if (gameObject.name == "Reiter2") SceneManaging.triggerActive = 2;
         else if (gameObject.name == "Reiter3") SceneManaging.triggerActive = 3;

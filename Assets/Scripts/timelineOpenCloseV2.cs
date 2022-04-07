@@ -1327,6 +1327,15 @@ public class timelineOpenCloseV2 : MonoBehaviour
                 }
                 //close timeline if you click e.g. in the shelf to get a new figure
                 openCloseTimelineByDrag("close", timelineImage);
+                /*for(int i = 0; i<gameController.GetComponent<UIController>().Rails.Length ; i++)
+                {
+                    if(gameController.GetComponent<UIController>().Rails[i].isTimelineOpen)
+                    {
+                        openCloseTimelineByDrag("close", gameController.GetComponent<UIController>().Rails[i].GetComponent<Image>());
+                    } 
+                }
+                if(gameController.GetComponent<UIController>().RailMusic.isTimelineOpen) openCloseTimelineByDrag("close", gameController.GetComponent<UIController>().RailMusic.GetComponent<Image>());
+                if(gameController.GetComponent<UIController>().RailLight.isTimelineOpen) openCloseTimelineByDrag("close", gameController.GetComponent<UIController>().RailLight.GetComponent<Image>());*/
                 //scale down also the figures on timeline
                 openCloseObjectInTimeline(false, timelineInstanceObjects, editTimelineObject);
                 // scale up currentFigure
