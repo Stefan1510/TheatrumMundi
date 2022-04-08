@@ -16,7 +16,7 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
     private CanvasGroup canvasGroup;
     [HideInInspector] public Vector2 pos;
     public SceneryElement ThisSceneryElement;
-    public float CoulisseWidth;
+    public float CoulisseWidth = 100;
 
     [HideInInspector] public GameObject parentStart;
     [HideInInspector] GameObject[] collection = new GameObject[8];

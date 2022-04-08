@@ -32,30 +32,44 @@ public class ObjectShelf : MonoBehaviour
 	void Start()
     {
         //Debug.Log("testprint");
-		//define the buttons
-		//Debug.Log("this is the main menue");
-		//mytext.text="this is text";
+        //define the buttons
+        //Debug.Log("this is the main menue");
+        //mytext.text="this is text";
 
-		// MenueShelf01.SetActive(true);
-		// MenueShelf02.SetActive(false);
-		// MenueShelf03.SetActive(false);
-		// MenueShelf04.SetActive(false);
-		
-		// LiveView.SetActive(true);
-		
-		// HeadlineShelf01.gameObject.SetActive(true);
-		// HeadlineShelf02.gameObject.SetActive(false);
-		// HeadlineShelf03.gameObject.SetActive(false);
-		// HeadlineShelf04.gameObject.SetActive(false);
+        // MenueShelf01.SetActive(true);
+        // MenueShelf02.SetActive(false);
+        // MenueShelf03.SetActive(false);
+        // MenueShelf04.SetActive(false);
 
-		// MenueButton01.SetActive(false);
-		// MenueButton02.SetActive(true);
-		// MenueButton03.SetActive(true);
-		// MenueButton04.SetActive(true);
-		ButtonShelf01();
+        // LiveView.SetActive(true);
+
+        // HeadlineShelf01.gameObject.SetActive(true);
+        // HeadlineShelf02.gameObject.SetActive(false);
+        // HeadlineShelf03.gameObject.SetActive(false);
+        // HeadlineShelf04.gameObject.SetActive(false);
+
+        // MenueButton01.SetActive(false);
+        // MenueButton02.SetActive(true);
+        // MenueButton03.SetActive(true);
+        // MenueButton04.SetActive(true);
+        MenueShelf01.SetActive(true);
+        MenueShelf02.SetActive(false);
+        MenueShelf03.SetActive(false);
+        try
+        {
+            MenueShelf04.SetActive(false);
+        }
+        catch (Exception ex)
+        {
+            if (ex is NullReferenceException || ex is UnassignedReferenceException)
+            {
+                return;
+            }
+            throw;
+        }
     }
-	
-	public void ButtonShelf01()
+
+    public void ButtonShelf01()
 	{
 		Debug.Log("button for shelf01");
 		//show menue of buehne

@@ -21,6 +21,7 @@ public class LightController : MonoBehaviour
     private Color[] _lbCookieColors;
     private int _lbCookieWidth;
     private int _lbCookieHeight;
+    private int _lbCookieAttenuation;
     private Color[] _lbColors_on;
     private Color[] _lbColors_off;
     private Color[] _lbColors_smooth;
@@ -44,12 +45,13 @@ public class LightController : MonoBehaviour
         _startYAngle = transform.localEulerAngles.y;
         _startHeight = transform.localPosition.y;
         _lbCookieOriginal = (Texture2D)GetComponent<Light>().cookie;
-        _lbCookieWidth = _lbCookieOriginal.width;
-        _lbCookieHeight = _lbCookieOriginal.height;
-        _lbCookie = _lbCookieOriginal;
-        _lbCookie = new Texture2D(_lbCookieOriginal.width, _lbCookieOriginal.height);
+        _lbCookieWidth = 1024;
+        _lbCookieHeight = 1024;
+        _lbCookieAttenuation = 128;
+        //_lbCookie = _lbCookieOriginal;
+        _lbCookie = new Texture2D(_lbCookieWidth, _lbCookieHeight);
         _lbCookie.wrapModeU = TextureWrapMode.Clamp;
-        _lbCookie.SetPixels(_lbCookieOriginal.GetPixels());
+        _lbCookie.SetPixels(_lbCookie.GetPixels());
         _lbCookieColors = new Color[_lbCookieWidth * _lbCookieHeight];
         _lbColors_on = new Color[_lbCookieWidth * _lbCookieHeight];
         _lbColors_off = new Color[_lbCookieWidth * _lbCookieHeight];
@@ -151,7 +153,7 @@ public class LightController : MonoBehaviour
     public void ChangeHorizontal(int HorizontalValue)
     {
         //Debug.Log("PING ChangeHorizontal");
-        int attenuation = 256;
+        int attenuation = _lbCookieAttenuation;
         HorizontalValue = _lbCookieWidth / 2 - HorizontalValue; //wie weit geht das Licht zu, hier noch auf beiden Seiten
         _lbAngleHorizontal = Mathf.Max(1, (int)(HorizontalValue) - attenuation);
         ChangeCookie();
@@ -162,7 +164,7 @@ public class LightController : MonoBehaviour
 
     public void ChangeVertical(int VerticalValue)
     {
-        int attenuation = 256;
+        int attenuation = _lbCookieAttenuation;
         VerticalValue = _lbCookieWidth / 2 - VerticalValue; //wie weit geht das Licht zu, hier noch auf beiden Seiten
         _lbAngleVertical = Mathf.Max(1, (int)(VerticalValue) - attenuation);
         ChangeCookie();
@@ -173,7 +175,7 @@ public class LightController : MonoBehaviour
 
     public void ChangeVerticalLeft(int VerticalValue)
     {
-        int attenuation = 256;
+        int attenuation = _lbCookieAttenuation;
         VerticalValue = _lbCookieWidth / 2 - VerticalValue; //wie weit geht das Licht zu, hier noch auf beiden Seiten
         _lbAngleVertical = Mathf.Max(1, (int)(VerticalValue) - attenuation);
         ChangeCookie();
@@ -188,7 +190,7 @@ public class LightController : MonoBehaviour
     {
 
         float grayScale = 0.0f;
-        int attenuation = 256;
+        int attenuation = _lbCookieAttenuation;
         _lbCookie.SetPixels(0, 0, _lbCookieWidth, _lbCookieHeight, _lbColors_on);
 
         _lbCookie.SetPixels(0, 0, 1, _lbCookieHeight, _lbColors_off);
