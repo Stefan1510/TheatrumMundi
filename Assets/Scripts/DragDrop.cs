@@ -16,36 +16,22 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
     private CanvasGroup canvasGroup;
     [HideInInspector] public Vector2 pos;
     public SceneryElement ThisSceneryElement;
-    public float CoulisseWidth = 100;
+    public float CoulisseWidth;
+    public float CoulisseHeight;
 
     [HideInInspector] public GameObject parentStart;
-    [HideInInspector] GameObject[] collection = new GameObject[8];
-    [HideInInspector] GameObject[] reiterActive = new GameObject[8];
+    public GameObject silhouette;
     [HideInInspector] public GameObject scenerysettings;
-    [HideInInspector] public GameObject gameController; 
+    public GameObject gameController;
 
     //[HideInInspector] public int statusReiter;
     [HideInInspector] public int schieneKulisse;
+    [HideInInspector] public float shelfSizeWidth, shelfSizeHeight;
+    [HideInInspector] public bool isWide;
+    private bool highlighted;
 
     private void Awake()
     {
-        gameController = GameObject.Find("GameController"); // neue Zeile von Kris fuer den SceneryController
-        reiterActive[0] = GameObject.Find("Reiter1Active");
-        reiterActive[1] = GameObject.Find("Reiter2Active");
-        reiterActive[2] = GameObject.Find("Reiter3Active");
-        reiterActive[3] = GameObject.Find("Reiter4Active");
-        reiterActive[4] = GameObject.Find("Reiter5Active");
-        reiterActive[5] = GameObject.Find("Reiter6Active");
-        reiterActive[6] = GameObject.Find("Reiter7Active");
-        reiterActive[7] = GameObject.Find("Reiter8Active");
-        collection[0] = GameObject.Find("Collection1");
-        collection[1] = GameObject.Find("Collection2");
-        collection[2] = GameObject.Find("Collection3");
-        collection[3] = GameObject.Find("Collection4");
-        collection[4] = GameObject.Find("Collection5");
-        collection[5] = GameObject.Find("Collection6");
-        collection[6] = GameObject.Find("Collection7");
-        collection[7] = GameObject.Find("Collection8");
         scenerysettings = GameObject.Find("MenueConfigMain");
         rectTransform = GetComponent<RectTransform>();
         canvasGroup = GetComponent<CanvasGroup>();
@@ -56,6 +42,7 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
 
         SceneManaging.dragDrop = this; // hier wird dem dragDrop-Objekt im SceneManager die aktuelle Kulisse uebergeben!
         menuExtra.SetActive(false);
+        transform.GetChild(1).gameObject.SetActive(false);
 
         parentStart = gameObject.transform.parent.gameObject;
     }
@@ -63,23 +50,66 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
     public void Start()
     {
         setReiterActive(SceneManaging.statusReiter);  // die funktion darf erst nach Awake ausgefuehrt werden, weil sonst die erste Schleife 
-                                        // alles auf false setzt und die weiteren Reiter nicht mehr gefunden werden! 
-                                        // also erst Awake fuer alle und dann aktiven Reiter setzen
+                                                      // alles auf false setzt und die weiteren Reiter nicht mehr gefunden werden! 
+                                                      // also erst Awake fuer alle und dann aktiven Reiter setzen
         ThisSceneryElement = StaticSceneData.StaticData.sceneryElements.Find(x => x.name == gameObject.name.Substring(6));
-        //Debug.Log("DRAGDROP++++++++++++++++++++pos: "+pos);
+
+        if (CoulisseWidth < CoulisseHeight)
+        {
+            isWide = false;
+            shelfSizeWidth = 200 / CoulisseHeight * CoulisseWidth;
+            rectTransform.sizeDelta = new Vector2(200 / CoulisseHeight * CoulisseWidth, 200);
+            silhouette.GetComponent<RectTransform>().sizeDelta = new Vector2(shelfSizeWidth, 200);
+            gameObject.GetComponent<BoxCollider2D>().size = new Vector2(shelfSizeWidth, 200);
+        }
+        else
+        {
+            isWide = true;
+            shelfSizeHeight = 200 / CoulisseWidth * CoulisseHeight;
+            rectTransform.sizeDelta = new Vector2(200, 200 / CoulisseWidth * CoulisseHeight);
+            silhouette.GetComponent<RectTransform>().sizeDelta = new Vector2(200, shelfSizeHeight);
+            gameObject.GetComponent<BoxCollider2D>().size = new Vector2(200, shelfSizeHeight);
+        }
     }
 
+    public void RemoveCoulisse()
+    {
+        if (ThisSceneryElement.mirrored)
+        {
+            ThisSceneryElement.mirrored = false;
+            GetComponent<RectTransform>().localScale = new Vector3(1, 1.0f, 1.0f);
+        }
+        transform.GetChild(1).gameObject.SetActive(false);
+        ThisSceneryElement.active = false;
+        transform.SetParent(parentStart.transform);
+        ThisSceneryElement.parent = "Schiene1";
+        GetComponent<RectTransform>().anchoredPosition = pos;
+        schieneKulisse = 0;
+        if (isWide)
+        {
+            GetComponent<RectTransform>().sizeDelta = new Vector2(200, 200 / CoulisseWidth * CoulisseHeight);
+            GetComponent<BoxCollider2D>().size = new Vector2(200, 200 / CoulisseWidth * CoulisseHeight);
+        }
+        else
+        {
+            GetComponent<RectTransform>().sizeDelta = new Vector2(200 / CoulisseHeight * CoulisseWidth, 200);
+            GetComponent<BoxCollider2D>().size = new Vector2(200 / CoulisseHeight * CoulisseWidth, 200);
+        }
+        GetComponent<Image>().color = new Color(1f, 1f, 1f, 1f);
+        menuExtra.SetActive(false);
+        gameController.GetComponent<SceneDataController>().CreateScene(StaticSceneData.StaticData);
+    }
 
     public void setReiterActive(int stat) // stat ist statusReiter
     {
         for (int i = 0; i <= 7; i++)
         {
-            reiterActive[i].SetActive(false);
+            gameController.GetComponent<UIController>().goReiterActive[i].SetActive(false);
         }
 
         if (stat != 0)
         {
-            reiterActive[stat-1].SetActive(true);
+            gameController.GetComponent<UIController>().goReiterActive[stat - 1].SetActive(true);
         }
     }
 
@@ -94,9 +124,10 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
         canvasGroup.blocksRaycasts = false;
         gameObject.transform.SetParent(scenerysettings.transform);
         GetComponent<Image>().color = new Color(.5f, 1f, 0.3f, 1f);
-        Debug.Log("Schiene Width: "+schieneBild.GetComponent<RectTransform>().rect.width+", Kulisse Width: "+gameObject.GetComponent<RectTransform>().rect.width+", kulisse soll width: "+schieneBild.GetComponent<RectTransform>().rect.width/410*CoulisseWidth); 
-        float valueScale = schieneBild.GetComponent<RectTransform>().rect.width/410*CoulisseWidth/gameObject.GetComponent<RectTransform>().rect.width;
-        rectTransform.localScale = new Vector2(valueScale,valueScale);
+        //Debug.Log("Schiene Width: " + schieneBild.GetComponent<RectTransform>().rect.width + ", Kulisse Width: " + gameObject.GetComponent<RectTransform>().rect.width + ", kulisse soll width: " + schieneBild.GetComponent<RectTransform>().rect.width / 410 * CoulisseWidth);
+        float valueScale = schieneBild.GetComponent<RectTransform>().rect.width / 410 * CoulisseWidth / gameObject.GetComponent<RectTransform>().rect.width;
+        rectTransform.sizeDelta = new Vector2(schieneBild.GetComponent<RectTransform>().rect.width / 410 * CoulisseWidth, schieneBild.GetComponent<RectTransform>().rect.width / 410 * CoulisseHeight);
+        gameObject.GetComponent<BoxCollider2D>().size = rectTransform.sizeDelta;
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -112,11 +143,10 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
             this.schieneKulisse = SceneManaging.triggerActive;
             setReiterActive(SceneManaging.triggerActive);
         }
-        if(GetComponent<TriggerSchiene>().schieneActive)
+        if (GetComponent<TriggerSchiene>().schieneActive)
         {
             this.schieneKulisse = SceneManaging.statusReiter;
         }
-
     }
 
     public void OnEndDrag(PointerEventData eventData)
@@ -128,7 +158,7 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
 
         if (SceneManaging.statusReiter != 0)
         {
-            gameObject.transform.SetParent(collection[(SceneManaging.statusReiter - 1)].transform);   // collection geht von 0-7, deswegen 'statusReiter-1'
+            gameObject.transform.SetParent(gameController.GetComponent<UIController>().Collection[(SceneManaging.statusReiter - 1)].transform);   // collection geht von 0-7, deswegen 'statusReiter-1'
 
             if (GetComponent<TriggerSchiene>().schieneActive)
             {
@@ -152,9 +182,18 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
                 ThisSceneryElement.parent = "Schiene1";
                 ThisSceneryElement.railnumber = 1;
                 rectTransform.anchoredPosition = pos;
+                if (isWide)
+                {
+                    rectTransform.sizeDelta = new Vector2(200, 200 / CoulisseWidth * CoulisseHeight);
+                    gameObject.GetComponent<BoxCollider2D>().size = new Vector2(200, 200 / CoulisseWidth * CoulisseHeight);
+                }
+                else
+                {
+                    rectTransform.sizeDelta = new Vector2(200 / CoulisseHeight * CoulisseWidth, 200);
+                    gameObject.GetComponent<BoxCollider2D>().size = new Vector2(200 / CoulisseHeight * CoulisseWidth, 200);
+                }
                 this.schieneKulisse = 0;
             }
-            
         }
 
 
@@ -171,11 +210,11 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
         }
 
         // ------------ Dinge, die fuer die Kulissen im Controler passieren muessen
-        
+
         ThisSceneryElement.z = GetComponent<RectTransform>().anchoredPosition.x / 300;
         ThisSceneryElement.y = GetComponent<RectTransform>().anchoredPosition.y / 300;  //die werte stimmen ungefaehr mit dem liveview ueberein
         ThisSceneryElement.x = 0.062f;
-        Debug.Log("Scenery Element: "+ThisSceneryElement.name+", ThisSceneryElement.active: "+ThisSceneryElement.active+", Posz: "+ThisSceneryElement.z+", Parent: "+ThisSceneryElement.parent);
+        //Debug.Log("Scenery Element: " + ThisSceneryElement.name + ", ThisSceneryElement.active: " + ThisSceneryElement.active + ", Posz: " + ThisSceneryElement.z + ", Parent: " + ThisSceneryElement.parent);
         // ------------ uebertragen der Daten aus dem Controller auf die 3D-Kulissen
 
         StaticSceneData.Sceneries3D(); //CreateScene der SceneryElements
@@ -187,11 +226,13 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
     public void setElementActive(DragDrop dragdrop)
     {
         dragdrop.GetComponent<Image>().color = new Color(.5f, 1f, 0.3f, 1f);
+        // highlight LV Element 
         SceneManaging.showSettings = true;
         dragdrop.menuExtra.SetActive(true);
         dragdrop.transform.GetChild(0).gameObject.SetActive(true);
         dragdrop.transform.GetChild(1).gameObject.SetActive(true);
         ElementName.GetComponent<Text>().text = gameObject.transform.GetChild(0).GetComponent<Text>().text;
+        highlighted = true;
     }
 
     public void setElementInactive(DragDrop dragdrop)
@@ -201,36 +242,45 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
         dragdrop.transform.GetChild(1).gameObject.SetActive(false);
         SceneManaging.showSettings = false;
         dragdrop.menuExtra.SetActive(false);
+        highlighted = false;
     }
 
     public void OnClick()
     {
         SceneManaging.dragDrop = this; // hier wird dem dragDrop-Objekt im SceneManaging die aktuelle Kulisse uebergeben
-        //Debug.Log("posX: " + this.GetComponent<RectTransform>().anchoredPosition.x/200+", SliderValue: "+sliderX.GetComponent<Slider>().value);
-        sliderX.GetComponent<Slider>().value = GetComponent<RectTransform>().anchoredPosition.x/200;
-        sliderY.GetComponent<Slider>().value = GetComponent<RectTransform>().anchoredPosition.y/100;
+        sliderX.GetComponent<Slider>().value = GetComponent<RectTransform>().anchoredPosition.x / 200;
+        sliderY.GetComponent<Slider>().value = GetComponent<RectTransform>().anchoredPosition.y / 100;
 
-        if (schieneKulisse != 0)
+        if (schieneKulisse != 0) // if object is not in shelf
         {
-            for (int i = 0; i < this.transform.parent.childCount; i++)
-            {
-                setElementInactive(gameObject.transform.parent.GetChild(i).GetComponent<DragDrop>());
-                Debug.Log("Child: " + gameObject.transform.parent.GetChild(i).GetComponent<DragDrop>());
-            }
-
-            if (SceneManaging.showSettings)
+            if (SceneManaging.showSettings && this.highlighted) // this coulisse is highlighted
             {
                 setElementInactive(this);
             }
-            else if (SceneManaging.showSettings == false)
+            else if (SceneManaging.showSettings && this.highlighted == false) // different coulisse is highlighted
+            {
+                for (int i = 0; i < this.transform.parent.childCount; i++)  // set inactive all coulisses of this collection --> in reiterbutton script: on click/change unhighlight ALL coulisses!
+                {
+                    setElementInactive(gameObject.transform.parent.GetChild(i).GetComponent<DragDrop>());
+                    Debug.Log("Child: " + gameObject.transform.parent.GetChild(i).GetComponent<DragDrop>());
+                }
+                setElementActive(this);
+            }
+
+            else    // nothing is highlighted
             {
                 setElementActive(this);
             }
         }
-        else
+        else // if you click in shelf to get a new coulisse
         {
-            setElementInactive(this);
+            for (int i = 0; i < this.transform.parent.childCount; i++)  // set inactive all coulisses of this collection --> in reiterbutton script: on click/change unhighlight ALL coulisses!
+            {
+                setElementInactive(gameObject.transform.parent.GetChild(i).GetComponent<DragDrop>());
+                Debug.Log("Child: " + gameObject.transform.parent.GetChild(i).GetComponent<DragDrop>());
+            }
         }
     }
+
 
 }

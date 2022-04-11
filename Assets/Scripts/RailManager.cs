@@ -115,7 +115,7 @@ public class RailManager : MonoBehaviour
             figureObjects[i] = (objectLibrary.transform.GetChild(i).GetChild(1).gameObject);
             objectShelfSize[i] = new Vector2(figureObjects[i].GetComponent<RectTransform>().rect.width, figureObjects[i].GetComponent<RectTransform>().rect.height);
             objectShelfParent[i] = figureObjects[i].transform.parent.gameObject;
-            Debug.Log("Figure: " + figureObjects[i]);
+            //Debug.Log("Figure: " + figureObjects[i]);
         }
 
         foreach (GameObject gaOb in objectShelfParent)
@@ -132,8 +132,8 @@ public class RailManager : MonoBehaviour
         {
 
         }
-        Debug.Log("++++++figures loaded: " + figureObjects.Length);
-        Debug.Log("++++++figures3D loaded: " + figureObjects3D.Length);
+        //Debug.Log("++++++figures loaded: " + figureObjects.Length);
+        //Debug.Log("++++++figures3D loaded: " + figureObjects3D.Length);
 
         currentClickedObjectIndex = -1;
         currentClickedInstanceObjectIndex = -1;

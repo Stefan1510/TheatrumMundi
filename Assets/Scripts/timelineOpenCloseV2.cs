@@ -10,11 +10,11 @@ public class timelineOpenCloseV2 : MonoBehaviour
     Outline outline;
     AudioSource audioSource;
     public GameObject gameController;
-    public Text timelineText;
+    //public Text timelineText;
     public Image timeSliderImage;
     private BoxCollider2D timeSlider;
     public GameObject rail3dObj;
-    Vector2 textSize;
+    //Vector2 textSize;
     //bool timelineOpen;			//timeline open/close
     //bool clickingTimeline;          //if timeline is clicked
     //bool movingOnTimeline;          //is the mouse over the timeline
@@ -109,7 +109,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
 		objectSceneSize.y=myButton.GetComponent<RectTransform>().rect.height;
 		*/
 
-        textSize = new Vector2(timelineText.GetComponent<RectTransform>().sizeDelta.x, timelineText.GetComponent<RectTransform>().sizeDelta.y);
+        //textSize = new Vector2(timelineText.GetComponent<RectTransform>().sizeDelta.x, timelineText.GetComponent<RectTransform>().sizeDelta.y);
 
         //load all objects given in the figuresShelf
         //Debug.Log("objectscount: "+objectLibrary.transform.childCount);
@@ -436,7 +436,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
             //scale up the collider
             tl.GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightOpened);
             //scale down the text
-            tl.transform.GetChild(0).gameObject.GetComponent<Text>().rectTransform.localScale = new Vector3(1, 0.2f, 1);
+            //tl.transform.GetChild(0).gameObject.GetComponent<Text>().rectTransform.localScale = new Vector3(1, 0.2f, 1);
             //timelineText.rectTransform.localScale = new Vector3(1,0.2f,1);
             //scale up all objects on timeline
             openCloseObjectInTimeline(isTimelineOpen, timelineInstanceObjects, editTimelineObject);
@@ -461,7 +461,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
             //scale down the collider
             tl.GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightClosed);
             //scale up the text
-            tl.transform.GetChild(0).gameObject.GetComponent<Text>().rectTransform.localScale = new Vector3(1, 1, 1);
+            //tl.transform.GetChild(0).gameObject.GetComponent<Text>().rectTransform.localScale = new Vector3(1, 1, 1);
             //scale up all objects on timeline
             openCloseObjectInTimeline(isTimelineOpen, timelineInstanceObjects, editTimelineObject);
         }
