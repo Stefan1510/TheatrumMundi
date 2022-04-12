@@ -72,7 +72,6 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
             silhouette.GetComponent<RectTransform>().sizeDelta = new Vector2(200, shelfSizeHeight);
             gameObject.GetComponent<BoxCollider2D>().size = new Vector2(200, shelfSizeHeight);
         }
-        //gameController.GetComponent<SceneDataController>().CreateScene(StaticSceneData.StaticData);
     }
 
     public void RemoveCoulisse()
@@ -103,16 +102,18 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
         StaticSceneData.Sceneries3D(); //CreateScene der SceneryElements
     }
 
-    public void setReiterActive(int stat) // stat ist statusReiter
+    public void setReiterActive(int stat) // stat = statusReiter
     {
         for (int i = 0; i <= 7; i++)
         {
             gameController.GetComponent<UIController>().goReiterActive[i].SetActive(false);
+            gameController.GetComponent<UIController>().goIndexTabs[i].SetActive(false);
         }
 
         if (stat != 0)
         {
             gameController.GetComponent<UIController>().goReiterActive[stat - 1].SetActive(true);
+            gameController.GetComponent<UIController>().goIndexTabs[stat - 1].SetActive(true);
         }
     }
 
@@ -137,9 +138,13 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
     {
         rectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
         // durch Skalierung d. Canvas teilen, sonst Bewegung d. Objekts nicht gleich der Mausbewegung
+        // ThisSceneryElement.z = GetComponent<RectTransform>().anchoredPosition.x / 300;
+        // ThisSceneryElement.y = GetComponent<RectTransform>().anchoredPosition.y / 300;  //die werte stimmen ungefaehr mit dem liveview ueberein
+        // ThisSceneryElement.x = 0.062f;
+        // StaticSceneData.Sceneries3D();
 
         //Debug.Log("Status Reiter: "+SceneManaging.statusReiter+ ", this.Schiene: "+this.schieneKulisse+"schieneActive: "+GetComponent<TriggerSchiene>().schieneActive);
-        Debug.Log("Triggereinstellungen: " + SceneManaging.triggerEinstellungen + ", triggerSChiene: " + GetComponent<TriggerSchiene>().schieneActive + ", statusReiter: " + SceneManaging.statusReiter);
+        //Debug.Log("Triggereinstellungen: " + SceneManaging.triggerEinstellungen + ", triggerSChiene: " + GetComponent<TriggerSchiene>().schieneActive + ", statusReiter: " + SceneManaging.statusReiter);
 
         if (SceneManaging.triggerActive != 0 && this.schieneKulisse != SceneManaging.triggerActive)
         {
@@ -151,6 +156,7 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
         {
             this.schieneKulisse = SceneManaging.statusReiter;
         }
+
     }
 
     public void OnEndDrag(PointerEventData eventData)
@@ -160,47 +166,46 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
 
         GetComponent<Image>().color = new Color(1f, 1f, 1f, 1f);
 
-            gameObject.transform.SetParent(gameController.GetComponent<UIController>().goIndexTabs[(SceneManaging.statusReiter - 1)].transform);   // collection geht von 0-7, deswegen 'statusReiter-1'
+        gameObject.transform.SetParent(gameController.GetComponent<UIController>().goIndexTabs[(SceneManaging.statusReiter - 1)].transform);   // collection geht von 0-7, deswegen 'statusReiter-1'
 
-            if (GetComponent<TriggerSchiene>().schieneActive)
+        if (GetComponent<TriggerSchiene>().schieneActive)
+        {
+            this.schieneKulisse = SceneManaging.statusReiter;
+            ThisSceneryElement.active = true;
+            ThisSceneryElement.parent = "Schiene" + SceneManaging.statusReiter.ToString();
+            ThisSceneryElement.railnumber = SceneManaging.statusReiter;
+        }
+        else if (SceneManaging.triggerActive == SceneManaging.statusReiter)
+        {
+            GetComponent<RectTransform>().anchoredPosition = schieneBild.GetComponent<RectTransform>().anchoredPosition;
+            this.schieneKulisse = SceneManaging.statusReiter;
+            ThisSceneryElement.active = true;
+            ThisSceneryElement.parent = "Schiene" + SceneManaging.statusReiter.ToString();
+            ThisSceneryElement.railnumber = SceneManaging.statusReiter;
+        }
+        else if (SceneManaging.triggerEinstellungen && GetComponent<TriggerSchiene>().schieneActive == false)
+        {
+            rectTransform.anchoredPosition = schieneBild.GetComponent<RectTransform>().anchoredPosition;
+        }
+        else
+        {
+            gameObject.transform.SetParent(parentStart.transform);
+            ThisSceneryElement.active = false;
+            ThisSceneryElement.parent = "Schiene1";
+            ThisSceneryElement.railnumber = 1;
+            rectTransform.anchoredPosition = pos;
+            if (isWide)
             {
-                this.schieneKulisse = SceneManaging.statusReiter;
-                ThisSceneryElement.active = true;
-                ThisSceneryElement.parent = "Schiene" + SceneManaging.statusReiter.ToString();
-                ThisSceneryElement.railnumber = SceneManaging.statusReiter;
-            }
-            else if (SceneManaging.triggerActive == SceneManaging.statusReiter)
-            {
-                GetComponent<RectTransform>().anchoredPosition = schieneBild.GetComponent<RectTransform>().anchoredPosition;
-                this.schieneKulisse = SceneManaging.statusReiter;
-                ThisSceneryElement.active = true;
-                ThisSceneryElement.parent = "Schiene" + SceneManaging.statusReiter.ToString();
-                ThisSceneryElement.railnumber = SceneManaging.statusReiter;
-            }
-            else if (SceneManaging.triggerEinstellungen && GetComponent<TriggerSchiene>().schieneActive == false)
-            {
-                rectTransform.anchoredPosition = schieneBild.GetComponent<RectTransform>().anchoredPosition;
-                Debug.Log("hier!");
+                rectTransform.sizeDelta = new Vector2(200, 200 / CoulisseWidth * CoulisseHeight);
+                gameObject.GetComponent<BoxCollider2D>().size = new Vector2(200, 200 / CoulisseWidth * CoulisseHeight);
             }
             else
             {
-                gameObject.transform.SetParent(parentStart.transform);
-                ThisSceneryElement.active = false;
-                ThisSceneryElement.parent = "Schiene1";
-                ThisSceneryElement.railnumber = 1;
-                rectTransform.anchoredPosition = pos;
-                if (isWide)
-                {
-                    rectTransform.sizeDelta = new Vector2(200, 200 / CoulisseWidth * CoulisseHeight);
-                    gameObject.GetComponent<BoxCollider2D>().size = new Vector2(200, 200 / CoulisseWidth * CoulisseHeight);
-                }
-                else
-                {
-                    rectTransform.sizeDelta = new Vector2(200 / CoulisseHeight * CoulisseWidth, 200);
-                    gameObject.GetComponent<BoxCollider2D>().size = new Vector2(200 / CoulisseHeight * CoulisseWidth, 200);
-                }
-                this.schieneKulisse = 0;
+                rectTransform.sizeDelta = new Vector2(200 / CoulisseHeight * CoulisseWidth, 200);
+                gameObject.GetComponent<BoxCollider2D>().size = new Vector2(200 / CoulisseHeight * CoulisseWidth, 200);
             }
+            this.schieneKulisse = 0;
+        }
 
         // ------------ Dinge, die fuer die Kulissen im Controler passieren muessen
 
@@ -244,7 +249,8 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
     {
         SceneManaging.dragDrop = this; // hier wird dem dragDrop-Objekt im SceneManaging die aktuelle Kulisse uebergeben
         sliderX.GetComponent<Slider>().value = GetComponent<RectTransform>().anchoredPosition.x / 200;
-        sliderY.GetComponent<Slider>().value = GetComponent<RectTransform>().anchoredPosition.y / 100;
+        sliderY.GetComponent<Slider>().value = GetComponent<RectTransform>().anchoredPosition.y / 200;
+        Debug.Log("X: pos 3d: " + ThisSceneryElement.z + ", pos slider: " + sliderX.GetComponent<Slider>().value + ", pos 2D: " + GetComponent<RectTransform>().anchoredPosition.x / 200);
 
         if (schieneKulisse != 0) // if object is not in shelf
         {
@@ -257,7 +263,6 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
                 for (int i = 0; i < this.transform.parent.childCount; i++)  // set inactive all coulisses of this collection --> in reiterbutton script: on click/change unhighlight ALL coulisses!
                 {
                     setElementInactive(gameObject.transform.parent.GetChild(i).GetComponent<DragDrop>());
-                    Debug.Log("Child: " + gameObject.transform.parent.GetChild(i).GetComponent<DragDrop>());
                 }
                 setElementActive(this);
             }
@@ -269,14 +274,19 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
         }
         else // if you click in shelf to get a new coulisse
         {
-            for (int i = 0; i < this.transform.parent.childCount; i++)  // set inactive all coulisses of this collection --> in reiterbutton script: on click/change unhighlight ALL coulisses!
+            for (int j = 0; j < gameController.GetComponent<UIController>().goIndexTabs.Length; j++)
             {
-                setElementInactive(gameObject.transform.parent.GetChild(i).GetComponent<DragDrop>());
-                //Debug.Log("Child: " + gameObject.transform.parent.GetChild(i).GetComponent<DragDrop>());
+                for (int i = 0; i < gameController.GetComponent<UIController>().goIndexTabs[j].transform.childCount; i++)  // set inactive all coulisses of this collection --> in reiterbutton script: on click/change unhighlight ALL coulisses!
+                {
+                    setElementInactive(gameController.GetComponent<UIController>().goIndexTabs[j].transform.GetChild(i).GetComponent<DragDrop>());
+                }
+                setElementActive(this);
             }
         }
+        ThisSceneryElement.z = GetComponent<RectTransform>().anchoredPosition.x / 300;
+        ThisSceneryElement.y = GetComponent<RectTransform>().anchoredPosition.y / 300;  //die werte stimmen ungefaehr mit dem liveview ueberein
+        ThisSceneryElement.x = 0.062f;
         StaticSceneData.Sceneries3D(); //CreateScene der SceneryElements
-        //gameController.GetComponent<SceneDataController>().CreateScene(StaticSceneData.StaticData);
     }
 
 
