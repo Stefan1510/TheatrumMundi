@@ -244,7 +244,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
         // disable animations and disable emission
         if (gameObject.name != "ImageTimelineRailMusic")
         {
-            for (int i = 0; i < figureObjects3D.Length; i++)
+            for (int i = 0; i < figureObjects3D.Length - 6; i++) // ships dont have animation
             {
                 for (int j = 0; j < figureObjects3D[i].transform.childCount; j++)
                 {
@@ -252,15 +252,27 @@ public class timelineOpenCloseV2 : MonoBehaviour
                     {
                         figureObjects3D[i].transform.GetChild(j).GetComponent<SkinnedMeshRenderer>().material.DisableKeyword("_EMISSION");
                     }
-                    catch (MissingComponentException ex) { }
+                    catch (Exception exep)
+                    {
+                        if (exep is MissingComponentException || exep is NullReferenceException)
+                        {
+                            return;
+                        }
+                        throw;
+                    }
                 }
                 try
                 {
                     figureObjects3D[i].GetComponent<Animator>().enabled = false;
                 }
-                catch (MissingComponentException ex) { }
-
-
+                catch (Exception ex)
+                {
+                    if (ex is MissingComponentException || ex is NullReferenceException)
+                    {
+                        return;
+                    }
+                    throw;
+                }
             }
         }
     }
@@ -527,7 +539,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
         //move object
         obj.transform.position = new Vector2(mousePos.x, mousePos.y);
         //set up flags
-        Debug.Log("mouse: "+mousePos);
+        //Debug.Log("mouse: " + mousePos);
     }
     public bool checkHittingTimeline(GameObject obj, Image tl, Vector2 mousePos)
     {
@@ -838,27 +850,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
         Debug.Log("+++Removed: " + obj);
         figCounterCircle[tmpNr - 1].transform.GetChild(0).GetComponent<Text>().text = (currentCounterNr - 1).ToString();
     }
-    public void unhighlight(GameObject obj3D, GameObject obj)
-    {
-        //obj3D.GetComponent<Outline>().enabled = false;
-        for (int i = 0; i < obj3D.transform.childCount; i++)
-        {
-            //Debug.Log("Child: "+obj3D.transform.GetChild(i));
-            try
-            {
-                obj3D.transform.GetChild(i).GetComponent<SkinnedMeshRenderer>().material.DisableKeyword("_EMISSION");
-                obj3D.transform.GetChild(i).GetComponent<SkinnedMeshRenderer>().material.SetColor("_Emission_Color", Color.black);
-                obj.transform.GetChild(0).GetComponent<Image>().color = colFigure;
-            }
-            catch (MissingComponentException ex)
-            {
 
-            }
-
-        }
-        obj.transform.GetChild(1).GetChild(0).gameObject.SetActive(false);  //hide Delete-Button
-        SceneManaging.highlighted = false;
-    }
     public int checkHittingAnyTimeline(GameObject obj, Vector2 mousePos)
     {
         int hit = -1;
@@ -882,27 +874,76 @@ public class timelineOpenCloseV2 : MonoBehaviour
         return hit;
     }
 
+    public bool checkFigureHighlighted(GameObject obj)
+    {
+        bool val = false;
+        try
+        {
+            if (obj.GetComponent<SkinnedMeshRenderer>().material.IsKeywordEnabled("_EMISSION"))    // check if second child (which is never the armature) has emission enabled (=is highlighted)
+            {
+                val = true;
+                Debug.Log("val: " + val);
+            }
+        }
+        catch (Exception ex)
+        {
+            if (ex is MissingComponentException || ex is NullReferenceException)
+            {
+                return false;
+            }
+            throw;
+        }
+        return val;
+    }
+
     public void highlight(GameObject obj3D, GameObject obj)
     {
+        obj.transform.GetChild(0).GetComponent<Image>().color = colFigureHighlighted;
+        obj.transform.GetChild(1).GetChild(0).gameObject.SetActive(true);   //show Delete-Button
+        SceneManaging.highlighted = true;
+
         for (int i = 0; i < obj3D.transform.childCount; i++)
         {
             //Debug.Log("Child: "+obj3D.transform.GetChild(i));
             try
             {
                 obj3D.transform.GetChild(i).GetComponent<SkinnedMeshRenderer>().material.EnableKeyword("_EMISSION");
-                obj3D.transform.GetChild(i).GetComponent<SkinnedMeshRenderer>().material.SetColor("_Emission_Color", Color.black);
-                obj.transform.GetChild(0).GetComponent<Image>().color = colFigureHighlighted;
+
             }
-            catch (MissingComponentException ex)
+            catch (Exception ex)
             {
+                if (ex is MissingComponentException || ex is NullReferenceException)
+                {
+                    return;
+                }
+                throw;
+            }
+        }
+    }
+    public void unhighlight(GameObject obj3D, GameObject obj)
+    {
+        obj.transform.GetChild(0).GetComponent<Image>().color = colFigure;
+        obj.transform.GetChild(1).GetChild(0).gameObject.SetActive(false);  //hide Delete-Button
+        SceneManaging.highlighted = false;
 
+        for (int i = 0; i < obj3D.transform.childCount; i++)
+        {
+            //Debug.Log("Child: "+obj3D.transform.GetChild(i));
+            try
+            {
+                obj3D.transform.GetChild(i).GetComponent<SkinnedMeshRenderer>().material.DisableKeyword("_EMISSION");
             }
 
+            catch (Exception ex)
+            {
+                if (ex is MissingComponentException || ex is NullReferenceException)
+                {
+                    return;
+                }
+                throw;
+            }
         }
-        obj.transform.GetChild(1).GetChild(0).gameObject.SetActive(true);   //show Delete-Button
-        SceneManaging.highlighted = true;
     }
-
     // Update is called once per frame
     void Update()
     {
@@ -984,6 +1025,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
             //or check if you click an object in timeline
             if ((currentClickedInstanceObjectIndex != (-1)) && (editTimelineObject == true))
             {
+                //Debug.Log("clicked");
                 if (timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(getMousePos))
                 {
                     //set up some flags
@@ -1003,7 +1045,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
                         {
                             highlight(timelineInstanceObjects3D[currentClickedInstanceObjectIndex], timelineInstanceObjects[currentClickedInstanceObjectIndex]);
                         }
-                        else if (SceneManaging.highlighted && timelineInstanceObjects3D[currentClickedInstanceObjectIndex].transform.GetChild(1).GetComponent<SkinnedMeshRenderer>().material.IsKeywordEnabled("_EMISSION"))    // check if second child (which is never the armature) has emission enabled (=is highlighted)
+                        else if (SceneManaging.highlighted && timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(0).GetComponent<Image>().color == colFigureHighlighted) // checkFigureHighlighted(timelineInstanceObjects3D[currentClickedInstanceObjectIndex].transform.GetChild(1).gameObject))  // check if second child (which is never the armature) has emission enabled (=is highlighted)
                         {
                             unhighlight(timelineInstanceObjects3D[currentClickedInstanceObjectIndex], timelineInstanceObjects[currentClickedInstanceObjectIndex]);
                         }
@@ -1203,7 +1245,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
             // //if you hit the timeline > object snap to timeline and is locked in y-movement-direction
             // openCloseTimelineByDrag("close", timelineImage);
             releaseOnTimeline = false;
-            }
+        }
         // }
 
         // dragging an object from shelf to timeline
@@ -1474,7 +1516,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
             else if (releaseOnTimeline == false && currentClickedInstanceObjectIndex != -1 && isInstance)
             {
                 Debug.Log("remove");
-                removeObjectFromTimeline(timelineInstanceObjects[currentClickedInstanceObjectIndex],timelineInstanceObjects3D[currentClickedInstanceObjectIndex]);
+                removeObjectFromTimeline(timelineInstanceObjects[currentClickedInstanceObjectIndex], timelineInstanceObjects3D[currentClickedInstanceObjectIndex]);
             }
 
             releaseOnTimeline = false;
@@ -1575,7 +1617,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
                     catch (MissingComponentException ex) { }
                 }
                 // stop Animation if not playing
-                else if (SceneManaging.playing == false) // && timelineInstanceObjects3D[i].GetComponent<Animator>().enabled)
+                else if (SceneManaging.playing == false)
                 {
                     try
                     {
