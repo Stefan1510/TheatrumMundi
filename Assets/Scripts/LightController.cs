@@ -145,7 +145,13 @@ public class LightController : MonoBehaviour
     {
         //ChangeHorizontal(HorizontalValue);
         thisLightElement.angle_h = (int)VerticalValue;
-        ChangeHorizontal(thisLightElement.angle_h);
+
+        if (thisLightElement.stagePosition == 1)
+            ChangeHorizontal(thisLightElement.angle_h);
+        else
+            ChangeHorizontalLeft(thisLightElement.angle_h);
+
+        //ChangeHorizontal(thisLightElement.angle_h);
         //StaticSceneData.Lights3D();
         UiSetting_LB_Image.GetComponent<LightRepresentationController>().RotateHorizontal(VerticalValue);
     }
@@ -157,6 +163,20 @@ public class LightController : MonoBehaviour
         HorizontalValue = _lbCookieWidth / 2 - HorizontalValue; //wie weit geht das Licht zu, hier noch auf beiden Seiten
         _lbAngleHorizontal = Mathf.Max(1, (int)(HorizontalValue) - attenuation);
         ChangeCookie();
+
+        _lbCookie.Apply();
+        GetComponent<Light>().cookie = _lbCookie;
+    }
+    
+    public void ChangeHorizontalLeft(int HorizontalValue)
+    {
+        //Debug.Log("PING ChangeHorizontal");
+        int attenuation = _lbCookieAttenuation;
+        HorizontalValue = _lbCookieWidth / 2 - HorizontalValue; //wie weit geht das Licht zu, hier noch auf beiden Seiten
+        _lbAngleHorizontal = Mathf.Max(1, (int)(HorizontalValue) - attenuation);
+        ChangeCookie();
+
+        FlipTexture(ref _lbCookie);
 
         _lbCookie.Apply();
         GetComponent<Light>().cookie = _lbCookie;

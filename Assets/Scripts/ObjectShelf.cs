@@ -66,8 +66,40 @@ public class ObjectShelf : MonoBehaviour
                 return;
             }
             throw;
-        }
-    }
+		}
+
+		HeadlineShelf01.gameObject.SetActive(true);
+		HeadlineShelf02.gameObject.SetActive(false);
+		HeadlineShelf03.gameObject.SetActive(false);
+		try
+		{
+			HeadlineShelf04.gameObject.SetActive(false);
+		}
+		catch (Exception ex)
+		{
+			if (ex is NullReferenceException || ex is UnassignedReferenceException)
+			{
+				return;
+			}
+			throw;
+		}
+
+		MenueButton01.SetActive(false);
+		MenueButton02.SetActive(true);
+		MenueButton03.SetActive(true);
+		try
+		{
+			MenueButton04.SetActive(true);
+		}
+		catch (Exception ex)
+		{
+			if (ex is NullReferenceException || ex is UnassignedReferenceException)
+			{
+				return;
+			}
+			throw;
+		}
+	}
 
     public void ButtonShelf01()
 	{
