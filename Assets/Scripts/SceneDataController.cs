@@ -24,6 +24,7 @@ public class SceneDataController : MonoBehaviour
     [HideInInspector] public int countActiveLightElements = 0;
     [HideInInspector] public int countActiveFigureElements = 0;
     [HideInInspector] public int currentTime;
+    [HideInInspector] public Material[] matCoulisse;
 
     [HideInInspector] public SceneData recentSceneData;
     [HideInInspector] public SceneData tempSceneData;
@@ -111,7 +112,7 @@ public class SceneDataController : MonoBehaviour
                 //height=objectRailElement.GetComponent<Renderer>().bounds.size.y,
                 velocity = 1.0f,
                 direction = "toRight",
-                railElementSpeeds=new List<RailElementSpeed>()                
+                railElementSpeeds = new List<RailElementSpeed>()
             };
             sceneRailElement.railElementSpeeds.Add(new RailElementSpeed());
             sceneData.railElements.Add(sceneRailElement);
@@ -130,7 +131,8 @@ public class SceneDataController : MonoBehaviour
                 active = objectSceneryElement.GetComponent<SceneryController>().sceneryActive,
                 parent = objectSceneryElement.transform.parent.name,
                 zPos = 0,
-                mirrored = false
+                mirrored = false,
+                emission = false
             };
             sceneData.sceneryElements.Add(sceneSceneryElement);
         }
@@ -251,7 +253,7 @@ public class SceneDataController : MonoBehaviour
                     se.railnumber = int.Parse(se.parent.Substring(7));
                     //Debug.Log("-----" + se.railnumber + "-----");
                     goSceneryElement.transform.parent = GameObject.Find(se.parent).transform;
-                    goSceneryElement.transform.localPosition = new Vector3(se.x+(se.zPos*0.01f), se.y, se.z);
+                    goSceneryElement.transform.localPosition = new Vector3(se.x + (se.zPos * 0.01f), se.y, se.z);
                     //goSceneryElement.GetComponent<SceneryController>().sceneryActive = se.active;
                     goSceneryElement.SetActive(se.active);
                     if (se.mirrored)
@@ -273,7 +275,21 @@ public class SceneDataController : MonoBehaviour
                     {
                         countActiveSceneryElements++;
                     }
-
+                    if (se.emission == false)
+                    {
+                        for (int i = 0; i < goSceneryElement.GetComponent<MeshRenderer>().materials.Length; i++)
+                        {
+                            goSceneryElement.GetComponent<MeshRenderer>().materials[i].DisableKeyword("_EMISSION");
+                        }
+                    }
+                    else
+                    {
+                        for (int i = 0; i < goSceneryElement.GetComponent<MeshRenderer>().materials.Length; i++)
+                        {
+                            goSceneryElement.GetComponent<MeshRenderer>().materials[i].EnableKeyword("_EMISSION");
+                        }
+ 
+                    }
                 }
             }
         }

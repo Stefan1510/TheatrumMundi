@@ -9,7 +9,7 @@ public class UIController : MonoBehaviour
     public GameObject[] goButtonSceneryElements;
     public GameObject[] goButtonFigureObjects;
     public GameObject[] goReiterActive;
-    public GameObject[] Collection;
+    public GameObject[] goIndexTabs;
     private objectsLightElement[] objectsLightElements;
     public timelineOpenCloseV2[] Rails;
 
