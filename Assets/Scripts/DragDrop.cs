@@ -31,7 +31,7 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
     [HideInInspector] public int schieneKulisse;
     [HideInInspector] public bool isWide;
     private bool highlighted;
-    private Color colHighlighted, colCoulisse;
+    private Color colHighlighted, colCoulisse, colSilhouetteActive, colSilhouette;
 
     private void Awake()
     {
@@ -51,19 +51,19 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
 
     public void Start()
     {
-        setReiterActive(SceneManaging.statusReiter);  // die funktion darf erst nach Awake ausgefuehrt werden, weil sonst die erste Schleife 
-                                                      // alles auf false setzt und die weiteren Reiter nicht mehr gefunden werden! 
-                                                      // also erst Awake fuer alle und dann aktiven Reiter setzen
+        setReiterActive(SceneManaging.statusReiter);  
         ThisSceneryElement = StaticSceneData.StaticData.sceneryElements.Find(x => x.name == gameObject.name.Substring(6));
         //ThisSceneryElement.emission = false;
         colHighlighted = new Color(1f, .45f, 0.33f, 1f);
         colCoulisse = new Color(1f, 1f, 1f, 1f);
+        colSilhouette = new Color(0f,0f,0f,0.4f);
+        colSilhouetteActive = new Color(0.6f,0f,0f,0.4f);
+
         if (CoulisseWidth < CoulisseHeight)
         {
             isWide = false;
             shelfSizeWidth = 200 / CoulisseHeight * CoulisseWidth;
             rectTransform.sizeDelta = new Vector2(200 / CoulisseHeight * CoulisseWidth, 200);
-            //rectTransform.anchoredPosition = new Vector2(rectTransform.anchoredPosition.x, -100);
             silhouette.GetComponent<RectTransform>().sizeDelta = new Vector2(shelfSizeWidth, 200);
             gameObject.GetComponent<BoxCollider2D>().size = new Vector2(shelfSizeWidth, 200);
             gameObject.GetComponent<BoxCollider2D>().offset = new Vector2(0, 100);
@@ -73,7 +73,6 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
             isWide = true;
             shelfSizeHeight = 200 / CoulisseWidth * CoulisseHeight;
             rectTransform.sizeDelta = new Vector2(200, 200 / CoulisseWidth * CoulisseHeight);
-            //rectTransform.anchoredPosition = new Vector2(rectTransform.anchoredPosition.x, -(shelfSizeHeight/2));
             silhouette.GetComponent<RectTransform>().sizeDelta = new Vector2(200, shelfSizeHeight);
             gameObject.GetComponent<BoxCollider2D>().size = new Vector2(200, shelfSizeHeight);
             gameObject.GetComponent<BoxCollider2D>().offset = new Vector2(0, shelfSizeHeight / 2);
@@ -129,6 +128,7 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
     public void OnBeginDrag(PointerEventData eventData)
     {
         SceneManaging.dragDrop = this;
+        
         for (int j = 0; j < gameController.GetComponent<UIController>().goIndexTabs.Length; j++)
         {
             for (int i = 0; i < gameController.GetComponent<UIController>().goIndexTabs[j].transform.childCount; i++)  // set inactive all coulisses --> in reiterbutton script: on click/change unhighlight ALL coulisses!
@@ -138,6 +138,7 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
             }
         }
         GetComponent<Image>().color = colHighlighted;
+        silhouette.GetComponent<Image>().color = colSilhouetteActive;
 
         canvasGroup.blocksRaycasts = false;
         gameObject.transform.SetParent(scenerysettings.transform);
@@ -180,6 +181,7 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
     public void OnEndDrag(PointerEventData eventData)
     {
         GetComponent<Image>().color = colCoulisse;
+        silhouette.GetComponent<Image>().color = colSilhouette;
         canvasGroup.blocksRaycasts = true;
         gameObject.transform.SetParent(gameController.GetComponent<UIController>().goIndexTabs[(SceneManaging.statusReiter - 1)].transform);   // collection geht von 0-7, deswegen 'statusReiter-1'
                 sliderX.GetComponent<Slider>().value = rectTransform.anchoredPosition.x / 200;
@@ -257,6 +259,7 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
         dragdrop.highlighted = true;
         // highlight LV Element 
         dragdrop.ThisSceneryElement.emission = true;
+        dragdrop.silhouette.GetComponent<Image>().color = colSilhouetteActive;
     }
 
     public void setElementInactive(DragDrop dragdrop)
@@ -268,6 +271,7 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
         dragdrop.menuExtra.SetActive(false);
         dragdrop.highlighted = false;
         dragdrop.ThisSceneryElement.emission = false;
+        dragdrop.silhouette.GetComponent<Image>().color = colSilhouette;
     }
 
     public void OnClick()
