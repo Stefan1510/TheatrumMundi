@@ -14,6 +14,7 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
     [SerializeField] private GameObject sliderX, sliderY;
     private RectTransform rectTransform;
     private CanvasGroup canvasGroup;
+    private bool dragging;
     [HideInInspector] public Vector2 pos;
 
     [HideInInspector] public float shelfSizeWidth, shelfSizeHeight;
@@ -33,6 +34,8 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
     private bool highlighted;
     private Color colHighlighted, colCoulisse, colSilhouetteActive, colSilhouette;
 
+    public bool OpenUp { get; private set; }
+
     private void Awake()
     {
         scenerysettings = GameObject.Find("MenueConfigMain");
@@ -47,17 +50,18 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
         transform.GetChild(1).gameObject.SetActive(false);
         pos = rectTransform.anchoredPosition;
         parentStart = gameObject.transform.parent.gameObject;
+        dragging = false;
     }
 
     public void Start()
     {
-        setReiterActive(SceneManaging.statusReiter);  
+        setReiterActive(SceneManaging.statusReiter);
         ThisSceneryElement = StaticSceneData.StaticData.sceneryElements.Find(x => x.name == gameObject.name.Substring(6));
         //ThisSceneryElement.emission = false;
         colHighlighted = new Color(1f, .45f, 0.33f, 1f);
         colCoulisse = new Color(1f, 1f, 1f, 1f);
-        colSilhouette = new Color(0f,0f,0f,0.4f);
-        colSilhouetteActive = new Color(0.6f,0f,0f,0.4f);
+        colSilhouette = new Color(0f, 0f, 0f, 0.4f);
+        colSilhouetteActive = new Color(0.6f, 0f, 0f, 0.4f);
 
         if (CoulisseWidth < CoulisseHeight)
         {
@@ -128,13 +132,12 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
     public void OnBeginDrag(PointerEventData eventData)
     {
         SceneManaging.dragDrop = this;
-        
+
         for (int j = 0; j < gameController.GetComponent<UIController>().goIndexTabs.Length; j++)
         {
             for (int i = 0; i < gameController.GetComponent<UIController>().goIndexTabs[j].transform.childCount; i++)  // set inactive all coulisses --> in reiterbutton script: on click/change unhighlight ALL coulisses!
             {
                 setElementInactive(gameController.GetComponent<UIController>().goIndexTabs[j].transform.GetChild(i).GetComponent<DragDrop>());
-                Debug.Log("BeginDrag: Kulisse " + gameController.GetComponent<UIController>().goIndexTabs[j].transform.GetChild(i).GetComponent<DragDrop>() + " inaktiv gesetzt");
             }
         }
         GetComponent<Image>().color = colHighlighted;
@@ -152,7 +155,7 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
 
     public void OnDrag(PointerEventData eventData)
     {
-
+        SceneManaging.dragDrop = this;
         rectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
         // durch Skalierung d. Canvas teilen, sonst Bewegung d. Objekts nicht gleich der Mausbewegung
 
@@ -162,9 +165,8 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
 
         if (SceneManaging.triggerActive != 0 && this.schieneKulisse != SceneManaging.triggerActive)
         {
-            SceneManaging.statusReiter = SceneManaging.triggerActive;
-            this.schieneKulisse = SceneManaging.triggerActive;
-            setReiterActive(SceneManaging.triggerActive);
+            dragging = true;
+
         }
         if (GetComponent<TriggerSchiene>().schieneActive)
         {
@@ -180,15 +182,15 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        dragging = false;
         GetComponent<Image>().color = colCoulisse;
         silhouette.GetComponent<Image>().color = colSilhouette;
         canvasGroup.blocksRaycasts = true;
         gameObject.transform.SetParent(gameController.GetComponent<UIController>().goIndexTabs[(SceneManaging.statusReiter - 1)].transform);   // collection geht von 0-7, deswegen 'statusReiter-1'
-                sliderX.GetComponent<Slider>().value = rectTransform.anchoredPosition.x / 200;
+        sliderX.GetComponent<Slider>().value = rectTransform.anchoredPosition.x / 200;
         sliderY.GetComponent<Slider>().value = (rectTransform.anchoredPosition.y + 150) / 100;
         if (GetComponent<TriggerSchiene>().schieneActive)                                                            // if coulisse touches rail image
         {
-            Debug.Log("coulisse touches rail image");
             this.schieneKulisse = SceneManaging.statusReiter;
             ThisSceneryElement.active = true;
             ThisSceneryElement.parent = "Schiene" + SceneManaging.statusReiter.ToString();
@@ -197,7 +199,6 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
         }
         else if (SceneManaging.triggerActive == SceneManaging.statusReiter)                                          // if mouse pos is on indexTab
         {
-            Debug.Log("coulisse touches index tab");
             rectTransform.anchoredPosition = schieneBild.GetComponent<RectTransform>().anchoredPosition;
             this.schieneKulisse = SceneManaging.statusReiter;
             ThisSceneryElement.active = true;
@@ -207,13 +208,11 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
         }
         else if (SceneManaging.triggerEinstellungen && GetComponent<TriggerSchiene>().schieneActive == false)       // if coulisse is not on rail image but in schematic window
         {
-            Debug.Log("coulisse touches schematic view");
             rectTransform.anchoredPosition = schieneBild.GetComponent<RectTransform>().anchoredPosition;
             setElementActive(this);
         }
         else                                                                                                         // if coulisse is dropped somewhere else
         {
-            Debug.Log("coulisse is dropped in void");
             gameObject.transform.SetParent(parentStart.transform);
             ThisSceneryElement.active = false;
             ThisSceneryElement.parent = "Schiene1";
@@ -286,7 +285,6 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
             if (SceneManaging.showSettings && this.highlighted) // this coulisse is highlighted
             {
                 setElementInactive(this);
-                Debug.Log("+++Kulisse " + this + " war gehighlighted und wird jetzt inaktiv: " + this.highlighted);
             }
             else if (SceneManaging.showSettings && this.highlighted == false) // different coulisse is highlighted
             {
@@ -295,21 +293,17 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
                     for (int i = 0; i < gameController.GetComponent<UIController>().goIndexTabs[j].transform.childCount; i++)  // set inactive all coulisses of this collection --> in reiterbutton script: on click/change unhighlight ALL coulisses!
                     {
                         setElementInactive(gameController.GetComponent<UIController>().goIndexTabs[j].transform.GetChild(i).GetComponent<DragDrop>());
-                        Debug.Log("+++Kulisse " + gameObject.transform.parent.GetChild(i).GetComponent<DragDrop>() + " des Reiters" + gameController.GetComponent<UIController>().goIndexTabs[j] + " wird inaktiv: " + gameObject.transform.parent.GetChild(i).GetComponent<DragDrop>().highlighted);
                     }
                 }
                 setElementActive(this);
-                Debug.Log("+++Kulisse " + this + " wird gehighlighted: " + this.highlighted);
             }
             else    // nothing is highlighted
             {
                 setElementActive(this);
-                Debug.Log("+++Nichts war gehighlighted, also wird Kulisse " + this + " gehighlighted: " + this.highlighted);
             }
         }
         else // if you click in shelf to get a new coulisse
         {
-            Debug.Log(" Klick in Shelf ");
             if (SceneManaging.showSettings)
             {
                 for (int j = 0; j < gameController.GetComponent<UIController>().goIndexTabs.Length; j++)
@@ -317,7 +311,6 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
                     for (int i = 0; i < gameController.GetComponent<UIController>().goIndexTabs[j].transform.childCount; i++)  // set inactive all coulisses of this collection --> in reiterbutton script: on click/change unhighlight ALL coulisses!
                     {
                         setElementInactive(gameController.GetComponent<UIController>().goIndexTabs[j].transform.GetChild(i).GetComponent<DragDrop>());
-                        Debug.Log("Kulisse " + gameController.GetComponent<UIController>().goIndexTabs[j].transform.GetChild(i).GetComponent<DragDrop>() + " inaktiv gesetzt");
                     }
                 }
             }
@@ -327,5 +320,16 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
         ThisSceneryElement.y = (rectTransform.anchoredPosition.y + 150) / 200;
         ThisSceneryElement.x = 0.062f;
         StaticSceneData.Sceneries3D(); //CreateScene der SceneryElements
+    }
+
+
+    public void Update()
+    {
+        if (dragging && SceneManaging.openUp)
+        {
+            SceneManaging.statusReiter = SceneManaging.triggerActive;
+            this.schieneKulisse = SceneManaging.triggerActive;
+            setReiterActive(SceneManaging.triggerActive);
+        }
     }
 }

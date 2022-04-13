@@ -16,7 +16,8 @@ public static class SceneManaging
     public static bool playing;
     public static bool updateMusic;
     public static int timelineHit;
-    public static bool highlighted = false;                 //global variable since only one object can be highlighted - everything else is unhighlighted
+    public static bool highlighted;                 //global variable since only one object can be highlighted - everything else is unhighlighted
 
     public static int objectsTimeline;
+    public  static bool openUp;
 }

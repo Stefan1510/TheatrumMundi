@@ -7,23 +7,13 @@ using UnityEngine.UI;
 public class timelineOpenCloseV2 : MonoBehaviour
 {
     Image timelineImage;
-    Outline outline;
     AudioSource audioSource;
     public GameObject gameController;
-    //public Text timelineText;
     public Image timeSliderImage;
     private BoxCollider2D timeSlider;
     public GameObject rail3dObj;
-    //Vector2 textSize;
-    //bool timelineOpen;			//timeline open/close
-    //bool clickingTimeline;          //if timeline is clicked
-    //bool movingOnTimeline;          //is the mouse over the timeline
     bool draggingOnTimeline;        //dragging the mouse over the timeline
-    //bool highlighted;               //global variable since only one object can be highlighted - everything else is unhighlighted
-    //bool clickingObject;            //if you only click the object
-    //bool movingObject;              //is the mouse over the object
     bool draggingObject;            //dragging an object with mouse
-    //bool objectOnTimeline;          //is object on timeline
     bool doSomethingOnce;           //flag for do something once in a loop
     bool editTimelineObject;        //flag for shifting/clicking an object on timeline
     bool releaseOnTimeline;         //flag if you set an object on timeline
@@ -39,14 +29,10 @@ public class timelineOpenCloseV2 : MonoBehaviour
     int maxTimeInSec;
     int currentClip;
     Vector2 sizeDeltaAsFactor;
-    //public Button myButton;
-    //Vector2 objectDefaultPosition;
     Vector2[] objectShelfPosition;
     Vector2[] objectShelfSize;
     GameObject[] objectShelfParent;
-    //temp gameobject
     GameObject newCopyOfFigure;
-    //Vector2 objectDefaultSize;
     Vector2 objectSceneSize;
 
     public GameObject objectLibrary;
@@ -56,7 +42,6 @@ public class timelineOpenCloseV2 : MonoBehaviour
 
     GameObject[] figureObjects;
     GameObject[] figureObjects3D;
-    //public GameObject[] figure3D;
     int currentClickedObjectIndex;
     int currentClickedInstanceObjectIndex;
 
@@ -76,21 +61,13 @@ public class timelineOpenCloseV2 : MonoBehaviour
 
     public AudioClip[] clip;         // ought to be 6 audioclips
 
-    // Start is called before the first frame update
+
     void Awake()
     {
         timelineImage = this.GetComponent<Image>();
-        //timeSliderImage=GetComponent<Image>();
-        //timeSlider=timeSliderImage.GetComponent<BoxCollider2D>();
         SceneManaging.anyTimelineOpen = false;
-        //clickingTimeline = false;
-        //movingOnTimeline = false;
         draggingOnTimeline = false;
-        //highlighted = false;
-        //clickingObject = false;
-        //movingObject = false;
         draggingObject = false;
-        //objectOnTimeline = false;
         doSomethingOnce = false;
         editTimelineObject = false;
         releaseOnTimeline = false;
@@ -99,17 +76,6 @@ public class timelineOpenCloseV2 : MonoBehaviour
         currentClip = 0;
         isTimelineOpen = false;
         isInstance = false;
-
-
-        /*
-		objectDefaultPosition=myButton.transform.position;
-		objectDefaultSize.x=myButton.GetComponent<RectTransform>().rect.width;
-		objectDefaultSize.y=myButton.GetComponent<RectTransform>().rect.height;
-		objectSceneSize.x=myButton.GetComponent<RectTransform>().rect.width;
-		objectSceneSize.y=myButton.GetComponent<RectTransform>().rect.height;
-		*/
-
-        //textSize = new Vector2(timelineText.GetComponent<RectTransform>().sizeDelta.x, timelineText.GetComponent<RectTransform>().sizeDelta.y);
 
         //load all objects given in the figuresShelf
         //Debug.Log("objectscount: "+objectLibrary.transform.childCount);
@@ -124,66 +90,28 @@ public class timelineOpenCloseV2 : MonoBehaviour
         {
             //collect objects
             figureObjects[i] = (objectLibrary.transform.GetChild(i).transform.GetChild(1).gameObject);
-            //Debug.Log("one figure: "+figureObjects[0]);					//returns the empty
-            //Debug.Log("one figure: "+figureObjects[0].GetChild(1));		//returns the childs of this empty e.g. the button
-
-            //store default position
-            //this creates new vectr2-objects (posistion and size of the elements in shelf)
-            //f3dobjectShelfPosition[i] = figureObjects[i].GetComponent<RectTransform>().anchoredPosition;
             objectShelfSize[i] = new Vector2(figureObjects[i].GetComponent<RectTransform>().rect.width, figureObjects[i].GetComponent<RectTransform>().rect.height);
-            //Debug.Log("defaultShelfPosition: " + objectShelfPosition[i] + " ++++++++++defaultShelfSize: " + objectShelfSize[i]);
-            //store default parentName
-            //this creates new game-objects named like the parent :(
-            //objectShelfParent[i]=new GameObject(figureObjects[i].transform.parent.gameObject.name);
             objectShelfParent[i] = figureObjects[i].transform.parent.gameObject;
-
-            //GameObject tmp=new GameObject();
-            //tmp.name=figureObjects[i].transform.parent.gameObject.name;
-            //objectShelfParent[i]=tmp;
-            //Destroy(tmp);
-            //make a true clone of gameobject
-            //objectShelfParent[i]=Instantiate(figureObjects[i].transform.parent.gameObject);
-            //Debug.Log("defaultShelfParent: "+objectShelfParent[i]);
         }
 
         foreach (GameObject gaOb in objectShelfParent)
-            //Debug.Log("defaultShelfParentArray: " + gaOb);
-
             //create a new tempGameObject
             newCopyOfFigure = new GameObject();
-
         try
         {
             for (int i = 0; i < figureObjects3D.Length; i++)
             {
                 figureObjects3D[i] = gameController.GetComponent<SceneDataController>().objectsFigureElements[i];
             }
-
         }
-        catch (IndexOutOfRangeException ex)
-        {
+        catch (IndexOutOfRangeException ex) { }
+        //Debug.Log("++++++figures loaded: " + figureObjects.Length);
+        //Debug.Log("++++++figures3D loaded: " + figureObjects3D.Length);
 
-        }
-        Debug.Log("++++++figures loaded: " + figureObjects.Length);
-        Debug.Log("++++++figures3D loaded: " + figureObjects3D.Length);
-
-        /*//example for the first element
-		objectDefaultPosition=figureObjects[0].transform.position;
-		objectDefaultSize.x=figureObjects[0].GetComponent<RectTransform>().rect.width;
-		objectDefaultSize.y=figureObjects[0].GetComponent<RectTransform>().rect.height;
-		objectSceneSize.x=figureObjects[0].GetComponent<RectTransform>().rect.width;
-		objectSceneSize.y=figureObjects[0].GetComponent<RectTransform>().rect.height;
-		//Debug.Log("object width,height: "+objectDefaultSize);*/
         currentClickedObjectIndex = -1;
         currentClickedInstanceObjectIndex = -1;
 
-        //change parent to root
-        //figureObjects[0].GetChild(1).transform.SetParent(this.transform);	//parent to timeline
-        //this is the root-parent
-        //mainMenue = GameObject.Find("timelineArea");
-        //parentMenue = GameObject.Find("MenueDirectorMain");
         timeSettings = timeSliderImage.transform.GetChild(0).gameObject; // GameObject.Find("ImageTimeSettingsArea");
-
     }
 
     void Start()
@@ -191,33 +119,12 @@ public class timelineOpenCloseV2 : MonoBehaviour
         scaleObject(gameObject, 1335, 15);//openCloseTimelineByClick(true,timelineImage,false);
         audioSource = GetComponent<AudioSource>();
         timeSettings.SetActive(false);
-        //outline.enabled = false;
-        //figCounterCircle[0] = figureObjects[0].transform.parent.GetChild(2).gameObject;
-        //figCounterCircle[0] = GameObject.Find("ImageCountFigObj01");
         for (int i = 0; i < figureObjects.Length; i++)
         {
             figCounterCircle[i] = figureObjects[i].transform.parent.GetChild(2).gameObject;
             figCounterCircle[i].transform.GetChild(0).GetComponent<Text>().text = "0";
         }
 
-        //get figure element
-        //gameController = GameObject.Find("GameController");
-        //Debug.Log(">>>figure elements existing: "+StaticSceneData.StaticData.figureElements);
-        //ThisFigureElement = StaticSceneData.StaticData.figureElements.Find(x => x.name == gameObject.name.Substring(6));
-        //Debug.Log(">>>figure element: "+ThisFigureElement);
-        //Debug.Log(">>>figure elements existing: "+figure1.name);
-
-        //rail1StartPos=new Vector3(0.0f,-0.009f,-2.0f);
-        //rail1EndPos=new Vector3(0.0f,-0.009f,2.0f);
-        /*rail2StartPos=new Vector3(-0.119f,0.146f,-2.0f);*/
-        //rail3StartPos=new Vector3(-0.319f,0.146f,-2.0f);
-        /*rail4StartPos=new Vector3(-0.439f,0.146f,-2.0f);
-		rail5StartPos=new Vector3(-0.642f,0.146f,-2.0f);
-		rail6StartPos=new Vector3(-0.759f,0.146f,-2.0f);*/
-        //Debug.Log("start... "+rail1StartPos);
-        //Debug.Log("start... "+rail1EndPos);
-        //list of objects in the timeline
-        //create an empty list
         List<GameObject> timelineObjects = new List<GameObject>();
         List<GameObject> timelineInstanceObjects = new List<GameObject>();
         List<GameObject> timelineObjects3D = new List<GameObject>();
