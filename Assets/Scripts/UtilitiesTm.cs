@@ -20,8 +20,9 @@ public static class UtilitiesTm
 
     public static string FloaTTimeToString(float seconds)
     {
-        string strSeconds = (seconds % 60).ToString("00");
-        string strMinutes = (seconds/60).ToString("00");
+        int intSeconds = (int)seconds;
+        string strSeconds = (intSeconds % 60).ToString("00");
+        string strMinutes = (intSeconds / 60).ToString("00");
         return strMinutes + ":" + strSeconds;
     }
 
