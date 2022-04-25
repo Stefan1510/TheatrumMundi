@@ -8,7 +8,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class TimeSliderController : MonoBehaviour, IPointerUpHandler
+public class TimeSliderController : MonoBehaviour, IPointerUpHandler, IDragHandler
 {
     [SerializeField] private Text _textTime;
     [SerializeField] private Toggle _toggleKeyConfigControlls;
@@ -31,7 +31,6 @@ public class TimeSliderController : MonoBehaviour, IPointerUpHandler
         UpdateTimeSlider(0);
         SwitchKeyConfigControls(false);
         ChangeControlsFromTimelineSelection();
-
         sliderTestTestTestSlider.onValueChanged.AddListener((float testTestTest) => TestTestTestTest(testTestTest));
         sliderTestTestTestSlider2.onValueChanged.AddListener((float testTestTest) => TestTestTestTest2(testTestTest));
 
@@ -62,7 +61,13 @@ public class TimeSliderController : MonoBehaviour, IPointerUpHandler
 
     public void OnPointerUp(PointerEventData data)
     {
-        Debug.LogError("Timeslider OnPointerUP");
+        Debug.LogError("Timeslider OnPointerUP");   //bitte auskommentieren
+    }
+
+    public void OnDrag(PointerEventData data)
+    {
+
+        Debug.LogError("Timeslider Scrub");     //bitte auskommentieren
     }
 
     void UpdateTimeSlider(float value)
