@@ -6,8 +6,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
-public class TimeSliderController : MonoBehaviour
+public class TimeSliderController : MonoBehaviour, IPointerUpHandler
 {
     [SerializeField] private Text _textTime;
     [SerializeField] private Toggle _toggleKeyConfigControlls;
@@ -57,6 +58,11 @@ public class TimeSliderController : MonoBehaviour
         {
             ChangeControlsFromTimelineSelection();
         }
+    }
+
+    public void OnPointerUp(PointerEventData data)
+    {
+        Debug.LogError("Timeslider OnPointerUP");
     }
 
     void UpdateTimeSlider(float value)
