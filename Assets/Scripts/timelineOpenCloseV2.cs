@@ -49,14 +49,12 @@ public class timelineOpenCloseV2 : MonoBehaviour
     public List<GameObject> timelineInstanceObjects;
     public List<GameObject> timelineObjects3D;
     public List<GameObject> timelineInstanceObjects3D;
-    private FigureElement ThisFigureElement;    //element to set 3d object
 
     double fig1StartPos;
     double fig2StartPos;
     Vector3 railStartPos;
     Vector3 railEndPos;
     Color colFigure, colMusic, colFigureHighlighted; //, colMusicHighlighted;
-
 
     public AudioClip[] clip;         // ought to be 6 audioclips
 
@@ -106,9 +104,25 @@ public class timelineOpenCloseV2 : MonoBehaviour
             for (int i = 0; i < figureObjects3D.Length; i++)
             {
                 figureObjects3D[i] = gameController.GetComponent<SceneDataController>().objectsFigureElements[i];
+                //FigureElement figure = new FigureElement();
+                //figure.name = figureObjects3D[i].name;
+                ////figureElements.Add(figure);
+                //StaticSceneData.StaticData.figureElements.Add(figure);
             }
         }
         catch (IndexOutOfRangeException ex) { }
+
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////
+        // an der Stelle beim auf die Rail packen:
+        FigureInstanceElement thisFigureInstanceElement = new FigureInstanceElement();
+        thisFigureInstanceElement.instanceNr = 0; //index
+        thisFigureInstanceElement.railStart = 0; //railIndex
+        thisFigureInstanceElement.moment = 222; //startSec
+        //figureElements[0].figureInstanceElements.Add(thisFigureInstanceElement);
+        StaticSceneData.StaticData.figureElements[0].figureInstanceElements.Add(thisFigureInstanceElement);
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
         //Debug.Log("++++++figures loaded: " + figureObjects.Length);
         //Debug.Log("++++++figures3D loaded: " + figureObjects3D.Length);
 
