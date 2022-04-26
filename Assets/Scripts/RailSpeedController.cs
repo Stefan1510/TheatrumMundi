@@ -36,7 +36,7 @@ public class RailSpeedController : MonoBehaviour
     //  v(t) is the velocity at time t 
     //  v1 and v2 are the velocities at time t1 and t2
     //  a is the uniform rate of acceleration.
-    float GetDistanceAtTime(float t)    //time in Sekunden
+    public float GetDistanceAtTime(float t)    //time in Sekunden
     {
         float distance = 0;
         float vt = 0, t1 = 0, t2 = 0, v1 = 0, v2 = 0;
@@ -95,7 +95,7 @@ public class RailSpeedController : MonoBehaviour
 
     float GetDistanceBetweenTwoMoments(float t1, float t2, float v1, float v2)
     {
-        float s = 0;    //zurückegeleger Weg zwischen t1 und t2;
+        float s = 0;    //zurï¿½ckegeleger Weg zwischen t1 und t2;
         float a = 0;
         float t = t2 - t1;
         if (v1 == v2)

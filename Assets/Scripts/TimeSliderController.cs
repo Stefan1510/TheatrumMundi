@@ -61,13 +61,12 @@ public class TimeSliderController : MonoBehaviour, IPointerUpHandler, IDragHandl
 
     public void OnPointerUp(PointerEventData data)
     {
-        Debug.LogError("Timeslider OnPointerUP");   //bitte auskommentieren
+        SceneManaging.updateMusic = false;
     }
 
     public void OnDrag(PointerEventData data)
     {
-
-        Debug.LogError("Timeslider Scrub");     //bitte auskommentieren
+        SceneManaging.updateMusic = true;
     }
 
     void UpdateTimeSlider(float value)

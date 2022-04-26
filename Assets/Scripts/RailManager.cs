@@ -9,42 +9,30 @@ public class RailManager : MonoBehaviour
     Image timelineImage;
     AudioSource audioSource;
     public GameObject gameController;
-    public Text timelineText;
     public Image timeSliderImage;
     private BoxCollider2D timeSlider;
     public GameObject rail3dObj;
-    Vector2 textSize;
-    //bool clickingTimeline;          //if timeline is clicked
-    //bool movingOnTimeline;          //is the mouse over the timeline
     bool draggingOnTimeline;        //dragging the mouse over the timeline
-    //bool highlighted;               //global variable since only one object can be highlighted - everything else is unhighlighted
-    //bool clickingObject;            //if you only click the object
-    //bool movingObject;              //is the mouse over the object
     bool draggingObject;            //dragging an object with mouse
-    //bool objectOnTimeline;          //is object on timeline
     bool doSomethingOnce;           //flag for do something once in a loop
     bool editTimelineObject;        //flag for shifting/clicking an object on timeline
     bool releaseOnTimeline;         //flag if you set an object on timeline
     bool playingMusic;
     bool isInstance;
-    [HideInInspector] public bool isTimelineOpen;            //timeline open/close
+    public bool isTimelineOpen;
     Vector2 releaseObjMousePos;
     double minX;
     double maxX;
-    double minY;
-    double maxY;
+    //double minY;
+    //double maxY;
     string maxTimeLength;
     int maxTimeInSec;
     int currentClip;
     Vector2 sizeDeltaAsFactor;
-    //public Button myButton;
-    //Vector2 objectDefaultPosition;
     Vector2[] objectShelfPosition;
     Vector2[] objectShelfSize;
     GameObject[] objectShelfParent;
-    //temp gameobject
     GameObject newCopyOfFigure;
-    //Vector2 objectDefaultSize;
     Vector2 objectSceneSize;
 
     public GameObject objectLibrary;
@@ -53,7 +41,6 @@ public class RailManager : MonoBehaviour
     GameObject[] figCounterCircle;
 
     GameObject[] figureObjects;
-    GameObject[] musicObjects;
     GameObject[] figureObjects3D;
     int currentClickedObjectIndex;
     int currentClickedInstanceObjectIndex;
@@ -74,21 +61,13 @@ public class RailManager : MonoBehaviour
 
     public AudioClip[] clip;         // ought to be 6 audioclips
 
-    // Start is called before the first frame update
+
     void Awake()
     {
         timelineImage = this.GetComponent<Image>();
-        //timeSliderImage=GetComponent<Image>();
-        //timeSlider=timeSliderImage.GetComponent<BoxCollider2D>();
         SceneManaging.anyTimelineOpen = false;
-        //clickingTimeline = false;
-        //movingOnTimeline = false;
         draggingOnTimeline = false;
-        //highlighted = false;
-        //clickingObject = false;
-        //movingObject = false;
         draggingObject = false;
-        //objectOnTimeline = false;
         doSomethingOnce = false;
         editTimelineObject = false;
         releaseOnTimeline = false;
@@ -98,9 +77,8 @@ public class RailManager : MonoBehaviour
         isTimelineOpen = false;
         isInstance = false;
 
-        textSize = new Vector2(timelineText.GetComponent<RectTransform>().sizeDelta.x, timelineText.GetComponent<RectTransform>().sizeDelta.y);
-
         //load all objects given in the figuresShelf
+        //Debug.Log("objectscount: "+objectLibrary.transform.childCount);
         figureObjects = new GameObject[objectLibrary.transform.childCount];         //instead of a count like "3"
         figureObjects3D = new GameObject[figureObjects.Length];     //instead of a count like "3"
         objectShelfPosition = new Vector2[figureObjects.Length];
@@ -108,14 +86,12 @@ public class RailManager : MonoBehaviour
         objectShelfParent = new GameObject[figureObjects.Length];
         figCounterCircle = new GameObject[figureObjects.Length];
 
-
         for (int i = 0; i < objectLibrary.transform.childCount; i++)
         {
             //collect objects
-            figureObjects[i] = (objectLibrary.transform.GetChild(i).GetChild(1).gameObject);
+            figureObjects[i] = (objectLibrary.transform.GetChild(i).transform.GetChild(1).gameObject);
             objectShelfSize[i] = new Vector2(figureObjects[i].GetComponent<RectTransform>().rect.width, figureObjects[i].GetComponent<RectTransform>().rect.height);
             objectShelfParent[i] = figureObjects[i].transform.parent.gameObject;
-            //Debug.Log("Figure: " + figureObjects[i]);
         }
 
         foreach (GameObject gaOb in objectShelfParent)
@@ -128,10 +104,7 @@ public class RailManager : MonoBehaviour
                 figureObjects3D[i] = gameController.GetComponent<SceneDataController>().objectsFigureElements[i];
             }
         }
-        catch (IndexOutOfRangeException ex)
-        {
-
-        }
+        catch (IndexOutOfRangeException ex) { }
         //Debug.Log("++++++figures loaded: " + figureObjects.Length);
         //Debug.Log("++++++figures3D loaded: " + figureObjects3D.Length);
 
@@ -143,17 +116,15 @@ public class RailManager : MonoBehaviour
 
     void Start()
     {
-        scaleObject(gameObject, 1335, 15);//openCloseTimelineByClick(true, timelineImage, false);
+        scaleObject(gameObject, 1335, 15);//openCloseTimelineByClick(true,timelineImage,false);
         audioSource = GetComponent<AudioSource>();
         timeSettings.SetActive(false);
-
         for (int i = 0; i < figureObjects.Length; i++)
         {
             figCounterCircle[i] = figureObjects[i].transform.parent.GetChild(2).gameObject;
             figCounterCircle[i].transform.GetChild(0).GetComponent<Text>().text = "0";
         }
 
-        //create an empty list
         List<GameObject> timelineObjects = new List<GameObject>();
         List<GameObject> timelineInstanceObjects = new List<GameObject>();
         List<GameObject> timelineObjects3D = new List<GameObject>();
@@ -168,10 +139,10 @@ public class RailManager : MonoBehaviour
         fig1StartPos = railStartPos.z;//-1.75f;
         fig2StartPos = railEndPos.z;//1.88f;
 
-        minX = 301.0f;  //timeline-minX
+        //minX = 301.0f;  //timeline-minX
         maxX = 1623.0f; //timeline-maxX
-        minY = 428.0f;  //timeline-minY
-        maxY = 438.0f;  //timeline-maxY
+        //minY = 428.0f;  //timeline-minY
+        //maxY = 438.0f;  //timeline-maxY
         maxTimeLength = "10:14";
         maxTimeInSec = 614;
         sizeDeltaAsFactor = new Vector2(1.0f, 1.0f);
@@ -180,21 +151,73 @@ public class RailManager : MonoBehaviour
         // disable animations and disable emission
         if (gameObject.name != "ImageTimelineRailMusic")
         {
-            for (int i = 0; i < figureObjects3D.Length; i++)
+            for (int i = 0; i < figureObjects3D.Length - 3; i++) // ships dont have animation
             {
-                for (int j = 0; j < figureObjects3D[i].transform.childCount; j++)
+                Debug.Log("++++++++figureObject: " + figureObjects3D[i]); // + ", isShip: " + figureObjects3D[i].GetComponent<FigureStats>().isShip);
+                if (figureObjects3D[i].GetComponent<FigureStats>().isShip)
                 {
-                    try
+                    for (int j = 0; j < figureObjects3D[i].transform.childCount; j++)     
+                    {
+                        figureObjects3D[i].transform.GetChild(j).GetComponent<MeshRenderer>().material.DisableKeyword("_EMISSION");
+                    }
+                }
+
+                else
+                {
+                    for (int j = 0; j < figureObjects3D[i].transform.childCount - 1; j++)     // last one is armature
                     {
                         figureObjects3D[i].transform.GetChild(j).GetComponent<SkinnedMeshRenderer>().material.DisableKeyword("_EMISSION");
+                        figureObjects3D[i].GetComponent<Animator>().enabled = false;
                     }
-                    catch (MissingComponentException ex) { }
+
+                    //     if (figureObjects3D[i].GetComponent<FigureStats>().isShip)
+                    //     {
+                    //         Debug.Log("ISSHIP+++figureObject: " + figureObjects[i]+", isShip: "+figureObjects[i].GetComponent<FigureStats>().isShip);
+                    //         //     try
+                    //         //     {
+                    //         figureObjects3D[i].transform.GetChild(j).GetComponent<MeshRenderer>().material.DisableKeyword("_EMISSION");
+
+                    //         //     }
+                    //         //     catch (Exception exep)
+                    //         //     {
+                    //         //         if (exep is MissingComponentException || exep is NullReferenceException)
+                    //         //         {
+                    //         //             return;
+                    //         //         }
+                    //         //         throw;
+                    //     }
+                    //     // }
+                    //     else
+                    //     {
+                    //         Debug.Log("figureObject: " + figureObjects[i]+", isShip: "+figureObjects[i].GetComponent<FigureStats>().isShip);
+                    //         //         try
+                    //         //         {
+                    //         figureObjects3D[i].transform.GetChild(j).GetComponent<SkinnedMeshRenderer>().material.DisableKeyword("_EMISSION");
+                    //         figureObjects3D[i].GetComponent<Animator>().enabled = false;
+                    //         //             Debug.Log("figureObject: " + figureObjects[i]+", isShip: "+figureObjects[i].GetComponent<FigureStats>().isShip);
+                    //         //         }
+                    //         //         catch (Exception exep)
+                    //         //         {
+                    //         //             if (exep is MissingComponentException || exep is NullReferenceException)
+                    //         //             {
+                    //         //                 return;
+                    //         //             }
+                    //         //             throw;
+                    //     }
+                    // }
+                    // }
+                    // try
+                    // {
+                    //     figureObjects3D[i].GetComponent<Animator>().enabled = false;
+                    // }
+                    // catch (Exception ex)
+                    // {
+                    //     if (ex is MissingComponentException || ex is NullReferenceException)
+                    //     {
+                    //         return;
+                    //     }
+                    //     throw;
                 }
-                try
-                {
-                    figureObjects3D[i].GetComponent<Animator>().enabled = false;
-                }
-                catch (MissingComponentException ex) { }
             }
         }
     }
@@ -232,6 +255,7 @@ public class RailManager : MonoBehaviour
                 objName = "no object clicked!";
             }
         }
+
         return objName;
     }
     public string identifyClickedObjectByList(List<GameObject> objectsOnTimeline)
@@ -272,6 +296,7 @@ public class RailManager : MonoBehaviour
 
         if (isAnyTimelineOpen() == false)
         {
+            //Debug.Log("++++ es ist keine schiene geöffnet, deswegen wird geklickte Schiene geöffnet: " + tl);
             //set global flag
             SceneManaging.anyTimelineOpen = true;
             isTimelineOpen = true;
@@ -279,9 +304,6 @@ public class RailManager : MonoBehaviour
             tl.rectTransform.sizeDelta = new Vector2(tl.rectTransform.rect.width, heightOpened);
             //scale up the collider
             tl.GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightOpened);
-            //scale down the text
-            //tl.transform.GetChild(0).gameObject.GetComponent<Text>().rectTransform.localScale = new Vector3(1, 0.2f, 1);
-            //timelineText.rectTransform.localScale = new Vector3(1,0.2f,1);
             //minimize or maximize objects on timeline
             openCloseObjectInTimeline(true, timelineInstanceObjects, editTimelineObject);
             if (gameObject.name == "ImageTimelineRailMusic")
@@ -294,23 +316,24 @@ public class RailManager : MonoBehaviour
                 ImageTimelineSelection.SetRailNumber((int)Char.GetNumericValue(timelineImage.name[17]) - 1);
                 ImageTimelineSelection.SetRailType(0);  // for rail-rails
             }
+
         }
         else if (isAnyTimelineOpen() && editObjOnTl == false)
         {
             if (thisTimelineOpen)
             {
+                //Debug.Log("++++ geklickte Schiene ist offen und wird geschlossen: " + tl);
                 //close timeline
                 isTimelineOpen = false;
                 //scale down timeline
                 tl.rectTransform.sizeDelta = new Vector2(tl.rectTransform.rect.width, heightClosed);
                 //scale down the collider
                 tl.GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightClosed);
-                //scale up the text
-                //tl.transform.GetChild(0).gameObject.GetComponent<Text>().rectTransform.localScale = new Vector3(1, 1, 1);
                 openCloseObjectInTimeline(false, timelineInstanceObjects, editTimelineObject);
             }
             else
             {
+                //Debug.Log("++++ geklickte Schiene ist zu, aber eine andere ist offen und wird geschlossen: " + tl);
                 // a different rail is open - close it
                 for (int i = 0; i < gameController.GetComponent<UIController>().Rails.Length; i++)
                 {
@@ -319,7 +342,7 @@ public class RailManager : MonoBehaviour
                     gameController.GetComponent<UIController>().Rails[i].isTimelineOpen = false;
                     //GameController.GetComponent<UIController>().Rails[i].transform.GetChild(0).gameObject.GetComponent<Text>().rectTransform.localScale = new Vector3(1, 1, 1);
                     openCloseObjectInTimeline(false, gameController.GetComponent<UIController>().Rails[i].timelineInstanceObjects, editTimelineObject);
-                    //Debug.Log("++++ Scaling down Rail: " + gameController.GetComponent<UIController>().Rails[i]);
+                    Debug.Log("++++ Scaling down Rail: " + gameController.GetComponent<UIController>().Rails[i]);
                 }
                 gameController.GetComponent<UIController>().RailLight.GetComponent<RectTransform>().sizeDelta = new Vector2(tl.rectTransform.rect.width, heightClosed);
                 gameController.GetComponent<UIController>().RailLight.GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightClosed);
@@ -327,8 +350,9 @@ public class RailManager : MonoBehaviour
                 gameController.GetComponent<UIController>().RailMusic.GetComponent<RectTransform>().sizeDelta = new Vector2(tl.rectTransform.rect.width, heightClosed);
                 gameController.GetComponent<UIController>().RailMusic.GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightClosed);
                 gameController.GetComponent<UIController>().RailMusic.isTimelineOpen = false;
-
                 // open clicked rail
+                //Debug.Log("++++ geklickte Schiene wird geöffnet: " + tl);
+                //scale up timeline
                 tl.rectTransform.sizeDelta = new Vector2(tl.rectTransform.rect.width, heightOpened);
                 //scale up the collider
                 tl.GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightOpened);
@@ -345,6 +369,7 @@ public class RailManager : MonoBehaviour
                     ImageTimelineSelection.SetRailType(0);  // for rail-rails
                 }
             }
+
         }
         openCloseTimeSettings(isAnyTimelineOpen(), timeSettings);
 
@@ -363,10 +388,9 @@ public class RailManager : MonoBehaviour
             //scale up the collider
             tl.GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightOpened);
             //scale down the text
-            tl.transform.GetChild(0).gameObject.GetComponent<Text>().rectTransform.localScale = new Vector3(1, 0.2f, 1);
+            //tl.transform.GetChild(0).gameObject.GetComponent<Text>().rectTransform.localScale = new Vector3(1, 0.2f, 1);
             //timelineText.rectTransform.localScale = new Vector3(1,0.2f,1);
-            //scale down all objects on timeline
-            //SceneManaging.anyTimelineOpen = true;
+            //scale up all objects on timeline
             openCloseObjectInTimeline(isTimelineOpen, timelineInstanceObjects, editTimelineObject);
             if (gameObject.name == "ImageTimelineRailMusic")
             {
@@ -381,15 +405,12 @@ public class RailManager : MonoBehaviour
         }
         else
         {
-            // Debug.Log("++++ geklickte Schiene ist offen und wird geschlossen: " + tl);
-            //if open=="close"
+            //Debug.Log("++++ geklickte Schiene ist offen und wird geschlossen: " + tl);
             isTimelineOpen = false;
             //scale down timeline
             tl.rectTransform.sizeDelta = new Vector2(tl.rectTransform.rect.width, heightClosed);
             //scale down the collider
             tl.GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightClosed);
-            //scale up the text
-            tl.transform.GetChild(0).gameObject.GetComponent<Text>().rectTransform.localScale = new Vector3(1, 1, 1);
             //scale up all objects on timeline
             openCloseObjectInTimeline(isTimelineOpen, timelineInstanceObjects, editTimelineObject);
         }
@@ -455,38 +476,16 @@ public class RailManager : MonoBehaviour
         //move object
         obj.transform.position = new Vector2(mousePos.x, mousePos.y);
         //set up flags
-
-    }
-    public int checkHittingAnyTimeline(GameObject obj, Vector2 mousePos)
-    {
-        int hit = -1;
-        Image[] tl = new Image[gameController.GetComponent<UIController>().Rails.Length];
-        for (int i = 0; i < gameController.GetComponent<UIController>().Rails.Length; i++)
-        {
-            tl[i] = gameController.GetComponent<UIController>().Rails[i].GetComponent<Image>();
-            Vector2 tlPos = new Vector2(tl[i].transform.position.x, tl[i].transform.position.y);
-            Vector2 colSize = new Vector2(tl[i].GetComponent<BoxCollider2D>().size.x, tl[i].GetComponent<BoxCollider2D>().size.y);
-            //if mouse hits the timeline while dragging an object
-            //my implementation of object-boundingbox
-            if (((mousePos.x <= (tlPos.x + (colSize.x / 2.0f))) && (mousePos.x > (tlPos.x - (colSize.x / 2.0f)))) &&
-            ((mousePos.y <= (tlPos.y + (colSize.y / 2.0f))) && (mousePos.y > (tlPos.y - (colSize.y / 2.0f)))))
-            {
-                //Debug.Log("object hits timeline!: "+tl[i]);
-                hit = i;
-            }
-            //else hit = -1;
-        }
-        //Debug.Log("drag and hit " + hit);
-        return hit;
+        //Debug.Log("mouse: " + mousePos);
     }
     public bool checkHittingTimeline(GameObject obj, Image tl, Vector2 mousePos)
     {
         bool hit = false;
         /*Debug.Log("tl pos "+tl.transform.position); //global pos are the real position-data
-		Debug.Log("tl collider "+tl.GetComponent<BoxCollider2D>().size);
-		Debug.Log("mouse "+mousePos);
-		Debug.Log("obj collider "+obj.GetComponent<BoxCollider2D>().size);
-		*/
+        Debug.Log("tl collider "+tl.GetComponent<BoxCollider2D>().size);
+        Debug.Log("mouse "+mousePos);
+        Debug.Log("obj collider "+obj.GetComponent<BoxCollider2D>().size);
+        */
         //calculate bounding-box related to the timeline-pos
         Vector2 tlPos = new Vector2(tl.transform.position.x, tl.transform.position.y);
         Vector2 colSize = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, tl.GetComponent<BoxCollider2D>().size.y);
@@ -496,7 +495,7 @@ public class RailManager : MonoBehaviour
         ((mousePos.y <= (tlPos.y + (colSize.y / 2.0f))) && (mousePos.y > (tlPos.y - (colSize.y / 2.0f)))))
         {
             //Debug.Log("object hits timeline!");
-            hit = true; 
+            hit = true; ;
         }
         //Debug.Log("drag and hit " + hit);
         return hit;
@@ -511,7 +510,6 @@ public class RailManager : MonoBehaviour
         {
             //Debug.Log("object size: "+objects[i].GetComponent<RectTransform>().sizeDelta);
             //if timeline open scale ALL objects up
-
             if (timelineOpen)
             {
                 scaleObjectHeight(objects[i], length, scaleUp);
@@ -531,26 +529,6 @@ public class RailManager : MonoBehaviour
                 objects[i].GetComponent<RectTransform>().anchoredPosition = new Vector2(objects[i].GetComponent<RectTransform>().anchoredPosition.x, -6.0f);
                 //objects[i].GetComponent<RectTransform>().sizeDelta=new Vector2(150.0f,10.0f);
             }
-
-            /*if (timelineOpen)
-            {
-                scaleObject(objects[i], length, scaleUp);
-                scaleObject(objects[i].transform.GetChild(1).gameObject, objects[i].transform.GetChild(1).gameObject.GetComponent<RectTransform>().sizeDelta.x, scaleUp);
-                scaleObject(objects[i].transform.GetChild(0).gameObject, objects[i].transform.GetChild(0).gameObject.GetComponent<RectTransform>().sizeDelta.x, scaleUp);
-                //objects[i].GetComponent<RectTransform>().sizeDelta=new Vector2(150.0f,50.0f);
-                //new Vector2(animationLength,scaleYUp);
-
-            }
-            else if ((timelineOpen == false) && (editObjOnTl == false))
-            {
-                //otherwise scale ALL objects down
-                //Debug.Log("method: scale object down:");
-                scaleObject(objects[i], length, scaleDown);
-                scaleObject(objects[i].transform.GetChild(0).gameObject, objects[i].transform.GetChild(0).gameObject.GetComponent<RectTransform>().sizeDelta.x, scaleDown);
-                scaleObject(objects[i].transform.GetChild(1).gameObject, objects[i].transform.GetChild(1).gameObject.GetComponent<RectTransform>().sizeDelta.x, scaleDown);
-                //objects[i].GetComponent<RectTransform>().sizeDelta=new Vector2(150.0f,10.0f);
-            }*/
-
         }
     }
 
@@ -606,7 +584,7 @@ public class RailManager : MonoBehaviour
         //check if the object is already in list
         if (objects.Contains(obj))
         {
-            //objects.Remove(obj);
+            //do nothing
         }
         else
         {
@@ -627,14 +605,13 @@ public class RailManager : MonoBehaviour
     }*/
     public void animate3DObjectByTime(GameObject fig3D, int startSec, double animLength, double timerTime, double railStartZ, double railEndZ)
     {
-        //Debug.Log("method: fig: " + fig3D + " 3dobj: " + figure1 + " startSec: " + startSec + " animLength: " + animLength + " timerTime: " + timerTime);
-        //Debug.Log("fig3d props: " + fig3D.transform.position.x + ", rail X: " + rail3dObj.transform.position.x);
+        Debug.Log("method: fig: " + fig3D + " 3dobj: startSec: " + startSec + " animLength: " + animLength + " timerTime: " + timerTime);
         double figPos = fig3D.transform.position.z;
         double figStartPos = railStartZ * (-1.0f);      //*-1.0 changes startpoint and animation-direction
         animLength = 44.0f;
 
-        float tmpX = 0.0f;
-        tmpX = float.Parse(rail3dObj.GetComponent<Text>().text);
+        //float tmpX = 0.0f;
+        //tmpX = float.Parse(rail3dObj.GetComponent<Text>().text);
 
         if ((timerTime >= startSec) && (timerTime <= (startSec + (int)animLength)))
         {
@@ -651,7 +628,7 @@ public class RailManager : MonoBehaviour
             //Debug.Log("if: rail-length: " + railLength + " figStartPos: " + figStartPos + " percentage: " + percentageOfTime + " railPos: " + railPos + " timerTime: " + timerTime);
             //Debug.Log("if: figPos: " + figPos);
             //fig3D.transform.position=new Vector3(rail3StartPos.x,fig3D.transform.position.y,(float)figPos);
-            fig3D.transform.position = new Vector3(tmpX, rail3dObj.transform.position.y - 0.03f, (float)figPos);
+            fig3D.transform.position = new Vector3(rail3dObj.transform.position.x, rail3dObj.transform.position.y - 0.03f, (float)figPos);
         }
     }
     public bool isInList(List<GameObject> objects, GameObject obj)
@@ -699,7 +676,7 @@ public class RailManager : MonoBehaviour
         obj.GetComponent<RectTransform>().pivot = new Vector2(0.0f, 0.5f);
         trans.anchoredPosition = new Vector2((obj.GetComponent<RectTransform>().rect.width / 2) * (-1), 0.0f);
         trans.SetSiblingIndex(0);
-        trans.sizeDelta = size; // custom size
+        trans.sizeDelta = new Vector2(100.0f, 80.0f); // custom size
 
 
         Image image = imgObject.AddComponent<Image>();
@@ -788,51 +765,104 @@ public class RailManager : MonoBehaviour
         Debug.Log("+++Removed: " + obj);
         figCounterCircle[tmpNr - 1].transform.GetChild(0).GetComponent<Text>().text = (currentCounterNr - 1).ToString();
     }
-    public void unhighlight(GameObject obj3D, GameObject obj)
+
+    public int checkHittingAnyTimeline(GameObject obj, Vector2 mousePos)
     {
-        //obj3D.GetComponent<Outline>().enabled = false;
-        for (int i = 0; i < obj3D.transform.childCount; i++)
+        int hit = -1;
+        Image[] tl = new Image[gameController.GetComponent<UIController>().Rails.Length];
+        for (int i = 0; i < gameController.GetComponent<UIController>().Rails.Length; i++)
         {
-            //Debug.Log("Child: "+obj3D.transform.GetChild(i));
-            try
+            tl[i] = gameController.GetComponent<UIController>().Rails[i].GetComponent<Image>();
+            Debug.Log("timeline: " + tl[i]);
+            Vector2 tlPos = new Vector2(tl[i].transform.position.x, tl[i].transform.position.y);
+            Vector2 colSize = new Vector2(tl[i].GetComponent<BoxCollider2D>().size.x, tl[i].GetComponent<BoxCollider2D>().size.y);
+            //if mouse hits the timeline while dragging an object
+            //my implementation of object-boundingbox
+            if (((mousePos.x <= (tlPos.x + (colSize.x / 2.0f))) && (mousePos.x > (tlPos.x - (colSize.x / 2.0f)))) &&
+            ((mousePos.y <= (tlPos.y + (colSize.y / 2.0f))) && (mousePos.y > (tlPos.y - (colSize.y / 2.0f)))))
             {
-                obj3D.transform.GetChild(i).GetComponent<SkinnedMeshRenderer>().material.DisableKeyword("_EMISSION");
-                obj3D.transform.GetChild(i).GetComponent<SkinnedMeshRenderer>().material.SetColor("_Emission_Color", Color.black);
-                obj.transform.GetChild(0).GetComponent<Image>().color = colFigure;
+                Debug.Log("object hits timeline!: " + tl[i]);
+                hit = i;
             }
-            catch (MissingComponentException ex)
-            {
-
-            }
-
         }
-        obj.transform.GetChild(1).GetChild(0).gameObject.SetActive(false);  //hide Delete-Button
-        SceneManaging.highlighted = false;
+        Debug.Log("drag and hit " + hit);
+        return hit;
+    }
+
+    public bool checkFigureHighlighted(GameObject obj)
+    {
+        bool val = false;
+        try
+        {
+            if (obj.GetComponent<SkinnedMeshRenderer>().material.IsKeywordEnabled("_EMISSION"))    // check if second child (which is never the armature) has emission enabled (=is highlighted)
+            {
+                val = true;
+                Debug.Log("val: " + val);
+            }
+        }
+        catch (Exception ex)
+        {
+            if (ex is MissingComponentException || ex is NullReferenceException)
+            {
+                return false;
+            }
+            throw;
+        }
+        return val;
     }
 
     public void highlight(GameObject obj3D, GameObject obj)
     {
+        obj.transform.GetChild(0).GetComponent<Image>().color = colFigureHighlighted;
+        obj.transform.GetChild(1).GetChild(0).gameObject.SetActive(true);   //show Delete-Button
+        SceneManaging.highlighted = true;
+
         for (int i = 0; i < obj3D.transform.childCount; i++)
         {
             //Debug.Log("Child: "+obj3D.transform.GetChild(i));
             try
             {
                 obj3D.transform.GetChild(i).GetComponent<SkinnedMeshRenderer>().material.EnableKeyword("_EMISSION");
-                obj3D.transform.GetChild(i).GetComponent<SkinnedMeshRenderer>().material.SetColor("_Emission_Color", Color.black);
-                obj.transform.GetChild(0).GetComponent<Image>().color = colFigureHighlighted;
+
             }
-            catch (MissingComponentException ex) { }
+            catch (Exception ex)
+            {
+                if (ex is MissingComponentException || ex is NullReferenceException)
+                {
+                    return;
+                }
+                throw;
+            }
         }
-        obj.transform.GetChild(1).GetChild(0).gameObject.SetActive(true);   //show Delete-Button
-        SceneManaging.highlighted = true;
+    }
+    public void unhighlight(GameObject obj3D, GameObject obj)
+    {
+        obj.transform.GetChild(0).GetComponent<Image>().color = colFigure;
+        obj.transform.GetChild(1).GetChild(0).gameObject.SetActive(false);  //hide Delete-Button
+        SceneManaging.highlighted = false;
+
+        for (int i = 0; i < obj3D.transform.childCount; i++)
+        {
+            //Debug.Log("Child: "+obj3D.transform.GetChild(i));
+            try
+            {
+                obj3D.transform.GetChild(i).GetComponent<SkinnedMeshRenderer>().material.DisableKeyword("_EMISSION");
+            }
+
+            catch (Exception ex)
+            {
+                if (ex is MissingComponentException || ex is NullReferenceException)
+                {
+                    return;
+                }
+                throw;
+            }
+        }
     }
 
-    // Update is called once per frame
     void Update()
     {
-        //Debug.Log("draggingOnTimeline: " + draggingOnTimeline + ", editTimelineObj: " + editTimelineObject + ", draggingObj: " + draggingObject + ", isInstance: " + isInstance);
         Vector2 getMousePos = Input.mousePosition;
-
         if (Input.GetMouseButtonDown(0)) //left mouse button down
         {
             //Debug.Log("---status---");
@@ -875,19 +905,13 @@ public class RailManager : MonoBehaviour
             {
                 editTimelineObject = false;
             }
-            //Debug.Log("=====> found hit at index: " + tmpI);
-            //Debug.Log("=====> instance-array: " + timelineInstanceObjects.Count);
 
             //if you click the timeline with the mouse
             if (this.GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(getMousePos))
             {
                 //open or close timeline
-
                 openCloseTimelineByClick(isTimelineOpen, timelineImage, editTimelineObject);
-
-                //movingOnTimeline = true;        //drag on the timeline
                 draggingOnTimeline = true;
-                //clickingTimeline=true;	//may be the same as timelineOpen
             }
 
             //if you click on an object in shelf 
@@ -897,26 +921,17 @@ public class RailManager : MonoBehaviour
                 if (figureObjects[currentClickedObjectIndex].GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(getMousePos))
                 {
                     //set up some flags
-                    //clickingObject = true;    //for clicking
-                    //movingObject = true;        //for dragging
                     draggingObject = true;
-
-                    //save default values
-                    //objectDefaultPosition=figureObjects[currentClickedObjectIndex].transform.position;
-                    //objectDefaultSize.x=figureObjects[currentClickedObjectIndex].GetComponent<RectTransform>().rect.width;
-                    //objectDefaultSize.y=figureObjects[currentClickedObjectIndex].GetComponent<RectTransform>().rect.height;
                 }
             }
             //or check if you click an object in timeline
             if ((currentClickedInstanceObjectIndex != (-1)) && (editTimelineObject == true))
             {
+                //Debug.Log("clicked");
                 if (timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(getMousePos))
                 {
                     //set up some flags
-                    //clickingObject = true;  //did you click the object
-                    //movingObject = true;        //want to drag the object
                     draggingObject = true;
-                    //movingOnTimeline = true;    //access for moving an object on timeline
                     draggingOnTimeline = true;
 
                     timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).GetComponent<Button>().onClick.AddListener(() => removeObjectFromTimeline(timelineInstanceObjects[currentClickedInstanceObjectIndex], timelineInstanceObjects3D[currentClickedInstanceObjectIndex]));//, currentClickedObjectIndex));
@@ -924,23 +939,20 @@ public class RailManager : MonoBehaviour
                     //highlighting objects and showing delete button when clicked
                     if (gameObject.name != "ImageTimelineRailMusic")
                     {
-                        //Debug.Log("+++highlighted: " + SceneManaging.highlighted);
                         if (SceneManaging.highlighted == false)
                         {
                             highlight(timelineInstanceObjects3D[currentClickedInstanceObjectIndex], timelineInstanceObjects[currentClickedInstanceObjectIndex]);
                         }
-                        else if (SceneManaging.highlighted && timelineInstanceObjects3D[currentClickedInstanceObjectIndex].transform.GetChild(1).GetComponent<SkinnedMeshRenderer>().material.IsKeywordEnabled("_EMISSION"))    // check if second child (which is never the armature) has emission enabled (=is highlighted)
+                        else if (SceneManaging.highlighted && timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(0).GetComponent<Image>().color == colFigureHighlighted) // checkFigureHighlighted(timelineInstanceObjects3D[currentClickedInstanceObjectIndex].transform.GetChild(1).gameObject))  // check if second child (which is never the armature) has emission enabled (=is highlighted)
                         {
                             unhighlight(timelineInstanceObjects3D[currentClickedInstanceObjectIndex], timelineInstanceObjects[currentClickedInstanceObjectIndex]);
                         }
                         else
                         {
-                            //Debug.Log("etwas ist gehighlited aber nicht das. ");
                             for (int j = 0; j < gameController.GetComponent<UIController>().Rails.Length; j++)
                             {
                                 for (int i = 0; i < gameController.GetComponent<UIController>().Rails[j].timelineInstanceObjects3D.Count; i++)
                                 {
-                                    //Debug.Log("+++++++Schiene: " + gameController.GetComponent<UIController>().Rails[j] + ", obj: " + gameController.GetComponent<UIController>().Rails[j].timelineInstanceObjects3D[i]);
                                     unhighlight(gameController.GetComponent<UIController>().Rails[j].timelineInstanceObjects3D[i], gameController.GetComponent<UIController>().Rails[j].timelineInstanceObjects[i]);
                                 }
                                 highlight(timelineInstanceObjects3D[currentClickedInstanceObjectIndex], timelineInstanceObjects[currentClickedInstanceObjectIndex]);
@@ -967,183 +979,140 @@ public class RailManager : MonoBehaviour
                     unhighlight(timelineInstanceObjects3D[i], timelineInstanceObjects[i]);
                 }
             }
-            /* if (movingOnTimeline)
-             {
-                 //space for dragging
-                 //Debug.Log("ready to drag something on the timeline...");
-                 draggingOnTimeline = true;
-             }*/
-
-            /*if (movingObject)
-            {
-                //Debug.Log("ready to drag an object from shelf...");
-                draggingObject = true;
-            }*/
         }
 
         // if timeline is open and something is being dragged
         if (draggingOnTimeline && editTimelineObject && isTimelineOpen)
         {
-            //Debug.Log("+++++++++++++++++++++++++dragging on timeline......"+draggingOnTimeline);
+            //Debug.Log("+++++++++++++++++++++++++dragging on timeline......");
             //Debug.Log("--->before-if-index: "+currentClickedInstanceObjectIndex);
             if (currentClickedInstanceObjectIndex != (-1))  //is set in the identify-methods
             {
-                //Debug.Log("--->index: "+currentClickedInstanceObjectIndex);
-                //Debug.Log("index-name: "+timelineInstanceObjects[0].name);
-                //Debug.Log("index-collider: "+timelineInstanceObjects[0].GetComponent<BoxCollider2D>());
-                //Debug.Log("index-mousepos: "+Physics2D.OverlapPoint(getMousePos));
-
+                isInstance = true;
                 //if you click an object in timeline (for dragging)
-
-                //Debug.Log("moving timelineInstanceObjects: " + timelineInstanceObjects[currentClickedInstanceObjectIndex].name);
                 //move object
                 updateObjectPosition(timelineInstanceObjects[currentClickedInstanceObjectIndex], getMousePos); // hier muss die maus position minus pivot point genommen werden! oder so
-                //snapping/lock y-axis
+                                                                                                               //snapping/lock y-axis
                 setObjectOnTimeline(timelineInstanceObjects[currentClickedInstanceObjectIndex], timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.position.x, this.transform.position.y);
 
-                if (Physics2D.OverlapPoint(getMousePos) == false)
+                if (Physics2D.OverlapPoint(getMousePos) == false)       // mouse outside
                 {
+                    SceneManaging.objectsTimeline = ((int)Char.GetNumericValue(timelineImage.name[17]) - 1);  // save old timeline to remove instance of this timeline
                     draggingObject = true;
                     editTimelineObject = false;
-                    isInstance = true;
                     draggingOnTimeline = false;
-                    // save old Timeline object was on
-                    //SceneManaging.objectsTimeline = ((int)Char.GetNumericValue(timelineImage.name[17]));
-                    //Debug.Log("objectTimeline saved: "+SceneManaging.objectsTimeline);
-                    /*//draggingObject = true;
-                    movingObject = true;
-                    editTimelineObject = false;
-                    openCloseTimelineByDrag("close", timelineImage);*/
-                    updateObjectList(timelineObjects, timelineInstanceObjects[currentClickedInstanceObjectIndex]);
-                    Debug.Log("removed: " + timelineInstanceObjects[currentClickedInstanceObjectIndex] + " from: " + timelineObjects + ", Listenlaenge: " + timelineInstanceObjects.Count);
                 }
             }
+            releaseOnTimeline = true;
         }
-
-        // something has been dragged outside the timeline (instance)
+        //if something has been dragged outside of the timeline
         if (draggingOnTimeline == false && editTimelineObject == false && draggingObject && isInstance)
         {
-            //int hitTimeline;
-            SceneManaging.objectsTimeline = checkHittingAnyTimeline(timelineInstanceObjects[currentClickedInstanceObjectIndex], getMousePos);
+            int hitTimeline;
+            hitTimeline = checkHittingAnyTimeline(timelineInstanceObjects[currentClickedInstanceObjectIndex], getMousePos);
 
-            if (SceneManaging.objectsTimeline != -1)
-            {
-                // if (hitTimeline != ((int)Char.GetNumericValue(timelineImage.name[17]))) // if hit timeline does not equal the old one
-                // {
-                //Debug.Log("hit timeline does not equal the old one: "+hitTimeline);
-                //open timeline, if its not open
-                openCloseTimelineByDrag("open", gameController.GetComponent<UIController>().Rails[SceneManaging.objectsTimeline].GetComponent<Image>());
+            // if (hitTimeline != -1)  // if a timeline is hit
+            // {
+            //     // if (hitTimeline != ((int)Char.GetNumericValue(timelineImage.name[17]))) // if hit timeline does not equal the old one
+            //     // {
+            //     Debug.Log("hit timeline: "+hitTimeline);
+            //     //open timeline, if its not open
+            //     openCloseTimelineByDrag("open", gameController.GetComponent<UIController>().Rails[hitTimeline].GetComponent<Image>());
 
-                //scale up object/figures in timeline
-                openCloseObjectInTimeline(SceneManaging.anyTimelineOpen, gameController.GetComponent<UIController>().Rails[SceneManaging.objectsTimeline].timelineInstanceObjects, editTimelineObject);
-                //and set animation-length
-                float animationLength = 100.0f;     //length of objects animation
-                float scaleY = 80.0f;               //size if the timeline is maximized
+            //     //scale up object/figures in timeline
+            //     openCloseObjectInTimeline(true, gameController.GetComponent<UIController>().Rails[hitTimeline].timelineInstanceObjects, editTimelineObject);
+            //     //and set animation-length
+            //     float animationLength = 100.0f;     //length of objects animation
+            //     float scaleY = 80.0f;               //size if the timeline is maximized
 
-                // change rail of object!! erst im buttonUp
+            //     // change rail of object!! erst im buttonUp
 
-                //scale down the dragged figure (and childobject: image)
-                scaleObject(timelineInstanceObjects[currentClickedInstanceObjectIndex], animationLength, scaleY);
-                scaleObject(timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(0).gameObject, animationLength, scaleY);
-                scaleObject(timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).gameObject, animationLength, scaleY);
-                timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(0).gameObject.SetActive(true);
+            //     //scale down the dragged figure (and childobject: image)
+            //     scaleObject(timelineInstanceObjects[currentClickedInstanceObjectIndex], animationLength, scaleY);
+            //     scaleObject(timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(0).gameObject, animationLength, scaleY);
+            //     scaleObject(timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).gameObject, animationLength, scaleY);
+            //     timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(0).gameObject.SetActive(true);
 
-                // change parent back
-                setParent(gameController.GetComponent<UIController>().Rails[SceneManaging.objectsTimeline].timelineInstanceObjects[currentClickedInstanceObjectIndex], gameObject);
+            //     // change parent back
+            //     setParent(gameController.GetComponent<UIController>().Rails[hitTimeline].timelineInstanceObjects[currentClickedInstanceObjectIndex], gameObject);
 
-                //snapping/lock y-axis
-                setObjectOnTimeline(gameController.GetComponent<UIController>().Rails[SceneManaging.objectsTimeline].timelineInstanceObjects[currentClickedInstanceObjectIndex], timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.position.x, gameController.GetComponent<UIController>().Rails[SceneManaging.objectsTimeline].transform.position.y);
+            //     //snapping/lock y-axis
+            //     setObjectOnTimeline(gameController.GetComponent<UIController>().Rails[hitTimeline].timelineInstanceObjects[currentClickedInstanceObjectIndex], timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.position.x, gameController.GetComponent<UIController>().Rails[hitTimeline].transform.position.y);
 
-                //set placed figures to timelineobjects-list of remote rail
-                updateObjectList(gameController.GetComponent<UIController>().Rails[SceneManaging.objectsTimeline].timelineObjects, gameController.GetComponent<UIController>().Rails[SceneManaging.objectsTimeline].timelineInstanceObjects[currentClickedInstanceObjectIndex]);
-                // erase from old list (this)
-                Debug.Log("added obj " + gameController.GetComponent<UIController>().Rails[SceneManaging.objectsTimeline].timelineInstanceObjects[currentClickedInstanceObjectIndex] + " to remote timeline: " + gameController.GetComponent<UIController>().Rails[SceneManaging.objectsTimeline].timelineObjects);
-                updateObjectList(timelineObjects, timelineInstanceObjects[currentClickedInstanceObjectIndex]);
-                Debug.Log("removed obj " + timelineInstanceObjects[currentClickedInstanceObjectIndex] + " from this timeline: " + timelineObjects);
+            //     //set placed figures to timelineobjects-list of remote rail
+            //     updateObjectList(gameController.GetComponent<UIController>().Rails[hitTimeline].timelineObjects, gameController.GetComponent<UIController>().Rails[hitTimeline].timelineInstanceObjects[currentClickedInstanceObjectIndex]);
+            //     // erase from old list (this)
+            //     Debug.Log("added obj " + gameController.GetComponent<UIController>().Rails[hitTimeline].timelineInstanceObjects[currentClickedInstanceObjectIndex] + " to remote timeline: " + gameController.GetComponent<UIController>().Rails[hitTimeline].timelineObjects);
+            //     updateObjectList(timelineObjects, timelineInstanceObjects[currentClickedInstanceObjectIndex]);
+            //     Debug.Log("removed obj " + timelineInstanceObjects[currentClickedInstanceObjectIndex] + " from this timeline: " + timelineObjects);
 
-                //SceneManaging.objectsTimeline = SceneManaging.objectsTimeline; // -1?
-                // }
-                /*else if (hitTimeline == ((int)Char.GetNumericValue(timelineImage.name[17])))    // if hit timeline equals the old one
-                {
-                    Debug.Log("hit timeline equals the old one: "+hitTimeline);
-                    //open timeline, if its not open
-                    openCloseTimelineByDrag("open", timelineImage);
+            //     //SceneManaging.objectsTimeline = SceneManaging.objectsTimeline; // -1?
+            //     // }
+            //     /*else if (hitTimeline == ((int)Char.GetNumericValue(timelineImage.name[17])))    // if hit timeline equals the old one
+            //     {
+            //         Debug.Log("hit timeline equals the old one: "+hitTimeline);
+            //         //open timeline, if its not open
+            //         openCloseTimelineByDrag("open", timelineImage);
 
-                    //scale up object/figures in timeline
-                    openCloseObjectInTimeline(SceneManaging.anyTimelineOpen, timelineInstanceObjects, editTimelineObject);
-                    //and set animation-length
-                    float animationLength = 100.0f;     //length of objects animation
-                    float scaleY = 80.0f;               //size if the timeline is maximized
+            //         //scale up object/figures in timeline
+            //         openCloseObjectInTimeline(SceneManaging.anyTimelineOpen, timelineInstanceObjects, editTimelineObject);
+            //         //and set animation-length
+            //         float animationLength = 100.0f;     //length of objects animation
+            //         float scaleY = 80.0f;               //size if the timeline is maximized
 
-                    //scale down the dragged figure (and childobject: image)
-                    scaleObject(timelineInstanceObjects[currentClickedInstanceObjectIndex], animationLength, scaleY);
-                    scaleObject(timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(0).gameObject, animationLength, scaleY);
-                    scaleObject(timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).gameObject, animationLength, scaleY);
-                    timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(0).gameObject.SetActive(true);
+            //         //scale down the dragged figure (and childobject: image)
+            //         scaleObject(timelineInstanceObjects[currentClickedInstanceObjectIndex], animationLength, scaleY);
+            //         scaleObject(timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(0).gameObject, animationLength, scaleY);
+            //         scaleObject(timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).gameObject, animationLength, scaleY);
+            //         timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(0).gameObject.SetActive(true);
 
-                    // change parent back
-                    setParent(timelineInstanceObjects[currentClickedInstanceObjectIndex], gameObject);
+            //         // change parent back
+            //         setParent(timelineInstanceObjects[currentClickedInstanceObjectIndex], gameObject);
 
-                    //snapping/lock y-axis
-                    setObjectOnTimeline(timelineInstanceObjects[currentClickedInstanceObjectIndex], timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.position.x, this.transform.position.y);
+            //         //snapping/lock y-axis
+            //         setObjectOnTimeline(timelineInstanceObjects[currentClickedInstanceObjectIndex], timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.position.x, this.transform.position.y);
 
-                    //set placed figures to timelineobjects-list
-                    updateObjectList(timelineObjects, timelineInstanceObjects[currentClickedInstanceObjectIndex]);
-                    // erase from old list
+            //         //set placed figures to timelineobjects-list
+            //         updateObjectList(timelineObjects, timelineInstanceObjects[currentClickedInstanceObjectIndex]);
+            //         // erase from old list
 
-                    //save position, where object on timeline is released + set flag 
-                    releaseOnTimeline = true;
-                    releaseObjMousePos = new Vector2(getMousePos.x, getMousePos.y);
-                    //Debug.Log("release object at pos: " + getMousePos + " " + Physics2D.OverlapPoint(getMousePos));
+            //         //save position, where object on timeline is released + set flag 
+            //         releaseOnTimeline = true;
+            //         releaseObjMousePos = new Vector2(getMousePos.x, getMousePos.y);
+            //         //Debug.Log("release object at pos: " + getMousePos + " " + Physics2D.OverlapPoint(getMousePos));
 
-                    //set up flags*/
-                // }
+            //         //set up flags*/
+            //     // }
 
-                //save position, where object on timeline is released + set flag 
-                releaseOnTimeline = true;
-                releaseObjMousePos = new Vector2(getMousePos.x, getMousePos.y);
-                //Debug.Log("release object at pos: " + getMousePos + " " + Physics2D.OverlapPoint(getMousePos));
+            //     //save position, where object on timeline is released + set flag 
+            //     releaseOnTimeline = true;
+            //     releaseObjMousePos = new Vector2(getMousePos.x, getMousePos.y);
+            //     //Debug.Log("release object at pos: " + getMousePos + " " + Physics2D.OverlapPoint(getMousePos));
 
-                //set up flags
-            }
+            //     //set up flags
+            // }
 
-            else
-            {
-                //scale up the dragged figure and childobjects (button and rect)
-                scaleObject(timelineInstanceObjects[currentClickedInstanceObjectIndex], 150, 150);
-                timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(0).gameObject.SetActive(false);
-                scaleObject(timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).gameObject, 150, 150);
-                //moving on mouse pos
-                updateObjectPosition(timelineInstanceObjects[currentClickedInstanceObjectIndex], getMousePos);
-                //openCloseTimelineByDrag("close", timelineImage);
-                //temporarily change parent, so that object appears in front of the shelf
-                timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.SetParent(parentMenue.transform);
-                //make 3d object invisible for time of dragging
-                timelineInstanceObjects3D[currentClickedInstanceObjectIndex].SetActive(false);
-                //if you hit the timeline > object snap to timeline and is locked in y-movement-direction
-                openCloseTimelineByDrag("close", timelineImage);
-                releaseOnTimeline = false;
-            }
-            /*else
-            {
-                if (SceneManaging.timelineHit == tmp)
-                {
-                    Debug.Log("Scaling...");
-                    scaleObject(timelineInstanceObjects[currentClickedInstanceObjectIndex], objectShelfSize[currentClickedInstanceObjectIndex].x, objectShelfSize[currentClickedInstanceObjectIndex].y);
-                    scaleObject(timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(0).gameObject, objectShelfSize[currentClickedInstanceObjectIndex].x, objectShelfSize[currentClickedInstanceObjectIndex].y);
-                }
-                Debug.Log("...awayyyy");
-                //close timeline if you click e.g. in the shelf to get a new figure
-                openCloseTimelineByDrag("close", timelineImage);
-                //scale down also the figures on timeline
-                openCloseObjectInTimeline(SceneManaging.anyTimelineOpen, timelineInstanceObjects, editTimelineObject);
-                // scale up currentFigure
+            // else // if no timeline is hit
+            // {
+            //Debug.Log("nothign hit");
+            // //scale up the dragged figure and childobjects (button and rect)
+            // scaleObject(timelineInstanceObjects[currentClickedInstanceObjectIndex], 150, 150);
+            timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(0).gameObject.SetActive(false);
+            // scaleObject(timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).gameObject, 150, 150);
+            //             //temporarily change parent, so that object appears in front of the shelf
+            // timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.SetParent(parentMenue.transform);
+            // //moving on mouse pos
+            updateObjectPosition(timelineInstanceObjects[currentClickedInstanceObjectIndex], getMousePos);
+            // Debug.Log("obj pos: "+timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.position+", obj: "+timelineInstanceObjects[currentClickedInstanceObjectIndex]);
+            // //openCloseTimelineByDrag("close", timelineImage);
 
-
-            }*/
-
-
+            // //make 3d object invisible for time of dragging
+            // timelineInstanceObjects3D[currentClickedInstanceObjectIndex].SetActive(false);
+            // //if you hit the timeline > object snap to timeline and is locked in y-movement-direction
+            // openCloseTimelineByDrag("close", timelineImage);
+            releaseOnTimeline = false;
         }
+        // }
 
         // dragging an object from shelf to timeline
         if (draggingObject && editTimelineObject == false && isInstance == false)
@@ -1151,12 +1120,17 @@ public class RailManager : MonoBehaviour
             //Debug.Log("dragging a shelf-selected object on timeline.");
             //move object
             updateObjectPosition(figureObjects[currentClickedObjectIndex], getMousePos);
+
             //temporarily change parent, so that object appears in front of the shelf
             figureObjects[currentClickedObjectIndex].transform.SetParent(parentMenue.transform);
 
+            //updateObjectPosition(newCopyOfFigure,getMousePos);
             //if you hit the timeline > object snap to timeline and is locked in y-movement-direction
             bool hitTimeline = false;
+            //string nameOfHitObject="";
             hitTimeline = checkHittingTimeline(figureObjects[currentClickedObjectIndex], timelineImage, getMousePos);
+            //hitTimeline=checkHittingTimeline(newCopyOfFigure, timelineImage, getMousePos);
+            //Debug.Log("mouseclick: " + hitTimeline);
 
             int tmp = 0;
             if (transform.name.Contains("1"))
@@ -1184,19 +1158,23 @@ public class RailManager : MonoBehaviour
                 tmp = 6;
             }
 
+
             if (hitTimeline)
             {
                 SceneManaging.timelineHit = tmp;
 
                 //open timeline, if its not open
+                //Debug.Log(">>>flag timelineOpen: " + SceneManaging.timelineOpen);
+
                 openCloseTimelineByDrag("open", timelineImage);
 
                 //scale up object/figures in timeline
-                openCloseObjectInTimeline(SceneManaging.anyTimelineOpen, timelineInstanceObjects, editTimelineObject);
+                openCloseObjectInTimeline(true, timelineInstanceObjects, editTimelineObject);
                 //and set animation-length
                 float animationLength = 100.0f;     //length of objects animation
-                float scaleY = 80.0f;               //size if the timeline is maximized
-
+                float scaleY = 80.0f;             //size if the timeline is maximized
+                                                  //figureObjects[currentClickedObjectIndex].GetComponent<RectTransform>().sizeDelta=new Vector2(animationLength,scaleYUp);
+                                                  //scaleObject(figureObjects[currentClickedObjectIndex], animationLength, scaleYUp);
                 //scale down the dragged figure (and childobject: image)
                 scaleObject(figureObjects[currentClickedObjectIndex], animationLength, scaleY);
                 scaleObject(figureObjects[currentClickedObjectIndex].transform.GetChild(0).gameObject, animationLength, scaleY);
@@ -1216,15 +1194,31 @@ public class RailManager : MonoBehaviour
                 setParent(figureObjects[currentClickedObjectIndex], gameObject);
 
                 //snapping/lock y-axis
+                //figureObjects[currentClickedObjectIndex].transform.position=new Vector3(figureObjects[currentClickedObjectIndex].transform.position.x, this.transform.position.y,0.0f);
                 setObjectOnTimeline(figureObjects[currentClickedObjectIndex], figureObjects[currentClickedObjectIndex].transform.position.x, this.transform.position.y);
+                //setObjectOnTimeline(newCopyOfFigure,newCopyOfFigure.transform.position.x,this.transform.position.y);
 
                 //set placed figures to timelineobjects-list
                 updateObjectList(timelineObjects, figureObjects[currentClickedObjectIndex]);
+                //updateObjectList(timelineObjects,newCopyOfFigure);
+
+                //createRectangle(figureObjects[currentClickedObjectIndex], new Vector2(50.0f,50.0f), new Vector2(50.0f,50.0f));
+
+                //calculate the time the animation starts to run
+                //double startSec=calculateFigureStartTimeInSec(figureObjects[currentClickedObjectIndex], 100.0f, maxTimeInSec, minX, maxX);
+
+                //set 3d object to default position
+                //set3DObject(currentClickedObjectIndex,figureObjects3D);
+                //updateObjectList(timelineObjects3D,figureObjects3D[currentClickedObjectIndex]);
+
+                //updateObjectList(timelineObjects3D,newCopyOfFigure);
 
                 //save position, where object on timeline is released + set flag 
                 releaseOnTimeline = true;
                 releaseObjMousePos = new Vector2(getMousePos.x, getMousePos.y);
                 //Debug.Log("release object at pos: " + getMousePos + " " + Physics2D.OverlapPoint(getMousePos));
+
+                //animation of 3d object not during dragging object on timeline ->outside of dragging
 
                 //set up flags
             }
@@ -1237,8 +1231,9 @@ public class RailManager : MonoBehaviour
                 }
                 //close timeline if you click e.g. in the shelf to get a new figure
                 openCloseTimelineByDrag("close", timelineImage);
+
                 //scale down also the figures on timeline
-                openCloseObjectInTimeline(SceneManaging.anyTimelineOpen, timelineInstanceObjects, editTimelineObject);
+                openCloseObjectInTimeline(false, timelineInstanceObjects, editTimelineObject);
                 // scale up currentFigure
 
                 releaseOnTimeline = false;
@@ -1250,11 +1245,6 @@ public class RailManager : MonoBehaviour
         {
             //Debug.Log("release mouse button at pos: " + getMousePos + " " + Physics2D.OverlapPoint(getMousePos));
             //Debug.Log("++++++left mouse button up");
-            //clickingTimeline = false;
-            //movingOnTimeline = false;
-            //draggingOnTimeline = false;
-            //clickingObject = false;
-            //movingObject = false;
             draggingObject = false;
             doSomethingOnce = false;
             editTimelineObject = false;
@@ -1263,108 +1253,103 @@ public class RailManager : MonoBehaviour
             {
                 if (releaseObjMousePos == getMousePos)  //if release obj-pos and release mouse-button-pos is the same
                 {
-                    if (isInstance == false)
+                    //Debug.Log("you released a figure on timeline");
+                    //replace timeline-figure with an instance
+
+                    //create a copy of this timelineObject and keep the original one
+                    newCopyOfFigure = Instantiate(figureObjects[currentClickedObjectIndex]);
+                    //set properties of object
+                    //count objects from same kind
+                    int countName = 0;
+                    //name
+                    countName = countCopiesOfObject(figureObjects[currentClickedObjectIndex], timelineInstanceObjects);
+                    newCopyOfFigure.name = figureObjects[currentClickedObjectIndex].name + "_instance" + countName;
+                    if (gameObject.name == "ImageTimelineRailMusic")
                     {
-                        //Debug.Log("you released a figure on timeline");
-
-                        //create a copy of this timelineObject and keep the original one
-                        newCopyOfFigure = Instantiate(figureObjects[currentClickedObjectIndex]);
-                        //set properties of object
-                        //count objects from same kind
-                        int countName = 0;
-                        countName = countCopiesOfObject(figureObjects[currentClickedObjectIndex], timelineInstanceObjects);
-                        newCopyOfFigure.name = figureObjects[currentClickedObjectIndex].name + "_instance" + countName;
-                        if (gameObject.name == "ImageTimelineRailMusic")
-                        {
-                            createRectangle(newCopyOfFigure, new Vector2(300, 50), Color.green, minX, (double)int.Parse(newCopyOfFigure.transform.GetChild(0).transform.GetChild(1).GetComponent<Text>().text));
-                        }
-                        else
-                        {
-                            createRectangle(newCopyOfFigure, new Vector2(300, 50), colFigure, minX, 50.0f);
-                        }
-
-                        figCounterCircle[currentClickedObjectIndex].transform.GetChild(0).GetComponent<Text>().text = (countName + 1).ToString();
-
-                        //parent
-                        newCopyOfFigure.transform.SetParent(figureObjects[currentClickedObjectIndex].transform.parent.gameObject.transform);
-                        //position
-                        newCopyOfFigure.transform.position = new Vector2(figureObjects[currentClickedObjectIndex].transform.position.x, figureObjects[currentClickedObjectIndex].transform.position.y);
-                        //set collider
-
-                        //add object to list which objects are on timeline
-                        //set placed figures to timelineInstanceObjects-list
-                        updateObjectList(timelineInstanceObjects, newCopyOfFigure);
-
-                        //count the instances
-                        //	Debug.Log("number of instances on timeline: "+timelineInstanceObjects.Count);
-
-                        //Debug.Log("copies of this object:"+countCopiesOfObject(newCopyOfFigure,timelineObjects));
-
-                        //set default parent
-                        setParent(figureObjects[currentClickedObjectIndex], objectShelfParent[currentClickedObjectIndex]);
-                        Debug.Log("Set parent to: " + objectShelfParent);
-                        //scale to default values
-                        scaleObject(figureObjects[currentClickedObjectIndex], objectShelfSize[currentClickedObjectIndex].x, objectShelfSize[currentClickedObjectIndex].y);
-                        scaleObject(figureObjects[currentClickedObjectIndex].transform.GetChild(0).gameObject, objectShelfSize[currentClickedObjectIndex].x, objectShelfSize[currentClickedObjectIndex].y);
-
-                        //set back the original figure-image to shelf
-                        //Debug.Log("default shelf-pos: "+objectShelfPosition[currentClickedObjectIndex]);
-                        //Debug.Log("default shelf-empty: "+figureObjects[currentClickedObjectIndex].transform.parent.gameObject.name);
-                        //Debug.Log("default shelf-empty-pos: "+figureObjects[currentClickedObjectIndex].transform.parent.gameObject.transform.position);
-
-                        //get position of parent-empty-object
-                        //Vector2 tmpVec=new Vector2(figureObjects[currentClickedObjectIndex].transform.parent.gameObject.transform.position.x,figureObjects[currentClickedObjectIndex].transform.parent.gameObject.transform.position.y);
-
-                        //set this position
-                        figureObjects[currentClickedObjectIndex].GetComponent<RectTransform>().anchoredPosition = new Vector2(75.0f, -75.0f);
-                        // bring object back to position two, so that its visible
-                        figureObjects[currentClickedObjectIndex].transform.SetSiblingIndex(1);
-
-                        //remove from timelineObjects-list
-                        //	Debug.Log("count timelineObjects: "+timelineObjects.Count);
-                        //	timelineObjects.Remove(figureObjects[currentClickedObjectIndex]);
-                        //	Debug.Log("count timelineObjects after remove: "+timelineObjects.Count);
-
-                        //	Debug.Log("count timelineInstancesObjects: "+timelineInstanceObjects.Count);
-
-                        //set 3d object to default position
-                        if (gameObject.name != "ImageTimelineRailMusic")
-                        {
-                            GameObject curr3DObject = new GameObject();
-                            curr3DObject = Instantiate(figureObjects3D[currentClickedObjectIndex]);
-                            timelineInstanceObjects3D.Add(curr3DObject);
-                            //Debug.Log("++++++++++++ PosX curr3DObj: " + curr3DObject.transform.position.x);
-                            //set3DObject(currentClickedObjectIndex,figureObjects3D);
-                            //set3DObjectOfInstance(timelineInstanceObjects3D[timelineInstanceObjects3D.Count - 1]); //the last added object
-                            setParent(timelineInstanceObjects3D[timelineInstanceObjects3D.Count - 1], rail3dObj);
-                        }
-
-                        //Debug.Log("original shelf-pos: "+objectShelfPosition[currentClickedObjectIndex]);
-                        /*
-                            figureObjects[currentClickedObjectIndex].transform.SetParent(objectShelfParent[currentClickedObjectIndex].transform);
-                            //Debug.Log("original parent: "+objectShelfParent[currentClickedObjectIndex]+" count: "+objectShelfParent.Length);				
-
-                            //objectShelfPosition[i]=new Vector2(figureObjects[i].transform.position.x,figureObjects[i].transform.position.y);
-                            */
-
-                        //show the instances as a pinned number
-
-                        // set index back to -1 because nothing is being clicked anymore
-                        currentClickedObjectIndex = -1;
+                        createRectangle(newCopyOfFigure, new Vector2(300, 50), Color.green, minX, (double)int.Parse(newCopyOfFigure.transform.GetChild(0).transform.GetChild(1).GetComponent<Text>().text));
                     }
-                    else // if isInstance is true
+                    else
                     {
-                        if (SceneManaging.objectsTimeline == (int)Char.GetNumericValue(timelineImage.name[17]))
-                        {
-                            Debug.Log("objectTimeline equals the new one: " + SceneManaging.objectsTimeline);
-                        }
 
+                        createRectangle(newCopyOfFigure, new Vector2(300, 50), colFigure, minX, 50.0f);
                     }
+
+                    figCounterCircle[currentClickedObjectIndex].transform.GetChild(0).GetComponent<Text>().text = (countName + 1).ToString();
+
+                    //parent
+                    newCopyOfFigure.transform.SetParent(figureObjects[currentClickedObjectIndex].transform.parent.gameObject.transform);
+                    //position
+                    newCopyOfFigure.transform.position = new Vector2(figureObjects[currentClickedObjectIndex].transform.position.x, figureObjects[currentClickedObjectIndex].transform.position.y);
+                    //set collider
+
+
+                    //add object to list which objects are on timeline
+                    //set placed figures to timelineInstanceObjects-list
+                    updateObjectList(timelineInstanceObjects, newCopyOfFigure);
+
+                    //count the instances
+                    //	Debug.Log("number of instances on timeline: "+timelineInstanceObjects.Count);
+
+                    //Debug.Log("copies of this object:"+countCopiesOfObject(newCopyOfFigure,timelineObjects));
+
+                    //set default parent
+                    setParent(figureObjects[currentClickedObjectIndex], objectShelfParent[currentClickedObjectIndex]);
+                    Debug.Log("Set parent to: " + objectShelfParent);
+                    //scale to default values
+                    scaleObject(figureObjects[currentClickedObjectIndex], objectShelfSize[currentClickedObjectIndex].x, objectShelfSize[currentClickedObjectIndex].y);
+                    scaleObject(figureObjects[currentClickedObjectIndex].transform.GetChild(0).gameObject, objectShelfSize[currentClickedObjectIndex].x, objectShelfSize[currentClickedObjectIndex].y);
+
+                    //set back the original figure-image to shelf
+                    //Debug.Log("default shelf-pos: "+objectShelfPosition[currentClickedObjectIndex]);
+                    //Debug.Log("default shelf-empty: "+figureObjects[currentClickedObjectIndex].transform.parent.gameObject.name);
+                    //Debug.Log("default shelf-empty-pos: "+figureObjects[currentClickedObjectIndex].transform.parent.gameObject.transform.position);
+
+                    //get position of parent-empty-object
+                    //Vector2 tmpVec=new Vector2(figureObjects[currentClickedObjectIndex].transform.parent.gameObject.transform.position.x,figureObjects[currentClickedObjectIndex].transform.parent.gameObject.transform.position.y);
+
+                    //set this position
+                    figureObjects[currentClickedObjectIndex].GetComponent<RectTransform>().anchoredPosition = new Vector2(75.0f, -75.0f);
+                    // bring object back to position two, so that its visible
+                    figureObjects[currentClickedObjectIndex].transform.SetSiblingIndex(1);
+
+                    //remove from timelineObjects-list
+                    //	Debug.Log("count timelineObjects: "+timelineObjects.Count);
+                    //	timelineObjects.Remove(figureObjects[currentClickedObjectIndex]);
+                    //	Debug.Log("count timelineObjects after remove: "+timelineObjects.Count);
+
+                    //	Debug.Log("count timelineInstancesObjects: "+timelineInstanceObjects.Count);
+
+                    //set 3d object to default position
+                    if (gameObject.name != "ImageTimelineRailMusic")
+                    {
+                        GameObject curr3DObject = new GameObject();
+                        curr3DObject = Instantiate(figureObjects3D[currentClickedObjectIndex]);
+                        timelineInstanceObjects3D.Add(curr3DObject);
+                        //set3DObject(currentClickedObjectIndex,figureObjects3D);
+                        //set3DObjectOfInstance(timelineInstanceObjects3D[timelineInstanceObjects3D.Count - 1]); //the last added object
+                        setParent(timelineInstanceObjects3D[timelineInstanceObjects3D.Count - 1], rail3dObj);
+                        //Debug.Log("++++++++++++ 3D Object: " + curr3DObject.name + ", rail3d: " + rail3dObj + ", Pos: "+curr3DObject.transform.position);
+                    }
+
+
+                    //Debug.Log("original shelf-pos: "+objectShelfPosition[currentClickedObjectIndex]);
+                    /*
+                        figureObjects[currentClickedObjectIndex].transform.SetParent(objectShelfParent[currentClickedObjectIndex].transform);
+                        //Debug.Log("original parent: "+objectShelfParent[currentClickedObjectIndex]+" count: "+objectShelfParent.Length);				
+
+                        //objectShelfPosition[i]=new Vector2(figureObjects[i].transform.position.x,figureObjects[i].transform.position.y);
+                        */
+
+                    //show the instances as a pinned number
+
+                    // set index back to -1 because nothing is being clicked anymore
+                    currentClickedObjectIndex = -1;
                 }
+
             }
 
             // if dropped somewhere else than timeline: bring figure back to shelf
-            else if (releaseOnTimeline == false && currentClickedObjectIndex != -1)
+            else if (releaseOnTimeline == false && currentClickedObjectIndex != -1 && isInstance == false)
             {
                 //Debug.Log("+++++++++++gameobject: " + gameObject.name + ", index: " + currentClickedObjectIndex);
 
@@ -1373,18 +1358,17 @@ public class RailManager : MonoBehaviour
                 figureObjects[currentClickedObjectIndex].transform.SetSiblingIndex(1);
                 figureObjects[currentClickedObjectIndex].GetComponent<RectTransform>().anchoredPosition = new Vector2(75.0f, -75.0f);
             }
-            // if instance dropped somewhere else than timeline: remove it
-            else if (releaseOnTimeline == false && currentClickedInstanceObjectIndex != 1 && draggingOnTimeline == false)
+            else if (releaseOnTimeline == false && currentClickedInstanceObjectIndex != -1 && isInstance)
             {
-                Debug.Log("dragging on timeline: " + draggingOnTimeline);
+                Debug.Log("remove");
                 removeObjectFromTimeline(timelineInstanceObjects[currentClickedInstanceObjectIndex], timelineInstanceObjects3D[currentClickedInstanceObjectIndex]);
-                Debug.Log("Listenlaenge: " + timelineInstanceObjects.Count);
             }
 
             releaseOnTimeline = false;
             releaseObjMousePos.x = 0.0f;
             releaseObjMousePos.y = 0.0f;
             draggingOnTimeline = false;
+            isInstance = false;
         }
 
         //------------------UPDATE-LOOP---------------------------
@@ -1395,6 +1379,20 @@ public class RailManager : MonoBehaviour
         //Debug.Log("figObj: "+figureObjects[currentClickedObjectIndex].ToString());
         //animate the 3d object controlled by time
         //double startSec=calculateFigureStartTimeInSec(figureObjects[currentClickedObjectIndex], 100.0f, maxTimeInSec, minX, maxX);
+
+        /*int idx=0;
+        for(int i=0;i<timelineObjects.Count;i++)
+        {
+            idx=idx+1;
+            double startSec=calculateFigureStartTimeInSec(timelineObjects[i], 100.0f, maxTimeInSec, minX, maxX);
+            //Debug.Log("startSec: "+startSec);
+            bool tests=checkFigureObjectShouldPlaying(timelineObjects[i], (int)startSec, 100.0f, AnimationTimer.GetTime());
+            //Debug.Log("tests: "+tests);
+            if (tests)
+            {
+                animate3DObjectByTime(timelineObjects3D[i], (int)startSec, 100.0f, AnimationTimer.GetTime(), railStartPos.z, railEndPos.z);
+            }
+        }*/
 
         if (gameObject.name == "ImageTimelineRailMusic")
         {
@@ -1420,7 +1418,8 @@ public class RailManager : MonoBehaviour
                         audioSource.clip = clip[currentClip];
                         audioSource.Play();
                         hitObject = ((int)Char.GetNumericValue(timelineInstanceObjects[i].name[17])); // instance index
-                        //Debug.Log("++++++++++MUSIC STARTS ++++++ tmpTime: " + audioSource.time + ", current clip: " + currentClip + ", startsec: " + startSec + ", tmpTime: " + tmpTime);
+                                                                                                      //Debug.Log("++++++++++MUSIC STARTS ++++++ tmpTime: " + audioSource.time + ", current clip: " + currentClip + ", startsec: " + startSec + ", tmpTime: " + tmpTime);
+
                     }
                     else if (SceneManaging.updateMusic)
                     {
@@ -1435,7 +1434,9 @@ public class RailManager : MonoBehaviour
                             audioSource.Stop();
                             playingMusic = false;
                         }
+
                     }
+
                 }
             }
             else
@@ -1443,13 +1444,12 @@ public class RailManager : MonoBehaviour
                 audioSource.Stop();
                 playingMusic = false;
             }
-        }
-        else if (gameObject.name == "ImageTimelineRailLight")
-        {
+
         }
 
         else
         {
+            //int idx = 0;
             for (int i = 0; i < timelineInstanceObjects.Count; i++)
             {
                 // start Animation on play
@@ -1470,15 +1470,24 @@ public class RailManager : MonoBehaviour
                     }
                     catch (MissingComponentException ex) { }
                 }
-
+                //idx = idx + 1;
                 double startSec = calculateFigureStartTimeInSec(timelineInstanceObjects[i], 100.0f, maxTimeInSec, minX, maxX);
                 bool tests = checkFigureObjectShouldPlaying(timelineInstanceObjects[i], (int)startSec, 100.0f, AnimationTimer.GetTime());
+                //Debug.Log("tests: "+tests);
+
                 //if object should be playing (tests=true):
                 if (tests)
                 {
                     animate3DObjectByTime(timelineInstanceObjects3D[i], (int)startSec, 100.0f, AnimationTimer.GetTime(), railStartPos.z, railEndPos.z);
                     //Debug.Log("+++++++++++++++++++startSec: "+startSec+" +++++++++++++ Timertime: "+AnimationTimer.GetTime()+timelineInstanceObjects[currentClickedInstanceObjectIndex].name);
+
                 }
+                /*if (timelineInstanceObjects[currentClickedInstanceObjectIndex].name[6] == 'F')
+                {
+                    Debug.Log(timelineInstanceObjects[currentClickedInstanceObjectIndex].name[6]);
+                    animate3DObjectByTime(timelineInstanceObjects3D[i], (int)startSec, 100.0f, AnimationTimer.GetTime(), railStartPos.z, railEndPos.z);
+                }*/
+
             }
         }
 
@@ -1498,5 +1507,39 @@ public class RailManager : MonoBehaviour
             animate3DObjectByTime(figureObjects3D[1], (int)startSec, 100.0f, AnimationTimer.GetTime(), rail1StartPos.z, rail1EndPos.z);
         }
         */
+
+        /*
+        //
+        if (Input.GetMouseButtonUp(0) && (!movingObject))
+        {
+            bool hitTimeline=false;
+            if(currentClickedObjectIndex>=0)
+                hitTimeline=checkHittingTimeline(figureObjects[currentClickedObjectIndex], timelineImage, getMousePos);
+            else
+                hitTimeline=false;
+            //set object position back to shelf
+            if ((!hitTimeline) && (currentClickedObjectIndex>=0) && (!moveTimeSlider(timeSliderImage)))
+            {
+                //Debug.Log("timeSlider="+moveTimeSlider(timeSliderImage));
+                string objectClicked=identifyClickedObject();	//get name of identified object
+                bool isPresent=isInList(timelineObjects,figureObjects[currentClickedObjectIndex]);
+                if (isPresent)
+                {
+                    Debug.Log("you released object in space "+objectClicked+" bool: "+isPresent+" name: "+figureObjects[currentClickedObjectIndex].name);
+                    Debug.Log("empty-parent: "+objectShelfParent[currentClickedObjectIndex]);
+                    Debug.Log("empty-child: "+figureObjects[currentClickedObjectIndex].transform.GetChild(0));
+                    figureObjects[currentClickedObjectIndex].transform.position=objectShelfPosition[currentClickedObjectIndex];
+                    scaleObject(figureObjects[currentClickedObjectIndex],250.0f,250.0f);
+                    //remove object out of objectlist
+                    timelineObjects.Remove(figureObjects[currentClickedObjectIndex]);
+                    Debug.Log("timelineObjects count: "+timelineObjects.Count);
+                }
+                else
+                {
+                    Debug.Log("else released object in space "+objectClicked+" bool: "+isPresent+" name: "+figureObjects[currentClickedObjectIndex].name);
+
+                }
+            }
+        }*/
     }
 }

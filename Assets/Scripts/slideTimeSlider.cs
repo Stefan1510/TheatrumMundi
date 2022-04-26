@@ -265,6 +265,7 @@ public class slideTimeSlider : MonoBehaviour
 			{
 				//space for dragging
 				dragging=true;
+				Debug.Log("+++++++++++++++++++++++dragging true");
 			}
 		}
 		if (dragging)

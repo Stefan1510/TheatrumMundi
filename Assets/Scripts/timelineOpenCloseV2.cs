@@ -55,8 +55,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
     double fig2StartPos;
     Vector3 railStartPos;
     Vector3 railEndPos;
-    Color colFigure = new Color(0.06f, 0.66f, .74f, 0.5f);
-    Color colFigureHighlighted = new Color(0f, 0.87f, 1.0f, 0.5f);
+    Color colFigure, colMusic, colFigureHighlighted; //, colMusicHighlighted;
 
 
     public AudioClip[] clip;         // ought to be 6 audioclips
@@ -85,6 +84,11 @@ public class timelineOpenCloseV2 : MonoBehaviour
         objectShelfSize = new Vector2[figureObjects.Length];
         objectShelfParent = new GameObject[figureObjects.Length];
         figCounterCircle = new GameObject[figureObjects.Length];
+
+        colFigure = new Color(0.06f, 0.66f, .74f, 0.5f);
+        colMusic = new Color(0.21f, 0.51f, 0.267f, 0.5f);
+        colFigureHighlighted = new Color(0f, 0.87f, 1.0f, 0.5f);
+        //colMusicHighlighted = new Color(0.21f,0.81f, 0.267f, 0.5f);
 
         for (int i = 0; i < objectLibrary.transform.childCount; i++)
         {
@@ -139,7 +143,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
         fig1StartPos = railStartPos.z;//-1.75f;
         fig2StartPos = railEndPos.z;//1.88f;
 
-        //minX = 301.0f;  //timeline-minX
+        minX = 301.0f;  //timeline-minX
         maxX = 1623.0f; //timeline-maxX
         //minY = 428.0f;  //timeline-minY
         //maxY = 438.0f;  //timeline-maxY
@@ -153,10 +157,10 @@ public class timelineOpenCloseV2 : MonoBehaviour
         {
             for (int i = 0; i < figureObjects3D.Length - 3; i++) // ships dont have animation
             {
-                Debug.Log("++++++++figureObject: " + figureObjects3D[i]); // + ", isShip: " + figureObjects3D[i].GetComponent<FigureStats>().isShip);
+                //Debug.Log("++++++++figureObject: " + figureObjects3D[i]); // + ", isShip: " + figureObjects3D[i].GetComponent<FigureStats>().isShip);
                 if (figureObjects3D[i].GetComponent<FigureStats>().isShip)
                 {
-                    for (int j = 0; j < figureObjects3D[i].transform.childCount; j++)     
+                    for (int j = 0; j < figureObjects3D[i].transform.childCount; j++)
                     {
                         figureObjects3D[i].transform.GetChild(j).GetComponent<MeshRenderer>().material.DisableKeyword("_EMISSION");
                     }
@@ -605,7 +609,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
     }*/
     public void animate3DObjectByTime(GameObject fig3D, int startSec, double animLength, double timerTime, double railStartZ, double railEndZ)
     {
-        Debug.Log("method: fig: " + fig3D + " 3dobj: startSec: " + startSec + " animLength: " + animLength + " timerTime: " + timerTime);
+        //Debug.Log("method: fig: " + fig3D + " 3dobj: startSec: " + startSec + " animLength: " + animLength + " timerTime: " + timerTime);
         double figPos = fig3D.transform.position.z;
         double figStartPos = railStartZ * (-1.0f);      //*-1.0 changes startpoint and animation-direction
         animLength = 44.0f;
@@ -659,12 +663,6 @@ public class timelineOpenCloseV2 : MonoBehaviour
     }
     public void createRectangle(GameObject obj, Vector2 size, Color col, double railMinX, double animLength) // start pos brauch ich eigentlich nicht
     {
-        //int alpha=1;
-        // Vector3 col = new Vector3(255, 120, 60);
-        // Image rect = obj.AddComponent<Image>();              // an object can have only one Image-Component
-        // rect.color = new Color(col.x, col.y, col.z);
-        // rect.transform.position = startPos;          
-
         double tmpLength = (maxX - minX) / 614.0f * animLength;
 
         GameObject imgObject = new GameObject("RectBackground");
@@ -676,11 +674,9 @@ public class timelineOpenCloseV2 : MonoBehaviour
         obj.GetComponent<RectTransform>().pivot = new Vector2(0.0f, 0.5f);
         trans.anchoredPosition = new Vector2((obj.GetComponent<RectTransform>().rect.width / 2) * (-1), 0.0f);
         trans.SetSiblingIndex(0);
-        trans.sizeDelta = new Vector2(100.0f, 80.0f); // custom size
-
+        trans.sizeDelta = new Vector2((float)animLength, 80.0f); // custom size
 
         Image image = imgObject.AddComponent<Image>();
-        //Texture2D tex = Resources.Load<Texture2D>("red");
         image.color = col;
         var tempColor = image.color;
         tempColor.a = 0.5f;
@@ -911,7 +907,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
             {
                 //open or close timeline
                 openCloseTimelineByClick(isTimelineOpen, timelineImage, editTimelineObject);
-                draggingOnTimeline = true;
+                //draggingOnTimeline = true;
             }
 
             //if you click on an object in shelf 
@@ -934,7 +930,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
                     draggingObject = true;
                     draggingOnTimeline = true;
 
-                    timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).GetComponent<Button>().onClick.AddListener(() => removeObjectFromTimeline(timelineInstanceObjects[currentClickedInstanceObjectIndex], timelineInstanceObjects3D[currentClickedInstanceObjectIndex]));//, currentClickedObjectIndex));
+                    //timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).GetComponent<Button>().onClick.AddListener(() => removeObjectFromTimeline(timelineInstanceObjects[currentClickedInstanceObjectIndex], timelineInstanceObjects3D[currentClickedInstanceObjectIndex]));//, currentClickedObjectIndex));
 
                     //highlighting objects and showing delete button when clicked
                     if (gameObject.name != "ImageTimelineRailMusic")
@@ -1175,7 +1171,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
                 float scaleY = 80.0f;             //size if the timeline is maximized
                                                   //figureObjects[currentClickedObjectIndex].GetComponent<RectTransform>().sizeDelta=new Vector2(animationLength,scaleYUp);
                                                   //scaleObject(figureObjects[currentClickedObjectIndex], animationLength, scaleYUp);
-                //scale down the dragged figure (and childobject: image)
+                                                  //scale down the dragged figure (and childobject: image)
                 scaleObject(figureObjects[currentClickedObjectIndex], animationLength, scaleY);
                 scaleObject(figureObjects[currentClickedObjectIndex].transform.GetChild(0).gameObject, animationLength, scaleY);
 
@@ -1266,12 +1262,14 @@ public class timelineOpenCloseV2 : MonoBehaviour
                     newCopyOfFigure.name = figureObjects[currentClickedObjectIndex].name + "_instance" + countName;
                     if (gameObject.name == "ImageTimelineRailMusic")
                     {
-                        createRectangle(newCopyOfFigure, new Vector2(300, 50), Color.green, minX, (double)int.Parse(newCopyOfFigure.transform.GetChild(0).transform.GetChild(1).GetComponent<Text>().text));
+                        float tmpLength = UtilitiesTm.FloatRemap(newCopyOfFigure.GetComponent<MusicLength>().musicLength, 0, 614, (float)minX, (float)maxX);
+                        createRectangle(newCopyOfFigure, new Vector2(300, 50), colMusic, minX, tmpLength);
+                        Debug.Log("musicLenght: " + tmpLength);
                     }
                     else
                     {
 
-                        createRectangle(newCopyOfFigure, new Vector2(300, 50), colFigure, minX, 50.0f);
+                        createRectangle(newCopyOfFigure, new Vector2(300, 50), colFigure, minX, 100.0f);
                     }
 
                     figCounterCircle[currentClickedObjectIndex].transform.GetChild(0).GetComponent<Text>().text = (countName + 1).ToString();
@@ -1327,7 +1325,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
                         timelineInstanceObjects3D.Add(curr3DObject);
                         //set3DObject(currentClickedObjectIndex,figureObjects3D);
                         //set3DObjectOfInstance(timelineInstanceObjects3D[timelineInstanceObjects3D.Count - 1]); //the last added object
-                        setParent(timelineInstanceObjects3D[timelineInstanceObjects3D.Count - 1], rail3dObj);
+                        setParent(timelineInstanceObjects3D[timelineInstanceObjects3D.Count - 1], rail3dObj.transform.GetChild(0).gameObject);
                         //Debug.Log("++++++++++++ 3D Object: " + curr3DObject.name + ", rail3d: " + rail3dObj + ", Pos: "+curr3DObject.transform.position);
                     }
 
@@ -1371,29 +1369,6 @@ public class timelineOpenCloseV2 : MonoBehaviour
             isInstance = false;
         }
 
-        //------------------UPDATE-LOOP---------------------------
-        //Debug.Log("update ");
-        //Debug.Log("update. ");
-        //Debug.Log("update.. ");
-        //Debug.Log("update... ");
-        //Debug.Log("figObj: "+figureObjects[currentClickedObjectIndex].ToString());
-        //animate the 3d object controlled by time
-        //double startSec=calculateFigureStartTimeInSec(figureObjects[currentClickedObjectIndex], 100.0f, maxTimeInSec, minX, maxX);
-
-        /*int idx=0;
-        for(int i=0;i<timelineObjects.Count;i++)
-        {
-            idx=idx+1;
-            double startSec=calculateFigureStartTimeInSec(timelineObjects[i], 100.0f, maxTimeInSec, minX, maxX);
-            //Debug.Log("startSec: "+startSec);
-            bool tests=checkFigureObjectShouldPlaying(timelineObjects[i], (int)startSec, 100.0f, AnimationTimer.GetTime());
-            //Debug.Log("tests: "+tests);
-            if (tests)
-            {
-                animate3DObjectByTime(timelineObjects3D[i], (int)startSec, 100.0f, AnimationTimer.GetTime(), railStartPos.z, railEndPos.z);
-            }
-        }*/
-
         if (gameObject.name == "ImageTimelineRailMusic")
         {
             if (SceneManaging.playing)
@@ -1418,9 +1393,15 @@ public class timelineOpenCloseV2 : MonoBehaviour
                         audioSource.clip = clip[currentClip];
                         audioSource.Play();
                         hitObject = ((int)Char.GetNumericValue(timelineInstanceObjects[i].name[17])); // instance index
-                                                                                                      //Debug.Log("++++++++++MUSIC STARTS ++++++ tmpTime: " + audioSource.time + ", current clip: " + currentClip + ", startsec: " + startSec + ", tmpTime: " + tmpTime);
-
+                        //Debug.Log("++++++++++MUSIC STARTS ++++++ tmpTime: " + audioSource.time + ", current clip: " + currentClip + ", startsec: " + startSec + ", tmpTime: " + tmpTime);
                     }
+                    else if (AnimationTimer.GetTime() < startSec || AnimationTimer.GetTime() > endSec && playingMusic == true)
+                    {
+                        playingMusic = false;
+                        //Debug.Log("+++++++++++++++++++TimeSlider ist ausserhalb und .");
+                        audioSource.Stop();
+                    }
+
                     else if (SceneManaging.updateMusic)
                     {
                         if (AnimationTimer.GetTime() >= startSec && AnimationTimer.GetTime() <= endSec)
@@ -1434,9 +1415,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
                             audioSource.Stop();
                             playingMusic = false;
                         }
-
                     }
-
                 }
             }
             else
@@ -1444,7 +1423,6 @@ public class timelineOpenCloseV2 : MonoBehaviour
                 audioSource.Stop();
                 playingMusic = false;
             }
-
         }
 
         else
@@ -1474,15 +1452,18 @@ public class timelineOpenCloseV2 : MonoBehaviour
                 double startSec = calculateFigureStartTimeInSec(timelineInstanceObjects[i], 100.0f, maxTimeInSec, minX, maxX);
                 bool tests = checkFigureObjectShouldPlaying(timelineInstanceObjects[i], (int)startSec, 100.0f, AnimationTimer.GetTime());
                 //Debug.Log("tests: "+tests);
-
+                //timelineInstanceObjects3D[currentClickedInstanceObjectIndex].transform.localPosition = new Vector3(0,0,GetComponent<RailSpeedController>().GetDistanceAtTime((float)startSec));
+                timelineInstanceObjects3D[i].transform.localPosition = new Vector3(timelineInstanceObjects3D[i].transform.localPosition.x,timelineInstanceObjects3D[i].transform.localPosition.y,(rail3dObj.transform.GetChild(0).GetComponent<RailSpeedController>().GetDistanceAtTime((float)startSec))/10);
+                
+                /*
                 //if object should be playing (tests=true):
                 if (tests)
                 {
-                    animate3DObjectByTime(timelineInstanceObjects3D[i], (int)startSec, 100.0f, AnimationTimer.GetTime(), railStartPos.z, railEndPos.z);
+                    //animate3DObjectByTime(timelineInstanceObjects3D[i], (int)startSec, 100.0f, AnimationTimer.GetTime(), railStartPos.z, railEndPos.z);
                     //Debug.Log("+++++++++++++++++++startSec: "+startSec+" +++++++++++++ Timertime: "+AnimationTimer.GetTime()+timelineInstanceObjects[currentClickedInstanceObjectIndex].name);
 
                 }
-                /*if (timelineInstanceObjects[currentClickedInstanceObjectIndex].name[6] == 'F')
+                if (timelineInstanceObjects[currentClickedInstanceObjectIndex].name[6] == 'F')
                 {
                     Debug.Log(timelineInstanceObjects[currentClickedInstanceObjectIndex].name[6]);
                     animate3DObjectByTime(timelineInstanceObjects3D[i], (int)startSec, 100.0f, AnimationTimer.GetTime(), railStartPos.z, railEndPos.z);
@@ -1491,22 +1472,6 @@ public class timelineOpenCloseV2 : MonoBehaviour
             }
         }
 
-        //animate3DObjectByTime(figureObjects[currentClickedObjectIndex], (int)startSec, 100.0f, AnimationTimer.GetTime(), rail1StartPos.z, rail1EndPos.z);
-
-        /*string st="";
-        st=figureObjects[currentClickedObjectIndex].name;
-        Debug.Log("st: "+st);
-        if (st=="ButtonFigObj01")
-        {
-            Debug.Log("case: "+st);
-            animate3DObjectByTime(figureObjects3D[0], (int)startSec, 100.0f, AnimationTimer.GetTime(), rail1StartPos.z, rail1EndPos.z);
-        }
-        if (st=="ButtonFigObj02")
-        {
-            Debug.Log("case: "+st);
-            animate3DObjectByTime(figureObjects3D[1], (int)startSec, 100.0f, AnimationTimer.GetTime(), rail1StartPos.z, rail1EndPos.z);
-        }
-        */
 
         /*
         //
