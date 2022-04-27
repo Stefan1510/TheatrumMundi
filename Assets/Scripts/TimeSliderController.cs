@@ -15,6 +15,7 @@ public class TimeSliderController : MonoBehaviour, IPointerUpHandler, IDragHandl
     [SerializeField] private GameObject _panelControls;
     [SerializeField] private GameObject _panelRailSpeedControls;
     [SerializeField] private GameObject _panelLightControls;
+    [SerializeField] private GameObject _panelBackgroundPositionControls;
 
     [SerializeField] private Slider sliderTestTestTestSlider;
     [SerializeField] private Slider sliderTestTestTestSlider2;
@@ -85,6 +86,7 @@ public class TimeSliderController : MonoBehaviour, IPointerUpHandler, IDragHandl
     {
         _panelRailSpeedControls.SetActive(false);
         _panelLightControls.SetActive(false);
+        _panelBackgroundPositionControls.SetActive(false);
         switch(ImageTimelineSelection.GetRailType())
         {
             case 0:
@@ -96,6 +98,7 @@ public class TimeSliderController : MonoBehaviour, IPointerUpHandler, IDragHandl
             case 2:
                 break;
             case 3:
+                _panelBackgroundPositionControls.SetActive(true);
                 break;
         }
     }

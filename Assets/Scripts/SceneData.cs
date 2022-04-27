@@ -108,6 +108,14 @@ public class LightingSet
     public float intensity;
 }
 
+[System.Serializable]
+public class BackgroundPosition
+{
+    public float moment;
+    public float yPosition;
+}
+
+
 //[System.Serializable]
 public class SceneData
 {
@@ -121,6 +129,7 @@ public class SceneData
 	public List<FigureElement> figureElements;
     public List<LightElement> lightElements;
     public List<LightingSet> lightingSets;
+    public List<BackgroundPosition> backgroundPositions;
 }
 
 public class StaticSceneData

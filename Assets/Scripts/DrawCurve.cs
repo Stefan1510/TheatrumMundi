@@ -70,7 +70,7 @@ public class DrawCurve : MonoBehaviour
             int momentIndex = StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds.FindIndex(mom => mom.moment == valueMoment);     //hier spezifisches RailElement, das kann dann entsprechend geändert werden
 
             RailElementSpeed thisRailElementSpeed = new RailElementSpeed();
-            Debug.Log(StaticSceneData.StaticData.railElements[_railIndex].name);
+            //Debug.Log(StaticSceneData.StaticData.railElements[_railIndex].name);
 
             if (momentIndex == -1)
             {
@@ -123,7 +123,7 @@ public class DrawCurve : MonoBehaviour
 
             float deltaMoment = momentEndF - momentStartF;  // deltaX
             float deltaValue = valueEndF - valueStartF;     // deltaY
-            Debug.Log("Deltas: x: " + deltaMoment + " // y: " + deltaValue);
+            //Debug.Log("Deltas: x: " + deltaMoment + " // y: " + deltaValue);
             //if (Mathf.Abs(deltaMoment)>=Mathf.Abs(deltaValue))  // y ist kleinergleich x
             //{
 

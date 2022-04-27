@@ -102,6 +102,15 @@ public class JumpToKeyframe : MonoBehaviour
         }
     }
 
+    void GetMomentFromBackgroundPositions()
+    {
+        keyFrames.Clear();
+        foreach(BackgroundPosition backgroundPosition in StaticSceneData.StaticData.backgroundPositions)
+        {
+            keyFrames.Add(backgroundPosition.moment);
+        }
+    }
+
 
     void SelectKeyFrames() //0 - railspeed; 1 - light; 2 - music; 3 - background
     {
@@ -117,7 +126,7 @@ public class JumpToKeyframe : MonoBehaviour
                 //GetMomentsFromMusicVolume
                 break;
             case 3:
-                //GetMomentsFromBackgroundPosition
+                GetMomentFromBackgroundPositions();
                 break;
         }
             
