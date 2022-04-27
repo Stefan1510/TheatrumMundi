@@ -20,4 +20,6 @@ public static class SceneManaging
 
     public static int objectsTimeline;
     public  static bool openUp;
+    public static bool hittingSomething;
+    public static int hitObject;
 }

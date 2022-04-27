@@ -157,7 +157,8 @@ public class SceneDataController : MonoBehaviour
                 velocity = 0.0f,
                 wheelsize = 1.0f,
                 railnumber = 1,
-                direction = "toRight"
+                direction = "toRight",
+                figureInstanceElements = new List<FigureInstanceElement>()
             };
             sceneData.figureElements.Add(sceneFigureElement);
         }

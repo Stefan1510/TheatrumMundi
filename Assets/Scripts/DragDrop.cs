@@ -172,12 +172,6 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
         {
             this.schieneKulisse = SceneManaging.statusReiter;
         }
-        // sliderX.GetComponent<Slider>().value = rectTransform.anchoredPosition.x / 200;
-        // sliderY.GetComponent<Slider>().value = (rectTransform.anchoredPosition.y + 150) / 100;
-        // ThisSceneryElement.z = rectTransform.anchoredPosition.x / 150;
-        // ThisSceneryElement.y = (rectTransform.anchoredPosition.y + 150) / 250 + 1.5f;
-        // ThisSceneryElement.x = 0.062f;
-        // StaticSceneData.Sceneries3D();
     }
 
     public void OnEndDrag(PointerEventData eventData)
@@ -208,7 +202,11 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
         }
         else if (SceneManaging.triggerEinstellungen && GetComponent<TriggerSchiene>().schieneActive == false)       // if coulisse is not on rail image but in schematic window
         {
-            rectTransform.anchoredPosition = schieneBild.GetComponent<RectTransform>().anchoredPosition;
+            Debug.Log("Mouse: "+eventData.position);
+            rectTransform.anchoredPosition = new Vector2(rectTransform.anchoredPosition.x, schieneBild.GetComponent<RectTransform>().anchoredPosition.y);
+            ThisSceneryElement.active = true;
+            ThisSceneryElement.parent = "Schiene" + SceneManaging.statusReiter.ToString();
+            ThisSceneryElement.railnumber = SceneManaging.statusReiter;
             setElementActive(this);
         }
         else                                                                                                         // if coulisse is dropped somewhere else

@@ -11,10 +11,10 @@ public class UIController : MonoBehaviour
     public GameObject[] goReiterActive;
     public GameObject[] goIndexTabs;
     private objectsLightElement[] objectsLightElements;
-    public timelineOpenCloseV2[] Rails;
+    public RailManager[] Rails;
 
     public RailLightManager RailLight;
-    public timelineOpenCloseV2 RailMusic;
+    public RailMusicManager RailMusic;
 
         //// Start is called before the first frame update
         void Start()
