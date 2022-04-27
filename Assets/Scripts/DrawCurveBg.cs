@@ -10,6 +10,7 @@ public class DrawCurveBg : MonoBehaviour
     [SerializeField] private Slider _valueSlider;
     [SerializeField] private Image _imagePositionKnob;
     [SerializeField] private GameObject _PanelLineDraw;
+    [SerializeField] private GameObject _backgroundHimmel;
 
     private List<Image> _imagePositionKnobCollection;
     private Color32[] _backColors;
@@ -20,8 +21,15 @@ public class DrawCurveBg : MonoBehaviour
     private bool _gameObjectStarted = false;
 
     // Start is called before the first frame update
+
+    //private void Awake()
+    //{
+
+    //}
     void Start()
     {
+        StaticSceneData.StaticData.backgroundPositions[0] = new BackgroundPosition { moment = 0, yPosition = _valueSlider.value };  // im SceneDataController MUSS ein erstes Element hinzugefügt werden, bevor es hier angesprochen werden kann
+        StaticSceneData.StaticData.backgroundPositions.Sort((x, y) => x.moment.CompareTo(y.moment));   // sortiert die railElementSpeeds anhand der Eigenschaft moment
         _gameObjectStarted = true;
         _textureCurve = new Texture2D((int)(_PanelLineDraw.GetComponent<RectTransform>().rect.width), (int)(_PanelLineDraw.GetComponent<RectTransform>().rect.height), TextureFormat.RGBA32, false); // wird durch Panel RectTransform stretch automatisch gescaled
         _backColors = new Color32[_textureCurve.width * _textureCurve.height];
@@ -38,24 +46,24 @@ public class DrawCurveBg : MonoBehaviour
         eventTriggerEntry.eventID = EventTriggerType.PointerUp;
         eventTriggerEntry.callback.AddListener((data) => { AddValue((PointerEventData)data); });
         _valueSlider.GetComponent<EventTrigger>().triggers.Add(eventTriggerEntry);
+        ChangeCurve();
+        ChangeBackgroundPosition();
     }
 
-    private void OnEnable()
-    {
-        if (_gameObjectStarted)
-        {
-            StaticSceneData.StaticData.backgroundPositions[0] = new BackgroundPosition { moment = 0, yPosition = _valueSlider.value };  // im SceneDataController MUSS ein erstes Element hinzugefügt werden, bevor es hier angesprochen werden kann
-            StaticSceneData.StaticData.backgroundPositions.Sort((x, y) => x.moment.CompareTo(y.moment));   // sortiert die railElementSpeeds anhand der Eigenschaft moment
-            ChangeCurve();
-        }
-    }
-
-
-    //// Update is called once per frame
-    //void Update()
+    //private void OnEnable()
     //{
-
+    //    if (_gameObjectStarted)
+    //    {
+            
+    //    }
     //}
+
+
+    // Update is called once per frame
+    void Update()
+    {
+        ChangeBackgroundPosition();
+    }
 
     public void AddValue(PointerEventData data)      // Aufruf auf Slider, der etwas verändern soll, gelöst über EventTrigger, übergebene data unnötig
     {
@@ -79,6 +87,7 @@ public class DrawCurveBg : MonoBehaviour
         StaticSceneData.StaticData.backgroundPositions.Sort((x, y) => x.moment.CompareTo(y.moment));   // sortiert die backgroundPositions anhand der Eigenschaft moment
 
         ChangeCurve();
+        ChangeBackgroundPosition();
     }
 
     public void ChangeCurve()
@@ -145,4 +154,21 @@ public class DrawCurveBg : MonoBehaviour
             _imagePositionKnobCollection.Add(knobInstance);
         }
     }
+
+    void ChangeBackgroundPosition()
+    {
+        float TimeNow = AnimationTimer.GetTime();
+        float _backgroundHimmelYPos = _backgroundHimmel.transform.localPosition.y;
+        int _listLength = StaticSceneData.StaticData.backgroundPositions.Count;
+
+        for (int i = 0; i < _listLength - 1; i++)
+        {
+            if ((StaticSceneData.StaticData.backgroundPositions[i].moment <= TimeNow) && (TimeNow <= StaticSceneData.StaticData.backgroundPositions[i + 1].moment))
+            {
+                _backgroundHimmelYPos = UtilitiesTm.FloatRemap(TimeNow, StaticSceneData.StaticData.backgroundPositions[i].moment, StaticSceneData.StaticData.backgroundPositions[i + 1].moment, StaticSceneData.StaticData.backgroundPositions[i].yPosition, StaticSceneData.StaticData.backgroundPositions[i + 1].yPosition);
+                _backgroundHimmel.transform.localPosition = new Vector3(_backgroundHimmel.transform.localPosition.x, _backgroundHimmelYPos, _backgroundHimmel.transform.localPosition.z);
+            }
+        }
+    }
+
 }
