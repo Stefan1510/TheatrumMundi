@@ -24,25 +24,6 @@ public class SetLightColors : MonoBehaviour
 
     void Start()
     {
-        //_imagePositionKnob.gameObject.SetActive(false);
-        //Color32 lightStartColor = new Color(ObjectsLights[0].GetComponent<Light>().color.r, ObjectsLights[0].GetComponent<Light>().color.g, ObjectsLights[0].GetComponent<Light>().color.b);
-        //StaticSceneData.StaticData.lightingSets[0] = new LightingSet
-        //{
-        //    moment = 0,
-        //    r = 255,
-        //    g = 231,
-        //    b = 121,
-        //    intensity = 0.5f
-        //};
-
-        //StaticSceneData.StaticData.lightingSets.Sort((x, y) => x.moment.CompareTo(y.moment));   // sortiert die LightPropertiesList anhand der Eigenschaft moment
-
-        //float knobPos = AnimationTimer.GetTime();
-        //knobPos = UtilitiesTm.FloatRemap(knobPos, AnimationTimer.GetMinTime(), AnimationTimer.GetMaxTime(), 0, _representationPanel.GetComponent<RectTransform>().rect.width);
-        //Image knobIntstance = Instantiate(_imagePositionKnob, _imagePositionKnob.transform.parent);
-        //knobIntstance.gameObject.SetActive(true);
-        //knobIntstance.transform.localPosition = new Vector3(knobPos, knobIntstance.transform.localPosition.y, knobIntstance.transform.localPosition.z);
-        //knobIntstance.GetComponent<Image>().color = new Color(StaticSceneData.StaticData.lightingSets[0].r, StaticSceneData.StaticData.lightingSets[0].g, StaticSceneData.StaticData.lightingSets[0].b);
         _savedButtonColor = 0;
         ButtonClick(0);
         ChangeLightColor();

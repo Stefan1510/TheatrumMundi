@@ -50,13 +50,13 @@ public class DrawCurveBg : MonoBehaviour
         ChangeBackgroundPosition();
     }
 
-    //private void OnEnable()
-    //{
-    //    if (_gameObjectStarted)
-    //    {
-            
-    //    }
-    //}
+    private void OnEnable()
+    {
+        if (_gameObjectStarted)
+        {
+            ChangeCurve();
+        }
+    }
 
 
     // Update is called once per frame

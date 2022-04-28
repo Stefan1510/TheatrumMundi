@@ -7,6 +7,9 @@ public class JumpToKeyframe : MonoBehaviour
     List<float> keyFrames;
     private int _selection;
     private int _railSelection;
+    [SerializeField] private GameObject _panelColorGradient;
+    [SerializeField] private GameObject _imageTimelineRailBg;
+    [SerializeField] private GameObject[] _railPanelsLineDraw;
     // Start is called before the first frame update
     void Start()
     {
@@ -81,6 +84,42 @@ public class JumpToKeyframe : MonoBehaviour
             }
         }
         AnimationTimer.SetTime(nextKeyframe);
+    }
+
+    public void DeleteCurrentKeyframe()
+    {
+        int momentIndex = -1;
+        switch (_selection)
+        {
+            case 0:     //Rails
+                momentIndex = StaticSceneData.StaticData.railElements[_railSelection].railElementSpeeds.FindIndex(mom => mom.moment == AnimationTimer.GetTime());
+                if (momentIndex > 0)
+                {
+                    StaticSceneData.StaticData.railElements[_railSelection].railElementSpeeds.Remove(StaticSceneData.StaticData.railElements[_railSelection].railElementSpeeds[momentIndex]);
+                    _railPanelsLineDraw[_railSelection].GetComponent<DrawCurve>().ChangeCurve();
+                }
+                break;
+            case 1:     // Light
+                momentIndex = StaticSceneData.StaticData.lightingSets.FindIndex(mom => mom.moment == AnimationTimer.GetTime());
+                Debug.LogWarning("Licht löschen! +++ momentIndex " + momentIndex);
+                if (momentIndex > 0)
+                {
+                    StaticSceneData.StaticData.lightingSets.Remove(StaticSceneData.StaticData.lightingSets[momentIndex]);
+                    _panelColorGradient.GetComponent<LightAnimationRepresentation>().ChangeImage();
+                }
+                break;
+            case 2:
+                //GetMomentsFromMusicVolume
+                break;
+            case 3:     //BackgroundPosition
+                momentIndex = StaticSceneData.StaticData.backgroundPositions.FindIndex(mom => mom.moment == AnimationTimer.GetTime());
+                if (momentIndex > 0)
+                {
+                    StaticSceneData.StaticData.backgroundPositions.Remove(StaticSceneData.StaticData.backgroundPositions[momentIndex]);
+                    _imageTimelineRailBg.GetComponent<DrawCurveBg>().ChangeCurve();
+                }
+                break;
+        }
     }
 
     void GetMomentsFromRailElementSpeeds()

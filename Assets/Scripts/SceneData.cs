@@ -55,9 +55,9 @@ public class SceneryElement
 public class FigureInstanceElement
 {
     public string name;
-    public float instanceNr;        
+    public int instanceNr;        
     public float moment;
-    public float railStart;         // empty auf der es sein soll
+    public int railStart;         // empty auf der es sein soll
 }
 [System.Serializable]
 public class FigureElement
