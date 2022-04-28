@@ -13,17 +13,7 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: mat_Fahrwerk_Elefant
-    second: {fileID: 2100000, guid: ff669e420192f0f43ac9a60890a3194e, type: 2}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Schiff01_col
-    second: {fileID: 2800000, guid: 9518c9f5c31c4ac42a307ff818557f6f, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Schiff1_Fahrwerk_col
-    second: {fileID: 2800000, guid: 02dd9538a8c56564c985a502b604e2ea, type: 3}
+    second: {fileID: 2100000, guid: 8fb2698ba26cb164382d2213a3a74ce2, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

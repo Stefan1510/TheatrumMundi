@@ -25,7 +25,7 @@ public class RailManager : MonoBehaviour
     double maxX;
     //double minY;
     //double maxY;
-    string maxTimeLength;
+    //string maxTimeLength;
     int maxTimeInSec;
     Vector2 sizeDeltaAsFactor;
     Vector2[] objectShelfPosition;
@@ -67,7 +67,6 @@ public class RailManager : MonoBehaviour
         doSomethingOnce = false;
         editTimelineObject = false;
         releaseOnTimeline = false;
-        playingMusic = false;
         releaseObjMousePos = new Vector2(0.0f, 0.0f);
         isTimelineOpen = false;
         isInstance = false;
@@ -135,76 +134,24 @@ public class RailManager : MonoBehaviour
 
         minX = 301.0f;  //timeline-minX
         maxX = 1623.0f; //timeline-maxX
-        maxTimeLength = "10:14";
+        //maxTimeLength = "10:14";
         maxTimeInSec = 614;
         sizeDeltaAsFactor = new Vector2(1.0f, 1.0f);
 
-        for (int i = 0; i < figureObjects3D.Length - 3; i++) // ships dont have animation
+        for (int i = 0; i < figureObjects3D.Length - 1; i++) // ships dont have animation
         {
             //Debug.Log("++++++++figureObject: " + figureObjects3D[i]); // + ", isShip: " + figureObjects3D[i].GetComponent<FigureStats>().isShip);
             if (figureObjects3D[i].GetComponent<FigureStats>().isShip)
             {
-                for (int j = 0; j < figureObjects3D[i].transform.childCount; j++)
-                {
-                    figureObjects3D[i].transform.GetChild(j).GetComponent<MeshRenderer>().material.DisableKeyword("_EMISSION");
-                }
+                //Debug.Log("figure: " + figureObjects3D[i] + " is a ship.");
+                figureObjects3D[i].GetComponent<MeshRenderer>().material.DisableKeyword("_EMISSION");
             }
 
             else
             {
-                for (int j = 0; j < figureObjects3D[i].transform.childCount - 1; j++)     // last one is armature
-                {
-                    figureObjects3D[i].transform.GetChild(j).GetComponent<SkinnedMeshRenderer>().material.DisableKeyword("_EMISSION");
-                    figureObjects3D[i].GetComponent<Animator>().enabled = false;
-                }
-
-                //     if (figureObjects3D[i].GetComponent<FigureStats>().isShip)
-                //     {
-                //         Debug.Log("ISSHIP+++figureObject: " + figureObjects[i]+", isShip: "+figureObjects[i].GetComponent<FigureStats>().isShip);
-                //         //     try
-                //         //     {
-                //         figureObjects3D[i].transform.GetChild(j).GetComponent<MeshRenderer>().material.DisableKeyword("_EMISSION");
-
-                //         //     }
-                //         //     catch (Exception exep)
-                //         //     {
-                //         //         if (exep is MissingComponentException || exep is NullReferenceException)
-                //         //         {
-                //         //             return;
-                //         //         }
-                //         //         throw;
-                //     }
-                //     // }
-                //     else
-                //     {
-                //         Debug.Log("figureObject: " + figureObjects[i]+", isShip: "+figureObjects[i].GetComponent<FigureStats>().isShip);
-                //         //         try
-                //         //         {
-                //         figureObjects3D[i].transform.GetChild(j).GetComponent<SkinnedMeshRenderer>().material.DisableKeyword("_EMISSION");
-                //         figureObjects3D[i].GetComponent<Animator>().enabled = false;
-                //         //             Debug.Log("figureObject: " + figureObjects[i]+", isShip: "+figureObjects[i].GetComponent<FigureStats>().isShip);
-                //         //         }
-                //         //         catch (Exception exep)
-                //         //         {
-                //         //             if (exep is MissingComponentException || exep is NullReferenceException)
-                //         //             {
-                //         //                 return;
-                //         //             }
-                //         //             throw;
-                //     }
-                // }
-                // }
-                // try
-                // {
-                //     figureObjects3D[i].GetComponent<Animator>().enabled = false;
-                // }
-                // catch (Exception ex)
-                // {
-                //     if (ex is MissingComponentException || ex is NullReferenceException)
-                //     {
-                //         return;
-                //     }
-                //     throw;
+                //Debug.Log("figure: " + figureObjects3D[i] + " is not a ship.");
+                figureObjects3D[i].transform.GetChild(1).GetComponent<SkinnedMeshRenderer>().material.DisableKeyword("_EMISSION");
+                figureObjects3D[i].GetComponent<Animator>().enabled = false;
             }
         }
 
@@ -324,12 +271,15 @@ public class RailManager : MonoBehaviour
                     openCloseObjectInTimeline(false, gameController.GetComponent<UIController>().Rails[i].timelineInstanceObjects, editTimelineObject);
                     Debug.Log("++++ Scaling down Rail: " + gameController.GetComponent<UIController>().Rails[i]);
                 }
-                gameController.GetComponent<UIController>().RailLight.GetComponent<RectTransform>().sizeDelta = new Vector2(tl.rectTransform.rect.width, heightClosed);
-                gameController.GetComponent<UIController>().RailLight.GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightClosed);
-                gameController.GetComponent<UIController>().RailLight.GetComponent<RailLightManager>().isTimelineOpen = false;
+                for (int j = 0; j < 2; j++)
+                {
+                    gameController.GetComponent<UIController>().RailLightBG[j].GetComponent<RectTransform>().sizeDelta = new Vector2(tl.rectTransform.rect.width, heightClosed);
+                    gameController.GetComponent<UIController>().RailLightBG[j].GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightClosed);
+                    gameController.GetComponent<UIController>().RailLightBG[j].GetComponent<RailLightManager>().isTimelineOpen = false;
+                }
                 gameController.GetComponent<UIController>().RailMusic.GetComponent<RectTransform>().sizeDelta = new Vector2(tl.rectTransform.rect.width, heightClosed);
-                gameController.GetComponent<UIController>().RailMusic.GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightClosed);
-                gameController.GetComponent<UIController>().RailMusic.GetComponent<RailMusicManager>().isTimelineOpen = false;
+                    gameController.GetComponent<UIController>().RailMusic.GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightClosed);
+                    gameController.GetComponent<UIController>().RailMusic.GetComponent<RailMusicManager>().isTimelineOpen = false;
                 // open clicked rail
                 //Debug.Log("++++ geklickte Schiene wird geöffnet: " + tl);
                 //scale up timeline
@@ -390,7 +340,10 @@ public class RailManager : MonoBehaviour
             }
         }
         if (gameController.GetComponent<UIController>().RailMusic.GetComponent<RailMusicManager>().isTimelineOpen == true) val = true;
-        if (gameController.GetComponent<UIController>().RailLight.GetComponent<RailLightManager>().isTimelineOpen == true) val = true;
+        for (int j = 0; j < 2; j++) // 2, weil es nur zwei Schienen gibt 
+        {
+            if (gameController.GetComponent<UIController>().RailLightBG[j].GetComponent<RailLightManager>().isTimelineOpen == true) val = true;
+        }
         return val;
     }
 
@@ -654,9 +607,10 @@ public class RailManager : MonoBehaviour
         return hit;
     }
 
-    public bool checkFigureHighlighted(GameObject obj)
+    /*public bool checkFigureHighlighted(GameObject obj)
     {
         bool val = false;
+        if(obj)
         try
         {
             if (obj.GetComponent<SkinnedMeshRenderer>().material.IsKeywordEnabled("_EMISSION"))    // check if second child (which is never the armature) has emission enabled (=is highlighted)
@@ -674,7 +628,7 @@ public class RailManager : MonoBehaviour
             throw;
         }
         return val;
-    }
+    }*/
 
     public void highlight(GameObject obj3D, GameObject obj)
     {
@@ -682,7 +636,15 @@ public class RailManager : MonoBehaviour
         obj.transform.GetChild(1).GetChild(0).gameObject.SetActive(true);   //show Delete-Button
         SceneManaging.highlighted = true;
 
-        for (int i = 0; i < obj3D.transform.childCount; i++)
+        if (obj3D.GetComponent<FigureStats>().isShip)
+        {
+            obj3D.GetComponent<MeshRenderer>().material.EnableKeyword("_EMISSION");
+        }
+        else
+        {
+            obj3D.transform.GetChild(1).GetComponent<SkinnedMeshRenderer>().material.EnableKeyword("_EMISSION");
+        }
+        /*for (int i = 0; i < obj3D.transform.childCount; i++)
         {
             //Debug.Log("Child: "+obj3D.transform.GetChild(i));
             try
@@ -698,7 +660,7 @@ public class RailManager : MonoBehaviour
                 }
                 throw;
             }
-        }
+        }*/
     }
     public void unhighlight(GameObject obj3D, GameObject obj)
     {
@@ -706,7 +668,16 @@ public class RailManager : MonoBehaviour
         obj.transform.GetChild(1).GetChild(0).gameObject.SetActive(false);  //hide Delete-Button
         SceneManaging.highlighted = false;
 
-        for (int i = 0; i < obj3D.transform.childCount; i++)
+        if (obj3D.GetComponent<FigureStats>().isShip)
+        {
+            obj3D.GetComponent<MeshRenderer>().material.DisableKeyword("_EMISSION");
+        }
+        else
+        {
+            obj3D.transform.GetChild(1).GetComponent<SkinnedMeshRenderer>().material.DisableKeyword("_EMISSION");
+        }
+
+        /*for (int i = 0; i < obj3D.transform.childCount; i++)
         {
             //Debug.Log("Child: "+obj3D.transform.GetChild(i));
             try
@@ -722,7 +693,7 @@ public class RailManager : MonoBehaviour
                 }
                 throw;
             }
-        }
+        }*/
     }
 
     void Update()
@@ -751,11 +722,6 @@ public class RailManager : MonoBehaviour
             int tmpI = -1;
             for (int i = 0; i < timelineInstanceObjects.Count; i++)
             {
-                /*Debug.Log("instance collider: "+timelineInstanceObjects[i].GetComponent<BoxCollider2D>());
-                Debug.Log("instance mouse: "+getMousePos);
-                Debug.Log("instance mouse: "+Physics2D.OverlapPoint(getMousePos));
-                Debug.Log("instance mouse: "+Physics2D.OverlapPoint(Input.mousePosition));*/
-                //if(timelineInstanceObjects[i].GetComponent<BoxCollider2D>()==Physics2D.OverlapPoint(Input.mousePosition))
                 if (timelineInstanceObjects[i].GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(getMousePos))
                 {
                     //Debug.Log("-----------found instance object!!!!->i: "+i);
@@ -780,12 +746,10 @@ public class RailManager : MonoBehaviour
             }
 
             //if you click on an object in shelf 
-            //first checking if you have an object clicked in shelf
             if (currentClickedObjectIndex != (-1))      //is set in the identify-methods
             {
-                if (figureObjects[currentClickedObjectIndex].GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(getMousePos))
+                if (figureObjects[currentClickedObjectIndex].GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(getMousePos) && getMousePos.y >= 500.0f) // necessary, so that figures below the figure shelf are not clickable anymore
                 {
-                    //set up some flags
                     draggingObject = true;
                 }
             }
@@ -1208,10 +1172,21 @@ public class RailManager : MonoBehaviour
             isInstance = false;
         }
 
-        for (int i = 0; i < timelineInstanceObjects.Count; i++)
+        for (int i = 0; i < timelineInstanceObjects3D.Count; i++)
         {
             // start Animation on play
-            if (SceneManaging.playing)
+            if (timelineInstanceObjects3D[i].GetComponent<FigureStats>().isShip == false)
+            {
+                if (SceneManaging.playing && !timelineInstanceObjects3D[i].GetComponent<Animator>().enabled)
+                {
+                    timelineInstanceObjects3D[i].GetComponent<Animator>().enabled = true;
+                }
+                else if (!SceneManaging.playing && timelineInstanceObjects3D[i].GetComponent<Animator>().enabled)
+                {
+                    timelineInstanceObjects3D[i].GetComponent<Animator>().enabled = false;
+                }
+            }
+            /*if (SceneManaging.playing && !timelineInstanceObjects3D[i].GetComponent<FigureStats>().isShip && !timelineInstanceObjects3D[i].GetComponent<Animator>().enabled)
             {
                 try
                 {
@@ -1220,14 +1195,14 @@ public class RailManager : MonoBehaviour
                 catch (MissingComponentException ex) { }
             }
             // stop Animation if not playing
-            else if (SceneManaging.playing == false)
+            else if (SceneManaging.playing == false && !timelineInstanceObjects3D[i].GetComponent<FigureStats>().isShip && timelineInstanceObjects3D[i].GetComponent<Animator>().enabled)
             {
                 try
                 {
                     timelineInstanceObjects3D[i].GetComponent<Animator>().enabled = false;
                 }
                 catch (MissingComponentException ex) { }
-            }
+            }*/
         }
     }
 }

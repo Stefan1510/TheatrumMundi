@@ -11,32 +11,22 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: faden_dick
-    second: {fileID: 2100000, guid: 383273d23c2ca8d45a7c0b0ce455e079, type: 2}
+    second: {fileID: 2100000, guid: b57b5a77c3ca6a7439a9ae0fbfa99d6d, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: mat_Elefant
-    second: {fileID: 2100000, guid: e194ff29baf8f8a4d8ab3d9012f196ab, type: 2}
+    second: {fileID: 2100000, guid: 2f4dabf9e77e6a54f860009fc435e2be, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: mat_Fahrwerk_Elefant
-    second: {fileID: 2100000, guid: 2f30394ee0108684fb3c06217966145c, type: 2}
+    second: {fileID: 2100000, guid: ff669e420192f0f43ac9a60890a3194e, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: messing
-    second: {fileID: 2100000, guid: a439843d1d39775479341d9de8c2a1f5, type: 2}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Elefant_Fahrwerk_col
-    second: {fileID: 2800000, guid: 72c0fec5dcb595b48ae683df16a53583, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Elefant_col
-    second: {fileID: 2800000, guid: 9a440ffa96d02bc4d8264c3733052ab0, type: 3}
+    second: {fileID: 2100000, guid: 5d5c6e48c8f768842b536b0a1b4ee083, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -63,36 +53,7 @@ ModelImporter:
     animationWrapMode: 0
     extraExposedTransformPaths: []
     extraUserProperties: []
-    clipAnimations:
-    - serializedVersion: 16
-      name: Armature|ArmatureAction.001
-      takeName: Armature|ArmatureAction.001
-      internalID: 0
-      firstFrame: 0
-      lastFrame: 179
-      wrapMode: 0
-      orientationOffsetY: 0
-      level: 0
-      cycleOffset: 0
-      loop: 0
-      hasAdditiveReferencePose: 0
-      loopTime: 1
-      loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
-      keepOriginalOrientation: 0
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
-      mirror: 0
-      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
-      curves: []
-      events: []
-      transformMask: []
-      maskType: 3
-      maskSource: {instanceID: 0}
-      additiveReferencePoseFrame: 0
+    clipAnimations: []
     isReadable: 0
   meshes:
     lODScreenPercentages: []

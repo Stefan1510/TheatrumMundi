@@ -236,9 +236,12 @@ public class RailMusicManager : MonoBehaviour
                     openCloseObjectInTimeline(false, gameController.GetComponent<UIController>().Rails[i].timelineInstanceObjects, editTimelineObject);
                     Debug.Log("++++ Scaling down Rail: " + gameController.GetComponent<UIController>().Rails[i]);
                 }
-                gameController.GetComponent<UIController>().RailLight.GetComponent<RectTransform>().sizeDelta = new Vector2(tl.rectTransform.rect.width, heightClosed);
-                gameController.GetComponent<UIController>().RailLight.GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightClosed);
-                gameController.GetComponent<UIController>().RailLight.isTimelineOpen = false;
+                for (int j = 0; j < 2; j++)
+                {
+                    gameController.GetComponent<UIController>().RailLightBG[j].GetComponent<RectTransform>().sizeDelta = new Vector2(tl.rectTransform.rect.width, heightClosed);
+                    gameController.GetComponent<UIController>().RailLightBG[j].GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightClosed);
+                    gameController.GetComponent<UIController>().RailLightBG[j].GetComponent<RailLightManager>().isTimelineOpen = false;
+                }
                 gameController.GetComponent<UIController>().RailMusic.GetComponent<RectTransform>().sizeDelta = new Vector2(tl.rectTransform.rect.width, heightClosed);
                 gameController.GetComponent<UIController>().RailMusic.GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightClosed);
                 gameController.GetComponent<UIController>().RailMusic.isTimelineOpen = false;
@@ -304,7 +307,10 @@ public class RailMusicManager : MonoBehaviour
             }
         }
         if (gameController.GetComponent<UIController>().RailMusic.isTimelineOpen == true) val = true;
-        if (gameController.GetComponent<UIController>().RailLight.isTimelineOpen == true) val = true;
+        for (int j = 0; j < 2; j++) // 2, weil es nur zwei Schienen gibt 
+        {
+            if (gameController.GetComponent<UIController>().RailLightBG[j].GetComponent<RailLightManager>().isTimelineOpen == true) val = true;
+        }
         return val;
     }
 
@@ -560,17 +566,17 @@ public class RailMusicManager : MonoBehaviour
     {
         bool hit = false;
 
-            Vector2 tlPos = new Vector2(timelineImage.transform.position.x, timelineImage.transform.position.y);
-            Vector2 colSize = new Vector2(timelineImage.GetComponent<BoxCollider2D>().size.x, timelineImage.GetComponent<BoxCollider2D>().size.y);
-            //if mouse hits the timeline while dragging an object
-            //my implementation of object-boundingbox
-            if (((mousePos.x <= (tlPos.x + (colSize.x / 2.0f))) && (mousePos.x > (tlPos.x - (colSize.x / 2.0f)))) &&
-            ((mousePos.y <= (tlPos.y + (colSize.y / 2.0f))) && (mousePos.y > (tlPos.y - (colSize.y / 2.0f)))))
-            {
-                Debug.Log("object hits timeline!: " + timelineImage);
-                hit = true;
-            }
-        
+        Vector2 tlPos = new Vector2(timelineImage.transform.position.x, timelineImage.transform.position.y);
+        Vector2 colSize = new Vector2(timelineImage.GetComponent<BoxCollider2D>().size.x, timelineImage.GetComponent<BoxCollider2D>().size.y);
+        //if mouse hits the timeline while dragging an object
+        //my implementation of object-boundingbox
+        if (((mousePos.x <= (tlPos.x + (colSize.x / 2.0f))) && (mousePos.x > (tlPos.x - (colSize.x / 2.0f)))) &&
+        ((mousePos.y <= (tlPos.y + (colSize.y / 2.0f))) && (mousePos.y > (tlPos.y - (colSize.y / 2.0f)))))
+        {
+            Debug.Log("object hits timeline!: " + timelineImage);
+            hit = true;
+        }
+
         Debug.Log("drag and hit " + hit);
         return hit;
     }

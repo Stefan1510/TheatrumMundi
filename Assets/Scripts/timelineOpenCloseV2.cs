@@ -349,9 +349,9 @@ public class timelineOpenCloseV2 : MonoBehaviour
                     openCloseObjectInTimeline(false, gameController.GetComponent<UIController>().Rails[i].timelineInstanceObjects, editTimelineObject);
                     Debug.Log("++++ Scaling down Rail: " + gameController.GetComponent<UIController>().Rails[i]);
                 }
-                gameController.GetComponent<UIController>().RailLight.GetComponent<RectTransform>().sizeDelta = new Vector2(tl.rectTransform.rect.width, heightClosed);
-                gameController.GetComponent<UIController>().RailLight.GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightClosed);
-                gameController.GetComponent<UIController>().RailLight.isTimelineOpen = false;
+                // gameController.GetComponent<UIController>().RailLight.GetComponent<RectTransform>().sizeDelta = new Vector2(tl.rectTransform.rect.width, heightClosed);
+                // gameController.GetComponent<UIController>().RailLight.GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightClosed);
+                // gameController.GetComponent<UIController>().RailLight.isTimelineOpen = false;
                 gameController.GetComponent<UIController>().RailMusic.GetComponent<RectTransform>().sizeDelta = new Vector2(tl.rectTransform.rect.width, heightClosed);
                 gameController.GetComponent<UIController>().RailMusic.GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightClosed);
                 gameController.GetComponent<UIController>().RailMusic.isTimelineOpen = false;
@@ -433,7 +433,7 @@ public class timelineOpenCloseV2 : MonoBehaviour
             }
         }
         if (gameController.GetComponent<UIController>().RailMusic.isTimelineOpen == true) val = true;
-        if (gameController.GetComponent<UIController>().RailLight.isTimelineOpen == true) val = true;
+        // if (gameController.GetComponent<UIController>().RailLight.isTimelineOpen == true) val = true;
         return val;
     }
 

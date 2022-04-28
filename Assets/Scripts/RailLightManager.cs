@@ -21,16 +21,17 @@ public class RailLightManager : MonoBehaviour
     {
         timelineImage = this.GetComponent<Image>();
         //SceneManaging.anyTimelineOpen = false;
-        textSize = new Vector2(timelineText.GetComponent<RectTransform>().sizeDelta.x, timelineText.GetComponent<RectTransform>().sizeDelta.y);
         timeSettings = timeSliderImage.transform.GetChild(0).gameObject; // GameObject.Find("ImageTimeSettingsArea");
     }
 
     void Start()
     {
-        scaleObject(gameObject, 1335, 15);//openCloseTimelineByClick(true, timelineImage, false);
         timeSettings.SetActive(false);
         isTimelineOpen = false;
+        Debug.Log("timeline:  " + gameObject.name + ", offen: " + isTimelineOpen);
+        scaleObject(gameObject, 1335, 15);
     }
+
     public void scaleObject(GameObject fig, float x, float y)
     {
         //scale the object
@@ -45,7 +46,6 @@ public class RailLightManager : MonoBehaviour
             //do nothing
         }
     }
-
     public void openCloseTimelineByClick(bool thisTimelineOpen, Image tl)
     {
         float heightOpened = 80.0f;
@@ -60,8 +60,16 @@ public class RailLightManager : MonoBehaviour
             tl.rectTransform.sizeDelta = new Vector2(tl.rectTransform.rect.width, heightOpened);
             //scale up the collider
             tl.GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightOpened);
-            ImageTimelineSelection.SetRailNumber(7);
-            ImageTimelineSelection.SetRailType(1);  // for light-rail
+            if (gameObject.name == "ImageTimelineRailLight")
+            {
+                ImageTimelineSelection.SetRailNumber(7);
+                ImageTimelineSelection.SetRailType(1);  // for light-rail
+            }
+            else
+            {
+                ImageTimelineSelection.SetRailNumber(6);
+                ImageTimelineSelection.SetRailType(3);  // for background
+            }
         }
         else
         {
@@ -85,9 +93,14 @@ public class RailLightManager : MonoBehaviour
                     gameController.GetComponent<UIController>().Rails[i].isTimelineOpen = false;
                     //Debug.Log("++++ Scaling down Rail: " + gameController.GetComponent<UIController>().Rails[i]);
                 }
-                gameController.GetComponent<UIController>().RailLight.GetComponent<RectTransform>().sizeDelta = new Vector2(tl.rectTransform.rect.width, heightClosed);
-                gameController.GetComponent<UIController>().RailLight.GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightClosed);
-                gameController.GetComponent<UIController>().RailLight.isTimelineOpen = false;
+
+                for (int j = 0; j < 2; j++)
+                {
+                    gameController.GetComponent<UIController>().RailLightBG[j].GetComponent<RectTransform>().sizeDelta = new Vector2(tl.rectTransform.rect.width, heightClosed);
+                    gameController.GetComponent<UIController>().RailLightBG[j].GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightClosed);
+                    gameController.GetComponent<UIController>().RailLightBG[j].isTimelineOpen = false;
+                }
+
                 gameController.GetComponent<UIController>().RailMusic.GetComponent<RectTransform>().sizeDelta = new Vector2(tl.rectTransform.rect.width, heightClosed);
                 gameController.GetComponent<UIController>().RailMusic.GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightClosed);
                 gameController.GetComponent<UIController>().RailMusic.isTimelineOpen = false;
@@ -96,13 +109,21 @@ public class RailLightManager : MonoBehaviour
                 //scale up the collider
                 tl.GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightOpened);
                 isTimelineOpen = true;
-                ImageTimelineSelection.SetRailNumber(7);
-                ImageTimelineSelection.SetRailType(1);  // for light-rail
+                if (gameObject.name == "ImageTimelineRailLight")
+                {
+                    ImageTimelineSelection.SetRailNumber(7);
+                    ImageTimelineSelection.SetRailType(1);  // for light-rail
+
+                }
+                else
+                {
+                    ImageTimelineSelection.SetRailNumber(6);
+                    ImageTimelineSelection.SetRailType(3);  // for background-rail 
+                }
             }
 
         }
         openCloseTimeSettings(isAnyTimelineOpen(), timeSettings);
-
     }
 
 
@@ -117,7 +138,11 @@ public class RailLightManager : MonoBehaviour
             }
         }
         if (gameController.GetComponent<UIController>().RailMusic.isTimelineOpen == true) val = true;
-        if (gameController.GetComponent<UIController>().RailLight.isTimelineOpen == true) val = true;
+        for (int j = 0; j < 2; j++) // 2, weil es nur zwei Schienen gibt 
+        {
+            if (gameController.GetComponent<UIController>().RailLightBG[j].GetComponent<RailLightManager>().isTimelineOpen == true) val = true;
+        }
+    
         return val;
     }
 
@@ -148,7 +173,7 @@ public class RailLightManager : MonoBehaviour
             {
                 //open or close timeline
                 openCloseTimelineByClick(isTimelineOpen, timelineImage);
-                Debug.Log("railtype: "+ImageTimelineSelection.GetRailType());
+                Debug.Log("railtype: " + ImageTimelineSelection.GetRailType());
             }
         }
     }
