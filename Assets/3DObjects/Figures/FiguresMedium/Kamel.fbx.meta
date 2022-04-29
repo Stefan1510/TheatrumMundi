@@ -11,32 +11,32 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: faden_dick.001
-    second: {fileID: 2100000, guid: 3cba3340cbc0e264db14ee8a681cb171, type: 2}
+    second: {fileID: 2100000, guid: 8f2c1af842d0f8a42a167bbf517dbf4b, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: mat_Faden.001
-    second: {fileID: 2100000, guid: 117edcd07ce919b4db205e80e994969e, type: 2}
+    second: {fileID: 2100000, guid: db4a40a8f69850f4184f194c9c3ff893, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: mat_Fahrwerk
-    second: {fileID: 2100000, guid: 9c4d9d5d70149f84ea041fe83898d37f, type: 2}
+    second: {fileID: 2100000, guid: 43a9eb70ff68b3a479ab539549a3645b, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: mat_Kamel
-    second: {fileID: 2100000, guid: 57a4e89f988cf58448b2ab8e1411f9ad, type: 2}
+    second: {fileID: 2100000, guid: a10867d771d50634eb383c3bdc0a917d, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: mat_kupfer
-    second: {fileID: 2100000, guid: dff6492560ed12d47b6d36edf83dc828, type: 2}
+    second: {fileID: 2100000, guid: c882cf5efc3186b49a5b7d0a07239f42, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: messing
-    second: {fileID: 2100000, guid: f8514e66d77db4f4b922e6b7410c95f9, type: 2}
+    second: {fileID: 2100000, guid: 3edef55d3a7128a43a58c049c3cebebf, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

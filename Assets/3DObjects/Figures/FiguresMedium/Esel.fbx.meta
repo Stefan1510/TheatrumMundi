@@ -11,27 +11,27 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: faden_dick
-    second: {fileID: 2100000, guid: 383273d23c2ca8d45a7c0b0ce455e079, type: 2}
+    second: {fileID: 2100000, guid: 89b3c17f7521e5f468f844b8c906dec0, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: mat_Faden
-    second: {fileID: 2100000, guid: a0fb348f22feebe46ba974a073c235f5, type: 2}
+    second: {fileID: 2100000, guid: e1e8d48b5cbfb3e458499e2c15cbe5fc, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: mat_Fahrwerk
-    second: {fileID: 2100000, guid: d7dcca02d25b95d49a68024512f05fc5, type: 2}
+    second: {fileID: 2100000, guid: f8ad3a31e389d4f43af7aeb62723fa33, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: mat_Figur
-    second: {fileID: 2100000, guid: 92248485bb095d949bed8f13120e86c9, type: 2}
+    second: {fileID: 2100000, guid: 005da2ed890fe0d4fb835825468c2c1d, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: messing
-    second: {fileID: 2100000, guid: 7a34149e3283b8640bbfe1a0787264d6, type: 2}
+    second: {fileID: 2100000, guid: 6bd38a601567e2a41b12846452e35db7, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

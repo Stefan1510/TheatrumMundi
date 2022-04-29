@@ -44,7 +44,7 @@ public class UIController : MonoBehaviour
                     if (se.active)
                     {
                         buttonSe.transform.SetParent(goCollection[se.railnumber - 1].transform);
-                        buttonSe.GetComponent<RectTransform>().anchoredPosition = new Vector2(se.z * 300, (se.y - 150f) * 200);
+                        buttonSe.GetComponent<RectTransform>().anchoredPosition = new Vector2(se.z * 300, (se.y - 0.1f) * 300);
                         buttonSe.GetComponent<DragDrop>().schieneKulisse = se.railnumber;
                         SceneManaging.statusReiter = se.railnumber;
                     }

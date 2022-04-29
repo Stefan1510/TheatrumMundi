@@ -11,22 +11,22 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: mat_Faden.001
-    second: {fileID: 2100000, guid: 3071a78fc6ee5c54589eba150a9962ee, type: 2}
+    second: {fileID: 2100000, guid: ce411aed5785007468e679016d66eb87, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: mat_Soldat02
-    second: {fileID: 2100000, guid: 886c6e4c759413f47b274062e395c694, type: 2}
+    second: {fileID: 2100000, guid: 7e465221258dd294b824df500f9a3e4a, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: mat_Soldat02_Fahrwerk
-    second: {fileID: 2100000, guid: 616221985120549449d4cf732ce295b8, type: 2}
+    second: {fileID: 2100000, guid: f0d734c1ad2d1e34d8e987d1a539053f, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: messing
-    second: {fileID: 2100000, guid: fd18652cfa25d2c46b262df8363fc400, type: 2}
+    second: {fileID: 2100000, guid: 055cc12709484a04fbbb858ce7b6768d, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

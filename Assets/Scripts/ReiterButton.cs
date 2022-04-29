@@ -81,7 +81,7 @@ public class ReiterButton : MonoBehaviour
         else if (gameObject.name == "RailButton8") SceneManaging.triggerActive = 8;
         else if (gameObject.name == "SettingsWindow") SceneManaging.triggerEinstellungen = true;
         else SceneManaging.triggerActive = 0;
-        //Debug.Log("triggerACtive: " + SceneManaging.triggerActive+", triggerEinstellung: "+SceneManaging.triggerEinstellungen);
+        //Debug.Log("triggerACtive: " + SceneManaging.triggerActive+", triggerEinstellung: "+SceneManaging.triggerEinstellungen+", gameobject: "+gameObject.name);
         //SceneManaging.dragDrop.setReiterActive(SceneManaging.dragDrop.statusReiter);
     }
 

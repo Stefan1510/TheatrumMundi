@@ -18,7 +18,8 @@ public class RailSpeedController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.position = new Vector3(0, 0, 2 + GetDistanceAtTime(AnimationTimer.GetTime()) * speed);
+        transform.position = new Vector3(0, transform.parent.localPosition.y, 2 + GetDistanceAtTime(AnimationTimer.GetTime()) * speed);
+
         //Debug.Log(speed);
         //_goneSeconds += Time.deltaTime;
         //if (_goneSeconds >= 10 )

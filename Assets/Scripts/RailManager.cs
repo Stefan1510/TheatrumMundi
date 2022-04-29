@@ -110,7 +110,6 @@ public class RailManager : MonoBehaviour
     void Start()
     {
         scaleObject(gameObject, 1335, 15);//openCloseTimelineByClick(true,timelineImage,false);
-        audioSource = GetComponent<AudioSource>();
         timeSettings.SetActive(false);
         for (int i = 0; i < figureObjects.Length; i++)
         {
@@ -122,12 +121,10 @@ public class RailManager : MonoBehaviour
         List<GameObject> timelineInstanceObjects = new List<GameObject>();
         List<GameObject> timelineObjects3D = new List<GameObject>();
         List<GameObject> timelineInstanceObjects3D = new List<GameObject>();
-        //Debug.Log("railInfo: "+ rail3dObj + "Pos: "+rail3dObj.transform.position); //bsp:'schiene1' and '(0.5,-0.5,0.0)' y=up-vector
         railStartPos = new Vector3(0.0f, 0.0f, 0.0f);
         railEndPos = new Vector3(0.0f, 0.0f, 0.0f);
         railStartPos = getRailStartEndpoint(rail3dObj, "start");
         railEndPos = getRailStartEndpoint(rail3dObj, "end");
-        //Debug.Log("railStartPos: " + railStartPos + "railEndPos: " + railEndPos);
 
         fig1StartPos = railStartPos.z;//-1.75f;
         fig2StartPos = railEndPos.z;//1.88f;
@@ -144,17 +141,22 @@ public class RailManager : MonoBehaviour
             if (figureObjects3D[i].GetComponent<FigureStats>().isShip)
             {
                 //Debug.Log("figure: " + figureObjects3D[i] + " is a ship.");
-                figureObjects3D[i].GetComponent<MeshRenderer>().material.DisableKeyword("_EMISSION");
+                for (int j = 0; j < figureObjects3D[i].GetComponent<MeshRenderer>().materials.Length; j++)
+                {
+                    figureObjects3D[i].GetComponent<MeshRenderer>().materials[j].DisableKeyword("_EMISSION");
+                }
             }
-
             else
             {
                 //Debug.Log("figure: " + figureObjects3D[i] + " is not a ship.");
-                figureObjects3D[i].transform.GetChild(1).GetComponent<SkinnedMeshRenderer>().material.DisableKeyword("_EMISSION");
+                for (int j = 0; j < figureObjects3D[i].transform.GetChild(1).GetComponent<SkinnedMeshRenderer>().materials.Length; j++)
+                {
+                    figureObjects3D[i].transform.GetChild(1).GetComponent<SkinnedMeshRenderer>().materials[j].DisableKeyword("_EMISSION");
+                }
                 figureObjects3D[i].GetComponent<Animator>().enabled = false;
+
             }
         }
-
     }
 
     public string identifyClickedObject()   //old
@@ -278,8 +280,8 @@ public class RailManager : MonoBehaviour
                     gameController.GetComponent<UIController>().RailLightBG[j].GetComponent<RailLightManager>().isTimelineOpen = false;
                 }
                 gameController.GetComponent<UIController>().RailMusic.GetComponent<RectTransform>().sizeDelta = new Vector2(tl.rectTransform.rect.width, heightClosed);
-                    gameController.GetComponent<UIController>().RailMusic.GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightClosed);
-                    gameController.GetComponent<UIController>().RailMusic.GetComponent<RailMusicManager>().isTimelineOpen = false;
+                gameController.GetComponent<UIController>().RailMusic.GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightClosed);
+                gameController.GetComponent<UIController>().RailMusic.GetComponent<RailMusicManager>().isTimelineOpen = false;
                 // open clicked rail
                 //Debug.Log("++++ geklickte Schiene wird geöffnet: " + tl);
                 //scale up timeline
@@ -482,17 +484,9 @@ public class RailManager : MonoBehaviour
             scaleObject(objects[i], x, y);
         }
     }
-    public void setPivot(GameObject obj, float x, float y)
-    {
-        obj.GetComponent<RectTransform>().pivot = new Vector2(x, y);
-    }
     public void setObjectOnTimeline(GameObject fig, float x, float y)
     {
         fig.transform.position = new Vector3(fig.transform.position.x, y, 0.0f);
-    }
-    public void ripObjectOffTimeline(GameObject fig, float x, float y)
-    {
-        fig.transform.position = new Vector3(x, y, 0.0f);
     }
     public void updateObjectList(List<GameObject> objects, GameObject obj)
     {
@@ -579,9 +573,28 @@ public class RailManager : MonoBehaviour
         Destroy(obj3D);
         timelineInstanceObjects.Remove(obj);
         timelineInstanceObjects3D.Remove(obj3D);
-        //Debug.Log("tmpNr: " + tmpNr + "currentCounterNr: " + currentCounterNr + ", Instances: " + timelineInstanceObjects.Count);
-        Debug.Log("+++Removed: " + obj);
         figCounterCircle[tmpNr - 1].transform.GetChild(0).GetComponent<Text>().text = (currentCounterNr - 1).ToString();
+    }
+    public void removeObjectFromTimeline2D(GameObject obj) // if Delete Button is pressed (button only knows 2D-Figure, 3D-Figure has to be calculated here)
+    {
+        int tmpNr = int.Parse(obj.transform.GetChild(1).name.Substring(12));
+        int currentCounterNr = int.Parse(figCounterCircle[tmpNr - 1].transform.GetChild(0).GetComponent<Text>().text);
+        int val = 0;
+        for (int i = 0; i < timelineInstanceObjects.Count; i++)
+        {
+            if (obj.name == timelineInstanceObjects[i].name)
+            {
+                val = i;
+            }
+        }
+        Destroy(obj);
+        Destroy(timelineInstanceObjects3D[val]);
+        timelineInstanceObjects.Remove(obj);
+        timelineInstanceObjects3D.Remove(timelineInstanceObjects3D[val]);
+        figCounterCircle[tmpNr - 1].transform.GetChild(0).GetComponent<Text>().text = (currentCounterNr - 1).ToString();
+
+        //erase from SceneData (passiert offenbar schon automatisch, weil bei ButtonUp immer wieder neu die Instances von timelineInstances geschrieben werden :) ) 
+        // StaticSceneData.StaticData.figureElements[Int32.Parse(obj.name.Substring(6,2))-1].figureInstanceElements.Remove(StaticSceneData.StaticData.figureElements[Int32.Parse(obj.name.Substring(6,2))-1].figureInstanceElements[Int32.Parse(obj.name.Substring(17))]);
     }
 
     public int checkHittingAnyTimeline(GameObject obj, Vector2 mousePos)
@@ -607,29 +620,6 @@ public class RailManager : MonoBehaviour
         return hit;
     }
 
-    /*public bool checkFigureHighlighted(GameObject obj)
-    {
-        bool val = false;
-        if(obj)
-        try
-        {
-            if (obj.GetComponent<SkinnedMeshRenderer>().material.IsKeywordEnabled("_EMISSION"))    // check if second child (which is never the armature) has emission enabled (=is highlighted)
-            {
-                val = true;
-                Debug.Log("val: " + val);
-            }
-        }
-        catch (Exception ex)
-        {
-            if (ex is MissingComponentException || ex is NullReferenceException)
-            {
-                return false;
-            }
-            throw;
-        }
-        return val;
-    }*/
-
     public void highlight(GameObject obj3D, GameObject obj)
     {
         obj.transform.GetChild(0).GetComponent<Image>().color = colFigureHighlighted;
@@ -638,29 +628,20 @@ public class RailManager : MonoBehaviour
 
         if (obj3D.GetComponent<FigureStats>().isShip)
         {
-            obj3D.GetComponent<MeshRenderer>().material.EnableKeyword("_EMISSION");
+            for (int i = 0; i < obj3D.GetComponent<MeshRenderer>().materials.Length; i++)
+            {
+                obj3D.GetComponent<MeshRenderer>().materials[i].EnableKeyword("_EMISSION");
+            }
+
         }
         else
         {
-            obj3D.transform.GetChild(1).GetComponent<SkinnedMeshRenderer>().material.EnableKeyword("_EMISSION");
+            for (int i = 0; i < obj3D.transform.GetChild(1).GetComponent<SkinnedMeshRenderer>().materials.Length; i++)
+            {
+                obj3D.transform.GetChild(1).GetComponent<SkinnedMeshRenderer>().materials[i].EnableKeyword("_EMISSION");
+            }
         }
-        /*for (int i = 0; i < obj3D.transform.childCount; i++)
-        {
-            //Debug.Log("Child: "+obj3D.transform.GetChild(i));
-            try
-            {
-                obj3D.transform.GetChild(i).GetComponent<SkinnedMeshRenderer>().material.EnableKeyword("_EMISSION");
 
-            }
-            catch (Exception ex)
-            {
-                if (ex is MissingComponentException || ex is NullReferenceException)
-                {
-                    return;
-                }
-                throw;
-            }
-        }*/
     }
     public void unhighlight(GameObject obj3D, GameObject obj)
     {
@@ -670,30 +651,18 @@ public class RailManager : MonoBehaviour
 
         if (obj3D.GetComponent<FigureStats>().isShip)
         {
-            obj3D.GetComponent<MeshRenderer>().material.DisableKeyword("_EMISSION");
+            for (int i = 0; i < obj3D.GetComponent<MeshRenderer>().materials.Length; i++)
+            {
+                obj3D.GetComponent<MeshRenderer>().materials[i].DisableKeyword("_EMISSION");
+            }
         }
         else
         {
-            obj3D.transform.GetChild(1).GetComponent<SkinnedMeshRenderer>().material.DisableKeyword("_EMISSION");
+            for (int i = 0; i < obj3D.transform.GetChild(1).GetComponent<SkinnedMeshRenderer>().materials.Length; i++)
+            {
+                obj3D.transform.GetChild(1).GetComponent<SkinnedMeshRenderer>().materials[i].DisableKeyword("_EMISSION");
+            }
         }
-
-        /*for (int i = 0; i < obj3D.transform.childCount; i++)
-        {
-            //Debug.Log("Child: "+obj3D.transform.GetChild(i));
-            try
-            {
-                obj3D.transform.GetChild(i).GetComponent<SkinnedMeshRenderer>().material.DisableKeyword("_EMISSION");
-            }
-
-            catch (Exception ex)
-            {
-                if (ex is MissingComponentException || ex is NullReferenceException)
-                {
-                    return;
-                }
-                throw;
-            }
-        }*/
     }
 
     void Update()
@@ -703,10 +672,10 @@ public class RailManager : MonoBehaviour
         {
             //Debug.Log("---status---");
             //Debug.Log("timeline-instance-object count: " + timelineInstanceObjects.Count);
-            for (int i = 0; i < timelineInstanceObjects.Count; i++)
+            /*for (int i = 0; i < timelineInstanceObjects.Count; i++)
             {
                 //Debug.Log("timeline-instance-object nr: " + i + " name: " + timelineInstanceObjects[i].name);
-            }
+            }*/
             //Debug.Log("---statusEnd---");
 
             //Debug.Log("click mouse button at pos: " + getMousePos + " " + Physics2D.OverlapPoint(getMousePos));
@@ -763,12 +732,11 @@ public class RailManager : MonoBehaviour
                     draggingObject = true;
                     draggingOnTimeline = true;
 
-                    //timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).GetComponent<Button>().onClick.AddListener(() => removeObjectFromTimeline(timelineInstanceObjects[currentClickedInstanceObjectIndex], timelineInstanceObjects3D[currentClickedInstanceObjectIndex]));//, currentClickedObjectIndex));
-
                     //highlighting objects and showing delete button when clicked
                     if (SceneManaging.highlighted == false)
                     {
                         highlight(timelineInstanceObjects3D[currentClickedInstanceObjectIndex], timelineInstanceObjects[currentClickedInstanceObjectIndex]);
+                        //timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).GetComponent<Button>().onClick.AddListener(() => removeObjectFromTimeline(timelineInstanceObjects[currentClickedInstanceObjectIndex], timelineInstanceObjects3D[currentClickedInstanceObjectIndex]));//, currentClickedObjectIndex));
                     }
                     else if (SceneManaging.highlighted && timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(0).GetComponent<Image>().color == colFigureHighlighted) // checkFigureHighlighted(timelineInstanceObjects3D[currentClickedInstanceObjectIndex].transform.GetChild(1).gameObject))  // check if second child (which is never the armature) has emission enabled (=is highlighted)
                     {
@@ -783,6 +751,7 @@ public class RailManager : MonoBehaviour
                                 unhighlight(gameController.GetComponent<UIController>().Rails[j].timelineInstanceObjects3D[i], gameController.GetComponent<UIController>().Rails[j].timelineInstanceObjects[i]);
                             }
                             highlight(timelineInstanceObjects3D[currentClickedInstanceObjectIndex], timelineInstanceObjects[currentClickedInstanceObjectIndex]);
+                            // timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).GetComponent<Button>().onClick.AddListener(() => removeObjectFromTimeline(timelineInstanceObjects[currentClickedInstanceObjectIndex], timelineInstanceObjects3D[currentClickedInstanceObjectIndex]));//, currentClickedObjectIndex));
                         }
                     }
 
@@ -1085,11 +1054,8 @@ public class RailManager : MonoBehaviour
                     //count objects from same kind
                     int countName = 0;
                     countName = countCopiesOfObject(figureObjects[currentClickedObjectIndex], timelineInstanceObjects);
-                    newCopyOfFigure.name = figureObjects[currentClickedObjectIndex].name + "_instance" + countName;
-
+                    newCopyOfFigure.name = figureObjects[currentClickedObjectIndex].name + "_instance" + countName.ToString("000");
                     createRectangle(newCopyOfFigure, new Vector2(300, 50), colFigure, minX, 100.0f);
-
-
                     figCounterCircle[currentClickedObjectIndex].transform.GetChild(0).GetComponent<Text>().text = (countName + 1).ToString();
 
                     //parent and position
@@ -1098,8 +1064,6 @@ public class RailManager : MonoBehaviour
 
                     //add object to list which objects are on timeline, set placed figures to timelineInstanceObjects-list
                     updateObjectList(timelineInstanceObjects, newCopyOfFigure);
-
-                    //Debug.Log("copies of this object:"+countCopiesOfObject(newCopyOfFigure,timelineObjects));
 
                     //set original image back to shelf
                     setParent(figureObjects[currentClickedObjectIndex], objectShelfParent[currentClickedObjectIndex]);
@@ -1112,8 +1076,6 @@ public class RailManager : MonoBehaviour
                     // bring object back to position two, so that its visible
                     figureObjects[currentClickedObjectIndex].transform.SetSiblingIndex(1);
 
-                    //	Debug.Log("count timelineInstancesObjects: "+timelineInstanceObjects.Count);
-
                     //set 3d object to default position
                     GameObject curr3DObject = new GameObject();
                     curr3DObject = Instantiate(figureObjects3D[currentClickedObjectIndex]);
@@ -1125,29 +1087,24 @@ public class RailManager : MonoBehaviour
                     // Save to SceneData:
                     FigureInstanceElement thisFigureInstanceElement = new FigureInstanceElement();
                     thisFigureInstanceElement.instanceNr = countName; //index
-                    thisFigureInstanceElement.name = curr3DObject.name + "_" + countName;
+                    thisFigureInstanceElement.name = curr3DObject.name + "_" + countName.ToString("000");
                     thisFigureInstanceElement.railStart = (int)Char.GetNumericValue(timelineImage.name[17]) - 1; //railIndex
                     StaticSceneData.StaticData.figureElements[currentClickedObjectIndex].figureInstanceElements.Add(thisFigureInstanceElement);
                     ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
-                    //show the instances as a pinned number
-
-                    // set index back to -1 because nothing is being clicked anymore
-                    currentClickedObjectIndex = -1;
+                    currentClickedObjectIndex = -1; // set index back to -1 because nothing is being clicked anymore
                 }
-
             }
 
             // if dropped somewhere else than timeline: bring figure back to shelf
             else if (releaseOnTimeline == false && currentClickedObjectIndex != -1 && isInstance == false)
             {
-                //Debug.Log("+++++++++++gameobject: " + gameObject.name + ", index: " + currentClickedObjectIndex);
-
                 setParent(figureObjects[currentClickedObjectIndex], objectShelfParent[currentClickedObjectIndex]);
                 // bring object back to position two, so that its visible and change position back to default
                 figureObjects[currentClickedObjectIndex].transform.SetSiblingIndex(1);
                 figureObjects[currentClickedObjectIndex].GetComponent<RectTransform>().anchoredPosition = new Vector2(75.0f, -75.0f);
             }
+
             else if (releaseOnTimeline == false && currentClickedInstanceObjectIndex != -1 && isInstance)
             {
                 Debug.Log("remove");
@@ -1158,11 +1115,11 @@ public class RailManager : MonoBehaviour
             {
                 double startSec = calculateFigureStartTimeInSec(timelineInstanceObjects[i], 100.0f, maxTimeInSec, minX, maxX);
                 timelineInstanceObjects3D[i].transform.localPosition = new Vector3(timelineInstanceObjects3D[i].transform.localPosition.x, timelineInstanceObjects3D[i].transform.localPosition.y, (rail3dObj.transform.GetChild(0).GetComponent<RailSpeedController>().GetDistanceAtTime((float)startSec)) / 10);
-                StaticSceneData.StaticData.figureElements[(int)Char.GetNumericValue(timelineInstanceObjects[i].name[7]) - 1].figureInstanceElements[(int)Char.GetNumericValue(timelineInstanceObjects[i].name[17])].moment = (float)startSec;
-                Debug.Log("FigureInstance: " + StaticSceneData.StaticData.figureElements[(int)Char.GetNumericValue(timelineInstanceObjects[i].name[7]) - 1].figureInstanceElements[(int)Char.GetNumericValue(timelineInstanceObjects[i].name[17])].name);
-                Debug.Log("Moment: " + StaticSceneData.StaticData.figureElements[(int)Char.GetNumericValue(timelineInstanceObjects[i].name[7]) - 1].figureInstanceElements[(int)Char.GetNumericValue(timelineInstanceObjects[i].name[17])].moment);
-                Debug.Log("rail: " + StaticSceneData.StaticData.figureElements[(int)Char.GetNumericValue(timelineInstanceObjects[i].name[7]) - 1].figureInstanceElements[(int)Char.GetNumericValue(timelineInstanceObjects[i].name[17])].railStart);
-                Debug.Log("isntanceNr: " + StaticSceneData.StaticData.figureElements[(int)Char.GetNumericValue(timelineInstanceObjects[i].name[7]) - 1].figureInstanceElements[(int)Char.GetNumericValue(timelineInstanceObjects[i].name[17])].instanceNr);
+                StaticSceneData.StaticData.figureElements[Int32.Parse(timelineInstanceObjects[i].name.Substring(6, 2)) - 1].figureInstanceElements[Int32.Parse(timelineInstanceObjects[i].name.Substring(17))].moment = (float)startSec;
+                Debug.Log("FigureInstance: " + StaticSceneData.StaticData.figureElements[Int32.Parse(timelineInstanceObjects[i].name.Substring(6, 2)) - 1].figureInstanceElements[Int32.Parse(timelineInstanceObjects[i].name.Substring(17))].name);
+                Debug.Log("Moment: " + StaticSceneData.StaticData.figureElements[Int32.Parse(timelineInstanceObjects[i].name.Substring(6, 2)) - 1].figureInstanceElements[Int32.Parse(timelineInstanceObjects[i].name.Substring(17))].moment);
+                Debug.Log("rail: " + StaticSceneData.StaticData.figureElements[Int32.Parse(timelineInstanceObjects[i].name.Substring(6, 2)) - 1].figureInstanceElements[Int32.Parse(timelineInstanceObjects[i].name.Substring(17))].railStart);
+                Debug.Log("isntanceNr: " + StaticSceneData.StaticData.figureElements[Int32.Parse(timelineInstanceObjects[i].name.Substring(6, 2)) - 1].figureInstanceElements[Int32.Parse(timelineInstanceObjects[i].name.Substring(17))].instanceNr);
             }
 
             releaseOnTimeline = false;
@@ -1186,23 +1143,6 @@ public class RailManager : MonoBehaviour
                     timelineInstanceObjects3D[i].GetComponent<Animator>().enabled = false;
                 }
             }
-            /*if (SceneManaging.playing && !timelineInstanceObjects3D[i].GetComponent<FigureStats>().isShip && !timelineInstanceObjects3D[i].GetComponent<Animator>().enabled)
-            {
-                try
-                {
-                    timelineInstanceObjects3D[i].GetComponent<Animator>().enabled = true;
-                }
-                catch (MissingComponentException ex) { }
-            }
-            // stop Animation if not playing
-            else if (SceneManaging.playing == false && !timelineInstanceObjects3D[i].GetComponent<FigureStats>().isShip && timelineInstanceObjects3D[i].GetComponent<Animator>().enabled)
-            {
-                try
-                {
-                    timelineInstanceObjects3D[i].GetComponent<Animator>().enabled = false;
-                }
-                catch (MissingComponentException ex) { }
-            }*/
         }
     }
 }
