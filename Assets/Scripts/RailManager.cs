@@ -554,13 +554,16 @@ public class RailManager : MonoBehaviour
     public int countCopiesOfObject(GameObject fig, List<GameObject> tlObjs)
     {
         int c = 0;
-        //count object with the same name as fig
-        foreach (GameObject gO in tlObjs)
+        for (int i = 0; i < gameController.GetComponent<UIController>().Rails.Length; i++)
         {
-            //if (gO.name==fig.name)
-            if (gO.name.Contains(fig.name))
+            //count object with the same name as fig
+            foreach (GameObject gO in gameController.GetComponent<UIController>().Rails[i].timelineInstanceObjects)
             {
-                c++;
+                //if (gO.name==fig.name)
+                if (gO.name.Contains(fig.name))
+                {
+                    c++;
+                }
             }
         }
         return c;
