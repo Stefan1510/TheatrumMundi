@@ -343,20 +343,23 @@ public class SceneDataController : MonoBehaviour
 
     public void FiguresApplyToScene(List<FigureElement> figureElements)
     {
+        countActiveFigureElements = 0;
         foreach (FigureElement fe in figureElements)
         {
             foreach (GameObject goFigureElement in objectsFigureElements)
             {
                 if (fe.name == goFigureElement.name)
                 {
-                    Debug.LogWarning("find Figures Here: " + fe.name);
+                    //Debug.LogWarning("find Figures Here: " + fe.name);
                     foreach (FigureInstanceElement feInstance in fe.figureInstanceElements)
                     {
+                        countActiveFigureElements++;
                         Debug.LogWarning("Create Instance here: " + feInstance.name);
                         GameObject curr3DObject = new GameObject();
                         curr3DObject = Instantiate(goFigureElement);
                         curr3DObject.transform.SetParent(objectsRailElements[feInstance.railStart].transform.GetChild(0));
                         curr3DObject.transform.localPosition = new Vector3(curr3DObject.transform.localPosition.x, curr3DObject.transform.localPosition.y, (objectsRailElements[feInstance.railStart].transform.GetChild(0).GetComponent<RailSpeedController>().GetDistanceAtTime(feInstance.moment) / 10));
+                        
                     }
                     //            objectFigureElement.transform.position = new Vector3(figureElement.x, figureElement.y, figureElement.z);
                     //            objectFigureElement.GetComponent<SceneryController>().sceneryActive = figureElement.active;

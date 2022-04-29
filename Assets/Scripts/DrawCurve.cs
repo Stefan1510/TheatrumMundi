@@ -48,6 +48,8 @@ public class DrawCurve : MonoBehaviour
         if (_gameObjectStarted)
         {
             StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds[0] = new RailElementSpeed { moment = 0, speed = _valueSlider.value };  // im SceneDataController MUSS ein erstes Element hinzugefügt werden, bevor es hier angesprochen werden kann
+            //StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds[0] = new RailElementSpeed { moment = 0, speed = 1 };  // im SceneDataController MUSS ein erstes Element hinzugefügt werden, bevor es hier angesprochen werden kann
+            //Debug.LogWarning(_valueSlider.value);
             StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds.Sort((x, y) => x.moment.CompareTo(y.moment));   // sortiert die railElementSpeeds anhand der Eigenschaft moment
             ChangeCurve();
         }
