@@ -837,6 +837,8 @@ public class RailMusicManager : MonoBehaviour
             isInstance = false;
         }
 
+
+        bool anyInstanceIsPlaying = false;
         // turning music on and off in playmode
         if (SceneManaging.playing)
         {
@@ -852,6 +854,7 @@ public class RailMusicManager : MonoBehaviour
                 // wenn timer im bereich musikstuecks und musik ist nicht an
                 if (AnimationTimer.GetTime() >= startSec && AnimationTimer.GetTime() <= endSec)
                 {
+                    anyInstanceIsPlaying = true;
                     // hitObject = ((int)Char.GetNumericValue(timelineInstanceObjects[i].name[17])); // instance index
                     SceneManaging.hitObject = i;
                     SceneManaging.hittingSomething = true;
@@ -870,6 +873,9 @@ public class RailMusicManager : MonoBehaviour
                         {
                             Debug.Log("+++++++++++++++++++TimeSlider ist im music piece and slider is being dragged.");
                             audioSource.time = tmpTime - (float)startSec;
+                            currentClip = ((int)Char.GetNumericValue(timelineInstanceObjects[i].name[07]) - 1); // object index
+                            audioSource.clip = clip[currentClip];
+                            playingMusic = false;
                         }
                     }
                     // else if (AnimationTimer.GetTime() < startSec || AnimationTimer.GetTime() > endSec && playingMusic == true)
@@ -900,16 +906,21 @@ public class RailMusicManager : MonoBehaviour
                     // }
                 }
 
-
-                else if (SceneManaging.hitObject != 0 && SceneManaging.hitObject != 1 && SceneManaging.hitObject != 2 && SceneManaging.hitObject != 3 && SceneManaging.hitObject != 4 && SceneManaging.hitObject != 5)
-                {
-                    audioSource.Stop();
-                    playingMusic = false;
-                    Debug.Log("stop");
-                }
+                //else if (SceneManaging.hitObject != 0 && SceneManaging.hitObject != 1 && SceneManaging.hitObject != 2 && SceneManaging.hitObject != 3 && SceneManaging.hitObject != 4 && SceneManaging.hitObject != 5)
+                //{
+                //    audioSource.Stop();
+                //    playingMusic = false;
+                //    Debug.Log("stop");
+                //}
             }
         }
         else
+        {
+            audioSource.Stop();
+            playingMusic = false;
+        }
+
+        if (!anyInstanceIsPlaying)
         {
             audioSource.Stop();
             playingMusic = false;
