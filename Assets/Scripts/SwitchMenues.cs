@@ -24,10 +24,7 @@ public class SwitchMenues : MonoBehaviour
     {
         ObjectMenueConfigMain.SetActive(false);
         ObjectMenueDirectorMain.SetActive(true);
-        StaticSceneData.Rails3D();
-        StaticSceneData.Sceneries3D();
-        StaticSceneData.Lights3D();
-        //StaticSceneData.Everything3D();
+        StaticSceneData.Everything3D();
     }
     public void SwitchToMenueConfig()
     {

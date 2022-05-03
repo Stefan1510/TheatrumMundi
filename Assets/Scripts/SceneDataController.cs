@@ -26,6 +26,8 @@ public class SceneDataController : MonoBehaviour
     [HideInInspector] public int currentTime;
     [HideInInspector] public Material[] matCoulisse;
 
+    [HideInInspector] public List<GameObject> objectsFigureInstances;
+
     [HideInInspector] public SceneData recentSceneData;
     [HideInInspector] public SceneData tempSceneData;
 
@@ -343,7 +345,14 @@ public class SceneDataController : MonoBehaviour
 
     public void FiguresApplyToScene(List<FigureElement> figureElements)
     {
+        Debug.LogWarning("before clear: "+objectsFigureInstances.Count);
         countActiveFigureElements = 0;
+        foreach (GameObject figureInstance in objectsFigureInstances)
+        {
+            Destroy(figureInstance);
+        }
+        objectsFigureInstances.Clear();
+        Debug.LogWarning("after clear: " + objectsFigureInstances.Count);
         foreach (FigureElement fe in figureElements)
         {
             foreach (GameObject goFigureElement in objectsFigureElements)
@@ -359,7 +368,7 @@ public class SceneDataController : MonoBehaviour
                         curr3DObject = Instantiate(goFigureElement);
                         curr3DObject.transform.SetParent(objectsRailElements[feInstance.railStart].transform.GetChild(0));
                         curr3DObject.transform.localPosition = new Vector3(curr3DObject.transform.localPosition.x, curr3DObject.transform.localPosition.y, (objectsRailElements[feInstance.railStart].transform.GetChild(0).GetComponent<RailSpeedController>().GetDistanceAtTime(feInstance.moment) / 10));
-                        
+                        objectsFigureInstances.Add(curr3DObject); 
                     }
                     //            objectFigureElement.transform.position = new Vector3(figureElement.x, figureElement.y, figureElement.z);
                     //            objectFigureElement.GetComponent<SceneryController>().sceneryActive = figureElement.active;

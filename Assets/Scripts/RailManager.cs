@@ -1093,6 +1093,7 @@ public class RailManager : MonoBehaviour
                     thisFigureInstanceElement.name = curr3DObject.name + "_" + countName.ToString("000");
                     thisFigureInstanceElement.railStart = (int)Char.GetNumericValue(timelineImage.name[17]) - 1; //railIndex
                     StaticSceneData.StaticData.figureElements[currentClickedObjectIndex].figureInstanceElements.Add(thisFigureInstanceElement);
+                    gameController.GetComponent<SceneDataController>().objectsFigureInstances.Add(curr3DObject);
                     ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
                     currentClickedObjectIndex = -1; // set index back to -1 because nothing is being clicked anymore
