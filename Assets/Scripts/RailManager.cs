@@ -685,8 +685,9 @@ public class RailManager : MonoBehaviour
         //add object to list which objects are on timeline, set placed figures to timelineInstanceObjects-list
         updateObjectList(timelineInstanceObjects, newCopyOfFigure);
     }*/
-    public void createNew2DInstance(int figureNr, float posX)
+    public void CreateNew2DInstance(int figureNr, float momentOrPosX, bool loadFromFile)
     {
+        Debug.LogWarning("which rail am I? " + gameObject.name);
         int countName = 0;
         countName = countCopiesOfObject(figureObjects[figureNr]);
         newCopyOfFigure = Instantiate(figureObjects[figureNr]);
@@ -695,7 +696,16 @@ public class RailManager : MonoBehaviour
         figCounterCircle[figureNr].transform.GetChild(0).GetComponent<Text>().text = (countName + 1).ToString();
         //parent and position
         newCopyOfFigure.transform.SetParent(gameObject.transform);
-        newCopyOfFigure.transform.position = new Vector2(posX, figureObjects[figureNr].transform.position.y);
+        if (loadFromFile)
+        {
+            float posX = UtilitiesTm.FloatRemap(momentOrPosX, 0, AnimationTimer.GetMaxTime(), gameObject.GetComponent<RectTransform>().rect.width/-2, gameObject.GetComponent<RectTransform>().rect.width/2);
+            newCopyOfFigure.transform.localPosition = new Vector2(posX, figureObjects[figureNr].transform.localPosition.y);
+            gameController.GetComponent<SceneDataController>().objects2dFigureInstances.Add(newCopyOfFigure);
+        }
+        else
+        {
+            newCopyOfFigure.transform.position = new Vector2(momentOrPosX, figureObjects[figureNr].transform.position.y);
+        }
         //add object to list which objects are on timeline, set placed figures to timelineInstanceObjects-list
         updateObjectList(timelineInstanceObjects, newCopyOfFigure);
     }
@@ -1084,7 +1094,7 @@ public class RailManager : MonoBehaviour
                 if (releaseObjMousePos == getMousePos)  //if release obj-pos and release mouse-button-pos is the same
                 {
                     //create a copy of this timelineObject and keep the original one
-                    createNew2DInstance(currentClickedObjectIndex, getMousePos.x);
+                    CreateNew2DInstance(currentClickedObjectIndex, getMousePos.x, false);
 
                     //set original image back to shelf, position 2 to make it visible
                     setParent(figureObjects[currentClickedObjectIndex], objectShelfParent[currentClickedObjectIndex]);
@@ -1107,7 +1117,7 @@ public class RailManager : MonoBehaviour
                     thisFigureInstanceElement.name = curr3DObject.name + "_" + countCopiesOfObject(figureObjects[currentClickedObjectIndex]).ToString("000");
                     thisFigureInstanceElement.railStart = (int)Char.GetNumericValue(timelineImage.name[17]) - 1; //railIndex
                     StaticSceneData.StaticData.figureElements[currentClickedObjectIndex].figureInstanceElements.Add(thisFigureInstanceElement);
-                    gameController.GetComponent<SceneDataController>().objectsFigureInstances.Add(curr3DObject);
+                    gameController.GetComponent<SceneDataController>().objects3dFigureInstances.Add(curr3DObject);
                     ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
                     currentClickedObjectIndex = -1; // set index back to -1 because nothing is being clicked anymore

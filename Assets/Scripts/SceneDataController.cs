@@ -13,6 +13,7 @@ public class SceneDataController : MonoBehaviour
     public GameObject[] objectsRailElements;
     public GameObject[] objectsSceneryElements;
     public GameObject[] objectsFigureElements;
+    public GameObject[] imageTimelineRails;
     //public GameObject[] objectsLightElements;
     public objectsLightElement[] objectsLightElements;
     [HideInInspector] public string sceneFileName;
@@ -26,7 +27,8 @@ public class SceneDataController : MonoBehaviour
     [HideInInspector] public int currentTime;
     [HideInInspector] public Material[] matCoulisse;
 
-    [HideInInspector] public List<GameObject> objectsFigureInstances;
+    [HideInInspector] public List<GameObject> objects3dFigureInstances;
+    [HideInInspector] public List<GameObject> objects2dFigureInstances;
 
     [HideInInspector] public SceneData recentSceneData;
     [HideInInspector] public SceneData tempSceneData;
@@ -345,30 +347,38 @@ public class SceneDataController : MonoBehaviour
 
     public void FiguresApplyToScene(List<FigureElement> figureElements)
     {
-        Debug.LogWarning("before clear: "+objectsFigureInstances.Count);
+        //Debug.LogWarning("before clear: "+objects3dFigureInstances.Count);
         countActiveFigureElements = 0;
-        foreach (GameObject figureInstance in objectsFigureInstances)
+        foreach (GameObject figureInstance3d in objects3dFigureInstances)
         {
-            Destroy(figureInstance);
+            Destroy(figureInstance3d);
         }
-        objectsFigureInstances.Clear();
-        Debug.LogWarning("after clear: " + objectsFigureInstances.Count);
+        objects3dFigureInstances.Clear();
+        foreach (GameObject figureInstance2d in objects2dFigureInstances)
+        {
+            Destroy(figureInstance2d);
+        }
+        objects2dFigureInstances.Clear();
+        //Debug.LogWarning("after clear: " + objects3dFigureInstances.Count);
         foreach (FigureElement fe in figureElements)
         {
-            foreach (GameObject goFigureElement in objectsFigureElements)
+            for (int i = 0; i < objectsFigureElements.Length; i++)
+            //foreach (GameObject goFigureElement in objectsFigureElements)
             {
-                if (fe.name == goFigureElement.name)
+                if (fe.name == objectsFigureElements[i].name)
+                //if (fe.name == goFigureElement.name)
                 {
                     //Debug.LogWarning("find Figures Here: " + fe.name);
                     foreach (FigureInstanceElement feInstance in fe.figureInstanceElements)
                     {
                         countActiveFigureElements++;
-                        Debug.LogWarning("Create Instance here: " + feInstance.name);
+                        //Debug.LogWarning("Create Instance here: " + feInstance.name);
+                        imageTimelineRails[feInstance.railStart].GetComponent<RailManager>().CreateNew2DInstance(i, feInstance.moment, true);
                         GameObject curr3DObject = new GameObject();
-                        curr3DObject = Instantiate(goFigureElement);
+                        curr3DObject = Instantiate(objectsFigureElements[i]);
                         curr3DObject.transform.SetParent(objectsRailElements[feInstance.railStart].transform.GetChild(0));
                         curr3DObject.transform.localPosition = new Vector3(curr3DObject.transform.localPosition.x, curr3DObject.transform.localPosition.y, (objectsRailElements[feInstance.railStart].transform.GetChild(0).GetComponent<RailSpeedController>().GetDistanceAtTime(feInstance.moment) / 10));
-                        objectsFigureInstances.Add(curr3DObject); 
+                        objects3dFigureInstances.Add(curr3DObject); 
                     }
                     //            objectFigureElement.transform.position = new Vector3(figureElement.x, figureElement.y, figureElement.z);
                     //            objectFigureElement.GetComponent<SceneryController>().sceneryActive = figureElement.active;
