@@ -846,10 +846,11 @@ public class RailMusicManager : MonoBehaviour
             //Debug.Log("+++++++++++++++++Music is playing");
             for (int i = 0; i < timelineInstanceObjects.Count; i++)
             {
-                double startSec = calculateFigureStartTimeInSec(timelineInstanceObjects[i], 100.0f, maxTimeInSec, minX, maxX);
-                double endSec = calculateMusicEndTimeInSec(timelineInstanceObjects[i], 180.0f, maxTimeInSec, minX, maxX);
+                //float tmpLength = ((float)maxX - (float)minX) * timelineInstanceObjects[i].GetComponent<MusicLength>().musicLength / 614;//UtilitiesTm.FloatRemap(newCopyOfFigure.GetComponent<MusicLength>().musicLength, 0, 614, (float)minX, (float)maxX);
+                double startSec = calculateFigureStartTimeInSec(timelineInstanceObjects[i], timelineInstanceObjects[i].GetComponent<MusicLength>().musicLength, maxTimeInSec, minX, maxX);
+                double endSec = calculateMusicEndTimeInSec(timelineInstanceObjects[i],timelineInstanceObjects[i].GetComponent<MusicLength>().musicLength, maxTimeInSec, minX, maxX);
                 float tmpTime = AnimationTimer.GetTime();
-                //Debug.Log(", startSec: " + startSec + "endSec: " + endSec + ", Timer: " + AnimationTimer.GetTime() + ", Playmusic: " + playingMusic);
+                Debug.Log(", startSec: " + startSec + "endSec: " + endSec + ", Timer: " + AnimationTimer.GetTime());// + ", LENGTH: " + tmpLength);
 
                 // wenn timer im bereich musikstuecks und musik ist nicht an
                 if (AnimationTimer.GetTime() >= startSec && AnimationTimer.GetTime() <= endSec)
