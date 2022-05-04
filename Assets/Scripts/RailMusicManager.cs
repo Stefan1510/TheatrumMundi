@@ -872,9 +872,9 @@ public class RailMusicManager : MonoBehaviour
                     {
                         {
                             Debug.Log("+++++++++++++++++++TimeSlider ist im music piece and slider is being dragged.");
-                            audioSource.time = tmpTime - (float)startSec;
-                            currentClip = ((int)Char.GetNumericValue(timelineInstanceObjects[i].name[07]) - 1); // object index
-                            audioSource.clip = clip[currentClip];
+                            //audioSource.time = tmpTime - (float)startSec;
+                            //currentClip = ((int)Char.GetNumericValue(timelineInstanceObjects[i].name[07]) - 1); // object index
+                            //audioSource.clip = clip[currentClip];
                             playingMusic = false;
                         }
                     }
