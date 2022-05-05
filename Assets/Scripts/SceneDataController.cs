@@ -347,19 +347,37 @@ public class SceneDataController : MonoBehaviour
 
     public void FiguresApplyToScene(List<FigureElement> figureElements)
     {
-        Debug.LogWarning("before clear: "+objects2dFigureInstances.Count);
+        //Debug.LogWarning("before clear: "+objects2dFigureInstances.Count);
         countActiveFigureElements = 0;
-        foreach (GameObject figureInstance3d in objects3dFigureInstances)
+        //foreach (GameObject figureInstance3d in objects3dFigureInstances)
+        //{
+        //    Destroy(figureInstance3d);
+        //}
+        //objects3dFigureInstances.Clear();
+        //foreach (GameObject figureInstance2d in objects2dFigureInstances)
+        //{
+        //    Destroy(figureInstance2d);
+        //}
+        //objects2dFigureInstances.Clear();
+
+        foreach(GameObject imageTimeLineRail in imageTimelineRails)
         {
-            Destroy(figureInstance3d);
+            Debug.LogWarning("Hi, my name is " + imageTimeLineRail.name);
+            foreach (GameObject obj in imageTimeLineRail.GetComponent<RailManager>().timelineInstanceObjects)
+            {
+                Debug.LogWarning(obj);
+                Destroy(obj);
+            }
+            foreach (GameObject obj3d in imageTimeLineRail.GetComponent<RailManager>().timelineInstanceObjects3D)
+            {
+                Debug.LogWarning(obj3d);
+                Destroy(obj3d);
+            }
+            imageTimeLineRail.GetComponent<RailManager>().timelineInstanceObjects.Clear();
+            imageTimeLineRail.GetComponent<RailManager>().timelineInstanceObjects3D.Clear();
         }
-        objects3dFigureInstances.Clear();
-        foreach (GameObject figureInstance2d in objects2dFigureInstances)
-        {
-            Destroy(figureInstance2d);
-        }
-        objects2dFigureInstances.Clear();
-        Debug.LogWarning("after clear: " + objects2dFigureInstances.Count);
+
+        //Debug.LogWarning("after clear: " + objects2dFigureInstances.Count);
         foreach (FigureElement fe in figureElements)
         {
             for (int i = 0; i < objectsFigureElements.Length; i++)
@@ -377,7 +395,7 @@ public class SceneDataController : MonoBehaviour
                         curr3DObject = imageTimelineRails[feInstance.railStart].GetComponent<RailManager>().CreateNew2DInstance(i, feInstance.moment, true);
                         // curr3DObject = Instantiate(objectsFigureElements[i]);
                         // imageTimelineRails[feInstance.railStart].GetComponent<RailManager>().timelineInstanceObjects3D.Add(curr3DObject);
-                        Debug.LogError("+++timeline3D: "+imageTimelineRails[feInstance.railStart].GetComponent<RailManager>().timelineInstanceObjects3D.Count);
+                        //Debug.LogError("+++timeline3D: "+imageTimelineRails[feInstance.railStart].GetComponent<RailManager>().timelineInstanceObjects3D.Count);
                         // curr3DObject.transform.SetParent(objectsRailElements[feInstance.railStart].transform.GetChild(0));
                         curr3DObject.transform.localPosition = new Vector3(curr3DObject.transform.localPosition.x, curr3DObject.transform.localPosition.y, (objectsRailElements[feInstance.railStart].transform.GetChild(0).GetComponent<RailSpeedController>().GetDistanceAtTime(feInstance.moment) / 10));
                         objects3dFigureInstances.Add(curr3DObject); 
