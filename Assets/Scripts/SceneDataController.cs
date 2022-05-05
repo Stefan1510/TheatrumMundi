@@ -36,11 +36,11 @@ public class SceneDataController : MonoBehaviour
     // Start is called before the first frame updates
     void Awake()
     {
-        Debug.Log("***************************** Puffpaff");
-        sceneFileName = "-";
-        sceneFileAuthor = "-";
-        sceneFileDate = "-";
-        sceneFileComment = "-";
+        // Debug.Log("***************************** Puffpaff");
+        // sceneFileName = "-";
+        // sceneFileAuthor = "-";
+        // sceneFileDate = "-";
+        // sceneFileComment = "-";
         //recentSceneData = new SceneData();
         //recentSceneData.railElements = new List<RailElement>();
         //recentSceneData.sceneryElements = new List<SceneryElement>();
@@ -65,8 +65,8 @@ public class SceneDataController : MonoBehaviour
     private void Start()
     {
 
-        Debug.Log("------- staticSceneDataJSON" + StaticSceneData.StaticData.ToString());
-        Debug.Log("------- staticSceneDataJSON" + CreateJsonFromSceneData(StaticSceneData.StaticData));
+        // Debug.Log("------- staticSceneDataJSON" + StaticSceneData.StaticData.ToString());
+        // Debug.Log("------- staticSceneDataJSON" + CreateJsonFromSceneData(StaticSceneData.StaticData));
 
     }
 
@@ -347,7 +347,7 @@ public class SceneDataController : MonoBehaviour
 
     public void FiguresApplyToScene(List<FigureElement> figureElements)
     {
-        //Debug.LogWarning("before clear: "+objects3dFigureInstances.Count);
+        Debug.LogWarning("before clear: "+objects2dFigureInstances.Count);
         countActiveFigureElements = 0;
         foreach (GameObject figureInstance3d in objects3dFigureInstances)
         {
@@ -359,7 +359,7 @@ public class SceneDataController : MonoBehaviour
             Destroy(figureInstance2d);
         }
         objects2dFigureInstances.Clear();
-        //Debug.LogWarning("after clear: " + objects3dFigureInstances.Count);
+        Debug.LogWarning("after clear: " + objects2dFigureInstances.Count);
         foreach (FigureElement fe in figureElements)
         {
             for (int i = 0; i < objectsFigureElements.Length; i++)
@@ -373,12 +373,15 @@ public class SceneDataController : MonoBehaviour
                     {
                         countActiveFigureElements++;
                         //Debug.LogWarning("Create Instance here: " + feInstance.name);
-                        imageTimelineRails[feInstance.railStart].GetComponent<RailManager>().CreateNew2DInstance(i, feInstance.moment, true);
-                        GameObject curr3DObject = new GameObject();
-                        curr3DObject = Instantiate(objectsFigureElements[i]);
-                        curr3DObject.transform.SetParent(objectsRailElements[feInstance.railStart].transform.GetChild(0));
+                        GameObject curr3DObject;
+                        curr3DObject = imageTimelineRails[feInstance.railStart].GetComponent<RailManager>().CreateNew2DInstance(i, feInstance.moment, true);
+                        // curr3DObject = Instantiate(objectsFigureElements[i]);
+                        // imageTimelineRails[feInstance.railStart].GetComponent<RailManager>().timelineInstanceObjects3D.Add(curr3DObject);
+                        Debug.LogError("+++timeline3D: "+imageTimelineRails[feInstance.railStart].GetComponent<RailManager>().timelineInstanceObjects3D.Count);
+                        // curr3DObject.transform.SetParent(objectsRailElements[feInstance.railStart].transform.GetChild(0));
                         curr3DObject.transform.localPosition = new Vector3(curr3DObject.transform.localPosition.x, curr3DObject.transform.localPosition.y, (objectsRailElements[feInstance.railStart].transform.GetChild(0).GetComponent<RailSpeedController>().GetDistanceAtTime(feInstance.moment) / 10));
                         objects3dFigureInstances.Add(curr3DObject); 
+                        
                     }
                     //            objectFigureElement.transform.position = new Vector3(figureElement.x, figureElement.y, figureElement.z);
                     //            objectFigureElement.GetComponent<SceneryController>().sceneryActive = figureElement.active;

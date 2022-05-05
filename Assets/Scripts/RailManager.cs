@@ -17,7 +17,6 @@ public class RailManager : MonoBehaviour
     bool doSomethingOnce;           //flag for do something once in a loop
     bool editTimelineObject;        //flag for shifting/clicking an object on timeline
     bool releaseOnTimeline;         //flag if you set an object on timeline
-    bool playingMusic;
     bool isInstance;
     public bool isTimelineOpen;
     Vector2 releaseObjMousePos;
@@ -55,7 +54,7 @@ public class RailManager : MonoBehaviour
     double fig2StartPos;
     Vector3 railStartPos;
     Vector3 railEndPos;
-    Color colFigure, colMusic, colFigureHighlighted; //, colMusicHighlighted;
+    Color colFigure, colFigureHighlighted;
 
 
     void Awake()
@@ -79,10 +78,6 @@ public class RailManager : MonoBehaviour
         objectShelfSize = new Vector2[figureObjects.Length];
         objectShelfParent = new GameObject[figureObjects.Length];
         figCounterCircle = new GameObject[figureObjects.Length];
-
-        colFigure = new Color(0.06f, 0.66f, .74f, 0.5f);
-        colFigureHighlighted = new Color(0f, 0.87f, 1.0f, 0.5f);
-
         for (int i = 0; i < objectLibrary.transform.childCount; i++)
         {
             //collect objects
@@ -90,6 +85,15 @@ public class RailManager : MonoBehaviour
             objectShelfSize[i] = new Vector2(figureObjects[i].GetComponent<RectTransform>().rect.width, figureObjects[i].GetComponent<RectTransform>().rect.height);
             objectShelfParent[i] = figureObjects[i].transform.parent.gameObject;
         }
+        for (int i = 0; i < figureObjects.Length; i++)
+        {
+            figCounterCircle[i] = figureObjects[i].transform.parent.GetChild(2).gameObject;
+            figCounterCircle[i].transform.GetChild(0).GetComponent<Text>().text = "0";
+        }
+        colFigure = new Color(0.06f, 0.66f, .74f, 0.5f);
+        colFigureHighlighted = new Color(0f, 0.87f, 1.0f, 0.5f);
+
+
         try
         {
             for (int i = 0; i < figureObjects3D.Length; i++)
@@ -111,11 +115,7 @@ public class RailManager : MonoBehaviour
     {
         scaleObject(gameObject, 1335, 15);//openCloseTimelineByClick(true,timelineImage,false);
         timeSettings.SetActive(false);
-        for (int i = 0; i < figureObjects.Length; i++)
-        {
-            figCounterCircle[i] = figureObjects[i].transform.parent.GetChild(2).gameObject;
-            figCounterCircle[i].transform.GetChild(0).GetComponent<Text>().text = "0";
-        }
+
 
         List<GameObject> timelineObjects = new List<GameObject>();
         List<GameObject> timelineInstanceObjects = new List<GameObject>();
@@ -513,7 +513,7 @@ public class RailManager : MonoBehaviour
         obj.GetComponent<RectTransform>().pivot = new Vector2(0.0f, 0.5f);
         trans.anchoredPosition = new Vector2((obj.GetComponent<RectTransform>().rect.width / 2) * (-1), 0.0f);
         trans.SetSiblingIndex(0);
-        trans.sizeDelta = new Vector2((float)animLength, 80.0f); // custom size
+        trans.sizeDelta = new Vector2((float)animLength, size.y); // custom size
 
         Image image = imgObject.AddComponent<Image>();
         image.color = col;
@@ -685,20 +685,24 @@ public class RailManager : MonoBehaviour
         //add object to list which objects are on timeline, set placed figures to timelineInstanceObjects-list
         updateObjectList(timelineInstanceObjects, newCopyOfFigure);
     }*/
-    public void CreateNew2DInstance(int figureNr, float momentOrPosX, bool loadFromFile)
+    public GameObject CreateNew2DInstance(int figureNr, float momentOrPosX, bool loadFromFile)
     {
-        Debug.LogWarning("which rail am I? " + gameObject.name);
+        // Debug.LogWarning("which rail am I? " + gameObject.name);
         int countName = 0;
         countName = countCopiesOfObject(figureObjects[figureNr]);
         newCopyOfFigure = Instantiate(figureObjects[figureNr]);
         newCopyOfFigure.name = figureObjects[figureNr].name + "instance" + countName.ToString("000");
-        createRectangle(newCopyOfFigure, new Vector2(300, 50), colFigure, minX, 100.0f);
+        createRectangle(newCopyOfFigure, new Vector2(300, 15), colFigure, minX, 100.0f);
+        // Debug.LogWarning("+++circle: " + figCounterCircle[figureNr].name);
+        //add object to list which objects are on timeline, set placed figures to timelineInstanceObjects-list
+        updateObjectList(timelineInstanceObjects, newCopyOfFigure);
+        Debug.Log("+++++liste 2D: " + timelineInstanceObjects.Count + ", figure: " + figureObjects[figureNr].name);
         figCounterCircle[figureNr].transform.GetChild(0).GetComponent<Text>().text = (countName + 1).ToString();
         //parent and position
         newCopyOfFigure.transform.SetParent(gameObject.transform);
         if (loadFromFile)
         {
-            float posX = UtilitiesTm.FloatRemap(momentOrPosX, 0, AnimationTimer.GetMaxTime(), gameObject.GetComponent<RectTransform>().rect.width/-2, gameObject.GetComponent<RectTransform>().rect.width/2);
+            float posX = UtilitiesTm.FloatRemap(momentOrPosX, 0, AnimationTimer.GetMaxTime(), gameObject.GetComponent<RectTransform>().rect.width / -2, gameObject.GetComponent<RectTransform>().rect.width / 2);
             newCopyOfFigure.transform.localPosition = new Vector2(posX, figureObjects[figureNr].transform.localPosition.y);
             gameController.GetComponent<SceneDataController>().objects2dFigureInstances.Add(newCopyOfFigure);
         }
@@ -706,8 +710,13 @@ public class RailManager : MonoBehaviour
         {
             newCopyOfFigure.transform.position = new Vector2(momentOrPosX, figureObjects[figureNr].transform.position.y);
         }
-        //add object to list which objects are on timeline, set placed figures to timelineInstanceObjects-list
-        updateObjectList(timelineInstanceObjects, newCopyOfFigure);
+        //set 3d object to default position
+        GameObject curr3DObject = new GameObject();
+        curr3DObject = Instantiate(figureObjects3D[figureNr]);
+        timelineInstanceObjects3D.Add(curr3DObject);
+        setParent(timelineInstanceObjects3D[timelineInstanceObjects3D.Count - 1], rail3dObj.transform.GetChild(0).gameObject);
+        //Debug.Log("++++++++++++ 3D Object: " + curr3DObject.name + ", rail3d: " + rail3dObj + ", Pos: " + curr3DObject.transform.position + ", Instances of this obj: " + countName);//= countCopiesOfObject(figureObjects[currentClickedObjectIndex], timelineInstanceObjects););
+        return curr3DObject;
     }
 
     void Update()
@@ -1093,8 +1102,9 @@ public class RailManager : MonoBehaviour
             {
                 if (releaseObjMousePos == getMousePos)  //if release obj-pos and release mouse-button-pos is the same
                 {
+                    GameObject curr3DObject;
                     //create a copy of this timelineObject and keep the original one
-                    CreateNew2DInstance(currentClickedObjectIndex, getMousePos.x, false);
+                    curr3DObject = CreateNew2DInstance(currentClickedObjectIndex, getMousePos.x, false);
 
                     //set original image back to shelf, position 2 to make it visible
                     setParent(figureObjects[currentClickedObjectIndex], objectShelfParent[currentClickedObjectIndex]);
@@ -1102,13 +1112,6 @@ public class RailManager : MonoBehaviour
                     scaleObject(figureObjects[currentClickedObjectIndex].transform.GetChild(0).gameObject, objectShelfSize[currentClickedObjectIndex].x, objectShelfSize[currentClickedObjectIndex].y);
                     figureObjects[currentClickedObjectIndex].GetComponent<RectTransform>().anchoredPosition = new Vector2(75.0f, -75.0f);
                     figureObjects[currentClickedObjectIndex].transform.SetSiblingIndex(1);
-
-                    //set 3d object to default position
-                    GameObject curr3DObject = new GameObject();
-                    curr3DObject = Instantiate(figureObjects3D[currentClickedObjectIndex]);
-                    timelineInstanceObjects3D.Add(curr3DObject);
-                    setParent(timelineInstanceObjects3D[timelineInstanceObjects3D.Count - 1], rail3dObj.transform.GetChild(0).gameObject);
-                    //Debug.Log("++++++++++++ 3D Object: " + curr3DObject.name + ", rail3d: " + rail3dObj + ", Pos: " + curr3DObject.transform.position + ", Instances of this obj: " + countName);//= countCopiesOfObject(figureObjects[currentClickedObjectIndex], timelineInstanceObjects););
 
                     ///////////////////////////////////////////////////////////////////////////////////////////////////////
                     // Save to SceneData:

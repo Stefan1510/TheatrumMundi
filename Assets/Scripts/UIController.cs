@@ -11,6 +11,7 @@ public class UIController : MonoBehaviour
     public GameObject[] goReiterActive;
     public GameObject[] goIndexTabs;
     private objectsLightElement[] objectsLightElements;
+    private FigureInstanceElement[] figureInstanceElements;
     public RailManager[] Rails;
 
     public RailLightManager[] RailLightBG;
@@ -106,5 +107,10 @@ public class UIController : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void FiguresApplyToUI()
+    {
+
     }
 }
