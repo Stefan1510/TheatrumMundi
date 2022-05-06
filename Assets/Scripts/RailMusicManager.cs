@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class RailMusicManager : MonoBehaviour
 {
-    Image timelineImage;
+    public Image timelineImage;
     AudioSource audioSource;
     public GameObject gameController;
     public Image timeSliderImage;
