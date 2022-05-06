@@ -62,6 +62,7 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
         colSilhouette = new Color(0f, 0f, 0f, 0.4f);
         colSilhouetteActive = new Color(0.6f, 0f, 0f, 0.4f);
 
+        
         if (CoulisseWidth < CoulisseHeight)
         {
             isWide = false;
@@ -134,7 +135,7 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
 
         for (int j = 0; j < gameController.GetComponent<UIController>().goIndexTabs.Length; j++)
         {
-            for (int i = 0; i < gameController.GetComponent<UIController>().goIndexTabs[j].transform.childCount; i++)  // set inactive all coulisses --> in reiterbutton script: on click/change unhighlight ALL coulisses!
+            for (int i = 0; i < gameController.GetComponent<UIController>().goIndexTabs[j].transform.childCount; i++)  // set inactive all coulisses
             {
                 setElementInactive(gameController.GetComponent<UIController>().goIndexTabs[j].transform.GetChild(i).GetComponent<DragDrop>());
             }

@@ -57,7 +57,7 @@ public class SceneDataController : MonoBehaviour
             objectSceneryElement.transform.SetParent(GameObject.Find("Schiene1").transform);
             objectSceneryElement.SetActive(false);
         }
-        Debug.Log("------- staticSceneDataJSON");
+        //Debug.Log("------- staticSceneDataJSON");
 
         StaticSceneData.StaticData = CreateSceneData();
     }
@@ -93,7 +93,7 @@ public class SceneDataController : MonoBehaviour
         sceneData.fileAuthor = sceneFileAuthor;
         sceneData.fileComment = sceneFileComment;
         sceneData.fileDate = sceneFileDate;
-        Debug.Log(CreateJsonFromSceneData(sceneData));
+        //Debug.Log(CreateJsonFromSceneData(sceneData));
         //sceneData.railElements.Clear();
         //sceneData.sceneryElements.Clear();
         //sceneData.lightElements.Clear();
@@ -324,7 +324,7 @@ public class SceneDataController : MonoBehaviour
                         case 0:
                             break;
                         case 1:
-                            Debug.Log("lights3D " + gameObjectLe.name);
+                            //Debug.Log("lights3D " + gameObjectLe.name);
                             //gameObjectLe.GetComponent<LightController>().Sayhi();
                             gameObjectLe.GetComponent<LightController>().ChangeHorizontal(le.angle_h);
                             gameObjectLe.GetComponent<LightController>().ChangeVertical(le.angle_v);
@@ -413,7 +413,7 @@ public class SceneDataController : MonoBehaviour
     public string CreateJsonFromSceneData(SceneData sceneData)
     {
         String JsonData = JsonUtility.ToJson(sceneData, true);
-        Debug.LogFormat("Data serialized to:\n{0}", JsonData);
+        //Debug.LogFormat("Data serialized to:\n{0}", JsonData);
         return JsonData;
     }
 

@@ -114,7 +114,7 @@ public class SaveFileController : MonoBehaviour
 
 
         string line = www.text;
-        print("www-text: " + line);
+        //print("www-text: " + line);
         string[] arr = line.Split('?');
         foreach (string fileEntry in arr)
         {

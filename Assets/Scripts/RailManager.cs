@@ -14,7 +14,6 @@ public class RailManager : MonoBehaviour
     public GameObject rail3dObj;
     bool draggingOnTimeline;        //dragging the mouse over the timeline
     bool draggingObject;            //dragging an object with mouse
-    bool doSomethingOnce;           //flag for do something once in a loop
     bool editTimelineObject;        //flag for shifting/clicking an object on timeline
     bool releaseOnTimeline;         //flag if you set an object on timeline
     bool isInstance;
@@ -43,9 +42,9 @@ public class RailManager : MonoBehaviour
     int currentClickedObjectIndex;
     int currentClickedInstanceObjectIndex;
 
-    public List<GameObject> timelineObjects;
+    //public List<GameObject> timelineObjects;
     public List<GameObject> timelineInstanceObjects;
-    public List<GameObject> timelineObjects3D;
+    //public List<GameObject> timelineObjects3D;
     public List<GameObject> timelineInstanceObjects3D;
     private FigureElement ThisFigureElement;    //element to set 3d object
     //FigureInstanceElement thisFigureInstanceElement = new FigureInstanceElement();
@@ -63,7 +62,6 @@ public class RailManager : MonoBehaviour
         SceneManaging.anyTimelineOpen = false;
         draggingOnTimeline = false;
         draggingObject = false;
-        doSomethingOnce = false;
         editTimelineObject = false;
         releaseOnTimeline = false;
         releaseObjMousePos = new Vector2(0.0f, 0.0f);
@@ -406,7 +404,7 @@ public class RailManager : MonoBehaviour
         //set up flags
         //Debug.Log("mouse: " + mousePos);
     }
-    public bool checkHittingTimeline(GameObject obj, Image tl, Vector2 mousePos)
+    public bool checkHittingTimeline(Image tl, Vector2 mousePos)
     {
         bool hit = false;
         /*Debug.Log("tl pos "+tl.transform.position); //global pos are the real position-data
@@ -975,7 +973,7 @@ public class RailManager : MonoBehaviour
             //if you hit the timeline > object snap to timeline and is locked in y-movement-direction
             bool hitTimeline = false;
             //string nameOfHitObject="";
-            hitTimeline = checkHittingTimeline(figureObjects[currentClickedObjectIndex], timelineImage, getMousePos);
+            hitTimeline = checkHittingTimeline(timelineImage, getMousePos);
 
             int tmp = 0;
             if (transform.name.Contains("1"))
@@ -1025,7 +1023,7 @@ public class RailManager : MonoBehaviour
                 setObjectOnTimeline(figureObjects[currentClickedObjectIndex], figureObjects[currentClickedObjectIndex].transform.position.x, this.transform.position.y);
 
                 //set placed figures to timelineobjects-list
-                updateObjectList(timelineObjects, figureObjects[currentClickedObjectIndex]);
+                updateObjectList(timelineInstanceObjects, figureObjects[currentClickedObjectIndex]);
 
                 //save position, where object on timeline is released + set flag 
                 releaseOnTimeline = true;
@@ -1052,7 +1050,6 @@ public class RailManager : MonoBehaviour
         if (Input.GetMouseButtonUp(0)) //left mouse button up
         {
             draggingObject = false;
-            doSomethingOnce = false;
             editTimelineObject = false;
 
             if (releaseOnTimeline == true)
