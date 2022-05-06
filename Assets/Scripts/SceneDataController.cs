@@ -362,15 +362,15 @@ public class SceneDataController : MonoBehaviour
 
         foreach(GameObject imageTimeLineRail in imageTimelineRails)
         {
-            Debug.LogWarning("Hi, my name is " + imageTimeLineRail.name);
+            //Debug.LogWarning("Hi, my name is " + imageTimeLineRail.name);
             foreach (GameObject obj in imageTimeLineRail.GetComponent<RailManager>().timelineInstanceObjects)
             {
-                Debug.LogWarning(obj);
+                //Debug.LogWarning(obj);
                 Destroy(obj);
             }
             foreach (GameObject obj3d in imageTimeLineRail.GetComponent<RailManager>().timelineInstanceObjects3D)
             {
-                Debug.LogWarning(obj3d);
+                //Debug.LogWarning(obj3d);
                 Destroy(obj3d);
             }
             imageTimeLineRail.GetComponent<RailManager>().timelineInstanceObjects.Clear();

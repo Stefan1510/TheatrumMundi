@@ -692,7 +692,6 @@ public class RailManager : MonoBehaviour
         countName = countCopiesOfObject(figureObjects[figureNr]);
         newCopyOfFigure = Instantiate(figureObjects[figureNr]);
         newCopyOfFigure.name = figureObjects[figureNr].name + "instance" + countName.ToString("000");
-        createRectangle(newCopyOfFigure, new Vector2(300, 15), colFigure, minX, 100.0f);
         // Debug.LogWarning("+++circle: " + figCounterCircle[figureNr].name);
         //add object to list which objects are on timeline, set placed figures to timelineInstanceObjects-list
         updateObjectList(timelineInstanceObjects, newCopyOfFigure);
@@ -702,14 +701,18 @@ public class RailManager : MonoBehaviour
         newCopyOfFigure.transform.SetParent(gameObject.transform);
         if (loadFromFile)
         {
-            float posX = UtilitiesTm.FloatRemap(momentOrPosX, 0, AnimationTimer.GetMaxTime(), gameObject.GetComponent<RectTransform>().rect.width / -2, gameObject.GetComponent<RectTransform>().rect.width / 2);
+            Debug.LogWarning("------------ mmmoooooooooooomentchen mal: " + momentOrPosX);
+            float posX = UtilitiesTm.FloatRemap(momentOrPosX + 27.5f, 0, AnimationTimer.GetMaxTime(), gameObject.GetComponent<RectTransform>().rect.width / -2, gameObject.GetComponent<RectTransform>().rect.width / 2);            
             newCopyOfFigure.transform.localPosition = new Vector2(posX, figureObjects[figureNr].transform.localPosition.y);
+            scaleObjectHeight(newCopyOfFigure, 100, 80);
             gameController.GetComponent<SceneDataController>().objects2dFigureInstances.Add(newCopyOfFigure);
+            //newCopyOfFigure.transform.parent.GetChild(0).GetComponent<RectTransform>().position = new Vector2(newCopyOfFigure.transform.parent.GetChild(0).GetComponent<RectTransform>().position.x + 25, newCopyOfFigure.transform.parent.GetChild(0).GetComponent<RectTransform>().position.y);
         }
         else
         {
             newCopyOfFigure.transform.position = new Vector2(momentOrPosX, figureObjects[figureNr].transform.position.y);
         }
+        createRectangle(newCopyOfFigure, new Vector2(300, 80), colFigure, minX, 100.0f);
         //set 3d object to default position
         GameObject curr3DObject = new GameObject();
         curr3DObject = Instantiate(figureObjects3D[figureNr]);
