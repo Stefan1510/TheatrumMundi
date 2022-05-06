@@ -302,7 +302,7 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
                     }
                 }
             }
-            GetComponent<Image>().color = colHighlighted;
+            //GetComponent<Image>().color = colHighlighted;
         }
         ThisSceneryElement.z = rectTransform.anchoredPosition.x / 300;
         ThisSceneryElement.y = (rectTransform.anchoredPosition.y + 150) / 200;

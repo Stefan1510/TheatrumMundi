@@ -196,7 +196,7 @@ public class RailMusicManager : MonoBehaviour
 
         if (isAnyTimelineOpen() == false)
         {
-            //Debug.Log("++++ es ist keine schiene geöffnet, deswegen wird geklickte Schiene geöffnet: " + tl);
+            Debug.Log("++++ es ist keine schiene geöffnet, deswegen wird geklickte Schiene geöffnet: " + tl);
             //set global flag
             SceneManaging.anyTimelineOpen = true;
             isTimelineOpen = true;
@@ -214,7 +214,7 @@ public class RailMusicManager : MonoBehaviour
         {
             if (thisTimelineOpen)
             {
-                //Debug.Log("++++ geklickte Schiene ist offen und wird geschlossen: " + tl);
+                Debug.Log("++++ geklickte Schiene ist offen und wird geschlossen: " + tl);
                 //close timeline
                 isTimelineOpen = false;
                 //scale down timeline
@@ -225,7 +225,7 @@ public class RailMusicManager : MonoBehaviour
             }
             else
             {
-                //Debug.Log("++++ geklickte Schiene ist zu, aber eine andere ist offen und wird geschlossen: " + tl);
+                Debug.Log("++++ geklickte Schiene ist zu, aber eine andere ist offen und wird geschlossen: " + tl);
                 // a different rail is open - close it
                 for (int i = 0; i < gameController.GetComponent<UIController>().Rails.Length; i++)
                 {
@@ -246,7 +246,7 @@ public class RailMusicManager : MonoBehaviour
                 gameController.GetComponent<UIController>().RailMusic.GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightClosed);
                 gameController.GetComponent<UIController>().RailMusic.isTimelineOpen = false;
                 // open clicked rail
-                //Debug.Log("++++ geklickte Schiene wird geöffnet: " + tl);
+                Debug.Log("++++ geklickte Schiene wird geöffnet: " + tl);
                 //scale up timeline
                 tl.rectTransform.sizeDelta = new Vector2(tl.rectTransform.rect.width, heightOpened);
                 //scale up the collider
