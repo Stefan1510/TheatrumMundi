@@ -12,7 +12,7 @@ public class ObjectShelf : MonoBehaviour
 	public GameObject MenueShelf02;
 	public GameObject MenueShelf03;
 	public GameObject MenueShelf04;
-	public GameObject gameController;
+	//public GameObject gameController;
 	
 	public GameObject LiveView;
 	public GameObject SchematicView;
@@ -105,7 +105,7 @@ public class ObjectShelf : MonoBehaviour
     public void ButtonShelf01()
 	{
 		Debug.Log("button for shelf01");
-		gameController.GetComponent<UIController>().Rails[0].openCloseTimelineByClick(false,gameController.GetComponent<UIController>().Rails[0].timelineImage,false);
+		//gameController.GetComponent<UIController>().Rails[0].openCloseTimelineByClick(false,gameController.GetComponent<UIController>().Rails[0].timelineImage,false);
 		//show menue of buehne
 		MenueShelf01.SetActive(true);
 		
@@ -166,7 +166,7 @@ public class ObjectShelf : MonoBehaviour
 	{
 		Debug.Log("button for shelf02");
 		// gameController.GetComponent<UIController>().RailLightBG[0].openCloseTimelineByClick(false,gameController.GetComponent<UIController>().RailLightBG[0].timel);
-		Debug.Log("+++timeline: "+gameController.GetComponent<UIController>().RailLightBG[0].timeSliderImage);
+		//Debug.Log("+++timeline: "+gameController.GetComponent<UIController>().RailLightBG[0].timeSliderImage);
 		//show menue of buehne
 		MenueShelf01.SetActive(false);
 		MenueShelf02.SetActive(true);
@@ -220,7 +220,7 @@ public class ObjectShelf : MonoBehaviour
 	public void ButtonShelf03()
 	{
 		Debug.Log("button for shelf03");
-		gameController.GetComponent<UIController>().RailMusic.openCloseTimelineByClick(false,gameController.GetComponent<UIController>().RailMusic.timelineImage,false);
+		//gameController.GetComponent<UIController>().RailMusic.openCloseTimelineByClick(false,gameController.GetComponent<UIController>().RailMusic.timelineImage,false);
 		//show menue of buehne
 		MenueShelf01.SetActive(false);
 		MenueShelf02.SetActive(false);
