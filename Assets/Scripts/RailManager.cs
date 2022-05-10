@@ -42,7 +42,7 @@ public class RailManager : MonoBehaviour
     int currentClickedObjectIndex;
     int currentClickedInstanceObjectIndex;
 
-    //public List<GameObject> timelineObjects;
+    public List<GameObject> timelineObjects;
     public List<GameObject> timelineInstanceObjects;
     //public List<GameObject> timelineObjects3D;
     public List<GameObject> timelineInstanceObjects3D;

@@ -34,7 +34,7 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
     private bool highlighted;
     private Color colHighlighted, colCoulisse, colSilhouetteActive, colSilhouette;
 
-    public bool OpenUp { get; private set; }
+    //public bool OpenUp { get; private set; }
 
     private void Awake()
     {
@@ -155,10 +155,8 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
     public void OnDrag(PointerEventData eventData)
     {
         SceneManaging.dragDrop = this;
-        rectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
+        rectTransform.anchoredPosition += eventData.delta;// /canvas.scaleFactor;
         // durch Skalierung d. Canvas teilen, sonst Bewegung d. Objekts nicht gleich der Mausbewegung
-
-
         //Debug.Log("Status Reiter: "+SceneManaging.statusReiter+ ", this.Schiene: "+this.schieneKulisse+"schieneActive: "+GetComponent<TriggerSchiene>().schieneActive);
         //Debug.Log("Triggereinstellungen: " + SceneManaging.triggerEinstellungen + ", triggerSChiene: " + GetComponent<TriggerSchiene>().schieneActive + ", statusReiter: " + SceneManaging.statusReiter);
 
@@ -300,6 +298,7 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
                     for (int i = 0; i < gameController.GetComponent<UIController>().goIndexTabs[j].transform.childCount; i++)  // set inactive all coulisses of this collection --> in reiterbutton script: on click/change unhighlight ALL coulisses!
                     {
                         setElementInactive(gameController.GetComponent<UIController>().goIndexTabs[j].transform.GetChild(i).GetComponent<DragDrop>());
+                        Debug.Log(" INAKTIV ");
                     }
                 }
             }

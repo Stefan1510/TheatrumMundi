@@ -6,6 +6,7 @@ public static class SceneManaging
 {
     public static DragDrop dragDrop;                // aktuelles dragDrop-Script ("this" in Dragdrop)
     public static int triggerActive = new int();
+    public static int objectInIndexTab;
     public static bool triggerEinstellungen = new bool();
     public static bool mouse_over = new bool();
     public static bool deleteButtonPressed = new bool();
