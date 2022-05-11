@@ -56,6 +56,10 @@ public class SceneDataController : MonoBehaviour
             //Debug.Log("SceneDataController Name: " + objectSceneryElement.name);
             objectSceneryElement.transform.SetParent(GameObject.Find("Schiene1").transform);
             objectSceneryElement.SetActive(false);
+            for (int i = 0; i < objectSceneryElement.GetComponent<MeshRenderer>().materials.Length; i++)
+            {
+                objectSceneryElement.GetComponent<MeshRenderer>().materials[i].DisableKeyword("_EMISSION");
+            }
         }
         //Debug.Log("------- staticSceneDataJSON");
 
@@ -295,7 +299,7 @@ public class SceneDataController : MonoBehaviour
                         {
                             goSceneryElement.GetComponent<MeshRenderer>().materials[i].EnableKeyword("_EMISSION");
                         }
- 
+
                     }
                 }
             }
@@ -360,7 +364,7 @@ public class SceneDataController : MonoBehaviour
         //}
         //objects2dFigureInstances.Clear();
 
-        foreach(GameObject imageTimeLineRail in imageTimelineRails)
+        foreach (GameObject imageTimeLineRail in imageTimelineRails)
         {
             //Debug.LogWarning("Hi, my name is " + imageTimeLineRail.name);
             foreach (GameObject obj in imageTimeLineRail.GetComponent<RailManager>().timelineInstanceObjects)
@@ -398,8 +402,8 @@ public class SceneDataController : MonoBehaviour
                         //Debug.LogError("+++timeline3D: "+imageTimelineRails[feInstance.railStart].GetComponent<RailManager>().timelineInstanceObjects3D.Count);
                         // curr3DObject.transform.SetParent(objectsRailElements[feInstance.railStart].transform.GetChild(0));
                         curr3DObject.transform.localPosition = new Vector3(curr3DObject.transform.localPosition.x, curr3DObject.transform.localPosition.y, (objectsRailElements[feInstance.railStart].transform.GetChild(0).GetComponent<RailSpeedController>().GetDistanceAtTime(feInstance.moment) / 10));
-                        objects3dFigureInstances.Add(curr3DObject); 
-                        
+                        objects3dFigureInstances.Add(curr3DObject);
+
                     }
                     //            objectFigureElement.transform.position = new Vector3(figureElement.x, figureElement.y, figureElement.z);
                     //            objectFigureElement.GetComponent<SceneryController>().sceneryActive = figureElement.active;
