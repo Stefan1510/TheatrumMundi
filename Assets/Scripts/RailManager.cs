@@ -705,9 +705,8 @@ public class RailManager : MonoBehaviour
         newCopyOfFigure.transform.SetParent(gameObject.transform);
         if (loadFromFile)
         {
-            float distance = rail3dObj.transform.GetChild(0).GetComponent<RailSpeedController>().GetDistanceAtTime(momentOrPosX);
             float posX = UtilitiesTm.FloatRemap(momentOrPosX, 0, AnimationTimer.GetMaxTime(), gameObject.GetComponent<RectTransform>().rect.width / -2, gameObject.GetComponent<RectTransform>().rect.width / 2);
-            Debug.LogWarning("moment " + momentOrPosX + " // posX " + posX + " // distance " + distance);
+            Debug.LogWarning("moment " + momentOrPosX + " // posX " + posX);
 
             newCopyOfFigure.transform.localPosition = new Vector2(posX, figureObjects[figureNr].transform.localPosition.y);
             // openCloseObjectInTimeline(true,timelineInstanceObjects,false); 

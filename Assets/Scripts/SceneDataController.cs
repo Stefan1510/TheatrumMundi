@@ -14,6 +14,7 @@ public class SceneDataController : MonoBehaviour
     public GameObject[] objectsSceneryElements;
     public GameObject[] objectsFigureElements;
     public GameObject[] imageTimelineRails;
+    public AudioClip[] objectsMusicClips;
     //public GameObject[] objectsLightElements;
     public objectsLightElement[] objectsLightElements;
     [HideInInspector] public string sceneFileName;
@@ -107,6 +108,7 @@ public class SceneDataController : MonoBehaviour
         sceneData.lightElements = new List<LightElement>();
         sceneData.lightingSets = new List<LightingSet>();
         sceneData.backgroundPositions = new List<BackgroundPosition>();
+        sceneData.musicClipElements = new List<MusicClipElement>();
 
         foreach (GameObject objectRailElement in objectsRailElements)
         {
@@ -209,9 +211,22 @@ public class SceneDataController : MonoBehaviour
             sceneData.lightElements.Add(sceneLightElement);
         }
 
+        //lightAnimation
         sceneData.lightingSets.Add(new LightingSet());
+        //bckgroundAnimation
         sceneData.backgroundPositions.Add(new BackgroundPosition());
+        //music
+        foreach(AudioClip clip in objectsMusicClips)
+        {
+            MusicClipElement sceneMusicClipElement = new MusicClipElement
+            {
+                name = clip.name,
+                musicClipElementInstances = new List<MusicClipElementInstance>()
+            };
+            sceneData.musicClipElements.Add(sceneMusicClipElement);
+        }
 
+        Debug.LogWarning(JsonUtility.ToJson(sceneData, true));
         recentSceneData = sceneData;
         return sceneData;
     }

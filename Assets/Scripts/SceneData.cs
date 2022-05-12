@@ -116,6 +116,20 @@ public class BackgroundPosition
     public float yPosition;
 }
 
+[System.Serializable]
+public class MusicClipElementInstance
+{
+    public string name;
+    public int instanceNr;
+    public float moment;
+}
+
+[System.Serializable]
+public class MusicClipElement
+{
+    public string name;
+    public List<MusicClipElementInstance> musicClipElementInstances;
+}
 
 //[System.Serializable]
 public class SceneData
@@ -125,6 +139,7 @@ public class SceneData
     public string fileAuthor;
     public string fileDate;
     public string fileComment;
+    public List<MusicClipElement> musicClipElements;
     public List<RailElement> railElements;
     public List<SceneryElement> sceneryElements;
 	public List<FigureElement> figureElements;
