@@ -43,8 +43,7 @@ public class UIController : MonoBehaviour
                 goButtonSceneryElements[i].GetComponent<RectTransform>().anchoredPosition = new Vector2(StaticSceneData.StaticData.sceneryElements[i].z * 270, (StaticSceneData.StaticData.sceneryElements[i].y - 0.02f) * 260);
                 SceneManaging.statusReiter = StaticSceneData.StaticData.sceneryElements[i].railnumber;
                 //Spiegelung
-                if(StaticSceneData.StaticData.sceneryElements[i].mirrored)
-                goButtonSceneryElements[i].GetComponent<RectTransform>().localScale = new Vector2(-1,1);
+                if(StaticSceneData.StaticData.sceneryElements[i].mirrored) goButtonSceneryElements[i].GetComponent<RectTransform>().localScale = new Vector2(-1,1);
                 // Größe der Kulissen
                 goButtonSceneryElements[i].GetComponent<RectTransform>().sizeDelta = new Vector2(goMenueKulissen.GetComponent<CoulissesManager>().schieneBild.GetComponent<RectTransform>().rect.width / 410 * goMenueKulissen.GetComponent<CoulissesManager>().coulisses[i].GetComponent<CoulisseStats>().CoulisseWidth, goMenueKulissen.GetComponent<CoulissesManager>().schieneBild.GetComponent<RectTransform>().rect.width / 410 * goMenueKulissen.GetComponent<CoulissesManager>().coulisses[i].GetComponent<CoulisseStats>().CoulisseHeight);
                 goButtonSceneryElements[i].GetComponent<BoxCollider2D>().size = goMenueKulissen.GetComponent<CoulissesManager>().coulisses[i].GetComponent<RectTransform>().sizeDelta;
