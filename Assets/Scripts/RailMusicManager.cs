@@ -590,9 +590,39 @@ public class RailMusicManager : MonoBehaviour
         SceneManaging.highlighted = false;
     }
 
-    public void CreateNew2DInstance(int musicNr, float moment)
+    public void CreateNew2DInstance(int musObjNr, float moment)
     {
+        //create a copy of this timelineObject and keep the original one
+        newCopyOfFigure = Instantiate(figureObjects[musObjNr]);
+        Debug.Log("+++newcopy: " + newCopyOfFigure);
+        //count objects from same kind
+        int countName = 0;
+        countName = countCopiesOfObject(figureObjects[musObjNr], timelineInstanceObjects);
+        newCopyOfFigure.name = figureObjects[musObjNr].name + "_instance" + countName.ToString("000");
 
+        float tmpLength = ((float)maxX - (float)minX) * newCopyOfFigure.GetComponent<MusicLength>().musicLength / 614;//UtilitiesTm.FloatRemap(newCopyOfFigure.GetComponent<MusicLength>().musicLength, 0, 614, (float)minX, (float)maxX);
+        createRectangle(newCopyOfFigure, new Vector2(300, 50), colMusic, minX, tmpLength);
+
+        figCounterCircle[musObjNr].transform.GetChild(0).GetComponent<Text>().text = (countName + 1).ToString();
+
+        //parent and position
+        float posX = UtilitiesTm.FloatRemap(moment, 0, AnimationTimer.GetMaxTime(), gameObject.GetComponent<RectTransform>().rect.width / -2, gameObject.GetComponent<RectTransform>().rect.width / 2);
+        newCopyOfFigure.transform.SetParent(gameObject.transform);
+        newCopyOfFigure.transform.localPosition = new Vector2(posX, newCopyOfFigure.transform.localPosition.y);
+
+        //add object to list which objects are on timeline, set placed figures to timelineInstanceObjects-list
+        updateObjectList(timelineInstanceObjects, newCopyOfFigure);
+        openCloseTimelineByClick(true, timelineImage, false);
+        ////set original image back to shelf
+        //setParent(figureObjects[currentClickedObjectIndex], objectShelfParent[musObjNr]);
+        ////scale to default values
+        //scaleObject(figureObjects[musObjNr], objectShelfSize[musObjNr].x, objectShelfSize[musObjNr].y);
+        //scaleObject(figureObjects[musObjNr].transform.GetChild(0).gameObject, objectShelfSize[musObjNr].x, objectShelfSize[musObjNr].y);
+
+        ////set this position
+        //figureObjects[musObjNr].GetComponent<RectTransform>().anchoredPosition = new Vector2(75.0f, -75.0f);
+        //// bring object back to position two, so that its visible
+        //figureObjects[musObjNr].transform.SetSiblingIndex(1);
     }
 
     void Update()
@@ -801,10 +831,14 @@ public class RailMusicManager : MonoBehaviour
                     MusicClipElementInstance musicClipElementInstance = new MusicClipElementInstance();
                     musicClipElementInstance.instanceNr = countCopiesOfObject(figureObjects[currentClickedObjectIndex], timelineInstanceObjects);
                     musicClipElementInstance.name = figureObjects[currentClickedObjectIndex].name + "_instance" + countName.ToString("000");
+                    float moment = UtilitiesTm.FloatRemap(timelineInstanceObjects[currentClickedObjectIndex].transform.localPosition.x, gameObject.GetComponent<RectTransform>().rect.width / -2, gameObject.GetComponent<RectTransform>().rect.width / 2, 0, AnimationTimer.GetMaxTime());
+                    musicClipElementInstance.moment = moment;
                     StaticSceneData.StaticData.musicClipElements[currentClickedObjectIndex].musicClipElementInstances.Add(musicClipElementInstance);
 
+                    Debug.LogWarning(JsonUtility.ToJson(StaticSceneData.StaticData, true));
+
                     ///////////////////////////////////////////////////////////////////////////////////////////////////////
-                    
+
                     // set index back to -1 because nothing is being clicked anymore
                     currentClickedObjectIndex = -1;
                 }
@@ -825,18 +859,18 @@ public class RailMusicManager : MonoBehaviour
 
 
             ///////////////////////////////////////////////////////////////////////////////////////////////////////
-            // Save musictitle.moment to SceneData:
-            for (int i = 0; i < timelineInstanceObjects.Count; i++)
-            {
-                int musObjIndex = Int32.Parse(timelineInstanceObjects[i].name.Substring(6, 2)) - 1;
-                int musInsIndex = Int32.Parse(timelineInstanceObjects[i].name.Substring(17));
-                float moment = UtilitiesTm.FloatRemap(timelineInstanceObjects[i].transform.localPosition.x, gameObject.GetComponent<RectTransform>().rect.width / -2, gameObject.GetComponent<RectTransform>().rect.width / 2, 0, AnimationTimer.GetMaxTime());
+            //// Save musictitle.moment to SceneData:
+            //for (int i = 0; i < timelineInstanceObjects.Count; i++)
+            //{
+            //    int musObjIndex = Int32.Parse(timelineInstanceObjects[i].name.Substring(6, 2)) - 1;
+            //    int musInsIndex = Int32.Parse(timelineInstanceObjects[i].name.Substring(17));
+            //    float moment = UtilitiesTm.FloatRemap(timelineInstanceObjects[i].transform.localPosition.x, gameObject.GetComponent<RectTransform>().rect.width / -2, gameObject.GetComponent<RectTransform>().rect.width / 2, 0, AnimationTimer.GetMaxTime());
 
-                Debug.LogWarning(timelineInstanceObjects[i].name.Substring(17) + " _ " + musInsIndex + " _ mom " +moment);
+            //    Debug.LogWarning(timelineInstanceObjects[i].name.Substring(17) + " _ " + musInsIndex + " _ mom " +moment);
 
-                StaticSceneData.StaticData.musicClipElements[musInsIndex].musicClipElementInstances[musInsIndex].moment = moment;
-                Debug.LogWarning(JsonUtility.ToJson(StaticSceneData.StaticData, true));
-            }
+            //    StaticSceneData.StaticData.musicClipElements[musInsIndex].musicClipElementInstances[musInsIndex].moment = moment;
+            //    Debug.LogWarning(JsonUtility.ToJson(StaticSceneData.StaticData, true));
+            //}
             ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
             releaseOnTimeline = false;

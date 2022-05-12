@@ -184,6 +184,11 @@ public class StaticSceneData
         GameObject goGameController = GameObject.Find("GameController");
         goGameController.GetComponent<SceneDataController>().FiguresApplyToScene(StaticData.figureElements);
     }
+    public static void Music()
+    {
+        GameObject goGameController = GameObject.Find("GameController");
+        goGameController.GetComponent<SceneDataController>().MusicApplyToScene(StaticData.musicClipElements);
+    }
 
     public static void Everything3D()
     {

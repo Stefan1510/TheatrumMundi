@@ -15,6 +15,7 @@ public class SceneDataController : MonoBehaviour
     public GameObject[] objectsFigureElements;
     public GameObject[] imageTimelineRails;
     public AudioClip[] objectsMusicClips;
+    public GameObject imageTimelineRailMusic;
     //public GameObject[] objectsLightElements;
     public objectsLightElement[] objectsLightElements;
     [HideInInspector] public string sceneFileName;
@@ -25,6 +26,7 @@ public class SceneDataController : MonoBehaviour
     [HideInInspector] public int countActiveSceneryElements = 0;
     [HideInInspector] public int countActiveLightElements = 0;
     [HideInInspector] public int countActiveFigureElements = 0;
+    [HideInInspector] public int countActiveMusicClips = 0;
     [HideInInspector] public int currentTime;
     [HideInInspector] public Material[] matCoulisse;
 
@@ -251,6 +253,9 @@ public class SceneDataController : MonoBehaviour
 
         //figure elements (Figuren)
         FiguresApplyToScene(sceneData.figureElements);
+
+        //music title elements (Musik)
+        MusicApplyToScene(sceneData.musicClipElements);
     }
 
     public void RailsApplyToScene(List<RailElement> railElements)
@@ -424,6 +429,31 @@ public class SceneDataController : MonoBehaviour
                     //            objectFigureElement.GetComponent<SceneryController>().sceneryActive = figureElement.active;
                     //            objectFigureElement.SetActive(figureElement.active);
                     //            objectFigureElement.transform.parent = GameObject.Find(figureElement.parent).transform;
+                }
+            }
+        }
+    }
+
+    public void MusicApplyToScene(List<MusicClipElement> musicClipElements)
+    {
+        countActiveMusicClips = 0;
+        foreach (GameObject obj in imageTimelineRailMusic.GetComponent<RailMusicManager>().timelineInstanceObjects)
+        {
+            Destroy(obj);
+        }
+        imageTimelineRailMusic.GetComponent<RailMusicManager>().timelineInstanceObjects.Clear();
+
+        foreach(MusicClipElement mce in musicClipElements)
+        {
+            for (int i = 0; i < objectsMusicClips.Length; i++)
+            {
+                if (mce.name == objectsMusicClips[i].name)
+                {
+                    foreach(MusicClipElementInstance mceInstance in mce.musicClipElementInstances)
+                    {
+                        countActiveMusicClips++;
+                        imageTimelineRailMusic.GetComponent<RailMusicManager>().CreateNew2DInstance(i, mceInstance.moment);
+                    }
                 }
             }
         }
