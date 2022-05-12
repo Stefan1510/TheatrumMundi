@@ -17,8 +17,8 @@ public class UIController : MonoBehaviour
     public RailLightManager[] RailLightBG;
     public RailMusicManager RailMusic;
 
-        //// Start is called before the first frame update
-        void Start()
+    //// Start is called before the first frame update
+    void Start()
     {
         objectsLightElements = GetComponent<SceneDataController>().objectsLightElements;
     }
@@ -35,34 +35,29 @@ public class UIController : MonoBehaviour
         //GameObject goButtonScenery;
 
         goMenueKulissen.SetActive(true);
-        foreach (SceneryElement se in StaticSceneData.StaticData.sceneryElements)
+        for (int i = 0; i < StaticSceneData.StaticData.sceneryElements.Count; i++)
         {
-            foreach (GameObject buttonSe in goButtonSceneryElements)
+            if (StaticSceneData.StaticData.sceneryElements[i].active)
             {
-                if ("Button" + se.name == buttonSe.name)
-                {
-                    buttonSe.GetComponent<DragDrop>().ThisSceneryElement = StaticSceneData.StaticData.sceneryElements.Find(DataSe => DataSe.name == se.name);
-                    if (se.active)
-                    {
-                        buttonSe.transform.SetParent(goCollection[se.railnumber - 1].transform);
-                        buttonSe.GetComponent<RectTransform>().anchoredPosition = new Vector2(se.z * 300, se.y* 200-150);
-                        buttonSe.GetComponent<DragDrop>().schieneKulisse = se.railnumber;
-                        SceneManaging.statusReiter = se.railnumber;
-                    }
-                    else
-                    {
-                        buttonSe.transform.SetParent(buttonSe.GetComponent<DragDrop>().parentStart.transform);
-                        buttonSe.GetComponent<RectTransform>().anchoredPosition = buttonSe.GetComponent<DragDrop>().pos;
-                        buttonSe.GetComponent<DragDrop>().schieneKulisse = 0;
-                        //buttonSe.GetComponent<DragDrop>().statusReiter = 1;
-                    }
-
-                    //GameObject.Find("Reiter" + se.railnumber + "Active").SetActive(false);
-                    Debug.Log("----- Schiene-Kulisse: +++" + se.railnumber + "+++");
-                }
+                goButtonSceneryElements[i].transform.SetParent(goCollection[StaticSceneData.StaticData.sceneryElements[i].railnumber - 1].transform);
+                goButtonSceneryElements[i].GetComponent<RectTransform>().anchoredPosition = new Vector2(StaticSceneData.StaticData.sceneryElements[i].z * 270, (StaticSceneData.StaticData.sceneryElements[i].y - 0.02f) * 260);
+                SceneManaging.statusReiter = StaticSceneData.StaticData.sceneryElements[i].railnumber;
+                //Spiegelung
+                if(StaticSceneData.StaticData.sceneryElements[i].mirrored)
+                goButtonSceneryElements[i].GetComponent<RectTransform>().localScale = new Vector2(-1,1);
+                // Größe der Kulissen
+                goButtonSceneryElements[i].GetComponent<RectTransform>().sizeDelta = new Vector2(goMenueKulissen.GetComponent<CoulissesManager>().schieneBild.GetComponent<RectTransform>().rect.width / 410 * goMenueKulissen.GetComponent<CoulissesManager>().coulisses[i].GetComponent<CoulisseStats>().CoulisseWidth, goMenueKulissen.GetComponent<CoulissesManager>().schieneBild.GetComponent<RectTransform>().rect.width / 410 * goMenueKulissen.GetComponent<CoulissesManager>().coulisses[i].GetComponent<CoulisseStats>().CoulisseHeight);
+                goButtonSceneryElements[i].GetComponent<BoxCollider2D>().size = goMenueKulissen.GetComponent<CoulissesManager>().coulisses[i].GetComponent<RectTransform>().sizeDelta;
             }
-        }
+            else
+            {
+                goButtonSceneryElements[i].transform.SetParent(goMenueKulissen.GetComponent<CoulissesManager>().parentStart[i].transform);
+                goButtonSceneryElements[i].GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
+                //goButtonSceneryElements[i].GetComponent<DragDrop>().schieneKulisse = 0;
+            }
 
+            // Debug.Log("----- Schiene-Kulisse: +++" + StaticSceneData.StaticData.sceneryElements[i].railnumber + "+++");
+        }
         goMenueKulissen.SetActive(false);
     }
 

@@ -10,7 +10,7 @@ public class CoulissesManager : MonoBehaviour
     public GameObject[] indexTabs;
     public GameObject[] collections;
     public GameObject[] indexTabImages;
-    public GameObject[] coulisses;
+    [HideInInspector] public GameObject[] coulisses;
     public GameObject scenerySettings;
     public GameObject schieneBild;
     public GameObject mainMenue;
@@ -19,7 +19,7 @@ public class CoulissesManager : MonoBehaviour
     public GameObject sliderX, sliderY;
     public GameObject sliderPosX, sliderPosY;
 
-    private GameObject[] parentStart;
+    [HideInInspector] public GameObject[] parentStart;
 
     [HideInInspector] public float[] shelfSizeWidth;
     [HideInInspector] public float[] shelfSizeHeight;
@@ -46,9 +46,7 @@ public class CoulissesManager : MonoBehaviour
     void Awake()
     {
         SceneManaging.objectInIndexTab = -1;
-    }
-    void Start()
-    {
+        coulisses = gameController.GetComponent<UIController>().goButtonSceneryElements;
         currentObjectIndex = -1;
         scenerySettings.SetActive(false);
         deleteButton.SetActive(false);
@@ -84,6 +82,10 @@ public class CoulissesManager : MonoBehaviour
             }
             parentStart[i] = coulisses[i].transform.parent.gameObject;
         }
+    }
+    void Start()
+    {
+
 
         colHighlighted = new Color(1f, .45f, 0.33f, 1f);
         colCoulisse = new Color(1f, 1f, 1f, 1f);
@@ -102,8 +104,6 @@ public class CoulissesManager : MonoBehaviour
 
     void Update()
     {
-        Debug.Log("current Index: " + currentObjectIndex + ", clicked Window index: " + clickInSettingsWindow);
-
         Vector2 getMousePos = Input.mousePosition;
         if (Input.GetMouseButtonDown(0)) //left mouse button down
         {
@@ -119,7 +119,8 @@ public class CoulissesManager : MonoBehaviour
                             highlight(j, false);
                         }
                     }
-                    setIndexTabActive(i);                }
+                    setIndexTabActive(i);
+                }
             }
 
             clickInSettingsWindow = isSettingsWindowClicked();
@@ -136,13 +137,7 @@ public class CoulissesManager : MonoBehaviour
             }
             else
             {
-                // preventing that coulisses in shelf are selected when slider are clicked
-                // if (scenerySettings.activeSelf == false)                //scenerySettings.activeSelf && Input.mousePosition.y >= 280.0f && Input.mousePosition.x <= 570.0f)
-                //                                                         //|| (scenerySettings.activeSelf && Input.mousePosition.y <= 280.0f && Input.mousePosition.x >= 570.0f) || 
-                // {
-                // setting Index of clicked Object
                 currentObjectIndex = identifyClickedObjectIndex();
-                // }
             }
 
             // if a coulisse is hit
@@ -459,7 +454,7 @@ public class CoulissesManager : MonoBehaviour
             StaticSceneData.StaticData.sceneryElements[i].emission = false;
             isHighlighted[i] = false;
             scenerySettings.SetActive(false);
-            Debug.Log("unighlight Kulisse: " + i);
+            //Debug.Log("unighlight Kulisse: " + i);
         }
 
     }
