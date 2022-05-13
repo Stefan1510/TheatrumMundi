@@ -602,6 +602,9 @@ public class RailMusicManager : MonoBehaviour
 
         float tmpLength = ((float)maxX - (float)minX) * newCopyOfFigure.GetComponent<MusicLength>().musicLength / 614;//UtilitiesTm.FloatRemap(newCopyOfFigure.GetComponent<MusicLength>().musicLength, 0, 614, (float)minX, (float)maxX);
         createRectangle(newCopyOfFigure, new Vector2(300, 50), colMusic, minX, tmpLength);
+        scaleObjectHeight(newCopyOfFigure, 100, 80);
+        scaleObjectHeight(newCopyOfFigure.transform.GetChild(0).gameObject, newCopyOfFigure.transform.GetChild(0).gameObject.GetComponent<RectTransform>().sizeDelta.x, 80);
+        newCopyOfFigure.transform.GetChild(0).GetComponent<RectTransform>().position = new Vector2(newCopyOfFigure.transform.GetChild(0).gameObject.GetComponent<RectTransform>().position.x + 25, newCopyOfFigure.transform.GetChild(0).gameObject.GetComponent<RectTransform>().position.y);
 
         figCounterCircle[musObjNr].transform.GetChild(0).GetComponent<Text>().text = (countName + 1).ToString();
 
@@ -609,6 +612,7 @@ public class RailMusicManager : MonoBehaviour
         float posX = UtilitiesTm.FloatRemap(moment, 0, AnimationTimer.GetMaxTime(), gameObject.GetComponent<RectTransform>().rect.width / -2, gameObject.GetComponent<RectTransform>().rect.width / 2);
         newCopyOfFigure.transform.SetParent(gameObject.transform);
         newCopyOfFigure.transform.localPosition = new Vector2(posX, newCopyOfFigure.transform.localPosition.y);
+        scaleObjectHeight(newCopyOfFigure.transform.GetChild(1).gameObject, 100, 80);
 
         //add object to list which objects are on timeline, set placed figures to timelineInstanceObjects-list
         updateObjectList(timelineInstanceObjects, newCopyOfFigure);
@@ -835,7 +839,7 @@ public class RailMusicManager : MonoBehaviour
                     musicClipElementInstance.moment = moment;
                     StaticSceneData.StaticData.musicClipElements[currentClickedObjectIndex].musicClipElementInstances.Add(musicClipElementInstance);
 
-                    Debug.LogWarning(JsonUtility.ToJson(StaticSceneData.StaticData, true));
+                    //Debug.LogWarning(JsonUtility.ToJson(StaticSceneData.StaticData, true));
 
                     ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -859,18 +863,18 @@ public class RailMusicManager : MonoBehaviour
 
 
             ///////////////////////////////////////////////////////////////////////////////////////////////////////
-            //// Save musictitle.moment to SceneData:
-            //for (int i = 0; i < timelineInstanceObjects.Count; i++)
-            //{
-            //    int musObjIndex = Int32.Parse(timelineInstanceObjects[i].name.Substring(6, 2)) - 1;
-            //    int musInsIndex = Int32.Parse(timelineInstanceObjects[i].name.Substring(17));
-            //    float moment = UtilitiesTm.FloatRemap(timelineInstanceObjects[i].transform.localPosition.x, gameObject.GetComponent<RectTransform>().rect.width / -2, gameObject.GetComponent<RectTransform>().rect.width / 2, 0, AnimationTimer.GetMaxTime());
+            // Save musictitle.moment to SceneData:
+            for (int i = 0; i < timelineInstanceObjects.Count; i++)
+            {
+                int musObjIndex = Int32.Parse(timelineInstanceObjects[i].name.Substring(6, 2)) - 1;
+                int musInsIndex = Int32.Parse(timelineInstanceObjects[i].name.Substring(17));
+                float moment = UtilitiesTm.FloatRemap(timelineInstanceObjects[i].transform.localPosition.x, gameObject.GetComponent<RectTransform>().rect.width / -2, gameObject.GetComponent<RectTransform>().rect.width / 2, 0, AnimationTimer.GetMaxTime());
 
-            //    Debug.LogWarning(timelineInstanceObjects[i].name.Substring(17) + " _ " + musInsIndex + " _ mom " +moment);
+                //Debug.LogWarning(timelineInstanceObjects[i].name.Substring(17) + " _ " + musInsIndex + " _ mom " + moment);
 
-            //    StaticSceneData.StaticData.musicClipElements[musInsIndex].musicClipElementInstances[musInsIndex].moment = moment;
-            //    Debug.LogWarning(JsonUtility.ToJson(StaticSceneData.StaticData, true));
-            //}
+                StaticSceneData.StaticData.musicClipElements[musInsIndex].musicClipElementInstances[musInsIndex].moment = moment;
+                //Debug.LogWarning(JsonUtility.ToJson(StaticSceneData.StaticData, true));
+            }
             ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
             releaseOnTimeline = false;

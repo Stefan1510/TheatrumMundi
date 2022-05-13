@@ -228,7 +228,7 @@ public class SceneDataController : MonoBehaviour
             sceneData.musicClipElements.Add(sceneMusicClipElement);
         }
 
-        Debug.LogWarning(JsonUtility.ToJson(sceneData, true));
+        //Debug.LogWarning(JsonUtility.ToJson(sceneData, true));
         recentSceneData = sceneData;
         return sceneData;
     }
@@ -255,7 +255,7 @@ public class SceneDataController : MonoBehaviour
         FiguresApplyToScene(sceneData.figureElements);
 
         //music title elements (Musik)
-        MusicApplyToScene(sceneData.musicClipElements);
+        //MusicApplyToScene(sceneData.musicClipElements);
     }
 
     public void RailsApplyToScene(List<RailElement> railElements)
