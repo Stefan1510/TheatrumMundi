@@ -41,10 +41,7 @@ public class RailManager : MonoBehaviour
     GameObject[] figureObjects3D;
     int currentClickedObjectIndex;
     int currentClickedInstanceObjectIndex;
-
-    public List<GameObject> timelineObjects;
     public List<GameObject> timelineInstanceObjects;
-    //public List<GameObject> timelineObjects3D;
     public List<GameObject> timelineInstanceObjects3D;
     private FigureElement ThisFigureElement;    //element to set 3d object
     //FigureInstanceElement thisFigureInstanceElement = new FigureInstanceElement();
@@ -54,7 +51,6 @@ public class RailManager : MonoBehaviour
     Vector3 railStartPos;
     Vector3 railEndPos;
     Color colFigure, colFigureHighlighted;
-
 
     void Awake()
     {
@@ -959,7 +955,6 @@ public class RailManager : MonoBehaviour
             // openCloseTimelineByDrag("close", timelineImage);
             releaseOnTimeline = false;
         }
-        // }
 
         // dragging an object from shelf to timeline
         if (draggingObject && editTimelineObject == false && isInstance == false)
@@ -1101,12 +1096,14 @@ public class RailManager : MonoBehaviour
                 double startSec = calculateFigureStartTimeInSec(timelineInstanceObjects[i], 100.0f, maxTimeInSec, minX, maxX);
                 
                 float moment = UtilitiesTm.FloatRemap(timelineInstanceObjects[i].transform.localPosition.x, gameObject.GetComponent<RectTransform>().rect.width / -2, gameObject.GetComponent<RectTransform>().rect.width / 2, 0, AnimationTimer.GetMaxTime());
-
+                Debug.Log("startsec: "+rail3dObj.transform.GetChild(0).GetComponent<RailSpeedController>().GetDistanceAtTime((float)startSec) / 10);
+                Debug.Log("endsec? "+ rail3dObj.transform.GetChild(0).GetComponent<RailSpeedController>().GetDistanceAtTime(AnimationTimer.GetTime()*rail3dObj.transform.GetChild(0).GetComponent<RailSpeedController>().speed) * -10);
                 timelineInstanceObjects3D[i].transform.localPosition = new Vector3(timelineInstanceObjects3D[i].transform.localPosition.x, 0, (rail3dObj.transform.GetChild(0).GetComponent<RailSpeedController>().GetDistanceAtTime((float)startSec)) / 10);
                 //StaticSceneData.StaticData.figureElements[Int32.Parse(timelineInstanceObjects[i].name.Substring(6, 2)) - 1].figureInstanceElements[Int32.Parse(timelineInstanceObjects[i].name.Substring(17))].moment = (float)startSec;
                 StaticSceneData.StaticData.figureElements[Int32.Parse(timelineInstanceObjects[i].name.Substring(6, 2)) - 1].figureInstanceElements[Int32.Parse(timelineInstanceObjects[i].name.Substring(17))].moment = moment;
                 // Debug.Log("FigureInstance: " + StaticSceneData.StaticData.figureElements[Int32.Parse(timelineInstanceObjects[i].name.Substring(6, 2)) - 1].figureInstanceElements[Int32.Parse(timelineInstanceObjects[i].name.Substring(17))].name);
                 // Debug.Log("Moment: " + StaticSceneData.StaticData.figureElements[Int32.Parse(timelineInstanceObjects[i].name.Substring(6, 2)) - 1].figureInstanceElements[Int32.Parse(timelineInstanceObjects[i].name.Substring(17))].moment);
+                // Debug.Log("30 cm in 3D in Timeline: "+7.32f);
                 // Debug.Log("rail: " + StaticSceneData.StaticData.figureElements[Int32.Parse(timelineInstanceObjects[i].name.Substring(6, 2)) - 1].figureInstanceElements[Int32.Parse(timelineInstanceObjects[i].name.Substring(17))].railStart);
                 // Debug.Log("isntanceNr: " + StaticSceneData.StaticData.figureElements[Int32.Parse(timelineInstanceObjects[i].name.Substring(6, 2)) - 1].figureInstanceElements[Int32.Parse(timelineInstanceObjects[i].name.Substring(17))].instanceNr);
             }

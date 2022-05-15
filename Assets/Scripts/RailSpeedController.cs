@@ -7,14 +7,6 @@ public class RailSpeedController : MonoBehaviour
     public int railIndex;
     public float speed;
 
-    //private float _goneSeconds = 0;
-
-    // Start is called before the first frame update
-    //void Start()
-    //{
-        
-    //}
-
     // Update is called once per frame
     void Update()
     {
@@ -24,7 +16,7 @@ public class RailSpeedController : MonoBehaviour
         //_goneSeconds += Time.deltaTime;
         //if (_goneSeconds >= 10 )
         //{
-        //    Debug.LogWarning(GetDistanceAtTime(AnimationTimer.GetTime()));
+           Debug.LogWarning(GetDistanceAtTime(AnimationTimer.GetTime())*speed);
         //}
     }
 
@@ -44,7 +36,7 @@ public class RailSpeedController : MonoBehaviour
         List<RailElementSpeed> railElementSpeeds = StaticSceneData.StaticData.railElements[railIndex].railElementSpeeds;
         int momentAfter = railElementSpeeds.FindIndex(speed => speed.moment > t);      //sucht von vorne aus und findet den ersten Moment, der nach t liegt
         int momentBefore = railElementSpeeds.FindLastIndex(speed => speed.moment <= t); //sucht von hinten aus und findet den ersten Moment, der vor t liegt
-        //Debug.LogWarning("Before: " + momentBefore + " - After: " + momentAfter);
+        // Debug.LogWarning("Before: " + momentBefore + " - After: " + momentAfter);
         if (momentBefore == 0 && momentAfter == -1) //ein momentBefore existiert immer, da der erste Wert von railElementSpeeds bei Programmstart gesetzt wird
         {
             v1 = v2 = railElementSpeeds[0].speed;
