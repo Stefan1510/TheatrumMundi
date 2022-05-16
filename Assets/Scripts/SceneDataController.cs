@@ -217,6 +217,7 @@ public class SceneDataController : MonoBehaviour
         sceneData.lightingSets.Add(new LightingSet());
         //bckgroundAnimation
         sceneData.backgroundPositions.Add(new BackgroundPosition());
+
         //music
         foreach(AudioClip clip in objectsMusicClips)
         {
@@ -255,7 +256,7 @@ public class SceneDataController : MonoBehaviour
         FiguresApplyToScene(sceneData.figureElements);
 
         //music title elements (Musik)
-        //MusicApplyToScene(sceneData.musicClipElements);
+        MusicApplyToScene(sceneData.musicClipElements);
     }
 
     public void RailsApplyToScene(List<RailElement> railElements)
