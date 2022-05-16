@@ -16,7 +16,7 @@ public class RailSpeedController : MonoBehaviour
         //_goneSeconds += Time.deltaTime;
         //if (_goneSeconds >= 10 )
         //{
-           Debug.LogWarning(GetDistanceAtTime(AnimationTimer.GetTime())*speed);
+        //    Debug.LogWarning(GetDistanceAtTime(AnimationTimer.GetTime())*speed);
         //}
     }
 

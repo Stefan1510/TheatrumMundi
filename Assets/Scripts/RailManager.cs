@@ -100,13 +100,13 @@ public class RailManager : MonoBehaviour
         currentClickedObjectIndex = -1;
         currentClickedInstanceObjectIndex = -1;
 
-        timeSettings = timeSliderImage.transform.GetChild(0).gameObject; 
+        timeSettings = timeSliderImage.transform.GetChild(0).gameObject;
     }
 
     void Start()
     {
-        scaleObject(gameObject, 1335, 20);
-        gameObject.GetComponent<BoxCollider2D>().size = new Vector2(1335,35);
+        scaleObject(gameObject, 1335, 25);
+        gameObject.GetComponent<BoxCollider2D>().size = new Vector2(1335, 25);
         timeSettings.SetActive(false);
 
         List<GameObject> timelineObjects = new List<GameObject>();
@@ -221,7 +221,7 @@ public class RailManager : MonoBehaviour
     public void openCloseTimelineByClick(bool thisTimelineOpen, Image tl, bool editObjOnTl)
     {
         float heightOpened = 80.0f;
-        float heightClosed = 20.0f;    //this size is set in editor
+        float heightClosed = 25.0f;    //this size is set in editor
 
         if (isAnyTimelineOpen() == false)
         {
@@ -248,7 +248,7 @@ public class RailManager : MonoBehaviour
                 isTimelineOpen = false;
                 //scale down timeline and collider
                 tl.rectTransform.sizeDelta = new Vector2(tl.rectTransform.rect.width, heightClosed);
-                tl.GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightClosed+15);
+                tl.GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightClosed);
                 openCloseObjectInTimeline(false, timelineInstanceObjects, editTimelineObject);
             }
             else
@@ -258,7 +258,7 @@ public class RailManager : MonoBehaviour
                 for (int i = 0; i < gameController.GetComponent<UIController>().Rails.Length; i++)
                 {
                     gameController.GetComponent<UIController>().Rails[i].GetComponent<RectTransform>().sizeDelta = new Vector2(tl.rectTransform.rect.width, heightClosed);
-                    gameController.GetComponent<UIController>().Rails[i].GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightClosed+15);
+                    gameController.GetComponent<UIController>().Rails[i].GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightClosed);
                     gameController.GetComponent<UIController>().Rails[i].GetComponent<RailManager>().isTimelineOpen = false;
                     openCloseObjectInTimeline(false, gameController.GetComponent<UIController>().Rails[i].timelineInstanceObjects, editTimelineObject);
                     //Debug.Log("++++ Scaling down Rail: " + gameController.GetComponent<UIController>().Rails[i]);
@@ -266,13 +266,13 @@ public class RailManager : MonoBehaviour
                 for (int j = 0; j < 2; j++)
                 {
                     gameController.GetComponent<UIController>().RailLightBG[j].GetComponent<RectTransform>().sizeDelta = new Vector2(tl.rectTransform.rect.width, heightClosed);
-                    gameController.GetComponent<UIController>().RailLightBG[j].GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightClosed+15);
+                    gameController.GetComponent<UIController>().RailLightBG[j].GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightClosed);
                     gameController.GetComponent<UIController>().RailLightBG[j].GetComponent<RailLightManager>().isTimelineOpen = false;
                 }
                 gameController.GetComponent<UIController>().RailMusic.GetComponent<RectTransform>().sizeDelta = new Vector2(tl.rectTransform.rect.width, heightClosed);
-                gameController.GetComponent<UIController>().RailMusic.GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightClosed+15);
+                gameController.GetComponent<UIController>().RailMusic.GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightClosed);
                 gameController.GetComponent<UIController>().RailMusic.GetComponent<RailMusicManager>().isTimelineOpen = false;
-                gameController.GetComponent<UIController>().RailMusic.GetComponent<RailMusicManager>().openCloseObjectInTimeline(false, gameController.GetComponent<UIController>().RailMusic.GetComponent<RailMusicManager>().timelineInstanceObjects,editObjOnTl);
+                gameController.GetComponent<UIController>().RailMusic.GetComponent<RailMusicManager>().openCloseObjectInTimeline(false, gameController.GetComponent<UIController>().RailMusic.GetComponent<RailMusicManager>().timelineInstanceObjects, editObjOnTl);
                 // open clicked rail
                 //Debug.Log("++++ geklickte Schiene wird geöffnet: " + tl);
                 //scale up timeline
@@ -292,7 +292,7 @@ public class RailManager : MonoBehaviour
     public void openCloseTimelineByDrag(string open, Image tl)
     {
         float heightOpened = 80.0f;
-        float heightClosed = 20.0f;    //this size is set in editor
+        float heightClosed = 25.0f;    //this size is set in editor
 
         if (open == "open")
         {
@@ -327,7 +327,7 @@ public class RailManager : MonoBehaviour
             //scale down timeline
             tl.rectTransform.sizeDelta = new Vector2(tl.rectTransform.rect.width, heightClosed);
             //scale down the collider
-            tl.GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightClosed+15);
+            tl.GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightClosed);
             //scale up all objects on timeline
             openCloseObjectInTimeline(isTimelineOpen, timelineInstanceObjects, editTimelineObject);
         }
@@ -423,7 +423,7 @@ public class RailManager : MonoBehaviour
     public void openCloseObjectInTimeline(bool timelineOpen, List<GameObject> objects, bool editObjOnTl)
     {
         float scaleUp = 80.0f;
-        float scaleDown = 20.0f;
+        float scaleDown = 25.0f;
         float length = 100.0f;
         //Debug.Log("method: timelineObjects count: "+objects.Count);
         for (int i = 0; i < objects.Count; i++)
@@ -638,7 +638,6 @@ public class RailManager : MonoBehaviour
             {
                 obj3D.GetComponent<MeshRenderer>().materials[i].EnableKeyword("_EMISSION");
             }
-
         }
         else
         {
@@ -647,7 +646,6 @@ public class RailManager : MonoBehaviour
                 obj3D.transform.GetChild(1).GetComponent<SkinnedMeshRenderer>().materials[i].EnableKeyword("_EMISSION");
             }
         }
-
     }
     public void unhighlight(GameObject obj3D, GameObject obj)
     {
@@ -671,23 +669,6 @@ public class RailManager : MonoBehaviour
         }
     }
 
-    /*public void createNew2DInstance(GameObject obj, int index)
-    {
-        int countName = 0;
-        countName = countCopiesOfObject(obj);
-        newCopyOfFigure = Instantiate(obj);
-        Debug.Log("+++Figure: " + obj.name + ", count: " + countName + ", gameobjeect: " + gameObject.name + ", text: " + obj.transform.GetChild(0).name);
-        newCopyOfFigure.name = obj.name + "_instance" + countName.ToString("000");
-        createRectangle(newCopyOfFigure, new Vector2(300, 50), colFigure, minX, 100.0f);
-        figCounterCircle[index].transform.GetChild(0).GetComponent<Text>().text = (countName + 1).ToString();
-
-        //parent and position
-        newCopyOfFigure.transform.SetParent(gameObject.transform);
-        newCopyOfFigure.transform.position = new Vector2(obj.transform.position.x, obj.transform.position.y);
-
-        //add object to list which objects are on timeline, set placed figures to timelineInstanceObjects-list
-        updateObjectList(timelineInstanceObjects, newCopyOfFigure);
-    }*/
     public GameObject CreateNew2DInstance(int figureNr, float momentOrPosX, bool loadFromFile)
     {
         int countName = 0;
@@ -715,6 +696,7 @@ public class RailManager : MonoBehaviour
             gameController.GetComponent<SceneDataController>().objects2dFigureInstances.Add(newCopyOfFigure);
             //newCopyOfFigure.transform.parent.GetChild(0).GetComponent<RectTransform>().position = new Vector2(newCopyOfFigure.transform.parent.GetChild(0).GetComponent<RectTransform>().position.x + 25, newCopyOfFigure.transform.parent.GetChild(0).GetComponent<RectTransform>().position.y);
             openCloseTimelineByClick(true, timelineImage, false);
+
         }
         else
         {
@@ -727,6 +709,11 @@ public class RailManager : MonoBehaviour
         curr3DObject = Instantiate(figureObjects3D[figureNr]);
         timelineInstanceObjects3D.Add(curr3DObject);
         setParent(timelineInstanceObjects3D[timelineInstanceObjects3D.Count - 1], rail3dObj.transform.GetChild(0).gameObject);
+        if (newCopyOfFigure.GetComponent<RectTransform>().position.x < (minX + 50))  // 50 is half the box Collider width (mouse pos is in the middle of the figure)
+        {
+            newCopyOfFigure.GetComponent<RectTransform>().position = new Vector2((float)minX + 50, GetComponent<RectTransform>().position.y);
+            Debug.Log("figur ist ausserhalb: minx: " + (minX + 50) + ", position: " + newCopyOfFigure.GetComponent<RectTransform>().position.x);
+        }
         //Debug.Log("++++++++++++ 3D Object: " + curr3DObject.name + ", rail3d: " + rail3dObj + ", Pos: " + curr3DObject.transform.position + ", Instances of this obj: " + countName);//= countCopiesOfObject(figureObjects[currentClickedObjectIndex], timelineInstanceObjects););
         return curr3DObject;
     }
@@ -828,15 +815,19 @@ public class RailManager : MonoBehaviour
         if (draggingOnTimeline && editTimelineObject && isTimelineOpen)
         {
             //Debug.Log("+++++++++++++++++++++++++dragging on timeline......");
-            //Debug.Log("--->before-if-index: "+currentClickedInstanceObjectIndex);
             if (currentClickedInstanceObjectIndex != (-1))  //is set in the identify-methods
             {
                 isInstance = true;
                 //if you click an object in timeline (for dragging)
                 //move object
-                updateObjectPosition(timelineInstanceObjects[currentClickedInstanceObjectIndex], getMousePos); // hier muss die maus position minus pivot point genommen werden! oder so
+                updateObjectPosition(timelineInstanceObjects[currentClickedInstanceObjectIndex], getMousePos); // hier muss die maus position minus pivot point genommen werden! oder so (s. dragdrop, da funktioniert das schon)
                                                                                                                //snapping/lock y-axis
                 setObjectOnTimeline(timelineInstanceObjects[currentClickedInstanceObjectIndex], timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.position.x, this.transform.position.y);
+
+                if (timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().position.x < (minX + 50))  // 50 is half the box Collider width (mouse pos is in the middle of the figure)
+                {
+                    timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().position = new Vector2((float)minX + 50, GetComponent<RectTransform>().position.y);    // tendenziell muesste das eher in buttonUp
+                }
 
                 if (Physics2D.OverlapPoint(getMousePos) == false)       // mouse outside
                 {
@@ -998,6 +989,8 @@ public class RailManager : MonoBehaviour
 
             if (hitTimeline)
             {
+                //Debug.Log("X-Pos: " + figureObjects[currentClickedObjectIndex].GetComponent<RectTransform>().position.x + ", minX+50: " + (minX + 50));
+
                 SceneManaging.timelineHit = tmp;
                 openCloseTimelineByDrag("open", timelineImage);
                 //scale up object/figures in timeline
@@ -1051,6 +1044,7 @@ public class RailManager : MonoBehaviour
             {
                 if (releaseObjMousePos == getMousePos)  //if release obj-pos and release mouse-button-pos is the same
                 {
+                    Debug.Log("losgelassen! ");
                     GameObject curr3DObject;
                     //create a copy of this timelineObject and keep the original one
                     curr3DObject = CreateNew2DInstance(currentClickedObjectIndex, getMousePos.x, false);
@@ -1059,6 +1053,7 @@ public class RailManager : MonoBehaviour
                     setParent(figureObjects[currentClickedObjectIndex], objectShelfParent[currentClickedObjectIndex]);
                     scaleObject(figureObjects[currentClickedObjectIndex], objectShelfSize[currentClickedObjectIndex].x, objectShelfSize[currentClickedObjectIndex].y);
                     scaleObject(figureObjects[currentClickedObjectIndex].transform.GetChild(0).gameObject, objectShelfSize[currentClickedObjectIndex].x, objectShelfSize[currentClickedObjectIndex].y);
+
                     figureObjects[currentClickedObjectIndex].GetComponent<RectTransform>().anchoredPosition = new Vector2(75.0f, -75.0f);
                     figureObjects[currentClickedObjectIndex].transform.SetSiblingIndex(1);
 
@@ -1094,10 +1089,9 @@ public class RailManager : MonoBehaviour
             for (int i = 0; i < timelineInstanceObjects.Count; i++)
             {
                 double startSec = calculateFigureStartTimeInSec(timelineInstanceObjects[i], 100.0f, maxTimeInSec, minX, maxX);
-                
+
                 float moment = UtilitiesTm.FloatRemap(timelineInstanceObjects[i].transform.localPosition.x, gameObject.GetComponent<RectTransform>().rect.width / -2, gameObject.GetComponent<RectTransform>().rect.width / 2, 0, AnimationTimer.GetMaxTime());
-                Debug.Log("startsec: "+rail3dObj.transform.GetChild(0).GetComponent<RailSpeedController>().GetDistanceAtTime((float)startSec) / 10);
-                Debug.Log("endsec? "+ rail3dObj.transform.GetChild(0).GetComponent<RailSpeedController>().GetDistanceAtTime(AnimationTimer.GetTime()*rail3dObj.transform.GetChild(0).GetComponent<RailSpeedController>().speed) * -10);
+
                 timelineInstanceObjects3D[i].transform.localPosition = new Vector3(timelineInstanceObjects3D[i].transform.localPosition.x, 0, (rail3dObj.transform.GetChild(0).GetComponent<RailSpeedController>().GetDistanceAtTime((float)startSec)) / 10);
                 //StaticSceneData.StaticData.figureElements[Int32.Parse(timelineInstanceObjects[i].name.Substring(6, 2)) - 1].figureInstanceElements[Int32.Parse(timelineInstanceObjects[i].name.Substring(17))].moment = (float)startSec;
                 StaticSceneData.StaticData.figureElements[Int32.Parse(timelineInstanceObjects[i].name.Substring(6, 2)) - 1].figureInstanceElements[Int32.Parse(timelineInstanceObjects[i].name.Substring(17))].moment = moment;

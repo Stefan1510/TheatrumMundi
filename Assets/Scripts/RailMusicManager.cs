@@ -95,8 +95,8 @@ public class RailMusicManager : MonoBehaviour
 
     void Start()
     {
-        scaleObject(gameObject, 1335, 20);
-        gameObject.GetComponent<BoxCollider2D>().size = new Vector2(1335, 35);
+        scaleObject(gameObject, 1335, 25);
+        gameObject.GetComponent<BoxCollider2D>().size = new Vector2(1335, 25);
         audioSource = GetComponent<AudioSource>();
         timeSettings.SetActive(false);
         for (int i = 0; i < figureObjects.Length; i++)
@@ -188,7 +188,7 @@ public class RailMusicManager : MonoBehaviour
     public void openCloseTimelineByClick(bool thisTimelineOpen, Image tl, bool editObjOnTl)
     {
         float heightOpened = 80.0f;
-        float heightClosed = 20.0f;    //this size is set in editor
+        float heightClosed = 25.0f;    //this size is set in editor
 
         if (isAnyTimelineOpen() == false)
         {
@@ -216,7 +216,7 @@ public class RailMusicManager : MonoBehaviour
                 //scale down timeline
                 tl.rectTransform.sizeDelta = new Vector2(tl.rectTransform.rect.width, heightClosed);
                 //scale down the collider
-                tl.GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightClosed + 15);
+                tl.GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightClosed);
                 openCloseObjectInTimeline(false, timelineInstanceObjects, editTimelineObject);
             }
             else
@@ -226,7 +226,7 @@ public class RailMusicManager : MonoBehaviour
                 for (int i = 0; i < gameController.GetComponent<UIController>().Rails.Length; i++)
                 {
                     gameController.GetComponent<UIController>().Rails[i].GetComponent<RectTransform>().sizeDelta = new Vector2(tl.rectTransform.rect.width, heightClosed);
-                    gameController.GetComponent<UIController>().Rails[i].GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightClosed + 15);
+                    gameController.GetComponent<UIController>().Rails[i].GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightClosed);
                     gameController.GetComponent<UIController>().Rails[i].isTimelineOpen = false;
                     //GameController.GetComponent<UIController>().Rails[i].transform.GetChild(0).gameObject.GetComponent<Text>().rectTransform.localScale = new Vector3(1, 1, 1);
                     openCloseObjectInTimeline(false, gameController.GetComponent<UIController>().Rails[i].timelineInstanceObjects, editTimelineObject);
@@ -235,11 +235,11 @@ public class RailMusicManager : MonoBehaviour
                 for (int j = 0; j < 2; j++)
                 {
                     gameController.GetComponent<UIController>().RailLightBG[j].GetComponent<RectTransform>().sizeDelta = new Vector2(tl.rectTransform.rect.width, heightClosed);
-                    gameController.GetComponent<UIController>().RailLightBG[j].GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightClosed + 15);
+                    gameController.GetComponent<UIController>().RailLightBG[j].GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightClosed);
                     gameController.GetComponent<UIController>().RailLightBG[j].GetComponent<RailLightManager>().isTimelineOpen = false;
                 }
                 gameController.GetComponent<UIController>().RailMusic.GetComponent<RectTransform>().sizeDelta = new Vector2(tl.rectTransform.rect.width, heightClosed);
-                gameController.GetComponent<UIController>().RailMusic.GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightClosed + 15);
+                gameController.GetComponent<UIController>().RailMusic.GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightClosed);
                 gameController.GetComponent<UIController>().RailMusic.isTimelineOpen = false;
                 // open clicked rail
                 Debug.Log("++++ geklickte Schiene wird geöffnet: " + tl);
@@ -260,7 +260,7 @@ public class RailMusicManager : MonoBehaviour
     public void openCloseTimelineByDrag(string open, Image tl)
     {
         float heightOpened = 80.0f;
-        float heightClosed = 20.0f;    //this size is set in editor
+        float heightClosed = 25.0f;    //this size is set in editor
 
         if (open == "open")
         {
@@ -285,7 +285,7 @@ public class RailMusicManager : MonoBehaviour
             //scale down timeline
             tl.rectTransform.sizeDelta = new Vector2(tl.rectTransform.rect.width, heightClosed);
             //scale down the collider
-            tl.GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightClosed + 15);
+            tl.GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightClosed);
             //scale up all objects on timeline
             openCloseObjectInTimeline(isTimelineOpen, timelineInstanceObjects, editTimelineObject);
         }
@@ -381,7 +381,7 @@ public class RailMusicManager : MonoBehaviour
     public void openCloseObjectInTimeline(bool timelineOpen, List<GameObject> objects, bool editObjOnTl)
     {
         float scaleUp = 80.0f;
-        float scaleDown = 20.0f;
+        float scaleDown = 25.0f;
         float length = 100.0f;
         //Debug.Log("method: timelineObjects count: "+objects.Count);
         for (int i = 0; i < objects.Count; i++)
@@ -628,7 +628,6 @@ public class RailMusicManager : MonoBehaviour
         //// bring object back to position two, so that its visible
         //figureObjects[musObjNr].transform.SetSiblingIndex(1);
     }
-
     void Update()
     {
         Vector2 getMousePos = Input.mousePosition;
@@ -703,12 +702,18 @@ public class RailMusicManager : MonoBehaviour
             //Debug.Log("--->before-if-index: "+currentClickedInstanceObjectIndex);
             if (currentClickedInstanceObjectIndex != (-1))  //is set in the identify-methods
             {
+                // Debug.Log("achtung! " + timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().position.x);
                 isInstance = true;
                 //if you click an object in timeline (for dragging)
                 //move object
                 updateObjectPosition(timelineInstanceObjects[currentClickedInstanceObjectIndex], getMousePos); // hier muss die maus position minus pivot point genommen werden! oder so
                                                                                                                //snapping/lock y-axis
                 setObjectOnTimeline(timelineInstanceObjects[currentClickedInstanceObjectIndex], timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.position.x, this.transform.position.y);
+
+                if (timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().position.x < (minX + 50))  // 50 is half the box Collider width (mouse pos is in the middle of the figure)
+                {
+                    timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().position = new Vector2((float)minX + 50, GetComponent<RectTransform>().position.y);    // tendenziell muesste das eher in buttonUp
+                }
 
                 if (Physics2D.OverlapPoint(getMousePos) == false)       // mouse outside
                 {
@@ -814,7 +819,17 @@ public class RailMusicManager : MonoBehaviour
 
                     //parent and position
                     newCopyOfFigure.transform.SetParent(gameObject.transform);
-                    newCopyOfFigure.transform.position = new Vector2(figureObjects[currentClickedObjectIndex].transform.position.x, figureObjects[currentClickedObjectIndex].transform.position.y);
+                    
+
+                    if (newCopyOfFigure.GetComponent<RectTransform>().position.x < (minX + 50))  // 50 is half the box Collider width (mouse pos is in the middle of the figure)
+                    {
+                        //Debug.Log("achtung! " + figureObjects[currentClickedObjectIndex].GetComponent<RectTransform>().position.x);
+                        newCopyOfFigure.GetComponent<RectTransform>().position = new Vector2((float)minX + 50, figureObjects[currentClickedObjectIndex].transform.position.y);    // tendenziell muesste das eher in buttonUp
+                    }
+                    else
+                    {
+                        newCopyOfFigure.transform.position = new Vector2(figureObjects[currentClickedObjectIndex].transform.position.x, figureObjects[currentClickedObjectIndex].transform.position.y);
+                    }
 
                     //add object to list which objects are on timeline, set placed figures to timelineInstanceObjects-list
                     updateObjectList(timelineInstanceObjects, newCopyOfFigure);
@@ -873,7 +888,7 @@ public class RailMusicManager : MonoBehaviour
             //     //Debug.LogWarning(timelineInstanceObjects[i].name.Substring(17) + " _ " + musInsIndex + " _ mom " + moment);
 
             //     StaticSceneData.StaticData.musicClipElements[musInsIndex].musicClipElementInstances[musInsIndex].moment = moment;
-                //Debug.LogWarning(JsonUtility.ToJson(StaticSceneData.StaticData, true));
+            //Debug.LogWarning(JsonUtility.ToJson(StaticSceneData.StaticData, true));
             // }
             ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
