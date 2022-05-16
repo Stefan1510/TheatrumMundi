@@ -16,7 +16,15 @@ public class SaveFileController : MonoBehaviour
     private SceneData tempSceneData;
     private string _selectedFile;
     private string _directorySaves;
+    private string _basepath;
     //// Start is called before the first frame update
+
+    private void Awake()
+    {
+        _basepath = "http://tm.skd.museum/";
+        //_basepath = "https://lightframefx.de/extras/theatrum-mundi/";
+    }
+
     void Start()
     {
         _directorySaves = "Saves";
@@ -109,7 +117,7 @@ public class SaveFileController : MonoBehaviour
         ClearFileButtons();
         fileSelectButton.gameObject.SetActive(true);
         WWWForm form = new WWWForm();
-        WWW www = new WWW("https://lightframefx.de/extras/theatrum-mundi/LoadFileNames.php", form);
+        WWW www = new WWW(_basepath + "LoadFileNames.php", form);
         yield return www;
 
 
@@ -132,7 +140,7 @@ public class SaveFileController : MonoBehaviour
         form.AddField("pathFile", filePath);
         form.AddField("text", json);
 
-        WWW www = new WWW("https://lightframefx.de/extras/theatrum-mundi/WriteFile.php", form);
+        WWW www = new WWW(_basepath + "WriteFile.php", form);
 
         yield return www;
 
@@ -142,7 +150,7 @@ public class SaveFileController : MonoBehaviour
 
     private IEnumerator LoadFileFromWWW(string fileName)
     {
-        WWW www = new WWW("https://lightframefx.de/extras/theatrum-mundi/Saves/" + fileName);
+        WWW www = new WWW(_basepath + "Saves/" + fileName);
         yield return www;
         _jsonString = www.text;
         tempSceneData = this.GetComponent<SceneDataController>().CreateSceneDataFromJSON(_jsonString);
@@ -169,7 +177,7 @@ public class SaveFileController : MonoBehaviour
         form.AddField("pathDirectory", _directorySaves);
         form.AddField("pathFile", FileName);
 
-        UnityWebRequest www = UnityWebRequest.Post("https://lightframefx.de/extras/theatrum-mundi/DeleteFile.php", form);
+        UnityWebRequest www = UnityWebRequest.Post(_basepath + "DeleteFile.php", form);
         yield return www.SendWebRequest();
         if (www.result == UnityWebRequest.Result.ConnectionError || www.result == UnityWebRequest.Result.ProtocolError)
         {
