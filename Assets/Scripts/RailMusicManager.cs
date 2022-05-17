@@ -21,6 +21,7 @@ public class RailMusicManager : MonoBehaviour
     public bool isTimelineOpen;
     Vector2 releaseObjMousePos;
     double minX;
+    private float railWidth;
     double maxX;
     int maxTimeInSec;
     int currentClip;
@@ -97,7 +98,11 @@ public class RailMusicManager : MonoBehaviour
 
     void Start()
     {
-        scaleObject(gameObject, 1335, heightClosed);
+        minX = 0.146f * Screen.width; //301.0f;  //timeline-minX
+        railWidth = 0.69f * Screen.width;
+        maxX = minX + railWidth; // 1623.0f; //timeline-maxX
+        Debug.Log("timeline X Anfang: " + minX + ", timeline X Ende: " + maxX);
+        scaleObject(gameObject, railWidth, heightClosed);
         gameObject.GetComponent<BoxCollider2D>().size = new Vector2(1335, heightClosed);
         audioSource = GetComponent<AudioSource>();
         timeSettings.SetActive(false);
@@ -114,8 +119,6 @@ public class RailMusicManager : MonoBehaviour
         railStartPos = getRailStartEndpoint(rail3dObj, "start");
         railEndPos = getRailStartEndpoint(rail3dObj, "end");
 
-        minX = 301.0f;  //timeline-minX
-        maxX = 1623.0f; //timeline-maxX
         maxTimeInSec = (int)AnimationTimer.GetMaxTime();
         sizeDeltaAsFactor = new Vector2(1.0f, 1.0f);
     }
@@ -376,8 +379,6 @@ public class RailMusicManager : MonoBehaviour
     }
     public void openCloseObjectInTimeline(bool timelineOpen, List<GameObject> objects, bool editObjOnTl)
     {
-        float scaleUp = 80.0f;
-        float scaleDown = 25.0f;
         float length = 100.0f;
         //Debug.Log("method: timelineObjects count: "+objects.Count);
         for (int i = 0; i < objects.Count; i++)
@@ -386,9 +387,9 @@ public class RailMusicManager : MonoBehaviour
             //if timeline open scale ALL objects up
             if (timelineOpen)
             {
-                scaleObjectHeight(objects[i], length, scaleUp);
-                scaleObjectHeight(objects[i].transform.GetChild(1).gameObject, objects[i].transform.GetChild(1).gameObject.GetComponent<RectTransform>().sizeDelta.x, scaleUp);
-                scaleObjectHeight(objects[i].transform.GetChild(0).gameObject, objects[i].transform.GetChild(0).gameObject.GetComponent<RectTransform>().sizeDelta.x, scaleUp);
+                scaleObject(objects[i], length, heightOpened);
+                scaleObject(objects[i].transform.GetChild(1).gameObject, objects[i].transform.GetChild(1).gameObject.GetComponent<RectTransform>().sizeDelta.x, heightOpened);
+                scaleObject(objects[i].transform.GetChild(0).gameObject, objects[i].transform.GetChild(0).gameObject.GetComponent<RectTransform>().sizeDelta.x, heightOpened);
                 objects[i].GetComponent<RectTransform>().anchoredPosition = new Vector2(objects[i].GetComponent<RectTransform>().anchoredPosition.x, -40.0f);
                 //objects[i].GetComponent<RectTransform>().sizeDelta=new Vector2(150.0f,50.0f);
                 //new Vector2(animationLength,scaleYUp);
@@ -397,29 +398,15 @@ public class RailMusicManager : MonoBehaviour
             {
                 //otherwise scale ALL objects down
                 //Debug.Log("method: scale object down:");
-                scaleObjectHeight(objects[i], length, scaleDown);
-                scaleObjectHeight(objects[i].transform.GetChild(0).gameObject, objects[i].transform.GetChild(0).gameObject.GetComponent<RectTransform>().sizeDelta.x, scaleDown);
-                scaleObjectHeight(objects[i].transform.GetChild(1).gameObject, objects[i].transform.GetChild(1).gameObject.GetComponent<RectTransform>().sizeDelta.x, scaleDown);
+                scaleObject(objects[i], length, heightClosed);
+                scaleObject(objects[i].transform.GetChild(0).gameObject, objects[i].transform.GetChild(0).gameObject.GetComponent<RectTransform>().sizeDelta.x, heightClosed);
+                scaleObject(objects[i].transform.GetChild(1).gameObject, objects[i].transform.GetChild(1).gameObject.GetComponent<RectTransform>().sizeDelta.x, heightClosed);
                 objects[i].GetComponent<RectTransform>().anchoredPosition = new Vector2(objects[i].GetComponent<RectTransform>().anchoredPosition.x, -10.0f);
                 //objects[i].GetComponent<RectTransform>().sizeDelta=new Vector2(150.0f,10.0f);
             }
         }
     }
 
-    public void scaleObjectHeight(GameObject fig, float x, float y)
-    {
-        //scale the object
-        fig.GetComponent<RectTransform>().sizeDelta = new Vector2(x, y);
-        //scale the collider, if object has one
-        if (fig.GetComponent<BoxCollider2D>() == true)
-        {
-            fig.GetComponent<BoxCollider2D>().size = new Vector2(x, y);
-        }
-        else
-        {
-            //do nothing
-        }
-    }
     public void scaleObject(GameObject fig, float x, float y)
     {
         //scale the object
@@ -598,8 +585,8 @@ public class RailMusicManager : MonoBehaviour
 
         float tmpLength = ((float)maxX - (float)minX) * newCopyOfFigure.GetComponent<MusicLength>().musicLength / maxTimeInSec;//UtilitiesTm.FloatRemap(newCopyOfFigure.GetComponent<MusicLength>().musicLength, 0, 614, (float)minX, (float)maxX);
         createRectangle(newCopyOfFigure, new Vector2(300, 50), colMusic, minX, tmpLength);
-        scaleObjectHeight(newCopyOfFigure, 100, 80);
-        scaleObjectHeight(newCopyOfFigure.transform.GetChild(0).gameObject, newCopyOfFigure.transform.GetChild(0).gameObject.GetComponent<RectTransform>().sizeDelta.x, 80);
+        scaleObject(newCopyOfFigure, 100, 80);
+        scaleObject(newCopyOfFigure.transform.GetChild(0).gameObject, newCopyOfFigure.transform.GetChild(0).gameObject.GetComponent<RectTransform>().sizeDelta.x, 80);
         newCopyOfFigure.transform.GetChild(0).GetComponent<RectTransform>().position = new Vector2(newCopyOfFigure.transform.GetChild(0).gameObject.GetComponent<RectTransform>().position.x + 26, newCopyOfFigure.transform.GetChild(0).gameObject.GetComponent<RectTransform>().position.y);
 
         figCounterCircle[musObjNr].transform.GetChild(0).GetComponent<Text>().text = (countName + 1).ToString();
@@ -608,11 +595,12 @@ public class RailMusicManager : MonoBehaviour
         float posX = UtilitiesTm.FloatRemap(moment, 0, AnimationTimer.GetMaxTime(), gameObject.GetComponent<RectTransform>().rect.width / -2, gameObject.GetComponent<RectTransform>().rect.width / 2);
         newCopyOfFigure.transform.SetParent(gameObject.transform);
         newCopyOfFigure.transform.localPosition = new Vector2(posX, newCopyOfFigure.transform.localPosition.y);
-        scaleObjectHeight(newCopyOfFigure.transform.GetChild(1).gameObject, 100, 80);
+        scaleObject(newCopyOfFigure.transform.GetChild(1).gameObject, 100, 80);
 
         //add object to list which objects are on timeline, set placed figures to timelineInstanceObjects-list
         updateObjectList(timelineInstanceObjects, newCopyOfFigure);
         openCloseTimelineByClick(true, timelineImage, false);
+        newCopyOfFigure.transform.localScale = Vector3.one;
         ////set original image back to shelf
         //setParent(figureObjects[currentClickedObjectIndex], objectShelfParent[musObjNr]);
         ////scale to default values
@@ -623,6 +611,15 @@ public class RailMusicManager : MonoBehaviour
         //figureObjects[musObjNr].GetComponent<RectTransform>().anchoredPosition = new Vector2(75.0f, -75.0f);
         //// bring object back to position two, so that its visible
         //figureObjects[musObjNr].transform.SetSiblingIndex(1);
+    }
+    public void ResetScreenSize()
+    {
+        // Debug.Log("Screen changed! ScreenX: " + Screen.width);
+        // currentScreenWidth = Screen.width;
+        minX = 0.146f * Screen.width; //301.0f;  //timeline-minX
+        railWidth = 0.69f * Screen.width;
+        maxX = minX + railWidth; // 1623.0f; //timeline-maxX
+                                 // Debug.Log("rail start: " + minX);
     }
     void Update()
     {
@@ -800,7 +797,6 @@ public class RailMusicManager : MonoBehaviour
                 {
                     //create a copy of this timelineObject and keep the original one
                     newCopyOfFigure = Instantiate(figureObjects[currentClickedObjectIndex]);
-                    Debug.Log("+++newcopy: " + newCopyOfFigure);
                     //count objects from same kind
                     int countName = 0;
                     countName = countCopiesOfObject(figureObjects[currentClickedObjectIndex], timelineInstanceObjects);
@@ -808,14 +804,12 @@ public class RailMusicManager : MonoBehaviour
 
                     float tmpLength = ((float)maxX - (float)minX) * newCopyOfFigure.GetComponent<MusicLength>().musicLength / 614;//UtilitiesTm.FloatRemap(newCopyOfFigure.GetComponent<MusicLength>().musicLength, 0, 614, (float)minX, (float)maxX);
                     createRectangle(newCopyOfFigure, new Vector2(300, 50), colMusic, minX, tmpLength);
-                    Debug.Log("musicLenght: " + tmpLength);
-
 
                     figCounterCircle[currentClickedObjectIndex].transform.GetChild(0).GetComponent<Text>().text = (countName + 1).ToString();
 
                     //parent and position
                     newCopyOfFigure.transform.SetParent(gameObject.transform);
-                    
+                    newCopyOfFigure.transform.localScale = Vector3.one;
 
                     if (newCopyOfFigure.GetComponent<RectTransform>().position.x < (minX + 50))  // 50 is half the box Collider width (mouse pos is in the middle of the figure)
                     {

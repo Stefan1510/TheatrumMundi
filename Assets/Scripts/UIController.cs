@@ -16,24 +16,33 @@ public class UIController : MonoBehaviour
 
     public RailLightManager[] RailLightBG;
     public RailMusicManager RailMusic;
+    public CoulissesManager CoulissesMan;
+    private int currenScreenWidth;
 
-    //// Start is called before the first frame update
+    // Start is called before the first frame update
     void Start()
     {
+        currenScreenWidth = Screen.width;
         objectsLightElements = GetComponent<SceneDataController>().objectsLightElements;
     }
 
-    //// Update is called once per frame
-    //void Update()
-    //{
-
-    //}
+    // Update is called once per frame
+    void Update()
+    {
+        if(Screen.width != currenScreenWidth)
+        {
+            for(int i=0;i<Rails.Length;i++)
+            {
+                Rails[i].ResetScreenSize();   
+            }
+            RailMusic.ResetScreenSize();
+            CoulissesMan.ResetScreenSize();
+            currenScreenWidth = Screen.width;
+        }
+    }
 
     public void SceneriesApplyToUI()
     {
-        //string buttonName;
-        //GameObject goButtonScenery;
-
         goMenueKulissen.SetActive(true);
         for (int i = 0; i < StaticSceneData.StaticData.sceneryElements.Count; i++)
         {
@@ -45,7 +54,7 @@ public class UIController : MonoBehaviour
                 //Spiegelung
                 if(StaticSceneData.StaticData.sceneryElements[i].mirrored) goButtonSceneryElements[i].GetComponent<RectTransform>().localScale = new Vector2(-1,1);
                 // Größe der Kulissen
-                goButtonSceneryElements[i].GetComponent<RectTransform>().sizeDelta = new Vector2(goMenueKulissen.GetComponent<CoulissesManager>().schieneBild.GetComponent<RectTransform>().rect.width / 410 * goMenueKulissen.GetComponent<CoulissesManager>().coulisses[i].GetComponent<CoulisseStats>().CoulisseWidth, goMenueKulissen.GetComponent<CoulissesManager>().schieneBild.GetComponent<RectTransform>().rect.width / 410 * goMenueKulissen.GetComponent<CoulissesManager>().coulisses[i].GetComponent<CoulisseStats>().CoulisseHeight);
+                goButtonSceneryElements[i].GetComponent<RectTransform>().sizeDelta = new Vector2(goMenueKulissen.GetComponent<CoulissesManager>().railWidth / 410 * goMenueKulissen.GetComponent<CoulissesManager>().coulisses[i].GetComponent<CoulisseStats>().CoulisseWidth, goMenueKulissen.GetComponent<CoulissesManager>().railWidth / 410 * goMenueKulissen.GetComponent<CoulissesManager>().coulisses[i].GetComponent<CoulisseStats>().CoulisseHeight);
                 goButtonSceneryElements[i].GetComponent<BoxCollider2D>().size = goMenueKulissen.GetComponent<CoulissesManager>().coulisses[i].GetComponent<RectTransform>().sizeDelta;
             }
             else

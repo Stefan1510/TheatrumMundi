@@ -107,8 +107,12 @@ public class RailManager : MonoBehaviour
 
     void Start()
     {
-        Debug.Log("Screen Size: " + Screen.width);
-        scaleObject(gameObject, 1335, heightClosed);
+        minX = 0.146f * Screen.width; //301.0f;  //timeline-minX
+        railWidth = 0.69f * Screen.width;
+        maxX = minX + railWidth; // 1623.0f; //timeline-maxX
+        // Debug.Log("timeline X Anfang: " + minX + ", timeline X Ende: " + maxX);
+        // Debug.Log("Screen Size: " + Screen.width);
+        scaleObject(gameObject, railWidth, heightClosed);
         gameObject.GetComponent<BoxCollider2D>().size = new Vector2(1335, heightClosed);
         timeSettings.SetActive(false);
 
@@ -116,11 +120,6 @@ public class RailManager : MonoBehaviour
         List<GameObject> timelineInstanceObjects = new List<GameObject>();
         List<GameObject> timelineObjects3D = new List<GameObject>();
         List<GameObject> timelineInstanceObjects3D = new List<GameObject>();
-
-        minX = 0.146f * Screen.width; //301.0f;  //timeline-minX
-        railWidth = 0.69f * Screen.width;
-        maxX = minX + railWidth; // 1623.0f; //timeline-maxX
-        Debug.Log("timeline X Anfang: " + minX + ", timeline X Ende: " + maxX);
         //maxTimeLength = "10:14";
         maxTimeInSec = (int)AnimationTimer.GetMaxTime();
 
@@ -684,20 +683,20 @@ public class RailManager : MonoBehaviour
         //Debug.Log("++++++++++++ 3D Object: " + curr3DObject.name + ", rail3d: " + rail3dObj + ", Pos: " + curr3DObject.transform.position + ", Instances of this obj: " + countName);//= countCopiesOfObject(figureObjects[currentClickedObjectIndex], timelineInstanceObjects););
         return curr3DObject;
     }
+    public void ResetScreenSize()
+    {
+        // Debug.Log("Screen changed! ScreenX: " + Screen.width);
+        // currentScreenWidth = Screen.width;
+        minX = 0.146f * Screen.width; //301.0f;  //timeline-minX
+        railWidth = 0.69f * Screen.width;
+        maxX = minX + railWidth; // 1623.0f; //timeline-maxX
+                                 // Debug.Log("rail start: " + minX);
+    }
 
     void Update()
     {
         Vector2 getMousePos = Input.mousePosition;
-        Debug.Log("mousePos: " + getMousePos);
-        if (Screen.width != currentScreenWidth)
-        {
-            Debug.Log("Screen changed! ScreenX: " + Screen.width);
-            currentScreenWidth = Screen.width;
-            minX = 0.146f * Screen.width; //301.0f;  //timeline-minX
-            railWidth = 0.69f * Screen.width;
-            maxX = minX + railWidth; // 1623.0f; //timeline-maxX
-            Debug.Log("rail start: " + minX);
-        }
+        // Debug.Log("mousePos: " + getMousePos);
         if (Input.GetMouseButtonDown(0)) //left mouse button down
         {
             //identify which gameobject you clicked
