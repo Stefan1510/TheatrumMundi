@@ -40,7 +40,7 @@ public class CoulissesManager : MonoBehaviour
     private bool objectInRail;
     private bool clickOnDelete;
 
-    Vector2 schieneBildPos, schieneBildCollider, colliderSettingsPos, colliderSettingsCollider;
+    Vector2 schieneBildPos, schieneBildCollider, colliderSettingsPos;//, colliderSettingsCollider;
     Vector2 diff;
 
     void Awake()
@@ -93,9 +93,9 @@ public class CoulissesManager : MonoBehaviour
         colSilhouetteActive = new Color(0.6f, 0f, 0f, 0.4f);
 
         schieneBildPos = new Vector2(schieneBild.GetComponent<RectTransform>().position.x, schieneBild.GetComponent<RectTransform>().transform.position.y);
-        schieneBildCollider = new Vector2(schieneBild.GetComponent<BoxCollider2D>().size.x, schieneBild.GetComponent<BoxCollider2D>().size.y);
+        //schieneBildCollider = new Vector2(schieneBild.GetComponent<BoxCollider2D>().size.x, schieneBild.GetComponent<BoxCollider2D>().size.y);
         colliderSettingsPos = new Vector2(colliderSettings.GetComponent<RectTransform>().position.x, colliderSettings.GetComponent<RectTransform>().transform.position.y);
-        colliderSettingsCollider = new Vector2(colliderSettings.GetComponent<BoxCollider2D>().size.x, colliderSettings.GetComponent<BoxCollider2D>().size.y);
+        //colliderSettingsCollider = new Vector2(colliderSettings.GetComponent<BoxCollider2D>().size.x, colliderSettings.GetComponent<BoxCollider2D>().size.y);
 
         setIndexTabActive(0);
         mainMenue.GetComponent<RectTransform>().pivot = collections[0].GetComponent<RectTransform>().pivot;
@@ -109,7 +109,6 @@ public class CoulissesManager : MonoBehaviour
         {
             for (int i = 0; i < indexTabs.Length; i++)
             {
-
                 if (indexTabs[i].GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(Input.mousePosition))
                 {
                     if (isAnythingHighlighted())
@@ -192,18 +191,18 @@ public class CoulissesManager : MonoBehaviour
                 }
             }
             // window or rail tab is hit
-            else if (checkHitting(colliderSettingsPos, colliderSettingsCollider, coulisses[currentObjectIndex]))
+            else if (checkHitting(colliderSettingsPos, new Vector2(colliderSettings.GetComponent<RectTransform>().rect.width,colliderSettings.GetComponent<RectTransform>().rect.height), coulisses[currentObjectIndex]))
             {
                 sliderX.GetComponent<Slider>().value = coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.x / 270;
                 sliderY.GetComponent<Slider>().value = coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.y / 260 + 0.02f;
                 justChanging = true;
                 objectInField = true;
                 objectInRail = false;
-                // Debug.Log("Ich bin auf im Fenster! " + objectInField);
-                if (checkHitting(schieneBildPos, schieneBildCollider, coulisses[currentObjectIndex]))
+                Debug.Log("Ich bin auf im Fenster! " + objectInField);
+                if (checkHitting(schieneBildPos, new Vector2(schieneBild.GetComponent<RectTransform>().rect.width,schieneBild.GetComponent<RectTransform>().rect.height), coulisses[currentObjectIndex]))
                 {
                     objectInRail = true;
-                    // Debug.Log("Ich bin auf der Schiene! " + objectInRail);
+                    Debug.Log("Ich bin auf der Schiene! " + objectInRail);
                 }
 
             }
@@ -298,23 +297,7 @@ public class CoulissesManager : MonoBehaviour
         }
     }
 
-    public int checkHittingIndexTab(GameObject[] tabs, Vector2 mousePos)
-    {
-        int hit = -1;
-        //calculate bounding-box related to the indexTab-pos
-        for (int i = 0; i < tabs.Length; i++)
-        {
-            Vector2 tlPos = new Vector2(tabs[i].transform.position.x, tabs[i].transform.position.y);
-            Vector2 colSize = new Vector2(tabs[i].GetComponent<BoxCollider2D>().size.x, tabs[i].GetComponent<BoxCollider2D>().size.y);
-            //my implementation of object-boundingbox
-            if (((mousePos.x <= (tlPos.x + (colSize.x / 2.0f))) && (mousePos.x > (tlPos.x - (colSize.x / 2.0f)))) &&
-            ((mousePos.y <= (tlPos.y + (colSize.y / 2.0f))) && (mousePos.y > (tlPos.y - (colSize.y / 2.0f)))))
-            {
-                hit = i;
-            }
-        }
-        return hit;
-    }
+    
 
     public void ChangeElementPositionX()
     {
@@ -343,17 +326,34 @@ public class CoulissesManager : MonoBehaviour
         StaticSceneData.StaticData.sceneryElements[currentObjectIndex].y = sliderY.GetComponent<RectTransform>().GetComponent<Slider>().value;
         StaticSceneData.Sceneries3D();
     }
-    public bool checkHitting(Vector2 pos1, Vector2 collider1, GameObject obj2)
+    public bool checkHitting(Vector2 pos1, Vector2 rect, GameObject obj2)
     {
         bool hit = false;
 
         Vector2 pos2 = new Vector2(obj2.transform.position.x, obj2.transform.position.y);
-        Vector2 collider2 = new Vector2(obj2.GetComponent<BoxCollider2D>().size.x, obj2.GetComponent<BoxCollider2D>().size.y + obj2.GetComponent<BoxCollider2D>().offset.y);
+        Vector2 collider2 = new Vector2(obj2.GetComponent<RectTransform>().rect.width, obj2.GetComponent<RectTransform>().rect.height);
         // Debug.Log("pos1y: " + pos1.y + ", pos2y:" + pos2.y);
-        if (pos2.x - collider2.x / 2.0f <= pos1.x + (collider1.x / 2.0f) && pos2.y <= pos1.y + collider1.y / 2
-        && pos2.x + collider2.x / 2.0f >= pos1.x - collider1.x / 2.0f && pos2.y + collider2.y >= pos1.y - collider1.y / 2)
+        if (pos2.x - collider2.x / 2.0f <= pos1.x + (rect.x / 2.0f) && pos2.y <= pos1.y + rect.y / 2
+        && pos2.x + collider2.x / 2.0f >= pos1.x - rect.x / 2.0f && pos2.y + collider2.y >= pos1.y - rect.y / 2)
         {
             hit = true;
+        }
+        return hit;
+    }
+    public int checkHittingIndexTab(GameObject[] tabs, Vector2 mousePos)
+    {
+        int hit = -1;
+        //calculate bounding-box related to the indexTab-pos
+        for (int i = 0; i < tabs.Length; i++)
+        {
+            Vector2 tlPos = new Vector2(tabs[i].transform.position.x, tabs[i].transform.position.y);
+            Vector2 colSize = new Vector2(tabs[i].GetComponent<BoxCollider2D>().size.x, tabs[i].GetComponent<BoxCollider2D>().size.y);
+            //my implementation of object-boundingbox
+            if (((mousePos.x <= (tlPos.x + (colSize.x / 2.0f))) && (mousePos.x > (tlPos.x - (colSize.x / 2.0f)))) &&
+            ((mousePos.y <= (tlPos.y + (colSize.y / 2.0f))) && (mousePos.y > (tlPos.y - (colSize.y / 2.0f)))))
+            {
+                hit = i;
+            }
         }
         return hit;
     }

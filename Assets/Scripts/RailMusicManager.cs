@@ -45,7 +45,7 @@ public class RailMusicManager : MonoBehaviour
     Vector3 railStartPos;
     Vector3 railEndPos;
     Color colMusic;//, colMusicHighlighted;
-
+    float heightClosed, heightOpened;
 
     public AudioClip[] clip;         // ought to be 6 audioclips
 
@@ -64,6 +64,8 @@ public class RailMusicManager : MonoBehaviour
         currentClip = 0;
         isTimelineOpen = false;
         isInstance = false;
+        heightClosed = 25.0f;
+        heightOpened = 80.0f;
 
         //load all objects given in the figuresShelf
         //Debug.Log("objectscount: "+objectLibrary.transform.childCount);
@@ -95,8 +97,8 @@ public class RailMusicManager : MonoBehaviour
 
     void Start()
     {
-        scaleObject(gameObject, 1335, 25);
-        gameObject.GetComponent<BoxCollider2D>().size = new Vector2(1335, 25);
+        scaleObject(gameObject, 1335, heightClosed);
+        gameObject.GetComponent<BoxCollider2D>().size = new Vector2(1335, heightClosed);
         audioSource = GetComponent<AudioSource>();
         timeSettings.SetActive(false);
         for (int i = 0; i < figureObjects.Length; i++)
@@ -187,9 +189,6 @@ public class RailMusicManager : MonoBehaviour
     }
     public void openCloseTimelineByClick(bool thisTimelineOpen, Image tl, bool editObjOnTl)
     {
-        float heightOpened = 80.0f;
-        float heightClosed = 25.0f;    //this size is set in editor
-
         if (isAnyTimelineOpen() == false)
         {
             // Debug.Log("++++ es ist keine schiene geöffnet, deswegen wird geklickte Schiene geöffnet: " + tl);
@@ -230,7 +229,7 @@ public class RailMusicManager : MonoBehaviour
                     gameController.GetComponent<UIController>().Rails[i].isTimelineOpen = false;
                     //GameController.GetComponent<UIController>().Rails[i].transform.GetChild(0).gameObject.GetComponent<Text>().rectTransform.localScale = new Vector3(1, 1, 1);
                     openCloseObjectInTimeline(false, gameController.GetComponent<UIController>().Rails[i].timelineInstanceObjects, editTimelineObject);
-                    Debug.Log("++++ Scaling down Rail: " + gameController.GetComponent<UIController>().Rails[i]);
+                    //Debug.Log("++++ Scaling down Rail: " + gameController.GetComponent<UIController>().Rails[i]);
                 }
                 for (int j = 0; j < 2; j++)
                 {
@@ -242,7 +241,7 @@ public class RailMusicManager : MonoBehaviour
                 gameController.GetComponent<UIController>().RailMusic.GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightClosed);
                 gameController.GetComponent<UIController>().RailMusic.isTimelineOpen = false;
                 // open clicked rail
-                Debug.Log("++++ geklickte Schiene wird geöffnet: " + tl);
+                //Debug.Log("++++ geklickte Schiene wird geöffnet: " + tl);
                 //scale up timeline
                 tl.rectTransform.sizeDelta = new Vector2(tl.rectTransform.rect.width, heightOpened);
                 //scale up the collider
@@ -259,9 +258,6 @@ public class RailMusicManager : MonoBehaviour
     }
     public void openCloseTimelineByDrag(string open, Image tl)
     {
-        float heightOpened = 80.0f;
-        float heightClosed = 25.0f;    //this size is set in editor
-
         if (open == "open")
         {
             //Debug.Log("++++ geklickte Schiene ist zu und wird geöffnet: " + tl);
