@@ -30,7 +30,7 @@ public class LightAnimationRepresentation : MonoBehaviour
         //_maxTime = (int)_sliderTime.maxValue;
         //_maxTime = 10 * 60 + 10;
         _maxTime = AnimationTimer.GetMaxTime();
-        Debug.Log(_maxTime);
+        //Debug.Log(_maxTime);
         _textureLightRepresentation = new Texture2D((int)_maxTime * 10, (int)_maxTime * 1, TextureFormat.RGBA32, false); // wird durch Panel RectTransform stretch automatisch gescaled
         //_textureLightRepresentation.filterMode = FilterMode.Trilinear;
         _lightColors = new Color32[_textureLightRepresentation.width * _textureLightRepresentation.height];
@@ -75,18 +75,18 @@ public class LightAnimationRepresentation : MonoBehaviour
         for (int lightStates = 0; lightStates < listLength - 1; lightStates++)
         {
             //Debug.Log("bluip, in der Schelife");
-            colorStart = new Color32(StaticSceneData.StaticData.lightingSets[lightStates].r, StaticSceneData.StaticData.lightingSets[lightStates].g, StaticSceneData.StaticData.lightingSets[lightStates].b, 255);   // holen der "früheren" Farbe aus der Datenhaltung
-            colorEnd = new Color32(StaticSceneData.StaticData.lightingSets[lightStates + 1].r, StaticSceneData.StaticData.lightingSets[lightStates + 1].g, StaticSceneData.StaticData.lightingSets[lightStates + 1].b, 255); // holen der "späteren" Farbe aus der Datenhaltung
-            float momentStartF = StaticSceneData.StaticData.lightingSets[lightStates].moment; // holen des "früheren" Moments aus der Datenhaltung
-            momentStart = (int)UtilitiesTm.FloatRemap(momentStartF, 0, _maxTime, 0, _textureLightRepresentation.width);    // mappen des "früheren" Moments von zwischen TimeSlider auf zwischen PanelWeite
-            float momentEndF = StaticSceneData.StaticData.lightingSets[lightStates + 1].moment; // holen des "späteren" Moments aus der Datenhaltung
-            momentEnd = (int)UtilitiesTm.FloatRemap(momentEndF, 0, _maxTime, 0, _textureLightRepresentation.width); // mappen des "späteren" Moments von zwischen TimeSlider auf zwischen PanelWeite
-            intensityStart = StaticSceneData.StaticData.lightingSets[lightStates].intensity;  // holen der "früheren" Lichtstärke aus der Datenhaltung
-            intensityEnd = StaticSceneData.StaticData.lightingSets[lightStates + 1].intensity;    // holen der "späteren" Lichtstärke aus der Datenhaltung
+            colorStart = new Color32(StaticSceneData.StaticData.lightingSets[lightStates].r, StaticSceneData.StaticData.lightingSets[lightStates].g, StaticSceneData.StaticData.lightingSets[lightStates].b, 255);   // holen der "frï¿½heren" Farbe aus der Datenhaltung
+            colorEnd = new Color32(StaticSceneData.StaticData.lightingSets[lightStates + 1].r, StaticSceneData.StaticData.lightingSets[lightStates + 1].g, StaticSceneData.StaticData.lightingSets[lightStates + 1].b, 255); // holen der "spï¿½teren" Farbe aus der Datenhaltung
+            float momentStartF = StaticSceneData.StaticData.lightingSets[lightStates].moment; // holen des "frï¿½heren" Moments aus der Datenhaltung
+            momentStart = (int)UtilitiesTm.FloatRemap(momentStartF, 0, _maxTime, 0, _textureLightRepresentation.width);    // mappen des "frï¿½heren" Moments von zwischen TimeSlider auf zwischen PanelWeite
+            float momentEndF = StaticSceneData.StaticData.lightingSets[lightStates + 1].moment; // holen des "spï¿½teren" Moments aus der Datenhaltung
+            momentEnd = (int)UtilitiesTm.FloatRemap(momentEndF, 0, _maxTime, 0, _textureLightRepresentation.width); // mappen des "spï¿½teren" Moments von zwischen TimeSlider auf zwischen PanelWeite
+            intensityStart = StaticSceneData.StaticData.lightingSets[lightStates].intensity;  // holen der "frï¿½heren" Lichtstï¿½rke aus der Datenhaltung
+            intensityEnd = StaticSceneData.StaticData.lightingSets[lightStates + 1].intensity;    // holen der "spï¿½teren" Lichtstï¿½rke aus der Datenhaltung
             //Debug.Log("momentStart: " + momentStart + " - momentEnd: " + momentEnd + " - intensityStart: " + intensityStart + " - intensityEnd: " + intensityEnd);
             for (secondCount = momentStart; secondCount <= momentEnd; secondCount++)
             {
-                float _interpolationStep = UtilitiesTm.FloatRemap((float)secondCount, (float)momentStart, (float)momentEnd, 0f, 1f);    //mappen der aktuellen Sekunde zwischen des "früheren" und "späteren" Moments auf einen Wert zwischen 0 und 1 --> Lerp braucht so einen Wert
+                float _interpolationStep = UtilitiesTm.FloatRemap((float)secondCount, (float)momentStart, (float)momentEnd, 0f, 1f);    //mappen der aktuellen Sekunde zwischen des "frï¿½heren" und "spï¿½teren" Moments auf einen Wert zwischen 0 und 1 --> Lerp braucht so einen Wert
                 colorGradient = Color32.Lerp(colorStart, colorEnd, _interpolationStep);
                 float intensityGradientF = Mathf.Lerp(intensityStart, intensityEnd, _interpolationStep);
                 intensityGradient = UtilitiesTm.FloatRemap(intensityGradientF, 0, _maxIntensity, 0, _textureLightRepresentation.height);

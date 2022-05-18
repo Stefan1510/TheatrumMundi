@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class RailLightManager : MonoBehaviour
 {
-    Image timelineImage;
+    private Image timelineImage;
     public GameObject gameController;
     public Text timelineText;
     public Image timeSliderImage;
@@ -15,21 +15,29 @@ public class RailLightManager : MonoBehaviour
     Vector2 textSize;
 
     GameObject timeSettings;
+    private float heightOpened, heightClosed;
+    private float railWidth;
+    //double minX, maxX;
 
     // Start is called before the first frame update
     void Awake()
     {
         timelineImage = this.GetComponent<Image>();
-        //SceneManaging.anyTimelineOpen = false;
         timeSettings = timeSliderImage.transform.GetChild(0).gameObject; // GameObject.Find("ImageTimeSettingsArea");
     }
 
     void Start()
     {
+        //minX = 0.146f * Screen.width;  //timeline-minX
+        railWidth = 0.69f * Screen.width;
+        //maxX = minX + railWidth;  //timeline-maxX
+        heightOpened = 80.0f;
+        heightClosed = 25.0f;
         timeSettings.SetActive(false);
         isTimelineOpen = false;
-        scaleObject(gameObject, 1335, 25);
-        gameObject.GetComponent<BoxCollider2D>().size = new Vector2(1335,25);
+        scaleObject(gameObject, railWidth, heightClosed);
+        gameObject.GetComponent<BoxCollider2D>().size = new Vector2(1335, heightClosed);
+        ResetScreenSize();
     }
 
     public void scaleObject(GameObject fig, float x, float y)
@@ -48,8 +56,6 @@ public class RailLightManager : MonoBehaviour
     }
     public void openCloseTimelineByClick(bool thisTimelineOpen, Image tl)
     {
-        float heightOpened = 80.0f;
-        float heightClosed = 25.0f;    //this size is set in editor
 
         if (isAnyTimelineOpen() == false)
         {
@@ -123,10 +129,19 @@ public class RailLightManager : MonoBehaviour
             }
 
         }
+
         openCloseTimeSettings(isAnyTimelineOpen(), timeSettings);
     }
 
-
+    public void ResetScreenSize()
+    {
+        // Debug.Log("Screen changed! ScreenX: " + Screen.width);
+        // currentScreenWidth = Screen.width;
+        //minX = 0.146f * Screen.width; //301.0f;  //timeline-minX
+        railWidth = 0.69f * Screen.width;
+        //maxX = minX + railWidth; // 1623.0f; //timeline-maxX
+                                 // Debug.Log("rail start: " + minX);
+    }
     public bool isAnyTimelineOpen()
     {
         bool val = false;
@@ -142,7 +157,7 @@ public class RailLightManager : MonoBehaviour
         {
             if (gameController.GetComponent<UIController>().RailLightBG[j].GetComponent<RailLightManager>().isTimelineOpen == true) val = true;
         }
-    
+
         return val;
     }
 

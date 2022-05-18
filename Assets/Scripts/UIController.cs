@@ -37,6 +37,8 @@ public class UIController : MonoBehaviour
             }
             RailMusic.ResetScreenSize();
             CoulissesMan.ResetScreenSize();
+            RailLightBG[0].ResetScreenSize();
+            RailLightBG[1].ResetScreenSize();
             currenScreenWidth = Screen.width;
         }
     }

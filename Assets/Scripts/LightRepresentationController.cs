@@ -41,7 +41,7 @@ public class LightRepresentationController : MonoBehaviour
     {
         _start_UiSetting_LB_Light_angle = UiSetting_LB_Light_angle.transform.localEulerAngles.z;
         _start_UiSetting_LB_side_Light_angle = UiSetting_LB_side_Light_angle.transform.localEulerAngles.z;
-        Debug.Log(UiSetting_LB.ToString() + " - " + _start_UiSetting_LB_Light_angle);
+        //Debug.Log(UiSetting_LB.ToString() + " - " + _start_UiSetting_LB_Light_angle);
     }
 
     // Start is called before the first frame update
