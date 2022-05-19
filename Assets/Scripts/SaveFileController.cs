@@ -32,13 +32,13 @@ public class SaveFileController : MonoBehaviour
         if (_isWebGl)
         {
             //Debug.LogError("WEBGL!!!");
-            if (Application.absoluteURL == "lightframefx.de")
+            if (Application.absoluteURL == "tm.skd.museum")
             {
-                _basepath = "https://lightframefx.de/extras/theatrum-mundi/";
+                _basepath = "http://tm.skd.museum/";
             }
             else
             {
-                _basepath = "http://tm.skd.museum/";
+                _basepath = "https://lightframefx.de/extras/theatrum-mundi/";
             }
         }
         else
