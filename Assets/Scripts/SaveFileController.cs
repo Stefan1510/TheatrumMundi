@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Networking;
+using System.IO;
 
 public class SaveFileController : MonoBehaviour
 {
@@ -17,18 +18,49 @@ public class SaveFileController : MonoBehaviour
     private string _selectedFile;
     private string _directorySaves;
     private string _basepath;
+    private bool _isWebGl;
     //// Start is called before the first frame update
 
     private void Awake()
     {
-        _basepath = "http://tm.skd.museum/";
-        //_basepath = "https://lightframefx.de/extras/theatrum-mundi/";
+        #if UNITY_WEBGL
+            _isWebGl = true;
+        #else
+            //Debug.LogWarning("any other");
+        #endif
+
+        if (_isWebGl)
+        {
+            //Debug.LogError("WEBGL!!!");
+            if (Application.absoluteURL == "lightframefx.de")
+            {
+                _basepath = "https://lightframefx.de/extras/theatrum-mundi/";
+            }
+            else
+            {
+                _basepath = "http://tm.skd.museum/";
+            }
+        }
+        else
+        {
+            _basepath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments);
+            _basepath += "\\theatrum mundi";
+        }
+        //Debug.LogError(Application.absoluteURL);
+        
     }
 
     void Start()
     {
         _directorySaves = "Saves";
-        StartCoroutine(LoadFilesFromServer());
+        if (_isWebGl)
+        {
+            StartCoroutine(LoadFilesFromServer());
+        }
+        else
+        {
+            ShowFilesFromDirectory();
+        }
     }
 
     //// Update is called once per frame
@@ -53,7 +85,14 @@ public class SaveFileController : MonoBehaviour
         {
             //File.WriteAllText(path, json);
 
-            StartCoroutine(WriteToServer(sceneDataSaveString, filePath));
+            if (_isWebGl)
+            {
+                StartCoroutine(WriteToServer(sceneDataSaveString, filePath));
+            }
+            else
+            {
+                WriteFileToDirectory(sceneDataSaveString, filePath);
+            }
             //GenerateFileButton(filePath);
         }
     }
@@ -70,15 +109,37 @@ public class SaveFileController : MonoBehaviour
     {
         if (_selectedFile != "")
         {
-            StartCoroutine(DeleteFileFromServer(_selectedFile));
+            if (_isWebGl)
+            {
+                StartCoroutine(DeleteFileFromServer(_selectedFile));
+            }
+            else
+            {
+                DeleteFileFromDirectory(_selectedFile);
+            }
         }
-        StartCoroutine(LoadFilesFromServer());
+
+        if (_isWebGl)
+        {
+            StartCoroutine(LoadFilesFromServer());
+        }
+        else
+        {
+            ShowFilesFromDirectory();
+        }
     }
 
     public void LoadSceneFromFile(string fileName)
     {
         _selectedFile = fileName;
-        StartCoroutine(LoadFileFromWWW(fileName));
+        if (_isWebGl)
+        {
+            StartCoroutine(LoadFileFromWWW(fileName));
+        }
+        else
+        {            
+            LoadFileFromDirectory(fileName);
+        }
         //Debug.Log("_____________ selected File: " + _selectedFile);
     }
 
@@ -134,6 +195,28 @@ public class SaveFileController : MonoBehaviour
         fileSelectButton.gameObject.SetActive(false);
     }
 
+    private void ShowFilesFromDirectory()
+    {
+        ClearFileButtons();
+        fileSelectButton.gameObject.SetActive(true);
+        //Debug.LogError(_basepath);
+        if (Directory.Exists(_basepath))
+        {
+            DirectoryInfo d = new DirectoryInfo(_basepath);
+            foreach (var fileEntry in d.GetFiles("*.json"))
+            {
+                //Debug.LogWarning(fileEntry.Name);
+                GenerateFileButton(fileEntry.Name);
+            }
+        }
+        else
+        {
+            Directory.CreateDirectory(_basepath);
+            return;
+        }
+        fileSelectButton.gameObject.SetActive(false);
+    }
+
     private IEnumerator WriteToServer(string json, string filePath)
     {
         WWWForm form = new WWWForm();
@@ -146,6 +229,16 @@ public class SaveFileController : MonoBehaviour
 
         Debug.Log("www: " + www.text);
         yield return StartCoroutine(LoadFilesFromServer());
+    }
+
+    private void WriteFileToDirectory(string json, string filePath)
+    {
+        string path = _basepath + "\\" + filePath;
+        Debug.LogWarning(path);
+        StreamWriter writer = new StreamWriter(path, true);
+        writer.Write(json);
+        writer.Close();
+        ShowFilesFromDirectory();
     }
 
     private IEnumerator LoadFileFromWWW(string fileName)
@@ -167,9 +260,35 @@ public class SaveFileController : MonoBehaviour
         sceneContentData += "Figuren: " + this.GetComponent<SceneDataController>().countActiveFigureElements.ToString() + "\n\n";
         sceneContentData += "Länge: " + "\n\n";
         sceneContentData += "Lichter: " + this.GetComponent<SceneDataController>().countActiveLightElements.ToString() + "\n\n";
-        sceneContentData += "Musik: ";
+        sceneContentData += "Musik: " + this.GetComponent<SceneDataController>().countActiveMusicClips.ToString() + "\n\n";
         textFileContentData.text = sceneContentData;
     }
+
+    private void LoadFileFromDirectory(string fileName)
+    {
+        string path = _basepath + "\\" + fileName;
+        //Read the text from directly from the test.txt file
+        StreamReader reader = new StreamReader(path);
+        _jsonString = reader.ReadToEnd();
+        reader.Close();
+        tempSceneData = this.GetComponent<SceneDataController>().CreateSceneDataFromJSON(_jsonString);
+        this.GetComponent<SceneDataController>().CreateScene(tempSceneData);
+        string sceneMetaData = "";
+        sceneMetaData += tempSceneData.fileName + "\n\n";
+        sceneMetaData += "erstellt: " + tempSceneData.fileDate + "\n\n";
+        sceneMetaData += "Ersteller: " + tempSceneData.fileAuthor + "\n\n";
+        sceneMetaData += "Kommentar:\n" + tempSceneData.fileComment;
+        textFileMetaData.text = sceneMetaData;
+        string sceneContentData = "";
+        sceneContentData += "Dateiinformationen:\n\n";
+        sceneContentData += "Kulissen: " + this.GetComponent<SceneDataController>().countActiveSceneryElements.ToString() + "\n\n";
+        sceneContentData += "Figuren: " + this.GetComponent<SceneDataController>().countActiveFigureElements.ToString() + "\n\n";
+        sceneContentData += "Länge: " + "\n\n";
+        sceneContentData += "Lichter: " + this.GetComponent<SceneDataController>().countActiveLightElements.ToString() + "\n\n";
+        sceneContentData += "Musik: " + this.GetComponent<SceneDataController>().countActiveMusicClips.ToString() + "\n\n";
+        textFileContentData.text = sceneContentData;
+    }
+
     private IEnumerator DeleteFileFromServer(string FileName)
     {
         WWWForm form = new WWWForm();
@@ -187,6 +306,13 @@ public class SaveFileController : MonoBehaviour
         {
             Debug.Log("Script Successfull");
         }
+    }
+
+    private void DeleteFileFromDirectory(string FileName)
+    {
+        string path = _basepath + "\\" + FileName;
+        File.Delete(path);
+        ShowFilesFromDirectory();
     }
 
 
