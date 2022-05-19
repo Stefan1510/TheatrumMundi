@@ -105,6 +105,8 @@ public class CoulissesManager : MonoBehaviour
     void Update()
     {
         Vector2 getMousePos = Input.mousePosition;
+
+        // if resolution has been changed and lossyScale is different than before (doesn't happen exactly when Screen Size is reset...)
         if (currentLossyScale != coulisses[0].transform.lossyScale.x)
         {
             currentLossyScale = coulisses[0].transform.lossyScale.x;
