@@ -640,7 +640,7 @@ public class RailManager : MonoBehaviour
         if (loadFromFile)
         {
             float posX = UtilitiesTm.FloatRemap(momentOrPosX, 0, AnimationTimer.GetMaxTime(), gameObject.GetComponent<RectTransform>().rect.width / -2, gameObject.GetComponent<RectTransform>().rect.width / 2);
-            Debug.LogWarning("moment " + momentOrPosX + " // posX " + posX);
+            //Debug.LogWarning("moment " + momentOrPosX + " // posX " + posX);
 
             newCopyOfFigure.transform.localPosition = new Vector2(posX, figureObjects[figureNr].transform.localPosition.y);
             // openCloseObjectInTimeline(true,timelineInstanceObjects,false); 

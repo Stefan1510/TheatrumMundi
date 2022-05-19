@@ -85,7 +85,7 @@ public class SceneDataController : MonoBehaviour
         sceneFileDate = DateTime.Now.ToString();
     }
 
-    private void SetFileMetaDataToScene()
+    public void SetFileMetaDataToScene()
     {
         inputFieldFileName.text = sceneFileName;
         inputFieldFileAuthor.text = sceneFileAuthor;
@@ -257,6 +257,7 @@ public class SceneDataController : MonoBehaviour
 
         //music title elements (Musik)
         MusicApplyToScene(sceneData.musicClipElements);
+
     }
 
     public void RailsApplyToScene(List<RailElement> railElements)

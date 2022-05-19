@@ -103,6 +103,8 @@ public class SaveFileController : MonoBehaviour
         //UIController.SceneriesApplyToUI();
         GetComponent<UIController>().SceneriesApplyToUI();
         GetComponent<UIController>().LightsApplyToUI();
+        GetComponent<UIController>().RailsApplyToUI();
+        GetComponent<SceneDataController>().SetFileMetaDataToScene();
     }
 
     public void DeleteFile()
