@@ -96,11 +96,11 @@ public class LightAnimationRepresentation : MonoBehaviour
             }            
         }
         colorEnd = new Color32(StaticSceneData.StaticData.lightingSets[listLength - 1].r, StaticSceneData.StaticData.lightingSets[listLength - 1].g, StaticSceneData.StaticData.lightingSets[listLength - 1].b, 255);
-        Debug.Log(listLength + " - r  " + colorEnd.r + " - g  " + colorEnd.g + " - b  " + colorEnd.b + " - intensityGradient " + intensityGradient);
+        //Debug.Log(listLength + " - r  " + colorEnd.r + " - g  " + colorEnd.g + " - b  " + colorEnd.b + " - intensityGradient " + intensityGradient);
         Color32[] lastColorBlock = new Color32[(_textureLightRepresentation.width - momentEnd - 1) * (int)intensityGradient];
         lastColorBlock = ChangeColors(lastColorBlock, colorEnd);
         _textureLightRepresentation.SetPixels32(secondCount, 0, (_textureLightRepresentation.width - momentEnd - 1), (int)intensityGradient, lastColorBlock);
-        Debug.Log("_________________________________________________________");
+        //Debug.Log("_________________________________________________________");
         _textureLightRepresentation.Apply();
         _representationPanel.GetComponent<Image>().sprite = Sprite.Create(_textureLightRepresentation, new Rect(0, 0, _textureLightRepresentation.width, _textureLightRepresentation.height), new Vector2(0.5f, 0.5f));
         UpdateKnobPositions();

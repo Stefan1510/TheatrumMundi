@@ -130,6 +130,7 @@ public class CoulissesManager : MonoBehaviour
             }
             for (int j = 0; j < coulissesOnRails.Count; j++)
             {
+                // Debug.Log("coulisseOnRails: " + coulissesOnRails[j]);
                 coulissesOnRails[j].GetComponent<RectTransform>().sizeDelta = new Vector2(railWidth / 410 * coulissesOnRails[j].GetComponent<CoulisseStats>().CoulisseWidth / coulissesOnRails[j].transform.lossyScale.x, railWidth / 410 * coulissesOnRails[j].GetComponent<CoulisseStats>().CoulisseHeight / coulissesOnRails[j].transform.lossyScale.y);
                 coulissesOnRails[j].GetComponent<BoxCollider2D>().size = coulissesOnRails[j].GetComponent<RectTransform>().sizeDelta;
                 coulissesOnRails[j].GetComponent<BoxCollider2D>().offset = new Vector2(0, coulissesOnRails[j].GetComponent<RectTransform>().rect.height / 2);
@@ -145,8 +146,8 @@ public class CoulissesManager : MonoBehaviour
                     {
                         for (int j = 0; j < coulissesOnRails.Count; j++)
                         {
-                            int k = int.Parse(coulissesOnRails[i].name.Substring(8, 2))-1;
-                        highlight(k, false);      
+                            int k = int.Parse(coulissesOnRails[i].name.Substring(8, 2)) - 1;
+                            highlight(k, false);
                         }
                     }
                     setIndexTabActive(i);
@@ -179,8 +180,8 @@ public class CoulissesManager : MonoBehaviour
                 {
                     for (int i = 0; i < coulissesOnRails.Count; i++)
                     {
-                        int j = int.Parse(coulissesOnRails[i].name.Substring(8, 2))-1;
-                        Debug.Log("coulisse: "+coulissesOnRails[i]+", j: "+j);
+                        int j = int.Parse(coulissesOnRails[i].name.Substring(8, 2)) - 1;
+                        // Debug.Log("coulisse: " + coulissesOnRails[i] + ", j: " + j);
                         highlight(j, false);        //todo: liste anlegen mit nur kulissen die auf schiene sind (damit nicht ALLE unhighlighted werden muessen)
                     }
                     highlight(currentObjectIndex, true);
@@ -198,7 +199,7 @@ public class CoulissesManager : MonoBehaviour
             {
                 for (int i = 0; i < coulissesOnRails.Count; i++)
                 {
-                    int j = int.Parse(coulissesOnRails[i].name.Substring(8, 2))-1;
+                    int j = int.Parse(coulissesOnRails[i].name.Substring(8, 2)) - 1;
                     highlight(j, false);        //todo: liste anlegen mit nur kulissen die auf schiene sind (damit nicht ALLE unhighlighted werden muessen)
                 }
                 StaticSceneData.Sceneries3D(); //CreateScene der SceneryElements
@@ -289,6 +290,7 @@ public class CoulissesManager : MonoBehaviour
                     sliderX.GetComponent<Slider>().value = coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.x / 270;
                     sliderY.GetComponent<Slider>().value = coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.y / 260 + 0.02f;
                     coulissesOnRails.Add(coulisses[currentObjectIndex]);
+                    // Debug.Log("added 1");
                 }
 
                 // if object is on a tab
@@ -302,6 +304,7 @@ public class CoulissesManager : MonoBehaviour
                     sliderX.GetComponent<Slider>().value = coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.x / 270;
                     sliderY.GetComponent<Slider>().value = coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.y / 260 + 0.02f;
                     coulissesOnRails.Add(coulisses[currentObjectIndex]);
+                    // Debug.Log("added 2");
                 }
 
                 // if object is outside the window (back to shelf)
@@ -309,6 +312,7 @@ public class CoulissesManager : MonoBehaviour
                 {
                     placeInShelf(currentObjectIndex);
                     StaticSceneData.StaticData.sceneryElements[currentObjectIndex].active = false;
+                    // Debug.Log("removed 1");
                 }
                 // set default values since nothing is clicked anymore
                 objectInField = false;
@@ -473,7 +477,11 @@ public class CoulissesManager : MonoBehaviour
         coulisses[i].GetComponent<BoxCollider2D>().offset = new Vector2(0, -coulisses[i].GetComponent<RectTransform>().localPosition.y);
         coulisses[i].GetComponent<BoxCollider2D>().size = new Vector2(shelfSizeWidth[i], shelfSizeHeight[i]);
         highlight(i, false);
-        coulissesOnRails.Remove(coulisses[i]);
+        if (coulissesOnRails.Contains(coulisses[i]))
+        {
+            coulissesOnRails.Remove(coulisses[i]);
+            // Debug.Log("removed: coulisse: " + coulisses[i] + ", listenlaenge: " + coulissesOnRails.Count);
+        }
     }
     public void ResetScreenSize()
     {

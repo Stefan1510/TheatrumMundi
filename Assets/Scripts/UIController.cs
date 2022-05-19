@@ -31,14 +31,14 @@ public class UIController : MonoBehaviour
     {
         if(Screen.width != currenScreenWidth)
         {
-            for(int i=0;i<Rails.Length;i++)
-            {
-                Rails[i].ResetScreenSize();   
-            }
-            RailMusic.ResetScreenSize();
+            // for(int i=0;i<Rails.Length;i++)
+            // {
+            //     Rails[i].ResetScreenSize();   
+            // // }
+            // RailMusic.ResetScreenSize();
             CoulissesMan.ResetScreenSize();
-            RailLightBG[0].ResetScreenSize();
-            RailLightBG[1].ResetScreenSize();
+            // RailLightBG[0].ResetScreenSize();
+            // RailLightBG[1].ResetScreenSize();
             currenScreenWidth = Screen.width;
         }
     }

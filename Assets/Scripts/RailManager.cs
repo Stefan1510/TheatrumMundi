@@ -21,7 +21,7 @@ public class RailManager : MonoBehaviour
     Vector2 releaseObjMousePos;
     double minX, minY;
     double maxX;
-    float railWidth, railHeight;
+    float railWidth; //, railHeight;
     int maxTimeInSec;
     Vector2[] objectShelfPosition;
     Vector2[] objectShelfSize;
@@ -43,11 +43,10 @@ public class RailManager : MonoBehaviour
     private FigureElement ThisFigureElement;    //element to set 3d object
     float heightOpened, heightClosed;
     Color colFigure, colFigureHighlighted;
-    private int currentScreenWidth;
+    private float currentLossyScale;
 
     void Awake()
     {
-        currentScreenWidth = Screen.width;
         timelineImage = this.GetComponent<Image>();
         SceneManaging.anyTimelineOpen = false;
         draggingOnTimeline = false;
@@ -93,27 +92,18 @@ public class RailManager : MonoBehaviour
 
         currentClickedObjectIndex = -1;
         currentClickedInstanceObjectIndex = -1;
-        heightOpened = 80.0f;
-        heightClosed = 25.0f;    //this size is set in editor
+        heightOpened = 0.074f * Screen.height;
+        heightClosed = 0.023f * Screen.height;    //this size is set in editor
         timeSettings = timeSliderImage.transform.GetChild(0).gameObject;
+        currentLossyScale = 1.0f;
     }
 
     void Start()
     {
-        // minX = 0.146f * Screen.width; //301.0f;  //timeline-minX
-        // railWidth = 0.69f * Screen.width;
-        // railHeight = 0.074f * Screen.height;
-        // maxX = minX + railWidth; // 1623.0f; //timeline-maxX
-        // Debug.Log("timeline X Anfang: " + minX + ", timeline X Ende: " + maxX);
-        // Debug.Log("Screen Size: " + Screen.width);
-        minX = 0.146f * Screen.width/gameObject.transform.lossyScale.x; //301.0f;  //timeline-minX
-        minY = 0.016f * Screen.width/gameObject.transform.lossyScale.x; //301.0f;  //timeline-minX
-        railWidth = 0.69f * Screen.width/gameObject.transform.lossyScale.x;
-        railHeight = 0.074f * Screen.height /gameObject.transform.lossyScale.x;
-        maxX = minX + railWidth; // 1623.0f; //timeline-maxX
-        //Debug.Log("maxX: "+timelineImage.GetComponent<RectTransform>().position.y);
-        scaleObject(gameObject, railWidth, heightClosed);
+        ResetScreenSize();
+        timelineImage.GetComponent<RectTransform>().sizeDelta = new Vector2(railWidth, heightClosed);
         gameObject.GetComponent<BoxCollider2D>().size = new Vector2(railWidth, heightClosed);
+
         timeSettings.SetActive(false);
 
         List<GameObject> timelineObjects = new List<GameObject>();
@@ -145,7 +135,6 @@ public class RailManager : MonoBehaviour
 
             }
         }
-        //ResetScreenSize();
     }
     public string identifyClickedObject()   //old
     {
@@ -390,14 +379,16 @@ public class RailManager : MonoBehaviour
     public bool checkHittingTimeline(Image tl, Vector2 mousePos)
     {
         bool hit = false;
+
         //calculate bounding-box related to the timeline-pos
-        Vector2 tlPos = new Vector2(tl.transform.position.x, tl.transform.position.y);
-        //Vector2 colSize = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, tl.GetComponent<BoxCollider2D>().size.y);
+        //Vector2 tlPos = new Vector2(tl.transform.position.x, tl.transform.position.y);
+        Vector2 colSize = new Vector2(GetComponent<BoxCollider2D>().size.x, GetComponent<BoxCollider2D>().size.y);
+        Debug.Log("mouse: " + Input.mousePosition.y + ", posY" + tl.transform.position.y + ", col Height: " + transform.position.y+railWidth );
         //if mouse hits the timeline while dragging an object
-        if (((mousePos.x <= (minX + (railWidth / 2.0f))) && (mousePos.x > (minX - (railWidth / 2.0f)))) &&
-        ((mousePos.y <= (minY + (railHeight / 2.0f))) && (mousePos.y > (minY - (railHeight / 2.0f)))))
+        if (mousePos.x <= maxX && mousePos.x > minX &&
+        ((mousePos.y <= (tl.transform.position.y + (colSize.y / 2.0f))) && (mousePos.y > (tl.transform.position.y - (colSize.y / 2.0f)))))
         {
-            //Debug.Log("object hits timeline!");
+            Debug.Log("object hits timeline!");
             hit = true; ;
         }
         //Debug.Log("drag and hit " + hit);
@@ -686,19 +677,34 @@ public class RailManager : MonoBehaviour
     }
     public void ResetScreenSize()
     {
-        // Debug.Log("Screen changed! ScreenX: " + Screen.width);
-        // currentScreenWidth = Screen.width;
-        minX = 0.146f * Screen.width; // /gameObject.transform.lossyScale.x; //301.0f;  //timeline-minX
-        railWidth = 0.69f * Screen.width; // /gameObject.transform.lossyScale.x;
-        railHeight = 0.074f * Screen.height; // /gameObject.transform.lossyScale.x;
-        maxX = minX + railWidth; // 1623.0f; //timeline-maxX
-                                 // Debug.Log("rail start: " + minX);
-        // Debug.Log("lossyScale: "+gameObject.transform.lossyScale);
-        // timelineImage.GetComponent<RectTransform>().sizeDelta = new Vector2(railWidth,railHeight);
-    }
+        Debug.Log("lossyScale: "+gameObject.transform.lossyScale);
+        //Debug.Log("Screen changed! ScreenX: " + Screen.width);
 
+        minX = 0.146f * Screen.width;// / gameObject.transform.lossyScale.x; //301.0f;  //timeline-minX
+        Debug.Log("minX: "+minX);
+        railWidth = 0.69f * Screen.width / gameObject.transform.lossyScale.x;
+        heightClosed = 0.023f * Screen.height / gameObject.transform.lossyScale.x;
+        heightOpened = 0.074f * Screen.height / gameObject.transform.lossyScale.x;
+        maxX = minX + railWidth;  //timeline-maxX
+        //Debug.Log("rail start: " + minX);
+        
+        if (isTimelineOpen)
+        {
+            timelineImage.GetComponent<RectTransform>().sizeDelta = gameObject.GetComponent<BoxCollider2D>().size = new Vector2(railWidth, heightOpened);
+        }
+        else
+        {
+            timelineImage.GetComponent<RectTransform>().sizeDelta = gameObject.GetComponent<BoxCollider2D>().size = new Vector2(railWidth, heightClosed);
+        }
+    }
     void Update()
     {
+        if (currentLossyScale != transform.lossyScale.x)
+        {
+            currentLossyScale = transform.lossyScale.x;
+            Debug.Log("scale after: "+transform.lossyScale.x);
+            ResetScreenSize();
+        }
         Vector2 getMousePos = Input.mousePosition;
         // Debug.Log("mousePos: " + getMousePos);
         if (Input.GetMouseButtonDown(0)) //left mouse button down
