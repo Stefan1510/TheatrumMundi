@@ -140,6 +140,7 @@ public class CoulissesManager : MonoBehaviour
         }
         if (Input.GetMouseButtonDown(0)) //left mouse button down
         {
+            // if indexTab is clicked
             for (int i = 0; i < indexTabs.Length; i++)
             {
                 if (indexTabs[i].GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(Input.mousePosition))
@@ -159,14 +160,17 @@ public class CoulissesManager : MonoBehaviour
             clickInSettingsWindow = isSettingsWindowClicked();
             clickOnDelete = isDeleteButtonClicked();
 
+            // if settingswindow (feineinstellungen) is clicked
             if (clickInSettingsWindow != -1)
             {
                 sliding = true;
             }
+            // if delete button is clicked
             else if (clickOnDelete)
             {
                 removeCoulisse();
             }
+            //
             else
             {
                 currentObjectIndex = identifyClickedObjectIndex();

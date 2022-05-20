@@ -58,9 +58,8 @@ public class RailManager : MonoBehaviour
         isInstance = false;
 
         //load all objects given in the figuresShelf
-        //Debug.Log("objectscount: "+objectLibrary.transform.childCount);
         figureObjects = new GameObject[objectLibrary.transform.childCount];         //instead of a count like "3"
-        figureObjects3D = new GameObject[figureObjects.Length];     //instead of a count like "3"
+        figureObjects3D = new GameObject[figureObjects.Length];   
         objectShelfPosition = new Vector2[figureObjects.Length];
         objectShelfSize = new Vector2[figureObjects.Length];
         objectShelfParent = new GameObject[figureObjects.Length];
@@ -80,7 +79,6 @@ public class RailManager : MonoBehaviour
         colFigure = new Color(0.06f, 0.66f, .74f, 0.5f);
         colFigureHighlighted = new Color(0f, 0.87f, 1.0f, 0.5f);
 
-
         try
         {
             for (int i = 0; i < figureObjects3D.Length; i++)
@@ -91,13 +89,10 @@ public class RailManager : MonoBehaviour
         catch (IndexOutOfRangeException ex) { }
 
         currentClickedObjectIndex = -1;
-        currentClickedInstanceObjectIndex = -1;
-        heightOpened = 0.074f * Screen.height;
-        heightClosed = 0.023f * Screen.height;    //this size is set in editor
+        currentClickedInstanceObjectIndex = -1;  
         timeSettings = timeSliderImage.transform.GetChild(0).gameObject;
-        currentLossyScale = 1.0f;
+        currentLossyScale = 0.0f;   // lossyScale is global Scale that I use to get the moment when ScreenSize is being changed (doesn't happen exactly when Screen Size is changed, but somehow shortly after, so I use this parameter instead)
     }
-
     void Start()
     {
         ResetScreenSize();
@@ -210,6 +205,7 @@ public class RailManager : MonoBehaviour
             // Debug.Log("++++ es ist keine schiene geöffnet, deswegen wird geklickte Schiene geöffnet: " + tl);
             //set global flag
             SceneManaging.anyTimelineOpen = true;
+            
             isTimelineOpen = true;
             //scale up timeline
             tl.rectTransform.sizeDelta = new Vector2(tl.rectTransform.rect.width, heightOpened/ gameObject.transform.lossyScale.x);
@@ -422,7 +418,6 @@ public class RailManager : MonoBehaviour
             }
         }
     }
-
     public void scaleObject(GameObject fig, float x, float y)
     {
         //scale the object
@@ -559,7 +554,6 @@ public class RailManager : MonoBehaviour
         //erase from SceneData (passiert offenbar schon automatisch, weil bei ButtonUp immer wieder neu die Instances von timelineInstances geschrieben werden :) ) 
         // StaticSceneData.StaticData.figureElements[Int32.Parse(obj.name.Substring(6,2))-1].figureInstanceElements.Remove(StaticSceneData.StaticData.figureElements[Int32.Parse(obj.name.Substring(6,2))-1].figureInstanceElements[Int32.Parse(obj.name.Substring(17))]);
     }
-
     public int checkHittingAnyTimeline(GameObject obj, Vector2 mousePos)
     {
         int hit = -1;
@@ -582,7 +576,6 @@ public class RailManager : MonoBehaviour
         //Debug.Log("drag and hit " + hit);
         return hit;
     }
-
     public void highlight(GameObject obj3D, GameObject obj)
     {
         obj.transform.GetChild(0).GetComponent<Image>().color = colFigureHighlighted;
@@ -625,7 +618,6 @@ public class RailManager : MonoBehaviour
             }
         }
     }
-
     public GameObject CreateNew2DInstance(int figureNr, float momentOrPosX, bool loadFromFile)
     {
         int countName = 0;
@@ -674,19 +666,18 @@ public class RailManager : MonoBehaviour
         //Debug.Log("++++++++++++ 3D Object: " + curr3DObject.name + ", rail3d: " + rail3dObj + ", Pos: " + curr3DObject.transform.position + ", Instances of this obj: " + countName);//= countCopiesOfObject(figureObjects[currentClickedObjectIndex], timelineInstanceObjects););
         return curr3DObject;
     }
-    public void ResetScreenSize()
+    public void ResetScreenSize()       // this probably has to be called globally, so that every Menue resizes (probably in the UIController). At the moment it is only scaled properly when rail tab is open e.g.
     {
         Debug.Log("lossyScale: "+gameObject.transform.lossyScale);
-        //Debug.Log("Screen changed! ScreenX: " + Screen.width);
+        // Debug.Log("Screen changed! ScreenX: " + Screen.width);
 
-        minX = 0.146f * Screen.width;// / gameObject.transform.lossyScale.x; //301.0f;  //timeline-minX
-        Debug.Log("minX: "+minX);
-        railWidth = 0.69f * Screen.width;// / gameObject.transform.lossyScale.x;
-        heightClosed = 0.023f * Screen.height;// / gameObject.transform.lossyScale.x;
-        heightOpened = 0.074f * Screen.height;// / gameObject.transform.lossyScale.x;
+        // I used the values that were put in FullHD (global: position.x) and calculated the percentage so that it works for all resolutions 
+        minX = 0.146f * Screen.width; //timeline-minX
+        railWidth = 0.69f * Screen.width; 
+        heightClosed = 0.023f * Screen.height;
+        heightOpened = 0.074f * Screen.height;
         maxX = minX + railWidth;  //timeline-maxX
         //Debug.Log("rail start: " + minX);
-        Debug.Log("isTimelineopen: "+isTimelineOpen+"heightclosed: "+heightClosed);
         if (isTimelineOpen)
         {
             timelineImage.GetComponent<RectTransform>().sizeDelta = gameObject.GetComponent<BoxCollider2D>().size = new Vector2(railWidth/ gameObject.transform.lossyScale.x, heightOpened/ gameObject.transform.lossyScale.x);
@@ -695,12 +686,11 @@ public class RailManager : MonoBehaviour
         else
         {
             timelineImage.GetComponent<RectTransform>().sizeDelta = gameObject.GetComponent<BoxCollider2D>().size = new Vector2(railWidth/ gameObject.transform.lossyScale.x, heightClosed/ gameObject.transform.lossyScale.x);
-            Debug.Log("size: "+ timelineImage.GetComponent<RectTransform>().sizeDelta.y);
         }
     }
     void Update()
     {
-        if (currentLossyScale != transform.lossyScale.x)
+        if (currentLossyScale != transform.lossyScale.x)    // Abfrage, ob sich lossyScale geaendert hat dann werden die Schienen rescaled
         {
             currentLossyScale = transform.lossyScale.x;
             Debug.Log("scale after: "+transform.lossyScale.x);
@@ -945,7 +935,6 @@ public class RailManager : MonoBehaviour
 
             //if you hit the timeline > object snap to timeline and is locked in y-movement-direction
             bool hitTimeline = false;
-            //string nameOfHitObject="";
             hitTimeline = checkHittingTimeline(timelineImage, getMousePos);
 
             int tmp = 0;
@@ -996,9 +985,6 @@ public class RailManager : MonoBehaviour
                 //snapping/lock y-axis
                 setObjectOnTimeline(figureObjects[currentClickedObjectIndex], figureObjects[currentClickedObjectIndex].transform.position.x, this.transform.position.y);
 
-                //set placed figures to timelineobjects-list
-                //updateObjectList(timelineObjects, figureObjects[currentClickedObjectIndex]);
-
                 //save position, where object on timeline is released + set flag 
                 releaseOnTimeline = true;
                 releaseObjMousePos = new Vector2(getMousePos.x, getMousePos.y);
@@ -1014,8 +1000,6 @@ public class RailManager : MonoBehaviour
                 }
                 //close timeline if you click e.g. in the shelf to get a new figure
                 openCloseTimelineByDrag("close", timelineImage);
-                // scale up currentFigure
-
                 releaseOnTimeline = false;
             }
         }
@@ -1077,7 +1061,8 @@ public class RailManager : MonoBehaviour
 
                 float moment = UtilitiesTm.FloatRemap(timelineInstanceObjects[i].transform.localPosition.x, gameObject.GetComponent<RectTransform>().rect.width / -2, gameObject.GetComponent<RectTransform>().rect.width / 2, 0, AnimationTimer.GetMaxTime());
 
-                timelineInstanceObjects3D[i].transform.localPosition = new Vector3(timelineInstanceObjects3D[i].transform.localPosition.x, 0, (rail3dObj.transform.GetChild(0).GetComponent<RailSpeedController>().GetDistanceAtTime((float)startSec)) / 10);
+                timelineInstanceObjects3D[i].transform.localPosition = new Vector3(-rail3dObj.transform.GetChild(0).transform.localPosition.x, (-rail3dObj.transform.GetChild(0).transform.localPosition.y-.03f), (rail3dObj.transform.GetChild(0).GetComponent<RailSpeedController>().GetDistanceAtTime((float)startSec)) / 10);
+                Debug.Log("rail pos: "+(-rail3dObj.transform.GetChild(0).transform.localPosition.x));
                 //StaticSceneData.StaticData.figureElements[Int32.Parse(timelineInstanceObjects[i].name.Substring(6, 2)) - 1].figureInstanceElements[Int32.Parse(timelineInstanceObjects[i].name.Substring(17))].moment = (float)startSec;
                 StaticSceneData.StaticData.figureElements[Int32.Parse(timelineInstanceObjects[i].name.Substring(6, 2)) - 1].figureInstanceElements[Int32.Parse(timelineInstanceObjects[i].name.Substring(17))].moment = moment;
                 // Debug.Log("FigureInstance: " + StaticSceneData.StaticData.figureElements[Int32.Parse(timelineInstanceObjects[i].name.Substring(6, 2)) - 1].figureInstanceElements[Int32.Parse(timelineInstanceObjects[i].name.Substring(17))].name);
