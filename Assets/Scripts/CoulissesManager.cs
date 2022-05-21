@@ -149,7 +149,7 @@ public class CoulissesManager : MonoBehaviour
                     {
                         for (int j = 0; j < coulissesOnRails.Count; j++)
                         {
-                            int k = int.Parse(coulissesOnRails[i].name.Substring(8, 2)) - 1;
+                            int k = int.Parse(coulissesOnRails[j].name.Substring(8, 2)) - 1;
                             highlight(k, false);
                         }
                     }
@@ -181,14 +181,12 @@ public class CoulissesManager : MonoBehaviour
             {
                 diff = new Vector2(getMousePos.x - coulisses[currentObjectIndex].transform.position.x, getMousePos.y - coulisses[currentObjectIndex].transform.position.y);
                 dragging = true;
-
                 if (isAnythingHighlighted())
                 {
                     for (int i = 0; i < coulissesOnRails.Count; i++)
                     {
                         int j = int.Parse(coulissesOnRails[i].name.Substring(8, 2)) - 1;
-                        // Debug.Log("coulisse: " + coulissesOnRails[i] + ", j: " + j);
-                        highlight(j, false);        //todo: liste anlegen mit nur kulissen die auf schiene sind (damit nicht ALLE unhighlighted werden muessen)
+                        highlight(j, false);        
                     }
                     highlight(currentObjectIndex, true);
                 }
@@ -441,9 +439,10 @@ public class CoulissesManager : MonoBehaviour
     public bool isAnythingHighlighted()
     {
         bool val = false;
-        for (int i = 0; i < coulisses.Length; i++)
+        for (int i = 0; i < coulissesOnRails.Count; i++)
         {
-            if (isHighlighted[i])
+            int j = int.Parse(coulissesOnRails[i].name.Substring(8, 2)) - 1; 
+            if (isHighlighted[j])
             {
                 val = true;
             }
