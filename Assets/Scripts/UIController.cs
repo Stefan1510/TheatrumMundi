@@ -121,17 +121,23 @@ public class UIController : MonoBehaviour
     {
         for (int i = 0; i < goRailDistSliders.Length; i++)
         {
-            if (i%2==0)
+            if (i == 0)
             {
-                //Debug.LogWarning("even index // railname: " + goRailSliders[i].name + " static: " + StaticSceneData.StaticData.railElements[i + 1].x);
-                goRailDistSliders[i].GetComponent<Slider>().value = -(StaticSceneData.StaticData.railElements[i + 1].x + 0.12f) * 2;
-                //Debug.LogWarning("railname: " + goRailSliders[i].name + " slider: " + goRailSliders[i].GetComponent<Slider>().value + " static: " + StaticSceneData.StaticData.railElements[i + 1].x);
+                //Debug.LogWarning("odd index // railname: " + goRailDistSliders[i].name + " static: " + StaticSceneData.StaticData.railElements[i + 1].x);
+                goRailDistSliders[i].GetComponent<Slider>().value = (StaticSceneData.StaticData.railElements[i + 1].x * -2) + 0.24f;
+                //Debug.LogWarning("railname: " + goRailDistSliders[i].name + " slider: " + goRailDistSliders[i].GetComponent<Slider>().value + " static: " + StaticSceneData.StaticData.railElements[i + 1].x);
             }
-            else if (i==1)
+            else if (i == 1)
             {
                 //Debug.LogWarning("odd index // railname: " + goRailDistSliders[i].name + " static: " + StaticSceneData.StaticData.railElements[i + 1].x);
                 goRailDistSliders[i].GetComponent<Slider>().value = -(StaticSceneData.StaticData.railElements[i + 1].x + 0.44f) * 2;
-                
+                //Debug.LogWarning("railname: " + goRailDistSliders[i].name + " slider: " + goRailDistSliders[i].GetComponent<Slider>().value + " static: " + StaticSceneData.StaticData.railElements[i + 1].x);
+            }
+            else if (i%2==0)
+            {
+                //Debug.LogWarning("even index // railname: " + goRailDistSliders[i].name + " static: " + StaticSceneData.StaticData.railElements[i + 1].x);
+                goRailDistSliders[i].GetComponent<Slider>().value = -(StaticSceneData.StaticData.railElements[i + 1].x + 0.12f) * 2;
+                //Debug.LogWarning("railname: " + goRailSliders[i].name + " slider: " + goRailSliders[i].GetComponent<Slider>().value + " static: " + StaticSceneData.StaticData.railElements[i + 1].x);
             }
             else
             {
@@ -144,11 +150,17 @@ public class UIController : MonoBehaviour
 
         for (int i = 0; i< goRailHeightSliders.Length;i++)
         {
-            Debug.LogWarning(" index // railname: " + goRailHeightSliders[i].name + " static: " + StaticSceneData.StaticData.railElements[i * 2].name + " " + StaticSceneData.StaticData.railElements[i*2].y);
-            goRailHeightSliders[i].GetComponent<Slider>().value = (StaticSceneData.StaticData.railElements[i * 2].y) * 2;
+            //Debug.LogWarning(" index // railname: " + goRailHeightSliders[i].name + " static: " + StaticSceneData.StaticData.railElements[i * 2].name + " " + StaticSceneData.StaticData.railElements[i * 2].y);
+            if (i==0)
+            {
+                goRailHeightSliders[i].GetComponent<Slider>().value = (StaticSceneData.StaticData.railElements[i * 2].y - 0.06f) * 2;
+            }
+            else
+            {
+                goRailHeightSliders[i].GetComponent<Slider>().value = (StaticSceneData.StaticData.railElements[i * 2].y * 2);                
+            }
             goRailHeightSliders[i].GetComponent<sliderValueToInputValue>().OnSliderChange();
-            Debug.LogWarning("railname: " + goRailHeightSliders[i].name + " slider: " + goRailHeightSliders[i].GetComponent<Slider>().value + " static: " + StaticSceneData.StaticData.railElements[i + 1].x);
-
+            //Debug.LogWarning("railname: " + goRailHeightSliders[i].name + " slider: " + goRailHeightSliders[i].GetComponent<Slider>().value + " static: " + StaticSceneData.StaticData.railElements[i + 1].x);
         }
     }
 

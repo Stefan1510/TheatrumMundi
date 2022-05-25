@@ -1095,4 +1095,9 @@ public class RailManager : MonoBehaviour
             }
         }
     }
+
+    public void PublicUpdate()
+    {
+        Update();
+    }
 }
