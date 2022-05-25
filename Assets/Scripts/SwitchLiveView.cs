@@ -36,19 +36,13 @@ public class SwitchLiveView : MonoBehaviour
 		switch (AnimationTimer.GetTimerState())
 		{
             case AnimationTimer.TimerState.stopped:
-                //AnimationTimer.StartTimer();
-                //SceneManaging.playing = true;
                 PlayBtn.transform.GetComponent<Image>().sprite = PauseIcon;
                 break;
             case AnimationTimer.TimerState.playing:
-                //AnimationTimer.PauseTimer();
-                //SceneManaging.playing = false;
-                PlayBtn.transform.GetComponent<Image>().sprite = PlayIcon;
+                PlayBtn.transform.GetComponent<Image>().sprite = PauseIcon;
                 break;
             case AnimationTimer.TimerState.paused:
-                //AnimationTimer.StartTimer();
-                //SceneManaging.playing = true;
-                PlayBtn.transform.GetComponent<Image>().sprite = PauseIcon;
+                PlayBtn.transform.GetComponent<Image>().sprite = PlayIcon;
                 break;
             }
 	}
