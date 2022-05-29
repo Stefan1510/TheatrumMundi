@@ -21,13 +21,16 @@ public class RailManager : MonoBehaviour
     Vector2 releaseObjMousePos;
     double minX, minY;
     double maxX;
-    float railWidth; //, railHeight;
+    float railWidth; 		//, railHeight;
+	Vector3 railStartPoint;
+	Vector3 railEndPoint;
     int maxTimeInSec;
     Vector2[] objectShelfPosition;
     Vector2[] objectShelfSize;
     GameObject[] objectShelfParent;
     GameObject newCopyOfFigure;
     Vector2 objectSceneSize;
+	float objectAnimationLength;
 
     public GameObject objectLibrary;
     public GameObject parentMenue; // mainMenue
@@ -56,6 +59,9 @@ public class RailManager : MonoBehaviour
         releaseObjMousePos = new Vector2(0.0f, 0.0f);
         isTimelineOpen = false;
         isInstance = false;
+		
+		railStartPoint=new Vector3(0.0f, 0.0f, -2.2f);
+		railEndPoint=new Vector3(0.0f, 0.0f, 2.6f);
 
         //load all objects given in the figuresShelf
         figureObjects = new GameObject[objectLibrary.transform.childCount];         //instead of a count like "3"
@@ -64,6 +70,8 @@ public class RailManager : MonoBehaviour
         objectShelfSize = new Vector2[figureObjects.Length];
         objectShelfParent = new GameObject[figureObjects.Length];
         figCounterCircle = new GameObject[figureObjects.Length];
+		objectAnimationLength=100.0f;												//length of current object-animation
+		
         for (int i = 0; i < objectLibrary.transform.childCount; i++)
         {
             //collect objects
@@ -391,7 +399,8 @@ public class RailManager : MonoBehaviour
     }
     public void openCloseObjectInTimeline(bool timelineOpen, List<GameObject> objects, bool editObjOnTl)
     {
-        float length = 100.0f;
+        //float length = 100.0f;		//is this the animation-length of an object?
+		float length = objectAnimationLength;
         //Debug.Log("method: timelineObjects count: "+objects.Count);
         for (int i = 0; i < objects.Count; i++)
         {
@@ -455,20 +464,35 @@ public class RailManager : MonoBehaviour
             objects.Add(obj);
         }
     }
-    public void createRectangle(GameObject obj, Vector2 size, Color col, double railMinX, double animLength) // start pos brauch ich eigentlich nicht
+    public double calcSecondsToPixel(double animLength, double railMinX, double railMaxX, int maxTimeLengthInSec)
+	{
+		double px=0;
+		double width=railMaxX-railMinX;
+		px=(width*animLength)/maxTimeLengthInSec;
+		return px;
+	}
+	public void createRectangle(GameObject obj, Vector2 size, Color col, double railMinX, double animLength) // start pos brauch ich eigentlich nicht
     {
-        double tmpLength = (maxX - minX) / 614.0f * animLength;
-
+		//PROBLEMS:
+		//animLength are in seconds but this is not 100 pixel!!! ->calc seconds to pixel is required
+		//startpoint of rectangle is not correct -> it should start where it is seen in liveview
+		//endpoint of rectangle is not correct -> it should be start+animlengthInPixel
+		
+        //double tmpLength = (maxX - minX) / 614.0f * animLength;	//614.0f = 10:14min in Seconds = maxTimeInSec
+		//double tmpLength = (maxX-minX)/(maxTimeInSec*animLength);
+		double tmpLength = calcSecondsToPixel(objectAnimationLength,minX,maxX,maxTimeInSec);
+		
         GameObject imgObject = new GameObject("RectBackground");
         RectTransform trans = imgObject.AddComponent<RectTransform>();
         trans.transform.SetParent(obj.transform); // setting parent
-        trans.localScale = Vector3.one;
-        trans.pivot = new Vector2(0.0f, 0.5f);
+        trans.localScale = Vector3.one;		//what is Vector3.one???
+        trans.pivot = new Vector2(0.0f, 0.5f);		//set rectangle-pivot-Ypos to center of figure
         //set pivot point of sprite  to left border, so that rect aligns with sprite
         obj.GetComponent<RectTransform>().pivot = new Vector2(0.0f, 0.5f);
         trans.anchoredPosition = new Vector2((obj.GetComponent<RectTransform>().rect.width / 2) * (-1), 0.0f);
         trans.SetSiblingIndex(0);
-        trans.sizeDelta = new Vector2((float)animLength, size.y); // custom size
+        //trans.sizeDelta = new Vector2((float)animLength, size.y); // custom size
+		trans.sizeDelta = new Vector2((float)tmpLength, size.y);	//size related to animationLength
 
         Image image = imgObject.AddComponent<Image>();
         image.color = col;
@@ -480,6 +504,15 @@ public class RailManager : MonoBehaviour
     }
     public int calculateFigureStartTimeInSec(GameObject fig, double animLength, int maxTimeLengthInSec, double railMinX, double railMaxX)
     {
+		//PROBLEMS:
+		//animLength are in seconds but this is not 100 pixel!!! ->calc seconds to pixel is required
+		//tmpX is not correct calculated
+		
+		//Debug.Log("fig: "+fig+" animLength: "+animLength+" timeLength: "+maxTimeLengthInSec+" railMinX: "+railMinX+" railMaxX: "+railMaxX);
+		//Debug.Log("Mouse position: "+(Input.mousePosition));
+		//Debug.Log("figure position: "+fig.transform.position);
+		//Debug.Log("box collider: "+fig.GetComponent<BoxCollider2D>().size);
+		//Debug.Log("rail3DObj_startX: "+rail3dObj.transform.position.x+" rail3DObj_width: "+rail3dObj.GetComponent<RectTransform>().rect.width);
         int sec = 0;
         double tmpX = fig.transform.position.x - railMinX;  //x-pos is screenX from left border, railMinX is the rail-startpoint
         Vector2 tmpSize = fig.GetComponent<BoxCollider2D>().size;
@@ -493,16 +526,20 @@ public class RailManager : MonoBehaviour
     }
     public Vector3 getRailStartEndpoint(GameObject r3DObj, string startEnd)
     {
+		//this returns the coordinate (not pixel!) values of a rail
+		//railStartPoint & railEndPoint = global variables
         Vector3 point = new Vector3(0.0f, 0.0f, 0.0f);
         if (startEnd == "start")
         {
             //calculate start point of the rail
-            point = new Vector3(0.0f, 0.0f, -2.2f);
+            //point = new Vector3(0.0f, 0.0f, -2.2f);
+			point = new Vector3(railStartPoint.x,railStartPoint.y,railStartPoint.z);
         }
         else //(startEnd="end")
         {
             //calculate end point of rail 
-            point = new Vector3(0.0f, 0.0f, 2.6f);
+            //point = new Vector3(0.0f, 0.0f, 2.6f);
+			point = new Vector3(railEndPoint.x,railEndPoint.y,railEndPoint.z);
         }
         return point;
     }
@@ -637,11 +674,14 @@ public class RailManager : MonoBehaviour
             newCopyOfFigure.transform.localPosition = new Vector2(posX, figureObjects[figureNr].transform.localPosition.y);
             // openCloseObjectInTimeline(true,timelineInstanceObjects,false); 
             //openCloseTimelineByClick(true, timelineImage,false);
-            createRectangle(newCopyOfFigure, new Vector2(300, 80), colFigure, minX, 100.0f);
-            scaleObject(newCopyOfFigure, 100, 80);
+            //createRectangle(newCopyOfFigure, new Vector2(300, 80), colFigure, minX, 100.0f);
+			createRectangle(newCopyOfFigure, new Vector2(300, 80), colFigure, minX, objectAnimationLength);
+            //scaleObject(newCopyOfFigure, 100, 80);
+			scaleObject(newCopyOfFigure, objectAnimationLength, 80);
             scaleObject(newCopyOfFigure.transform.GetChild(0).gameObject, newCopyOfFigure.transform.GetChild(0).gameObject.GetComponent<RectTransform>().sizeDelta.x, 80);
             newCopyOfFigure.transform.GetChild(0).GetComponent<RectTransform>().position = new Vector2(newCopyOfFigure.transform.GetChild(0).gameObject.GetComponent<RectTransform>().position.x + 25, newCopyOfFigure.transform.GetChild(0).gameObject.GetComponent<RectTransform>().position.y);
-            scaleObject(newCopyOfFigure.transform.GetChild(1).gameObject, 100, 80);
+            //scaleObject(newCopyOfFigure.transform.GetChild(1).gameObject, 100, 80);
+			scaleObject(newCopyOfFigure.transform.GetChild(1).gameObject, objectAnimationLength, 80);
             gameController.GetComponent<SceneDataController>().objects2dFigureInstances.Add(newCopyOfFigure);
             newCopyOfFigure.transform.localScale = Vector3.one;
             //newCopyOfFigure.transform.parent.GetChild(0).GetComponent<RectTransform>().position = new Vector2(newCopyOfFigure.transform.parent.GetChild(0).GetComponent<RectTransform>().position.x + 25, newCopyOfFigure.transform.parent.GetChild(0).GetComponent<RectTransform>().position.y);
@@ -652,7 +692,8 @@ public class RailManager : MonoBehaviour
         {
             newCopyOfFigure.transform.position = new Vector2(momentOrPosX, figureObjects[figureNr].transform.position.y);
             newCopyOfFigure.transform.localScale = Vector3.one;
-            createRectangle(newCopyOfFigure, new Vector2(300, 80), colFigure, minX, 100.0f);
+            //createRectangle(newCopyOfFigure, new Vector2(300, 80), colFigure, minX, 100.0f);
+			createRectangle(newCopyOfFigure, new Vector2(300, 80), colFigure, minX, objectAnimationLength);
         }
         //set 3d object to default position
         GameObject curr3DObject = new GameObject();
@@ -672,12 +713,13 @@ public class RailManager : MonoBehaviour
         // Debug.Log("Screen changed! ScreenX: " + Screen.width);
 
         // I used the values that were put in FullHD (global: position.x) and calculated the percentage so that it works for all resolutions 
-        minX = 0.146f * Screen.width; //timeline-minX
-        railWidth = 0.69f * Screen.width; 
+        minX = 0.146f * Screen.width; 				//timeline-rail-minX
+        railWidth = 0.69f * Screen.width; 			//railwidth=1324.8px
         heightClosed = 0.023f * Screen.height;
         heightOpened = 0.074f * Screen.height;
-        maxX = minX + railWidth;  //timeline-maxX
-        //Debug.Log("rail start: " + minX);
+        maxX = minX + railWidth;  					//timeline-rail-maxX
+		
+		//Debug.Log("rail start: " + minX);
         if (isTimelineOpen)
         {
             timelineImage.GetComponent<RectTransform>().sizeDelta = gameObject.GetComponent<BoxCollider2D>().size = new Vector2(railWidth/ gameObject.transform.lossyScale.x, heightOpened/ gameObject.transform.lossyScale.x);
@@ -971,8 +1013,11 @@ public class RailManager : MonoBehaviour
                 openCloseTimelineByDrag("open", timelineImage);
                 //scale up object/figures in timeline
                 //openCloseObjectInTimeline(true, timelineInstanceObjects, editTimelineObject);
-                //and set animation-length
-                float animationLength = 100.0f;     //length of objects animation
+                
+				//and set animation-length
+                
+				//float animationLength = 100.0f;     //length of objects animation
+				float animationLength = objectAnimationLength;	//length of objects animation
                                                     //figureObjects[currentClickedObjectIndex].GetComponent<RectTransform>().sizeDelta=new Vector2(animationLength,scaleYUp);
                                                     //scaleObject(figureObjects[currentClickedObjectIndex], animationLength, scaleYUp);
                                                     //scale down the dragged figure (and childobject: image)
@@ -1057,7 +1102,8 @@ public class RailManager : MonoBehaviour
 
             for (int i = 0; i < timelineInstanceObjects.Count; i++)
             {
-                double startSec = calculateFigureStartTimeInSec(timelineInstanceObjects[i], 100.0f, maxTimeInSec, minX, maxX);
+                //double startSec = calculateFigureStartTimeInSec(timelineInstanceObjects[i], 100.0f, maxTimeInSec, minX, maxX);
+				double startSec = calculateFigureStartTimeInSec(timelineInstanceObjects[i], objectAnimationLength, maxTimeInSec, minX, maxX);
 
                 float moment = UtilitiesTm.FloatRemap(timelineInstanceObjects[i].transform.localPosition.x, gameObject.GetComponent<RectTransform>().rect.width / -2, gameObject.GetComponent<RectTransform>().rect.width / 2, 0, AnimationTimer.GetMaxTime());
 
