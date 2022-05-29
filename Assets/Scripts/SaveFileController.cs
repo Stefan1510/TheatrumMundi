@@ -105,6 +105,16 @@ public class SaveFileController : MonoBehaviour
         GetComponent<UIController>().LightsApplyToUI();
         GetComponent<UIController>().RailsApplyToUI();
         GetComponent<SceneDataController>().SetFileMetaDataToScene();
+        if (_isWebGl)
+        {
+            StartCoroutine(LoadFilesFromServer());
+        }
+        else
+        {
+            ShowFilesFromDirectory();
+        }
+        AnimationTimer.SetTime(0);
+        GetComponent<UIController>().Rails[0].GetComponent<RailManager>().PublicUpdate();
     }
 
     public void DeleteFile()
@@ -148,7 +158,13 @@ public class SaveFileController : MonoBehaviour
     private void GenerateFileButton(string fileName)
     {
         Button fileButtonInstance = Instantiate(fileSelectButton, contentFileSelect.transform);
+        //Debug.LogError(fileName.Substring(0, fileName.Length - 5));
         fileButtonInstance.name = fileName;
+        if (fileName.Substring(0,fileName.Length-5) == StaticSceneData.StaticData.fileName)
+        {
+            //Debug.LogError("gleicher Filename !!!! einesse  q344l   1243keaskr");
+            fileButtonInstance.GetComponent<Button>().image.color = new Color32(64, 192, 16, 192);
+        }
         fileButtonInstance.GetComponentInChildren<Text>().text = fileName;
         fileButtonInstance.gameObject.SetActive(true);
         fileButtonInstance.onClick.AddListener(() => LoadSceneFromFile(fileName));

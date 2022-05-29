@@ -27,10 +27,18 @@ public class ObjectShelf : MonoBehaviour
 	public GameObject MenueButton03;
 	public GameObject MenueButton04;
 
-	//private GameObject lvcamera;
+	GameObject gameController;
 
-	// Start is called before the first frame update
-	void Start()
+    //private GameObject lvcamera;
+
+    // Start is called before the first frame update
+
+    private void Awake()
+    {
+        gameController = GameObject.Find("GameController");
+    }
+
+    void Start()
     {
         //Debug.Log("testprint");
         //define the buttons
@@ -161,6 +169,7 @@ public class ObjectShelf : MonoBehaviour
 		}
 
 		StaticSceneData.Everything3D();
+		gameController.GetComponent<UIController>().Rails[0].GetComponent<RailManager>().PublicUpdate();
 	}
 	public void ButtonShelf02()
 	{
@@ -216,6 +225,7 @@ public class ObjectShelf : MonoBehaviour
 		}
 
 		StaticSceneData.Everything3D();
+		gameController.GetComponent<UIController>().Rails[0].GetComponent<RailManager>().PublicUpdate();
 	}
 	public void ButtonShelf03()
 	{
@@ -265,6 +275,7 @@ public class ObjectShelf : MonoBehaviour
 		}
 
 		StaticSceneData.Everything3D();
+		gameController.GetComponent<UIController>().Rails[0].GetComponent<RailManager>().PublicUpdate();
 	}
 	
 	public void ButtonShelf04()

@@ -364,6 +364,7 @@ public class SceneDataController : MonoBehaviour
                             gameObjectLe.GetComponent<LightController>().ChangeHeight(le.y);
                             break;
                         case 3:
+                            countActiveLightElements--;
                             break;
                     }
                 }

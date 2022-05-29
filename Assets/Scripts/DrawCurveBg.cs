@@ -45,6 +45,7 @@ public class DrawCurveBg : MonoBehaviour
         EventTrigger.Entry eventTriggerEntry = new EventTrigger.Entry();
         eventTriggerEntry.eventID = EventTriggerType.PointerUp;
         eventTriggerEntry.callback.AddListener((data) => { AddValue((PointerEventData)data); });
+        _valueSlider.onValueChanged.AddListener((float value) => ChangeLiveBackground(value));
         _valueSlider.GetComponent<EventTrigger>().triggers.Add(eventTriggerEntry);
         ChangeCurve();
         ChangeBackgroundPosition();
@@ -170,5 +171,8 @@ public class DrawCurveBg : MonoBehaviour
             }
         }
     }
-
+    void ChangeLiveBackground(float value)
+    {
+        _backgroundHimmel.transform.localPosition = new Vector3(_backgroundHimmel.transform.localPosition.x, value, _backgroundHimmel.transform.localPosition.z);
+    }
 }
