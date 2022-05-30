@@ -70,6 +70,7 @@ public class RailManager : MonoBehaviour
         objectShelfSize = new Vector2[figureObjects.Length];
         objectShelfParent = new GameObject[figureObjects.Length];
         figCounterCircle = new GameObject[figureObjects.Length];
+		
 		objectAnimationLength=100.0f;												//length of current object-animation
 		
         for (int i = 0; i < objectLibrary.transform.childCount; i++)
@@ -676,12 +677,10 @@ public class RailManager : MonoBehaviour
             //openCloseTimelineByClick(true, timelineImage,false);
             //createRectangle(newCopyOfFigure, new Vector2(300, 80), colFigure, minX, 100.0f);
 			createRectangle(newCopyOfFigure, new Vector2(300, 80), colFigure, minX, objectAnimationLength);
-            //scaleObject(newCopyOfFigure, 100, 80);
-			scaleObject(newCopyOfFigure, objectAnimationLength, 80);
+            scaleObject(newCopyOfFigure, 100, 80);		//scale the figure-picture in timeline to x: 100 and y: 80px
             scaleObject(newCopyOfFigure.transform.GetChild(0).gameObject, newCopyOfFigure.transform.GetChild(0).gameObject.GetComponent<RectTransform>().sizeDelta.x, 80);
             newCopyOfFigure.transform.GetChild(0).GetComponent<RectTransform>().position = new Vector2(newCopyOfFigure.transform.GetChild(0).gameObject.GetComponent<RectTransform>().position.x + 25, newCopyOfFigure.transform.GetChild(0).gameObject.GetComponent<RectTransform>().position.y);
-            //scaleObject(newCopyOfFigure.transform.GetChild(1).gameObject, 100, 80);
-			scaleObject(newCopyOfFigure.transform.GetChild(1).gameObject, objectAnimationLength, 80);
+            scaleObject(newCopyOfFigure.transform.GetChild(1).gameObject, 100, 80);		//is this the blue rectangle size?
             gameController.GetComponent<SceneDataController>().objects2dFigureInstances.Add(newCopyOfFigure);
             newCopyOfFigure.transform.localScale = Vector3.one;
             //newCopyOfFigure.transform.parent.GetChild(0).GetComponent<RectTransform>().position = new Vector2(newCopyOfFigure.transform.parent.GetChild(0).GetComponent<RectTransform>().position.x + 25, newCopyOfFigure.transform.parent.GetChild(0).GetComponent<RectTransform>().position.y);
@@ -1017,12 +1016,12 @@ public class RailManager : MonoBehaviour
 				//and set animation-length
                 
 				//float animationLength = 100.0f;     //length of objects animation
-				float animationLength = objectAnimationLength;	//length of objects animation
+				float figPictureSize = 100.0f;		//length/width of figure-picture in timeline
                                                     //figureObjects[currentClickedObjectIndex].GetComponent<RectTransform>().sizeDelta=new Vector2(animationLength,scaleYUp);
                                                     //scaleObject(figureObjects[currentClickedObjectIndex], animationLength, scaleYUp);
                                                     //scale down the dragged figure (and childobject: image)
-                scaleObject(figureObjects[currentClickedObjectIndex], animationLength, heightOpened/ gameObject.transform.lossyScale.x);
-                scaleObject(figureObjects[currentClickedObjectIndex].transform.GetChild(0).gameObject, animationLength, heightOpened/ gameObject.transform.lossyScale.x);
+                scaleObject(figureObjects[currentClickedObjectIndex], figPictureSize, heightOpened/ gameObject.transform.lossyScale.x);
+                scaleObject(figureObjects[currentClickedObjectIndex].transform.GetChild(0).gameObject, figPictureSize, heightOpened/ gameObject.transform.lossyScale.x);
 
                 // change parent back
                 setParent(figureObjects[currentClickedObjectIndex], gameObject);
@@ -1108,6 +1107,11 @@ public class RailManager : MonoBehaviour
                 float moment = UtilitiesTm.FloatRemap(timelineInstanceObjects[i].transform.localPosition.x, gameObject.GetComponent<RectTransform>().rect.width / -2, gameObject.GetComponent<RectTransform>().rect.width / 2, 0, AnimationTimer.GetMaxTime());
 
                 timelineInstanceObjects3D[i].transform.localPosition = new Vector3(-rail3dObj.transform.GetChild(0).transform.localPosition.x, (-rail3dObj.transform.GetChild(0).transform.localPosition.y-.03f), (rail3dObj.transform.GetChild(0).GetComponent<RailSpeedController>().GetDistanceAtTime((float)startSec)) / 10);
+				//this is for: (kris) damit die Figuren auch in die Richtung schauen, in die sie laufen
+				if (rail3dObj.transform.GetChild(0).GetComponent<RailSpeedController>().railIndex % 2 == 1)
+                {
+                    timelineInstanceObjects3D[i].transform.localEulerAngles = new Vector3(0, 270, 0);
+                }
                 Debug.Log("rail pos: "+(-rail3dObj.transform.GetChild(0).transform.localPosition.x));
                 //StaticSceneData.StaticData.figureElements[Int32.Parse(timelineInstanceObjects[i].name.Substring(6, 2)) - 1].figureInstanceElements[Int32.Parse(timelineInstanceObjects[i].name.Substring(17))].moment = (float)startSec;
                 StaticSceneData.StaticData.figureElements[Int32.Parse(timelineInstanceObjects[i].name.Substring(6, 2)) - 1].figureInstanceElements[Int32.Parse(timelineInstanceObjects[i].name.Substring(17))].moment = moment;
