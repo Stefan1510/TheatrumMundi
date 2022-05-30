@@ -490,6 +490,8 @@ public class RailManager : MonoBehaviour
         trans.pivot = new Vector2(0.0f, 0.5f);		//set rectangle-pivot-Ypos to center of figure
         //set pivot point of sprite  to left border, so that rect aligns with sprite
         obj.GetComponent<RectTransform>().pivot = new Vector2(0.0f, 0.5f);
+		//position where the rectangle starts related to the figure-picture 
+		//-> if "/2", rectangle starts a little bit in front of visible pixels of object-picture in timeline and exactly with the figure-picture-rectangle
         trans.anchoredPosition = new Vector2((obj.GetComponent<RectTransform>().rect.width / 2) * (-1), 0.0f);
         trans.SetSiblingIndex(0);
         //trans.sizeDelta = new Vector2((float)animLength, size.y); // custom size
@@ -510,19 +512,28 @@ public class RailManager : MonoBehaviour
 		//tmpX is not correct calculated
 		
 		//Debug.Log("fig: "+fig+" animLength: "+animLength+" timeLength: "+maxTimeLengthInSec+" railMinX: "+railMinX+" railMaxX: "+railMaxX);
-		//Debug.Log("Mouse position: "+(Input.mousePosition));
+		Debug.Log("Mouse position: "+(Input.mousePosition));
 		//Debug.Log("figure position: "+fig.transform.position);
 		//Debug.Log("box collider: "+fig.GetComponent<BoxCollider2D>().size);
 		//Debug.Log("rail3DObj_startX: "+rail3dObj.transform.position.x+" rail3DObj_width: "+rail3dObj.GetComponent<RectTransform>().rect.width);
         int sec = 0;
-        double tmpX = fig.transform.position.x - railMinX;  //x-pos is screenX from left border, railMinX is the rail-startpoint
+        /*double tmpX = fig.transform.position.x - railMinX;  //x-pos is screenX from left border, railMinX is the rail-startpoint
         Vector2 tmpSize = fig.GetComponent<BoxCollider2D>().size;
         double tmpMinX = (double)tmpX - (tmpSize.x / 2.0f); //if tmpX is the midpoint of figure
         double tmpMaxX = tmpMinX + animLength;  //length of figure is related to rail speed, here named as animationLength
                                                 //get figure minX related to timelineMinX
         double percentageOfRail = tmpMinX / (railMaxX - railMinX);  //max-min=real length, percentage: e.g. 0,3823124 (38%)
-        sec = (int)(((double)maxTimeLengthInSec) * percentageOfRail);
-        //Debug.Log("method: fig: "+fig+" tmpX: "+tmpX+" tmpSize: "+tmpSize+" tmpMinX: "+tmpMinX+" railMaxX: "+railMaxX+" percentage: "+percentageOfRail+" sec: "+sec);
+        sec = (int)(((double)maxTimeLengthInSec) * percentageOfRail);  */
+        
+		
+		//Debug.Log("method: fig: "+fig+" tmpX: "+tmpX+" tmpSize: "+tmpSize+" tmpMinX: "+tmpMinX+" railMaxX: "+railMaxX+" percentage: "+percentageOfRail+" sec: "+sec);
+		Debug.Log("figXPos: "+fig.transform.position.x + " railMinX: "+railMinX );
+		double tmpX = fig.transform.GetChild(0).gameObject.transform.position.x; //x-start of the blue rectangle
+		tmpX=tmpX-railMinX;
+		Debug.Log("tmpXBlueRect: "+tmpX);
+		double percentageOfRail = (tmpX)/(railMaxX-railMinX);			//percent (between 0 and 1) of blue-rect-startpoint in relation to the complete rail
+		sec = (int)(((double)maxTimeLengthInSec) * percentageOfRail);	//seconds of percentage
+		
         return sec;
     }
     public Vector3 getRailStartEndpoint(GameObject r3DObj, string startEnd)
@@ -1106,13 +1117,19 @@ public class RailManager : MonoBehaviour
 
                 float moment = UtilitiesTm.FloatRemap(timelineInstanceObjects[i].transform.localPosition.x, gameObject.GetComponent<RectTransform>().rect.width / -2, gameObject.GetComponent<RectTransform>().rect.width / 2, 0, AnimationTimer.GetMaxTime());
 
-                timelineInstanceObjects3D[i].transform.localPosition = new Vector3(-rail3dObj.transform.GetChild(0).transform.localPosition.x, (-rail3dObj.transform.GetChild(0).transform.localPosition.y-.03f), (rail3dObj.transform.GetChild(0).GetComponent<RailSpeedController>().GetDistanceAtTime((float)startSec)) / 10);
+                //timelineInstanceObjects3D[i].transform.localPosition = new Vector3(-rail3dObj.transform.GetChild(0).transform.localPosition.x, (-rail3dObj.transform.GetChild(0).transform.localPosition.y-.03f), (rail3dObj.transform.GetChild(0).GetComponent<RailSpeedController>().GetDistanceAtTime((float)startSec)) / 10);
+				timelineInstanceObjects3D[i].transform.localPosition = new Vector3(-rail3dObj.transform.GetChild(0).transform.localPosition.x, (-rail3dObj.transform.GetChild(0).transform.localPosition.y-.03f), (rail3dObj.transform.GetChild(0).GetComponent<RailSpeedController>().GetDistanceAtTime((float)startSec)) / 10);
 				//this is for: (kris) damit die Figuren auch in die Richtung schauen, in die sie laufen
 				if (rail3dObj.transform.GetChild(0).GetComponent<RailSpeedController>().railIndex % 2 == 1)
                 {
                     timelineInstanceObjects3D[i].transform.localEulerAngles = new Vector3(0, 270, 0);
                 }
                 Debug.Log("rail pos: "+(-rail3dObj.transform.GetChild(0).transform.localPosition.x));
+				Debug.Log("obj3D on rail pos: "+(-rail3dObj.transform.GetChild(0).transform.localPosition));
+				Debug.Log("instObj3D on rail pos: "+(timelineInstanceObjects3D[i].transform.localPosition));
+				Debug.Log("GetDistAtTime: "+(rail3dObj.transform.GetChild(0).GetComponent<RailSpeedController>().GetDistanceAtTime((float)startSec)));
+				Debug.Log("startSec: "+((float)startSec));
+				Debug.Log("GetDistAtTime/10: "+((rail3dObj.transform.GetChild(0).GetComponent<RailSpeedController>().GetDistanceAtTime((float)startSec))/10));
                 //StaticSceneData.StaticData.figureElements[Int32.Parse(timelineInstanceObjects[i].name.Substring(6, 2)) - 1].figureInstanceElements[Int32.Parse(timelineInstanceObjects[i].name.Substring(17))].moment = (float)startSec;
                 StaticSceneData.StaticData.figureElements[Int32.Parse(timelineInstanceObjects[i].name.Substring(6, 2)) - 1].figureInstanceElements[Int32.Parse(timelineInstanceObjects[i].name.Substring(17))].moment = moment;
                 // Debug.Log("FigureInstance: " + StaticSceneData.StaticData.figureElements[Int32.Parse(timelineInstanceObjects[i].name.Substring(6, 2)) - 1].figureInstanceElements[Int32.Parse(timelineInstanceObjects[i].name.Substring(17))].name);
