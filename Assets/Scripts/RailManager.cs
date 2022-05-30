@@ -1116,10 +1116,16 @@ public class RailManager : MonoBehaviour
 				double startSec = calculateFigureStartTimeInSec(timelineInstanceObjects[i], objectAnimationLength, maxTimeInSec, minX, maxX);
 
                 float moment = UtilitiesTm.FloatRemap(timelineInstanceObjects[i].transform.localPosition.x, gameObject.GetComponent<RectTransform>().rect.width / -2, gameObject.GetComponent<RectTransform>().rect.width / 2, 0, AnimationTimer.GetMaxTime());
+                float zPosFigure = (rail3dObj.transform.GetChild(0).GetComponent<RailSpeedController>().GetDistanceAtTime((float)startSec)) / 10;
+                if (zPosFigure < 0) // wenn die Figur auf eine Position noch vor dem empty gesetzt werden würde, würde erscheinen bevor sie auf den rails da ist
+                {
+                    zPosFigure = 500f;      // deshalb wird die Figur komplett außerhalb der Szene abgesetzt.
+                }
 
                 //timelineInstanceObjects3D[i].transform.localPosition = new Vector3(-rail3dObj.transform.GetChild(0).transform.localPosition.x, (-rail3dObj.transform.GetChild(0).transform.localPosition.y-.03f), (rail3dObj.transform.GetChild(0).GetComponent<RailSpeedController>().GetDistanceAtTime((float)startSec)) / 10);
-				timelineInstanceObjects3D[i].transform.localPosition = new Vector3(-rail3dObj.transform.GetChild(0).transform.localPosition.x, (-rail3dObj.transform.GetChild(0).transform.localPosition.y-.03f), (rail3dObj.transform.GetChild(0).GetComponent<RailSpeedController>().GetDistanceAtTime((float)startSec)) / 10);
-				//this is for: (kris) damit die Figuren auch in die Richtung schauen, in die sie laufen
+                timelineInstanceObjects3D[i].transform.localPosition = new Vector3(-rail3dObj.transform.GetChild(0).transform.localPosition.x, (-rail3dObj.transform.GetChild(0).transform.localPosition.y - .03f), zPosFigure);
+				
+                //this is for: (kris) damit die Figuren auch in die Richtung schauen, in die sie laufen
 				if (rail3dObj.transform.GetChild(0).GetComponent<RailSpeedController>().railIndex % 2 == 1)
                 {
                     timelineInstanceObjects3D[i].transform.localEulerAngles = new Vector3(0, 270, 0);

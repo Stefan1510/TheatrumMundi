@@ -6,11 +6,19 @@ public class RailSpeedController : MonoBehaviour
 {
     public int railIndex;
     public float speed;
+    private float _speedAtTime;
 
     // Update is called once per frame
     void Update()
     {
-        transform.position = new Vector3(0, transform.parent.localPosition.y, 2 + GetDistanceAtTime(AnimationTimer.GetTime()) * speed);
+        if (railIndex % 2 == 0)
+        {
+            transform.position = new Vector3(0, transform.parent.localPosition.y, 2 + GetDistanceAtTime(AnimationTimer.GetTime()) * speed);
+        }
+        else
+        {
+            transform.position = new Vector3(0, transform.parent.localPosition.y, -(2 + GetDistanceAtTime(AnimationTimer.GetTime()) * speed));
+        }
 
         //Debug.Log(speed);
         //_goneSeconds += Time.deltaTime;
@@ -41,6 +49,7 @@ public class RailSpeedController : MonoBehaviour
         {
             v1 = v2 = railElementSpeeds[0].speed;
             distance = GetDistanceBetweenTwoMoments(0, t, v1, v2);
+            _speedAtTime = v1;
         }
         else if (momentAfter == -1)
         {
@@ -57,6 +66,7 @@ public class RailSpeedController : MonoBehaviour
             v1 = v2;
             v2 = railElementSpeeds[momentBefore].speed;
             distance += GetDistanceBetweenTwoMoments(t1, t2, v1, v2);
+            _speedAtTime = v2;
         }
         else if (momentBefore == 0)
         {
@@ -64,6 +74,7 @@ public class RailSpeedController : MonoBehaviour
             v1 = railElementSpeeds[0].speed;
             v2 = vt;
             distance = GetDistanceBetweenTwoMoments(0, t, v1, v2);
+            _speedAtTime = vt;
         }
         else
         {
@@ -82,6 +93,7 @@ public class RailSpeedController : MonoBehaviour
             v1 = v2;
             v2 = vt;
             distance += GetDistanceBetweenTwoMoments(t1, t2, v1, v2);
+            _speedAtTime = vt;
         }
         return distance;
     }
@@ -101,6 +113,12 @@ public class RailSpeedController : MonoBehaviour
             s = 0.5f * a * t * t + v1 * t;
         }
         return s;
+    }
+
+    public float GetSpeedAtTime(float t)
+    {
+        GetDistanceAtTime(t);
+        return _speedAtTime;
     }
 
 }
