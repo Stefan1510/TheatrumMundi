@@ -40,6 +40,7 @@ public class ObjectShelf : MonoBehaviour
 
     void Start()
     {
+		SceneManaging.menueActive = 1;
         //Debug.Log("testprint");
         //define the buttons
         //Debug.Log("this is the main menue");
@@ -116,7 +117,7 @@ public class ObjectShelf : MonoBehaviour
 		//gameController.GetComponent<UIController>().Rails[0].openCloseTimelineByClick(false,gameController.GetComponent<UIController>().Rails[0].timelineImage,false);
 		//show menue of buehne
 		MenueShelf01.SetActive(true);
-		
+		SceneManaging.menueActive = 1;
 		MenueShelf02.SetActive(false);
 		MenueShelf03.SetActive(false);
 		try {
@@ -179,6 +180,7 @@ public class ObjectShelf : MonoBehaviour
 		//show menue of buehne
 		MenueShelf01.SetActive(false);
 		MenueShelf02.SetActive(true);
+		SceneManaging.menueActive = 2;
 		MenueShelf03.SetActive(false);
 		try {
 			MenueShelf04.SetActive(false);
@@ -235,6 +237,7 @@ public class ObjectShelf : MonoBehaviour
 		MenueShelf01.SetActive(false);
 		MenueShelf02.SetActive(false);
 		MenueShelf03.SetActive(true);
+		SceneManaging.menueActive = 3;
 		try {
 			MenueShelf04.SetActive(false);
 		} catch (Exception ex) 
@@ -287,6 +290,7 @@ public class ObjectShelf : MonoBehaviour
 		MenueShelf03.SetActive(false);
 		try {
 			MenueShelf04.SetActive(true);
+			SceneManaging.menueActive = 4;
 		} catch (Exception ex) 
 		{
 			if(ex is NullReferenceException || ex is UnassignedReferenceException)

@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class PressHelp : MonoBehaviour
 {
-    [SerializeField] GameObject helpButtonPressed;
-    [SerializeField] GameObject helpOverlay;
+    [SerializeField] GameObject helpButtonPressed, helpOverlay, menueConfigMain, menuDirMain;
+
     private bool pressed = false;
 
     private void Start()
@@ -23,8 +23,24 @@ public class PressHelp : MonoBehaviour
         }
         else
         {
-            helpButtonPressed.SetActive(true);
-            helpOverlay.SetActive(true);
+            if (SceneManaging.menueActive == 1)
+            {
+
+            }
+            else if (SceneManaging.menueActive == 2)
+            {
+                helpButtonPressed.SetActive(true);
+                helpOverlay.SetActive(true);
+            }
+            else if (SceneManaging.menueActive == 3)
+            {
+
+            }
+            else if (SceneManaging.menueActive == 4)
+            {
+
+            }
+
             pressed = true;
         }
     }

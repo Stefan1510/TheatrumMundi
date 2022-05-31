@@ -84,7 +84,6 @@ namespace RockVR.Video.Demo
         {
             if (renderButtonPressed)
             {
-                Debug.Log("gfeth los");
                 VideoCaptureCtrl.instance.StopCapture();
                 renderButtonPressed = false;
                 AnimationTimer.ResetTime();
@@ -92,7 +91,6 @@ namespace RockVR.Video.Demo
             else
             {
                 AnimationTimer.ResetTime();
-Debug.Log("gfeth los");
                 VideoCaptureCtrl.instance.StartCapture();
                 renderButtonPressed = true;
                 AnimationTimer.StartTimer();
