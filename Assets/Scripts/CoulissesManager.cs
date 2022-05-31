@@ -230,15 +230,15 @@ public class CoulissesManager : MonoBehaviour
             else if (checkHitting(new Vector2(windowMinX, windowMinY), new Vector2(windowWidth, windowHeight), coulisses[currentObjectIndex]))
             {
                 sliderX.GetComponent<Slider>().value = coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.x / 270;
-                sliderY.GetComponent<Slider>().value = coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.y / 260 + 0.02f;
+                sliderY.GetComponent<Slider>().value = coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.y / 260 - 0.035f;
                 justChanging = true;
                 objectInField = true;
                 objectInRail = false;
-                //Debug.Log("Ich bin auf im Fenster! " + objectInField);
+                Debug.Log("Ich bin im Fenster! " + objectInField);
                 if (checkHitting(new Vector2(railMinX, railMinY), new Vector2(railWidth, railHeight), coulisses[currentObjectIndex]))
                 {
                     objectInRail = true;
-                    //Debug.Log("Ich bin auf der Schiene! " + objectInRail);
+                    Debug.Log("Ich bin auf der Schiene! object y: "+coulisses[currentObjectIndex].transform.position.y+", rail image y: "+railMinY);
                 }
 
             }
@@ -251,7 +251,7 @@ public class CoulissesManager : MonoBehaviour
             }
             ////////////////////////////////////////////////////////////////////////////////////////////
             StaticSceneData.StaticData.sceneryElements[currentObjectIndex].z = coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.x / 270;
-            StaticSceneData.StaticData.sceneryElements[currentObjectIndex].y = coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.y / 260 + 0.02f;
+            StaticSceneData.StaticData.sceneryElements[currentObjectIndex].y = coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.y / 260 - 0.035f;
             StaticSceneData.StaticData.sceneryElements[currentObjectIndex].x = 0.062f;
             StaticSceneData.Sceneries3D(); //CreateScene der SceneryElements
             ////////////////////////////////////////////////////////////////////////////////////////////
@@ -292,7 +292,7 @@ public class CoulissesManager : MonoBehaviour
                     StaticSceneData.StaticData.sceneryElements[currentObjectIndex].parent = "Schiene" + (currentTabIndex + 1).ToString();
                     StaticSceneData.StaticData.sceneryElements[currentObjectIndex].railnumber = currentTabIndex + 1;
                     sliderX.GetComponent<Slider>().value = coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.x / 270;
-                    sliderY.GetComponent<Slider>().value = coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.y / 260 + 0.02f;
+                    sliderY.GetComponent<Slider>().value = coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.y / 260 - 0.035f;
                     coulissesOnRails.Add(coulisses[currentObjectIndex]);
                     // Debug.Log("added 1");
                 }
@@ -306,7 +306,7 @@ public class CoulissesManager : MonoBehaviour
                     StaticSceneData.StaticData.sceneryElements[currentObjectIndex].parent = "Schiene" + (currentTabIndex + 1).ToString();
                     StaticSceneData.StaticData.sceneryElements[currentObjectIndex].railnumber = currentTabIndex + 1;
                     sliderX.GetComponent<Slider>().value = coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.x / 270;
-                    sliderY.GetComponent<Slider>().value = coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.y / 260 + 0.02f;
+                    sliderY.GetComponent<Slider>().value = coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.y / 260 - 0.035f;
                     coulissesOnRails.Add(coulisses[currentObjectIndex]);
                     // Debug.Log("added 2");
                 }
@@ -326,7 +326,7 @@ public class CoulissesManager : MonoBehaviour
                 ///////////////////////////////////////////////
                 StaticSceneData.StaticData.sceneryElements[currentObjectIndex].z = coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.x / 270;
                 // Debug.Log("posY 2D: " + coulisses[currentObjectIndex].GetComponent<RectTransform>().position.y + ", localposY 2D: " + coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.y);
-                StaticSceneData.StaticData.sceneryElements[currentObjectIndex].y = (coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.y) / 260 + .02f;
+                StaticSceneData.StaticData.sceneryElements[currentObjectIndex].y = (coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.y) / 260 - .035f;
                 StaticSceneData.StaticData.sceneryElements[currentObjectIndex].x = 0.062f;
                 StaticSceneData.Sceneries3D(); //CreateScene der SceneryElements
                 ////////////////////////////////////////////////////////////////////////
@@ -355,7 +355,7 @@ public class CoulissesManager : MonoBehaviour
         //2D-Kulisse
         //Debug.Log("value: "+ yPos.GetComponent<InputField>().text);
         sliderPosY.GetComponent<InputField>().text = sliderY.GetComponent<Slider>().value.ToString();
-        coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition = new Vector2(coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.x, (sliderY.GetComponent<Slider>().value - 0.02f) * 260);
+        coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition = new Vector2(coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.x, (sliderY.GetComponent<Slider>().value + 0.035f) * 260);
         //sliding = true;
 
         //3D-Kulisse
@@ -493,7 +493,7 @@ public class CoulissesManager : MonoBehaviour
         railWidth = 0.586f * Screen.width;
         railMinX = (0.68f * Screen.width) - (railWidth / 2);
         railHeight = 0.093f * Screen.height;
-        railMinY = 0.041f * Screen.height - (railHeight / 2);
+        railMinY = 0.07f * Screen.height - (railHeight / 2);
         windowWidth = 0.613f * Screen.width;
         windowHeight = 0.331f * Screen.height;
         windowMinX = (0.68f * Screen.width);
