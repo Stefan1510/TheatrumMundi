@@ -1121,9 +1121,17 @@ public class RailManager : MonoBehaviour
                 {
                     zPosFigure = 500f;      // deshalb wird die Figur komplett außerhalb der Szene abgesetzt.
                 }
-
+                //Debug.Log("SUBSTRING: "+rail3dObj.name.Substring(7));
+                if(rail3dObj.name.Substring(7) == "1" || rail3dObj.name.Substring(7) == "3" || rail3dObj.name.Substring(7) == "5")
+                {
                 //timelineInstanceObjects3D[i].transform.localPosition = new Vector3(-rail3dObj.transform.GetChild(0).transform.localPosition.x, (-rail3dObj.transform.GetChild(0).transform.localPosition.y-.03f), (rail3dObj.transform.GetChild(0).GetComponent<RailSpeedController>().GetDistanceAtTime((float)startSec)) / 10);
                 timelineInstanceObjects3D[i].transform.localPosition = new Vector3(-rail3dObj.transform.GetChild(0).transform.localPosition.x, (-rail3dObj.transform.GetChild(0).transform.localPosition.y - .03f), zPosFigure);
+                }
+                else 
+                {
+                    timelineInstanceObjects3D[i].transform.localPosition = new Vector3(rail3dObj.transform.GetChild(0).transform.localPosition.x, (-rail3dObj.transform.GetChild(0).transform.localPosition.y - .03f), zPosFigure);
+                }
+                
 				
                 //this is for: (kris) damit die Figuren auch in die Richtung schauen, in die sie laufen
 				if (rail3dObj.transform.GetChild(0).GetComponent<RailSpeedController>().railIndex % 2 == 1)
