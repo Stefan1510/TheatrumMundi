@@ -1124,19 +1124,19 @@ public class RailManager : MonoBehaviour
                 //Debug.Log("SUBSTRING: "+rail3dObj.name.Substring(7));
                 if(rail3dObj.name.Substring(7) == "1" || rail3dObj.name.Substring(7) == "3" || rail3dObj.name.Substring(7) == "5")
                 {
-                //timelineInstanceObjects3D[i].transform.localPosition = new Vector3(-rail3dObj.transform.GetChild(0).transform.localPosition.x, (-rail3dObj.transform.GetChild(0).transform.localPosition.y-.03f), (rail3dObj.transform.GetChild(0).GetComponent<RailSpeedController>().GetDistanceAtTime((float)startSec)) / 10);
-                timelineInstanceObjects3D[i].transform.localPosition = new Vector3(-rail3dObj.transform.GetChild(0).transform.localPosition.x, (-rail3dObj.transform.GetChild(0).transform.localPosition.y - .03f), zPosFigure);
+                    //timelineInstanceObjects3D[i].transform.localPosition = new Vector3(-rail3dObj.transform.GetChild(0).transform.localPosition.x, (-rail3dObj.transform.GetChild(0).transform.localPosition.y - 0.01f), (rail3dObj.transform.GetChild(0).GetComponent<RailSpeedController>().GetDistanceAtTime((float)startSec)) / 10);
+                    timelineInstanceObjects3D[i].transform.localPosition = new Vector3(-rail3dObj.transform.GetChild(0).transform.localPosition.x, (-rail3dObj.transform.GetChild(0).transform.localPosition.y - 0.01f), zPosFigure);
                 }
                 else 
                 {
-                    timelineInstanceObjects3D[i].transform.localPosition = new Vector3(rail3dObj.transform.GetChild(0).transform.localPosition.x, (-rail3dObj.transform.GetChild(0).transform.localPosition.y - .03f), zPosFigure);
+                    timelineInstanceObjects3D[i].transform.localPosition = new Vector3(rail3dObj.transform.GetChild(0).transform.localPosition.x, (-rail3dObj.transform.GetChild(0).transform.localPosition.y - 0.01f), zPosFigure);
                 }
                 
 				
                 //this is for: (kris) damit die Figuren auch in die Richtung schauen, in die sie laufen
 				if (rail3dObj.transform.GetChild(0).GetComponent<RailSpeedController>().railIndex % 2 == 1)
                 {
-                    timelineInstanceObjects3D[i].transform.localEulerAngles = new Vector3(0, 270, 0);
+                    timelineInstanceObjects3D[i].transform.localEulerAngles = new Vector3(timelineInstanceObjects3D[i].transform.localEulerAngles.x, 270, timelineInstanceObjects3D[i].transform.localEulerAngles.z);
                 }
                 Debug.Log("rail pos: "+(-rail3dObj.transform.GetChild(0).transform.localPosition.x));
 				Debug.Log("obj3D on rail pos: "+(-rail3dObj.transform.GetChild(0).transform.localPosition));
