@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+
 namespace RockVR.Video.Demo
 {
     public class PlayerControls : MonoBehaviour
@@ -83,6 +84,7 @@ namespace RockVR.Video.Demo
         {
             if (renderButtonPressed)
             {
+                Debug.Log("gfeth los");
                 VideoCaptureCtrl.instance.StopCapture();
                 renderButtonPressed = false;
                 AnimationTimer.ResetTime();
@@ -90,7 +92,7 @@ namespace RockVR.Video.Demo
             else
             {
                 AnimationTimer.ResetTime();
-
+Debug.Log("gfeth los");
                 VideoCaptureCtrl.instance.StartCapture();
                 renderButtonPressed = true;
                 AnimationTimer.StartTimer();
