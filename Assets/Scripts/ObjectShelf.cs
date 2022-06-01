@@ -94,7 +94,7 @@ public class ObjectShelf : MonoBehaviour
 			throw;
 		}
 
-		MenueButton01.SetActive(false);
+		MenueButton01.SetActive(true);
 		MenueButton02.SetActive(true);
 		MenueButton03.SetActive(true);
 		try
@@ -155,7 +155,7 @@ public class ObjectShelf : MonoBehaviour
 		//Debug.Log("lvc");
 		//lvcamera.transform.position=new Vector3(8f,4f,5f);
 
-		MenueButton01.SetActive(false);
+		MenueButton01.SetActive(true);
 		MenueButton02.SetActive(true);
 		MenueButton03.SetActive(true);
 		try {
@@ -213,7 +213,7 @@ public class ObjectShelf : MonoBehaviour
 		//HeadlineLicht.SetActive(false););
 
 		MenueButton01.SetActive(true);
-		MenueButton02.SetActive(false);
+		MenueButton02.SetActive(true);
 		MenueButton03.SetActive(true);
 		try {
 			MenueButton04.SetActive(true);
@@ -265,7 +265,7 @@ public class ObjectShelf : MonoBehaviour
 
 		MenueButton01.SetActive(true);
 		MenueButton02.SetActive(true);
-		MenueButton03.SetActive(false);
+		MenueButton03.SetActive(true);
 		try {
 			MenueButton04.SetActive(true);
 		} catch (Exception ex) 
