@@ -283,7 +283,6 @@ public class CoulissesManager : MonoBehaviour
                             {
                                 coulisses[currentObjectIndex].transform.SetParent(collections[i].transform);
                                 coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition = new Vector2(coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.x, 0.0f);
-
                             }
                         }
                     }
@@ -294,7 +293,9 @@ public class CoulissesManager : MonoBehaviour
                     sliderX.GetComponent<Slider>().value = coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.x / 270;
                     sliderY.GetComponent<Slider>().value = coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.y / 260 ;
                     coulissesOnRails.Add(coulisses[currentObjectIndex]);
-                    // Debug.Log("added 1");
+                    StaticSceneData.StaticData.sceneryElements[currentObjectIndex].zPos = coulisses[currentObjectIndex].transform.GetSiblingIndex();
+                    StaticSceneData.Sceneries3D();
+                    Debug.Log("sibling index : "+coulisses[currentObjectIndex].transform.GetSiblingIndex());
                 }
 
                 // if object is on a tab
@@ -308,7 +309,9 @@ public class CoulissesManager : MonoBehaviour
                     sliderX.GetComponent<Slider>().value = coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.x / 270;
                     sliderY.GetComponent<Slider>().value = coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.y / 260;
                     coulissesOnRails.Add(coulisses[currentObjectIndex]);
-                    // Debug.Log("added 2");
+                    StaticSceneData.StaticData.sceneryElements[currentObjectIndex].zPos = coulisses[currentObjectIndex].transform.GetSiblingIndex();
+                    StaticSceneData.Sceneries3D();
+                    Debug.Log("sibling index : "+coulisses[currentObjectIndex].transform.GetSiblingIndex());
                 }
 
                 // if object is outside the window (back to shelf)
@@ -474,6 +477,27 @@ public class CoulissesManager : MonoBehaviour
             coulisses[currentObjectIndex].GetComponent<RectTransform>().localScale = new Vector2(-1, 1.0f);
         }
         StaticSceneData.Sceneries3D();
+    }
+    public void pressPlus()
+    {
+        if(coulisses[currentObjectIndex].transform.GetSiblingIndex() < coulisses[currentObjectIndex].transform.parent.transform.childCount-1)
+    {
+        coulisses[currentObjectIndex].transform.SetSiblingIndex(coulisses[currentObjectIndex].transform.GetSiblingIndex()+1);
+        StaticSceneData.StaticData.sceneryElements[currentObjectIndex].zPos = coulisses[currentObjectIndex].transform.GetSiblingIndex();
+        Debug.Log("zPos: "+StaticSceneData.StaticData.sceneryElements[currentObjectIndex].zPos);
+        StaticSceneData.Sceneries3D();
+    }
+        
+    }
+        public void pressMinus()
+    {
+        if(coulisses[currentObjectIndex].transform.GetSiblingIndex() >0)
+    {
+        coulisses[currentObjectIndex].transform.SetSiblingIndex(coulisses[currentObjectIndex].transform.GetSiblingIndex()-1);
+        StaticSceneData.StaticData.sceneryElements[currentObjectIndex].zPos = coulisses[currentObjectIndex].transform.GetSiblingIndex();
+        Debug.Log("zPos: "+StaticSceneData.StaticData.sceneryElements[currentObjectIndex].zPos);
+        StaticSceneData.Sceneries3D();
+    }
     }
     public void placeInShelf(int i)
     {
