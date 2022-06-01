@@ -508,6 +508,7 @@ public class RailMusicManager : MonoBehaviour
     }
     public void removeObjectFromTimeline(GameObject obj)
     {
+        //Debug.LogError(obj.name);
         int tmpNr = int.Parse(obj.transform.GetChild(1).name.Substring(12));
         int currentCounterNr = int.Parse(figCounterCircle[tmpNr - 1].transform.GetChild(0).GetComponent<Text>().text);
         Destroy(obj);
@@ -515,6 +516,7 @@ public class RailMusicManager : MonoBehaviour
         //Debug.Log("tmpNr: " + tmpNr + "currentCounterNr: " + currentCounterNr + ", Instances: " + timelineInstanceObjects.Count);
         Debug.Log("+++Removed: " + obj);
         figCounterCircle[tmpNr - 1].transform.GetChild(0).GetComponent<Text>().text = (currentCounterNr - 1).ToString();
+        StaticSceneData.StaticData.musicClipElements[Int32.Parse(obj.name.Substring(6, 2)) - 1].musicClipElementInstances.Remove(StaticSceneData.StaticData.musicClipElements[Int32.Parse(obj.name.Substring(6, 2)) - 1].musicClipElementInstances[Int32.Parse(obj.name.Substring(17,3))]);
     }
 
     public bool checkHittingTimeline(GameObject obj, Vector2 mousePos)
