@@ -257,6 +257,10 @@ public class SceneDataController : MonoBehaviour
 
         //music title elements (Musik)
         MusicApplyToScene(sceneData.musicClipElements);
+        for (int i = 0; i < imageTimelineRails.Length; i++)
+        {
+            imageTimelineRails[i].GetComponent<RailManager>().PublicUpdate();
+        }
 
     }
 
@@ -418,8 +422,7 @@ public class SceneDataController : MonoBehaviour
                     {
                         countActiveFigureElements++;
                         //Debug.LogWarning("Create Instance here: " + feInstance.name);
-                        GameObject curr3DObject;
-                        curr3DObject = imageTimelineRails[feInstance.railStart].GetComponent<RailManager>().CreateNew2DInstance(i, feInstance.moment, true);
+                        GameObject curr3DObject = imageTimelineRails[feInstance.railStart].GetComponent<RailManager>().CreateNew2DInstance(i, feInstance.moment, true);
                         // curr3DObject = Instantiate(objectsFigureElements[i]);
                         // imageTimelineRails[feInstance.railStart].GetComponent<RailManager>().timelineInstanceObjects3D.Add(curr3DObject);
                         //Debug.LogError("+++timeline3D: "+imageTimelineRails[feInstance.railStart].GetComponent<RailManager>().timelineInstanceObjects3D.Count);

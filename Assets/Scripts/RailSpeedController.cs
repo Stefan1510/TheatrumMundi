@@ -41,7 +41,6 @@ public class RailSpeedController : MonoBehaviour
     public float GetDistanceAtTime(float t)    //time in Sekunden
     {
         float distance = 0;
-        float _durationFromTime = 0;
         float vt = 0, t1 = 0, t2 = 0, v1 = 0, v2 = 0;
         List<RailElementSpeed> railElementSpeeds = StaticSceneData.StaticData.railElements[railIndex].railElementSpeeds;
         int momentAfter = railElementSpeeds.FindIndex(speed => speed.moment > t);      //sucht von vorne aus und findet den ersten Moment, der nach t liegt
@@ -51,7 +50,6 @@ public class RailSpeedController : MonoBehaviour
         {
             v1 = v2 = railElementSpeeds[0].speed;
             distance = GetDistanceBetweenTwoMoments(0, t, v1, v2);
-            _durationFromTime = t;
             _speedAtTime = v1;
         }
         else if (momentAfter == -1)
@@ -63,14 +61,12 @@ public class RailSpeedController : MonoBehaviour
                 v1 = railElementSpeeds[i].speed;
                 v2 = railElementSpeeds[i + 1].speed;
                 distance += GetDistanceBetweenTwoMoments(t1, t2, v1, v2);
-                _durationFromTime += t2 - t1;
             }
             t1 = t2;
             t2 = t;
             v1 = v2;
             v2 = railElementSpeeds[momentBefore].speed;
             distance += GetDistanceBetweenTwoMoments(t1, t2, v1, v2);
-            _durationFromTime += t2 - t1;
             _speedAtTime = v2;
         }
         else if (momentBefore == 0)
@@ -79,7 +75,6 @@ public class RailSpeedController : MonoBehaviour
             v1 = railElementSpeeds[0].speed;
             v2 = vt;
             distance = GetDistanceBetweenTwoMoments(0, t, v1, v2);
-            _durationFromTime = t;
             _speedAtTime = vt;
         }
         else
@@ -93,14 +88,12 @@ public class RailSpeedController : MonoBehaviour
                 v1 = railElementSpeeds[i].speed;
                 v2 = railElementSpeeds[i + 1].speed;
                 distance += GetDistanceBetweenTwoMoments(t1, t2, v1, v2);
-                _durationFromTime += t2 - t1;
             }
             t1 = t2;
             t2 = t;
             v1 = v2;
             v2 = vt;
             distance += GetDistanceBetweenTwoMoments(t1, t2, v1, v2);
-            _durationFromTime += t2 - t1;
             _speedAtTime = vt;
         }
         return distance;
@@ -131,7 +124,10 @@ public class RailSpeedController : MonoBehaviour
 
     public float GetDurationFromTime (float t)
     {
-        return _durationFromTime;
+        float startDistance = GetDistanceAtTime(t);
+        float endDistance = startDistance + 4.1f;
+        float duration = 4.1f / _speedAtTime;
+        return duration;
     }
 
 }

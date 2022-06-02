@@ -31,6 +31,7 @@ public class RailManager : MonoBehaviour
     GameObject newCopyOfFigure;
     Vector2 objectSceneSize;
 	float objectAnimationLength;
+    private bool _loadFiguresFromSceneData;     // when adding new figure to rail load everthing from scenedata again
 
     public GameObject objectLibrary;
     public GameObject parentMenue; // mainMenue
@@ -688,7 +689,8 @@ public class RailManager : MonoBehaviour
             // openCloseObjectInTimeline(true,timelineInstanceObjects,false); 
             //openCloseTimelineByClick(true, timelineImage,false);
             //createRectangle(newCopyOfFigure, new Vector2(300, 80), colFigure, minX, 100.0f);
-			createRectangle(newCopyOfFigure, new Vector2(300, 80), colFigure, minX, objectAnimationLength);
+            objectAnimationLength = rail3dObj.transform.GetChild(0).GetComponent<RailSpeedController>().GetDurationFromTime(momentOrPosX)*10+20;
+            createRectangle(newCopyOfFigure, new Vector2(300, 80), colFigure, minX, objectAnimationLength);
             scaleObject(newCopyOfFigure, 100, 80);		//scale the figure-picture in timeline to x: 100 and y: 80px
             scaleObject(newCopyOfFigure.transform.GetChild(0).gameObject, newCopyOfFigure.transform.GetChild(0).gameObject.GetComponent<RectTransform>().sizeDelta.x, 80);
             newCopyOfFigure.transform.GetChild(0).GetComponent<RectTransform>().position = new Vector2(newCopyOfFigure.transform.GetChild(0).gameObject.GetComponent<RectTransform>().position.x + 25, newCopyOfFigure.transform.GetChild(0).gameObject.GetComponent<RectTransform>().position.y);
@@ -697,7 +699,6 @@ public class RailManager : MonoBehaviour
             newCopyOfFigure.transform.localScale = Vector3.one;
             //newCopyOfFigure.transform.parent.GetChild(0).GetComponent<RectTransform>().position = new Vector2(newCopyOfFigure.transform.parent.GetChild(0).GetComponent<RectTransform>().position.x + 25, newCopyOfFigure.transform.parent.GetChild(0).GetComponent<RectTransform>().position.y);
             openCloseTimelineByClick(true, timelineImage, false);
-
         }
         else
         {
@@ -1073,6 +1074,7 @@ public class RailManager : MonoBehaviour
                     GameObject curr3DObject;
                     //create a copy of this timelineObject and keep the original one
                     curr3DObject = CreateNew2DInstance(currentClickedObjectIndex, getMousePos.x, false);
+                    _loadFiguresFromSceneData = true;
 
                     //set original image back to shelf, position 2 to make it visible
                     setParent(figureObjects[currentClickedObjectIndex], objectShelfParent[currentClickedObjectIndex]);
@@ -1152,6 +1154,12 @@ public class RailManager : MonoBehaviour
                 // Debug.Log("30 cm in 3D in Timeline: "+7.32f);
                 // Debug.Log("rail: " + StaticSceneData.StaticData.figureElements[Int32.Parse(timelineInstanceObjects[i].name.Substring(6, 2)) - 1].figureInstanceElements[Int32.Parse(timelineInstanceObjects[i].name.Substring(17))].railStart);
                 // Debug.Log("isntanceNr: " + StaticSceneData.StaticData.figureElements[Int32.Parse(timelineInstanceObjects[i].name.Substring(6, 2)) - 1].figureInstanceElements[Int32.Parse(timelineInstanceObjects[i].name.Substring(17))].instanceNr);
+            }
+            if (_loadFiguresFromSceneData)
+            {
+                StaticSceneData.Figures3D();
+                _loadFiguresFromSceneData = false;
+                Update();
             }
 
             releaseOnTimeline = false;
