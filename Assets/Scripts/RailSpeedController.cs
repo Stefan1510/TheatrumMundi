@@ -126,7 +126,14 @@ public class RailSpeedController : MonoBehaviour
     {
         float startDistance = GetDistanceAtTime(t);
         float endDistance = startDistance + 4.1f;
-        float duration = 4.1f / _speedAtTime;
+        float duration = 0;
+        float distance = startDistance;
+
+        while (distance <= endDistance)
+        {
+            distance = GetDistanceAtTime(t + duration);
+            duration += 0.1f;
+        }
         return duration;
     }
 
