@@ -118,6 +118,10 @@ public class ObjectShelf : MonoBehaviour
 		//show menue of buehne
 		MenueShelf01.SetActive(true);
 		SceneManaging.menueActive = 1;
+		if (ImageTimelineSelection.GetMainMenuType() == 1)
+        {
+			ImageTimelineSelection.SetRailType(0);
+        }
 		MenueShelf02.SetActive(false);
 		MenueShelf03.SetActive(false);
 		try {
@@ -181,6 +185,10 @@ public class ObjectShelf : MonoBehaviour
 		MenueShelf01.SetActive(false);
 		MenueShelf02.SetActive(true);
 		SceneManaging.menueActive = 2;
+		if (ImageTimelineSelection.GetMainMenuType() == 1)
+		{
+			ImageTimelineSelection.SetRailType(1);
+		}
 		MenueShelf03.SetActive(false);
 		try {
 			MenueShelf04.SetActive(false);
@@ -238,6 +246,10 @@ public class ObjectShelf : MonoBehaviour
 		MenueShelf02.SetActive(false);
 		MenueShelf03.SetActive(true);
 		SceneManaging.menueActive = 3;
+		if (ImageTimelineSelection.GetMainMenuType() == 1)
+		{
+			ImageTimelineSelection.SetRailType(2);
+		}
 		try {
 			MenueShelf04.SetActive(false);
 		} catch (Exception ex) 
