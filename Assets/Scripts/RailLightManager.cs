@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class RailLightManager : MonoBehaviour
 {
-    private Image timelineImage;
+    public Image timelineImage;
     public GameObject gameController;
     public Text timelineText;
     public Image timeSliderImage;
@@ -32,23 +32,22 @@ public class RailLightManager : MonoBehaviour
     {
         timeSettings.SetActive(false);
         isTimelineOpen = false;
-    
-        ResetScreenSize();
-        timelineImage.GetComponent<RectTransform>().sizeDelta = new Vector2(railWidth/ gameObject.transform.lossyScale.x, heightClosed/ gameObject.transform.lossyScale.x);
-        gameObject.GetComponent<BoxCollider2D>().size = new Vector2(railWidth/ gameObject.transform.lossyScale.x, heightClosed/ gameObject.transform.lossyScale.x);
-    }
-    public void openCloseTimelineByClick(bool thisTimelineOpen, Image tl)
-    {
 
+        ResetScreenSize();
+        timelineImage.GetComponent<RectTransform>().sizeDelta = new Vector2(railWidth / gameObject.transform.lossyScale.x, heightClosed / gameObject.transform.lossyScale.x);
+        gameObject.GetComponent<BoxCollider2D>().size = new Vector2(railWidth / gameObject.transform.lossyScale.x, heightClosed / gameObject.transform.lossyScale.x);
+    }
+    public void openTimelineByClick(bool thisTimelineOpen, Image tl)
+    {
         if (isAnyTimelineOpen() == false)
         {
             //set global flag
             SceneManaging.anyTimelineOpen = true;
             isTimelineOpen = true;
             //scale up timeline
-            tl.rectTransform.sizeDelta = new Vector2(tl.rectTransform.rect.width, heightOpened/ gameObject.transform.lossyScale.x);
+            tl.rectTransform.sizeDelta = new Vector2(tl.rectTransform.rect.width, heightOpened / gameObject.transform.lossyScale.x);
             //scale up the collider
-            tl.GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightOpened/ gameObject.transform.lossyScale.x);
+            tl.GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightOpened / gameObject.transform.lossyScale.x);
             if (gameObject.name == "ImageTimelineRailLight")
             {
                 ImageTimelineSelection.SetRailNumber(7);
@@ -64,39 +63,39 @@ public class RailLightManager : MonoBehaviour
         {
             if (thisTimelineOpen)
             {
-                //close timeline
+                /*//close timeline
                 isTimelineOpen = false;
                 //scale down timeline
                 tl.rectTransform.sizeDelta = new Vector2(tl.rectTransform.rect.width, heightClosed/ gameObject.transform.lossyScale.x);
                 //scale down the collider
                 tl.GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightClosed/ gameObject.transform.lossyScale.x);
-                //scale up the text
+                //scale up the text*/
             }
             else
             {
                 // a different rail is open - close it
                 for (int i = 0; i < gameController.GetComponent<UIController>().Rails.Length; i++)
                 {
-                    gameController.GetComponent<UIController>().Rails[i].GetComponent<RectTransform>().sizeDelta = new Vector2(tl.rectTransform.rect.width, heightClosed/ gameObject.transform.lossyScale.x);
-                    gameController.GetComponent<UIController>().Rails[i].GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightClosed/ gameObject.transform.lossyScale.x);
+                    gameController.GetComponent<UIController>().Rails[i].GetComponent<RectTransform>().sizeDelta = new Vector2(tl.rectTransform.rect.width, heightClosed / gameObject.transform.lossyScale.x);
+                    gameController.GetComponent<UIController>().Rails[i].GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightClosed / gameObject.transform.lossyScale.x);
                     gameController.GetComponent<UIController>().Rails[i].isTimelineOpen = false;
                     //Debug.Log("++++ Scaling down Rail: " + gameController.GetComponent<UIController>().Rails[i]);
                 }
 
                 for (int j = 0; j < 2; j++)
                 {
-                    gameController.GetComponent<UIController>().RailLightBG[j].GetComponent<RectTransform>().sizeDelta = new Vector2(tl.rectTransform.rect.width, heightClosed/ gameObject.transform.lossyScale.x);
-                    gameController.GetComponent<UIController>().RailLightBG[j].GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightClosed/ gameObject.transform.lossyScale.x);
+                    gameController.GetComponent<UIController>().RailLightBG[j].GetComponent<RectTransform>().sizeDelta = new Vector2(tl.rectTransform.rect.width, heightClosed / gameObject.transform.lossyScale.x);
+                    gameController.GetComponent<UIController>().RailLightBG[j].GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightClosed / gameObject.transform.lossyScale.x);
                     gameController.GetComponent<UIController>().RailLightBG[j].isTimelineOpen = false;
                 }
 
-                gameController.GetComponent<UIController>().RailMusic.GetComponent<RectTransform>().sizeDelta = new Vector2(tl.rectTransform.rect.width, heightClosed/ gameObject.transform.lossyScale.x);
-                gameController.GetComponent<UIController>().RailMusic.GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightClosed/ gameObject.transform.lossyScale.x);
+                gameController.GetComponent<UIController>().RailMusic.GetComponent<RectTransform>().sizeDelta = new Vector2(tl.rectTransform.rect.width, heightClosed / gameObject.transform.lossyScale.x);
+                gameController.GetComponent<UIController>().RailMusic.GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightClosed / gameObject.transform.lossyScale.x);
                 gameController.GetComponent<UIController>().RailMusic.isTimelineOpen = false;
                 // open clicked rail
-                tl.rectTransform.sizeDelta = new Vector2(tl.rectTransform.rect.width, heightOpened/ gameObject.transform.lossyScale.x);
+                tl.rectTransform.sizeDelta = new Vector2(tl.rectTransform.rect.width, heightOpened / gameObject.transform.lossyScale.x);
                 //scale up the collider
-                tl.GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightOpened/ gameObject.transform.lossyScale.x);
+                tl.GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightOpened / gameObject.transform.lossyScale.x);
                 isTimelineOpen = true;
                 if (gameObject.name == "ImageTimelineRailLight")
                 {
@@ -110,34 +109,32 @@ public class RailLightManager : MonoBehaviour
                     ImageTimelineSelection.SetRailType(3);  // for background-rail 
                 }
             }
-
         }
-
         openCloseTimeSettings(isAnyTimelineOpen(), timeSettings);
     }
 
     public void ResetScreenSize()
     {
-        Debug.Log("lossyScale: "+gameObject.transform.lossyScale);
+        Debug.Log("lossyScale: " + gameObject.transform.lossyScale);
         //Debug.Log("Screen changed! ScreenX: " + Screen.width);
 
         minX = 0.146f * Screen.width;// / gameObject.transform.lossyScale.x; //301.0f;  //timeline-minX
-        Debug.Log("minX: "+minX);
+        Debug.Log("minX: " + minX);
         railWidth = 0.69f * Screen.width;// / gameObject.transform.lossyScale.x;
-        heightClosed = 0.023f * Screen.height;// / gameObject.transform.lossyScale.x;
+        heightClosed = 0.018f * Screen.height;// / gameObject.transform.lossyScale.x;
         heightOpened = 0.074f * Screen.height;// / gameObject.transform.lossyScale.x;
         maxX = minX + railWidth;  //timeline-maxX
         //Debug.Log("rail start: " + minX);
-        Debug.Log("isTimelineopen: "+isTimelineOpen+"heightclosed: "+heightClosed);
+        Debug.Log("isTimelineopen: " + isTimelineOpen + "heightclosed: " + heightClosed);
         if (isTimelineOpen)
         {
-            timelineImage.GetComponent<RectTransform>().sizeDelta = gameObject.GetComponent<BoxCollider2D>().size = new Vector2(railWidth/ gameObject.transform.lossyScale.x, heightOpened/ gameObject.transform.lossyScale.x);
-            Debug.Log("size box collider: "+gameObject.GetComponent<BoxCollider2D>().size.y);
+            timelineImage.GetComponent<RectTransform>().sizeDelta = gameObject.GetComponent<BoxCollider2D>().size = new Vector2(railWidth / gameObject.transform.lossyScale.x, heightOpened / gameObject.transform.lossyScale.x);
+            Debug.Log("size box collider: " + gameObject.GetComponent<BoxCollider2D>().size.y);
         }
         else
         {
-            timelineImage.GetComponent<RectTransform>().sizeDelta = gameObject.GetComponent<BoxCollider2D>().size = new Vector2(railWidth/ gameObject.transform.lossyScale.x, heightClosed/ gameObject.transform.lossyScale.x);
-            Debug.Log("size: "+ timelineImage.GetComponent<RectTransform>().sizeDelta.y);
+            timelineImage.GetComponent<RectTransform>().sizeDelta = gameObject.GetComponent<BoxCollider2D>().size = new Vector2(railWidth / gameObject.transform.lossyScale.x, heightClosed / gameObject.transform.lossyScale.x);
+            Debug.Log("size: " + timelineImage.GetComponent<RectTransform>().sizeDelta.y);
         }
     }
     public bool isAnyTimelineOpen()
@@ -155,7 +152,6 @@ public class RailLightManager : MonoBehaviour
         {
             if (gameController.GetComponent<UIController>().RailLightBG[j].GetComponent<RailLightManager>().isTimelineOpen == true) val = true;
         }
-
         return val;
     }
 
@@ -179,7 +175,7 @@ public class RailLightManager : MonoBehaviour
         if (currentLossyScale != transform.lossyScale.x)
         {
             currentLossyScale = transform.lossyScale.x;
-            Debug.Log("scale after: "+transform.lossyScale.x);
+            Debug.Log("scale after: " + transform.lossyScale.x);
             ResetScreenSize();
         }
         //Debug.Log("draggingOnTimeline: " + draggingOnTimeline + ", editTimelineObj: " + editTimelineObject + ", draggingObj: " + draggingObject + ", isInstance: " + isInstance);
@@ -191,7 +187,7 @@ public class RailLightManager : MonoBehaviour
             if (this.GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(getMousePos))
             {
                 //open or close timeline
-                openCloseTimelineByClick(isTimelineOpen, timelineImage);
+                openTimelineByClick(isTimelineOpen, timelineImage);
                 Debug.Log("railtype: " + ImageTimelineSelection.GetRailType());
             }
         }

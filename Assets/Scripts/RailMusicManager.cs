@@ -65,8 +65,8 @@ public class RailMusicManager : MonoBehaviour
         currentClip = 0;
         isTimelineOpen = false;
         isInstance = false;
-        heightClosed = 25.0f;
-        heightOpened = 80.0f;
+        // heightClosed = 20.0f;
+        // heightOpened = 80.0f;
 
         //load all objects given in the figuresShelf
         //Debug.Log("objectscount: "+objectLibrary.transform.childCount);
@@ -93,16 +93,16 @@ public class RailMusicManager : MonoBehaviour
         currentClickedObjectIndex = -1;
         currentClickedInstanceObjectIndex = -1;
         currentLossyScale = 1.0f;
-        
+
         timeSettings = timeSliderImage.transform.GetChild(0).gameObject; // GameObject.Find("ImageTimeSettingsArea");
     }
 
     void Start()
     {
         ResetScreenSize();
-        timelineImage.GetComponent<RectTransform>().sizeDelta = new Vector2(railWidth/ gameObject.transform.lossyScale.x, heightClosed/ gameObject.transform.lossyScale.x);
-        gameObject.GetComponent<BoxCollider2D>().size = new Vector2(railWidth/ gameObject.transform.lossyScale.x, heightClosed/ gameObject.transform.lossyScale.x);
-        
+        timelineImage.GetComponent<RectTransform>().sizeDelta = new Vector2(railWidth / gameObject.transform.lossyScale.x, heightClosed / gameObject.transform.lossyScale.x);
+        gameObject.GetComponent<BoxCollider2D>().size = new Vector2(railWidth / gameObject.transform.lossyScale.x, heightClosed / gameObject.transform.lossyScale.x);
+
         audioSource = GetComponent<AudioSource>();
         timeSettings.SetActive(false);
         for (int i = 0; i < figureObjects.Length; i++)
@@ -189,7 +189,7 @@ public class RailMusicManager : MonoBehaviour
 
         return objName;
     }
-    public void openCloseTimelineByClick(bool thisTimelineOpen, Image tl, bool editObjOnTl)
+    public void openTimelineByClick(bool thisTimelineOpen, Image tl, bool editObjOnTl)
     {
         if (isAnyTimelineOpen() == false)
         {
@@ -198,9 +198,9 @@ public class RailMusicManager : MonoBehaviour
             SceneManaging.anyTimelineOpen = true;
             isTimelineOpen = true;
             //scale up timeline
-            tl.rectTransform.sizeDelta = new Vector2(tl.rectTransform.rect.width, heightOpened/ gameObject.transform.lossyScale.x);
+            tl.rectTransform.sizeDelta = new Vector2(tl.rectTransform.rect.width, heightOpened / gameObject.transform.lossyScale.x);
             //scale up the collider
-            tl.GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightOpened/ gameObject.transform.lossyScale.x);
+            tl.GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightOpened / gameObject.transform.lossyScale.x);
             //minimize or maximize objects on timeline
             openCloseObjectInTimeline(true, timelineInstanceObjects, editTimelineObject);
             ImageTimelineSelection.SetRailNumber(6);
@@ -211,14 +211,14 @@ public class RailMusicManager : MonoBehaviour
         {
             if (thisTimelineOpen)
             {
-                // Debug.Log("++++ geklickte Schiene ist offen und wird geschlossen: " + tl);
+                /*// Debug.Log("++++ geklickte Schiene ist offen und wird geschlossen: " + tl);
                 //close timeline
                 isTimelineOpen = false;
                 //scale down timeline
                 tl.rectTransform.sizeDelta = new Vector2(tl.rectTransform.rect.width, heightClosed/ gameObject.transform.lossyScale.x);
                 //scale down the collider
                 tl.GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightClosed/ gameObject.transform.lossyScale.x);
-                openCloseObjectInTimeline(false, timelineInstanceObjects, editTimelineObject);
+                openCloseObjectInTimeline(false, timelineInstanceObjects, editTimelineObject);*/
             }
             else
             {
@@ -226,8 +226,8 @@ public class RailMusicManager : MonoBehaviour
                 // a different rail is open - close it
                 for (int i = 0; i < gameController.GetComponent<UIController>().Rails.Length; i++)
                 {
-                    gameController.GetComponent<UIController>().Rails[i].GetComponent<RectTransform>().sizeDelta = new Vector2(tl.rectTransform.rect.width, heightClosed/ gameObject.transform.lossyScale.x);
-                    gameController.GetComponent<UIController>().Rails[i].GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightClosed/ gameObject.transform.lossyScale.x);
+                    gameController.GetComponent<UIController>().Rails[i].GetComponent<RectTransform>().sizeDelta = new Vector2(tl.rectTransform.rect.width, heightClosed / gameObject.transform.lossyScale.x);
+                    gameController.GetComponent<UIController>().Rails[i].GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightClosed / gameObject.transform.lossyScale.x);
                     gameController.GetComponent<UIController>().Rails[i].isTimelineOpen = false;
                     //GameController.GetComponent<UIController>().Rails[i].transform.GetChild(0).gameObject.GetComponent<Text>().rectTransform.localScale = new Vector3(1, 1, 1);
                     openCloseObjectInTimeline(false, gameController.GetComponent<UIController>().Rails[i].timelineInstanceObjects, editTimelineObject);
@@ -235,19 +235,19 @@ public class RailMusicManager : MonoBehaviour
                 }
                 for (int j = 0; j < 2; j++)
                 {
-                    gameController.GetComponent<UIController>().RailLightBG[j].GetComponent<RectTransform>().sizeDelta = new Vector2(tl.rectTransform.rect.width, heightClosed/ gameObject.transform.lossyScale.x);
-                    gameController.GetComponent<UIController>().RailLightBG[j].GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightClosed/ gameObject.transform.lossyScale.x);
+                    gameController.GetComponent<UIController>().RailLightBG[j].GetComponent<RectTransform>().sizeDelta = new Vector2(tl.rectTransform.rect.width, heightClosed / gameObject.transform.lossyScale.x);
+                    gameController.GetComponent<UIController>().RailLightBG[j].GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightClosed / gameObject.transform.lossyScale.x);
                     gameController.GetComponent<UIController>().RailLightBG[j].GetComponent<RailLightManager>().isTimelineOpen = false;
                 }
-                gameController.GetComponent<UIController>().RailMusic.GetComponent<RectTransform>().sizeDelta = new Vector2(tl.rectTransform.rect.width, heightClosed/ gameObject.transform.lossyScale.x);
-                gameController.GetComponent<UIController>().RailMusic.GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightClosed/ gameObject.transform.lossyScale.x);
+                gameController.GetComponent<UIController>().RailMusic.GetComponent<RectTransform>().sizeDelta = new Vector2(tl.rectTransform.rect.width, heightClosed / gameObject.transform.lossyScale.x);
+                gameController.GetComponent<UIController>().RailMusic.GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightClosed / gameObject.transform.lossyScale.x);
                 gameController.GetComponent<UIController>().RailMusic.isTimelineOpen = false;
                 // open clicked rail
                 //Debug.Log("++++ geklickte Schiene wird geöffnet: " + tl);
                 //scale up timeline
-                tl.rectTransform.sizeDelta = new Vector2(tl.rectTransform.rect.width, heightOpened/ gameObject.transform.lossyScale.x);
+                tl.rectTransform.sizeDelta = new Vector2(tl.rectTransform.rect.width, heightOpened / gameObject.transform.lossyScale.x);
                 //scale up the collider
-                tl.GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightOpened/ gameObject.transform.lossyScale.x);
+                tl.GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightOpened / gameObject.transform.lossyScale.x);
                 openCloseObjectInTimeline(true, timelineInstanceObjects, editTimelineObject);
                 isTimelineOpen = true;
                 ImageTimelineSelection.SetRailNumber(6);
@@ -265,9 +265,9 @@ public class RailMusicManager : MonoBehaviour
             //Debug.Log("++++ geklickte Schiene ist zu und wird geöffnet: " + tl);
             isTimelineOpen = true;
             //scale up timeline
-            tl.rectTransform.sizeDelta = new Vector2(tl.rectTransform.rect.width, heightOpened/ gameObject.transform.lossyScale.x);
+            tl.rectTransform.sizeDelta = new Vector2(tl.rectTransform.rect.width, heightOpened / gameObject.transform.lossyScale.x);
             //scale up the collider
-            tl.GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightOpened/ gameObject.transform.lossyScale.x);
+            tl.GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightOpened / gameObject.transform.lossyScale.x);
             //scale down the text
             //tl.transform.GetChild(0).gameObject.GetComponent<Text>().rectTransform.localScale = new Vector3(1, 0.2f, 1);
             //timelineText.rectTransform.localScale = new Vector3(1,0.2f,1);
@@ -281,9 +281,9 @@ public class RailMusicManager : MonoBehaviour
             //Debug.Log("++++ geklickte Schiene ist offen und wird geschlossen: " + tl);
             isTimelineOpen = false;
             //scale down timeline
-            tl.rectTransform.sizeDelta = new Vector2(tl.rectTransform.rect.width, heightClosed/ gameObject.transform.lossyScale.x);
+            tl.rectTransform.sizeDelta = new Vector2(tl.rectTransform.rect.width, heightClosed / gameObject.transform.lossyScale.x);
             //scale down the collider
-            tl.GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightClosed/ gameObject.transform.lossyScale.x);
+            tl.GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightClosed / gameObject.transform.lossyScale.x);
             //scale up all objects on timeline
             openCloseObjectInTimeline(isTimelineOpen, timelineInstanceObjects, editTimelineObject);
         }
@@ -357,8 +357,8 @@ public class RailMusicManager : MonoBehaviour
     public bool checkHittingTimeline(GameObject obj, Image tl, Vector2 mousePos)
     {
         bool hit = false;
-        Vector2 colSize = new Vector2(GetComponent<BoxCollider2D>().size.x* gameObject.transform.lossyScale.x, GetComponent<BoxCollider2D>().size.y* gameObject.transform.lossyScale.x);
-        Debug.Log("mouse: " + Input.mousePosition.y + ", posY" + tl.transform.position.y + ", col Height: " + colSize.y );
+        Vector2 colSize = new Vector2(GetComponent<BoxCollider2D>().size.x * gameObject.transform.lossyScale.x, GetComponent<BoxCollider2D>().size.y * gameObject.transform.lossyScale.x);
+        Debug.Log("mouse: " + Input.mousePosition.y + ", posY" + tl.transform.position.y + ", col Height: " + colSize.y);
         //if mouse hits the timeline while dragging an object
         if (mousePos.x <= maxX && mousePos.x > minX && mousePos.y <= tl.transform.position.y + (colSize.y / 2.0f) && mousePos.y > tl.transform.position.y - (colSize.y / 2.0f))
         {
@@ -378,9 +378,9 @@ public class RailMusicManager : MonoBehaviour
             //if timeline open scale ALL objects up
             if (timelineOpen)
             {
-                scaleObject(objects[i], length, heightOpened/ gameObject.transform.lossyScale.x);
-                scaleObject(objects[i].transform.GetChild(1).gameObject, objects[i].transform.GetChild(1).gameObject.GetComponent<RectTransform>().sizeDelta.x, heightOpened/ gameObject.transform.lossyScale.x);
-                scaleObject(objects[i].transform.GetChild(0).gameObject, objects[i].transform.GetChild(0).gameObject.GetComponent<RectTransform>().sizeDelta.x, heightOpened/ gameObject.transform.lossyScale.x);
+                scaleObject(objects[i], length, heightOpened / gameObject.transform.lossyScale.x);
+                scaleObject(objects[i].transform.GetChild(1).gameObject, objects[i].transform.GetChild(1).gameObject.GetComponent<RectTransform>().sizeDelta.x, heightOpened / gameObject.transform.lossyScale.x);
+                scaleObject(objects[i].transform.GetChild(0).gameObject, objects[i].transform.GetChild(0).gameObject.GetComponent<RectTransform>().sizeDelta.x, heightOpened / gameObject.transform.lossyScale.x);
                 objects[i].GetComponent<RectTransform>().anchoredPosition = new Vector2(objects[i].GetComponent<RectTransform>().anchoredPosition.x, -40.0f);
                 //objects[i].GetComponent<RectTransform>().sizeDelta=new Vector2(150.0f,50.0f);
                 //new Vector2(animationLength,scaleYUp);
@@ -389,9 +389,9 @@ public class RailMusicManager : MonoBehaviour
             {
                 //otherwise scale ALL objects down
                 //Debug.Log("method: scale object down:");
-                scaleObject(objects[i], length, heightClosed/ gameObject.transform.lossyScale.x);
-                scaleObject(objects[i].transform.GetChild(0).gameObject, objects[i].transform.GetChild(0).gameObject.GetComponent<RectTransform>().sizeDelta.x, heightClosed/ gameObject.transform.lossyScale.x);
-                scaleObject(objects[i].transform.GetChild(1).gameObject, objects[i].transform.GetChild(1).gameObject.GetComponent<RectTransform>().sizeDelta.x, heightClosed/ gameObject.transform.lossyScale.x);
+                scaleObject(objects[i], length, heightClosed / gameObject.transform.lossyScale.x);
+                scaleObject(objects[i].transform.GetChild(0).gameObject, objects[i].transform.GetChild(0).gameObject.GetComponent<RectTransform>().sizeDelta.x, heightClosed / gameObject.transform.lossyScale.x);
+                scaleObject(objects[i].transform.GetChild(1).gameObject, objects[i].transform.GetChild(1).gameObject.GetComponent<RectTransform>().sizeDelta.x, heightClosed / gameObject.transform.lossyScale.x);
                 objects[i].GetComponent<RectTransform>().anchoredPosition = new Vector2(objects[i].GetComponent<RectTransform>().anchoredPosition.x, -10.0f);
                 //objects[i].GetComponent<RectTransform>().sizeDelta=new Vector2(150.0f,10.0f);
             }
@@ -516,7 +516,7 @@ public class RailMusicManager : MonoBehaviour
         //Debug.Log("tmpNr: " + tmpNr + "currentCounterNr: " + currentCounterNr + ", Instances: " + timelineInstanceObjects.Count);
         Debug.Log("+++Removed: " + obj);
         figCounterCircle[tmpNr - 1].transform.GetChild(0).GetComponent<Text>().text = (currentCounterNr - 1).ToString();
-        StaticSceneData.StaticData.musicClipElements[Int32.Parse(obj.name.Substring(6, 2)) - 1].musicClipElementInstances.Remove(StaticSceneData.StaticData.musicClipElements[Int32.Parse(obj.name.Substring(6, 2)) - 1].musicClipElementInstances[Int32.Parse(obj.name.Substring(17,3))]);
+        StaticSceneData.StaticData.musicClipElements[Int32.Parse(obj.name.Substring(6, 2)) - 1].musicClipElementInstances.Remove(StaticSceneData.StaticData.musicClipElements[Int32.Parse(obj.name.Substring(6, 2)) - 1].musicClipElementInstances[Int32.Parse(obj.name.Substring(17, 3))]);
     }
 
     public bool checkHittingTimeline(GameObject obj, Vector2 mousePos)
@@ -577,7 +577,7 @@ public class RailMusicManager : MonoBehaviour
 
         //add object to list which objects are on timeline, set placed figures to timelineInstanceObjects-list
         updateObjectList(timelineInstanceObjects, newCopyOfFigure);
-        openCloseTimelineByClick(true, timelineImage, false);
+        openTimelineByClick(true, timelineImage, false);
         newCopyOfFigure.transform.localScale = Vector3.one;
         ////set original image back to shelf
         //setParent(figureObjects[currentClickedObjectIndex], objectShelfParent[musObjNr]);
@@ -592,26 +592,26 @@ public class RailMusicManager : MonoBehaviour
     }
     public void ResetScreenSize()
     {
-        Debug.Log("lossyScale: "+gameObject.transform.lossyScale);
+        Debug.Log("lossyScale: " + gameObject.transform.lossyScale);
         //Debug.Log("Screen changed! ScreenX: " + Screen.width);
 
         minX = 0.146f * Screen.width;// / gameObject.transform.lossyScale.x; //301.0f;  //timeline-minX
-        Debug.Log("minX: "+minX);
+        Debug.Log("minX: " + minX);
         railWidth = 0.69f * Screen.width;// / gameObject.transform.lossyScale.x;
-        heightClosed = 0.023f * Screen.height;// / gameObject.transform.lossyScale.x;
+        heightClosed = 0.018f * Screen.height;// / gameObject.transform.lossyScale.x;
         heightOpened = 0.074f * Screen.height;// / gameObject.transform.lossyScale.x;
         maxX = minX + railWidth;  //timeline-maxX
         //Debug.Log("rail start: " + minX);
-        Debug.Log("isTimelineopen: "+isTimelineOpen+"heightclosed: "+heightClosed);
+        Debug.Log("isTimelineopen: " + isTimelineOpen + "heightclosed: " + heightClosed);
         if (isTimelineOpen)
         {
-            timelineImage.GetComponent<RectTransform>().sizeDelta = gameObject.GetComponent<BoxCollider2D>().size = new Vector2(railWidth/ gameObject.transform.lossyScale.x, heightOpened/ gameObject.transform.lossyScale.x);
-            Debug.Log("size box collider: "+gameObject.GetComponent<BoxCollider2D>().size.y);
+            timelineImage.GetComponent<RectTransform>().sizeDelta = gameObject.GetComponent<BoxCollider2D>().size = new Vector2(railWidth / gameObject.transform.lossyScale.x, heightOpened / gameObject.transform.lossyScale.x);
+            Debug.Log("size box collider: " + gameObject.GetComponent<BoxCollider2D>().size.y);
         }
         else
         {
-            timelineImage.GetComponent<RectTransform>().sizeDelta = gameObject.GetComponent<BoxCollider2D>().size = new Vector2(railWidth/ gameObject.transform.lossyScale.x, heightClosed/ gameObject.transform.lossyScale.x);
-            Debug.Log("size: "+ timelineImage.GetComponent<RectTransform>().sizeDelta.y);
+            timelineImage.GetComponent<RectTransform>().sizeDelta = gameObject.GetComponent<BoxCollider2D>().size = new Vector2(railWidth / gameObject.transform.lossyScale.x, heightClosed / gameObject.transform.lossyScale.x);
+            Debug.Log("size: " + timelineImage.GetComponent<RectTransform>().sizeDelta.y);
         }
     }
     void Update()
@@ -619,10 +619,10 @@ public class RailMusicManager : MonoBehaviour
         if (currentLossyScale != transform.lossyScale.x)
         {
             currentLossyScale = transform.lossyScale.x;
-            Debug.Log("scale after: "+transform.lossyScale.x);
+            Debug.Log("scale after: " + transform.lossyScale.x);
             ResetScreenSize();
         }
-        
+
         Vector2 getMousePos = Input.mousePosition;
         if (Input.GetMouseButtonDown(0)) //left mouse button down
         {
@@ -655,7 +655,7 @@ public class RailMusicManager : MonoBehaviour
             if (this.GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(getMousePos))
             {
                 //open or close timeline
-                openCloseTimelineByClick(isTimelineOpen, timelineImage, editTimelineObject);
+                openTimelineByClick(isTimelineOpen, timelineImage, editTimelineObject);
                 //draggingOnTimeline = true;
             }
 
