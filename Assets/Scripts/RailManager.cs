@@ -47,6 +47,7 @@ public class RailManager : MonoBehaviour
     float heightOpened, heightClosed;
     Color colFigure, colFigureHighlighted;
     private float currentLossyScale;
+    private Vector2 diff;
 
     void Awake()
     {
@@ -230,6 +231,11 @@ public class RailManager : MonoBehaviour
         {
             if (thisTimelineOpen)
             {
+                // if timeline is already open, unhighlight all
+                for (int i = 0; i < timelineInstanceObjects3D.Count; i++)
+                {
+                    highlight(timelineInstanceObjects3D[i], timelineInstanceObjects[i], false);
+                }
                 /*// Debug.Log("++++ geklickte Schiene ist offen und wird geschlossen: " + tl);
                 //close timeline
                 isTimelineOpen = false;
@@ -248,6 +254,10 @@ public class RailManager : MonoBehaviour
                     gameController.GetComponent<UIController>().Rails[i].GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightClosed * 1.2f / gameObject.transform.lossyScale.x);
                     gameController.GetComponent<UIController>().Rails[i].GetComponent<RailManager>().isTimelineOpen = false;
                     openCloseObjectInTimeline(false, gameController.GetComponent<UIController>().Rails[i].timelineInstanceObjects, editTimelineObject);
+                    for (int j = 0; j < gameController.GetComponent<UIController>().Rails[i].GetComponent<RailManager>().timelineInstanceObjects3D.Count; j++)
+                    {
+                        highlight(gameController.GetComponent<UIController>().Rails[i].GetComponent<RailManager>().timelineInstanceObjects3D[j], gameController.GetComponent<UIController>().Rails[i].timelineInstanceObjects[j], false);
+                    }
                     //Debug.Log("++++ Scaling down Rail: " + gameController.GetComponent<UIController>().Rails[i]);
                 }
                 for (int j = 0; j < 2; j++)
@@ -333,7 +343,7 @@ public class RailManager : MonoBehaviour
                         openCloseObjectInTimeline(false, gameController.GetComponent<UIController>().Rails[i].timelineInstanceObjects, editTimelineObject);
                         for (int j = 0; j < gameController.GetComponent<UIController>().Rails[i].GetComponent<RailManager>().timelineInstanceObjects3D.Count; j++)
                         {
-                            unhighlight(gameController.GetComponent<UIController>().Rails[i].GetComponent<RailManager>().timelineInstanceObjects3D[j], gameController.GetComponent<UIController>().Rails[i].timelineInstanceObjects[j]);
+                            highlight(gameController.GetComponent<UIController>().Rails[i].GetComponent<RailManager>().timelineInstanceObjects3D[j], gameController.GetComponent<UIController>().Rails[i].timelineInstanceObjects[j], false);
                         }
                     }
                 }
@@ -662,47 +672,51 @@ public class RailManager : MonoBehaviour
         //Debug.Log("drag and hit " + hit);
         return hit;
     }
-    public void highlight(GameObject obj3D, GameObject obj)
+    public void highlight(GameObject obj3D, GameObject obj, bool highlightOn)
     {
-        obj.transform.GetChild(0).GetComponent<Image>().color = colFigureHighlighted;
-        obj.transform.GetChild(1).GetChild(0).gameObject.SetActive(true);   //show Delete-Button
-        SceneManaging.highlighted = true;
-
-        if (obj3D.GetComponent<FigureStats>().isShip)
+        if (highlightOn)
         {
-            for (int i = 0; i < obj3D.GetComponent<MeshRenderer>().materials.Length; i++)
+            obj.transform.GetChild(0).GetComponent<Image>().color = colFigureHighlighted;
+            obj.transform.GetChild(1).GetChild(0).gameObject.SetActive(true);   //show Delete-Button
+            SceneManaging.highlighted = true;
+
+            if (obj3D.GetComponent<FigureStats>().isShip)
             {
-                obj3D.GetComponent<MeshRenderer>().materials[i].EnableKeyword("_EMISSION");
+                for (int i = 0; i < obj3D.GetComponent<MeshRenderer>().materials.Length; i++)
+                {
+                    obj3D.GetComponent<MeshRenderer>().materials[i].EnableKeyword("_EMISSION");
+                }
+            }
+            else
+            {
+                for (int i = 0; i < obj3D.transform.GetChild(1).GetComponent<SkinnedMeshRenderer>().materials.Length; i++)
+                {
+                    obj3D.transform.GetChild(1).GetComponent<SkinnedMeshRenderer>().materials[i].EnableKeyword("_EMISSION");
+                }
             }
         }
         else
         {
-            for (int i = 0; i < obj3D.transform.GetChild(1).GetComponent<SkinnedMeshRenderer>().materials.Length; i++)
-            {
-                obj3D.transform.GetChild(1).GetComponent<SkinnedMeshRenderer>().materials[i].EnableKeyword("_EMISSION");
-            }
-        }
-    }
-    public void unhighlight(GameObject obj3D, GameObject obj)
-    {
-        obj.transform.GetChild(0).GetComponent<Image>().color = colFigure;
-        obj.transform.GetChild(1).GetChild(0).gameObject.SetActive(false);  //hide Delete-Button
-        SceneManaging.highlighted = false;
+            obj.transform.GetChild(0).GetComponent<Image>().color = colFigure;
+            obj.transform.GetChild(1).GetChild(0).gameObject.SetActive(false);  //hide Delete-Button
+            SceneManaging.highlighted = false;
 
-        if (obj3D.GetComponent<FigureStats>().isShip)
-        {
-            for (int i = 0; i < obj3D.GetComponent<MeshRenderer>().materials.Length; i++)
+            if (obj3D.GetComponent<FigureStats>().isShip)
             {
-                obj3D.GetComponent<MeshRenderer>().materials[i].DisableKeyword("_EMISSION");
+                for (int i = 0; i < obj3D.GetComponent<MeshRenderer>().materials.Length; i++)
+                {
+                    obj3D.GetComponent<MeshRenderer>().materials[i].DisableKeyword("_EMISSION");
+                }
+            }
+            else
+            {
+                for (int i = 0; i < obj3D.transform.GetChild(1).GetComponent<SkinnedMeshRenderer>().materials.Length; i++)
+                {
+                    obj3D.transform.GetChild(1).GetComponent<SkinnedMeshRenderer>().materials[i].DisableKeyword("_EMISSION");
+                }
             }
         }
-        else
-        {
-            for (int i = 0; i < obj3D.transform.GetChild(1).GetComponent<SkinnedMeshRenderer>().materials.Length; i++)
-            {
-                obj3D.transform.GetChild(1).GetComponent<SkinnedMeshRenderer>().materials[i].DisableKeyword("_EMISSION");
-            }
-        }
+
     }
     public GameObject CreateNew2DInstance(int figureNr, float momentOrPosX, bool loadFromFile)
     {
@@ -834,6 +848,7 @@ public class RailManager : MonoBehaviour
             //if you click on an object in shelf 
             if (currentClickedObjectIndex != (-1))      //is set in the identify-methods
             {
+                //diff = new Vector2(getMousePos.x - figureObjects[currentClickedObjectIndex].transform.position.x, getMousePos.y - figureObjects[currentClickedObjectIndex].transform.position.y);
                 if (figureObjects[currentClickedObjectIndex].GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(getMousePos) && getMousePos.y >= 500.0f) // necessary, so that figures below the figure shelf are not clickable anymore
                 {
                     draggingObject = true;
@@ -844,6 +859,7 @@ public class RailManager : MonoBehaviour
             {
                 if (timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(getMousePos))
                 {
+                    diff = new Vector2(getMousePos.x - timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.position.x, getMousePos.y - timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.position.y);
                     //set up some flags
                     //draggingObject = true;
                     draggingOnTimeline = true;
@@ -851,23 +867,22 @@ public class RailManager : MonoBehaviour
                     //highlighting objects and showing delete button when clicked
                     if (SceneManaging.highlighted == false)
                     {
-                        highlight(timelineInstanceObjects3D[currentClickedInstanceObjectIndex], timelineInstanceObjects[currentClickedInstanceObjectIndex]);
+                        highlight(timelineInstanceObjects3D[currentClickedInstanceObjectIndex], timelineInstanceObjects[currentClickedInstanceObjectIndex], true);
                         //timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).GetComponent<Button>().onClick.AddListener(() => removeObjectFromTimeline(timelineInstanceObjects[currentClickedInstanceObjectIndex], timelineInstanceObjects3D[currentClickedInstanceObjectIndex]));//, currentClickedObjectIndex));
                     }
                     else if (SceneManaging.highlighted && timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(0).GetComponent<Image>().color == colFigureHighlighted) // checkFigureHighlighted(timelineInstanceObjects3D[currentClickedInstanceObjectIndex].transform.GetChild(1).gameObject))  // check if second child (which is never the armature) has emission enabled (=is highlighted)
                     {
-                        unhighlight(timelineInstanceObjects3D[currentClickedInstanceObjectIndex], timelineInstanceObjects[currentClickedInstanceObjectIndex]);
+                        // highlight(timelineInstanceObjects3D[currentClickedInstanceObjectIndex], timelineInstanceObjects[currentClickedInstanceObjectIndex], false);
                     }
                     else
                     {
                         for (int i = 0; i < timelineInstanceObjects3D.Count; i++)
                         {
-                            unhighlight(timelineInstanceObjects3D[i], timelineInstanceObjects[i]);
+                            highlight(timelineInstanceObjects3D[i], timelineInstanceObjects[i], false);
                         }
-                        highlight(timelineInstanceObjects3D[currentClickedInstanceObjectIndex], timelineInstanceObjects[currentClickedInstanceObjectIndex]);
+                        highlight(timelineInstanceObjects3D[currentClickedInstanceObjectIndex], timelineInstanceObjects[currentClickedInstanceObjectIndex], true);
                         // timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).GetComponent<Button>().onClick.AddListener(() => removeObjectFromTimeline(timelineInstanceObjects[currentClickedInstanceObjectIndex], timelineInstanceObjects3D[currentClickedInstanceObjectIndex]));//, currentClickedObjectIndex));
                     }
-
                 }
             }
 
@@ -877,7 +892,7 @@ public class RailManager : MonoBehaviour
                 // delete highlight of everything if nothing is clicked
                 for (int i = 0; i < timelineInstanceObjects3D.Count; i++)
                 {
-                    unhighlight(timelineInstanceObjects3D[i], timelineInstanceObjects[i]);
+                    highlight(timelineInstanceObjects3D[i], timelineInstanceObjects[i], false);
                 }
             }
         }
@@ -891,8 +906,8 @@ public class RailManager : MonoBehaviour
                 isInstance = true;
                 //if you click an object in timeline (for dragging)
                 //move object
-                updateObjectPosition(timelineInstanceObjects[currentClickedInstanceObjectIndex], getMousePos); // hier muss die maus position minus pivot point genommen werden! oder so (s. dragdrop, da funktioniert das schon)
-                                                                                                               //snapping/lock y-axis
+                updateObjectPosition(timelineInstanceObjects[currentClickedInstanceObjectIndex], getMousePos - diff); // hier muss die maus position minus pivot point genommen werden! oder so (s. dragdrop, da funktioniert das schon)
+                                                                                                                      //snapping/lock y-axis
                 setObjectOnTimeline(timelineInstanceObjects[currentClickedInstanceObjectIndex], timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.position.x, this.transform.position.y);
                 // Debug.Log("pos X: " + timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().position.x);
                 if (timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().position.x < (minX + 50))  // 50 is half the box Collider width (mouse pos is in the middle of the figure)
@@ -1007,7 +1022,7 @@ public class RailManager : MonoBehaviour
             //             //temporarily change parent, so that object appears in front of the shelf
             // timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.SetParent(parentMenue.transform);
             // //moving on mouse pos
-            updateObjectPosition(timelineInstanceObjects[currentClickedInstanceObjectIndex], getMousePos);
+            updateObjectPosition(timelineInstanceObjects[currentClickedInstanceObjectIndex], getMousePos - diff);
             // Debug.Log("obj pos: "+timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.position+", obj: "+timelineInstanceObjects[currentClickedInstanceObjectIndex]);
             // //openCloseTimelineByDrag("close", timelineImage);
 
