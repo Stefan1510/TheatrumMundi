@@ -899,16 +899,25 @@ public class RailManager : MonoBehaviour
         // if timeline is open and something is being dragged
         if (draggingOnTimeline && isTimelineOpen)
         {
-            //Debug.Log("+++++++++++++++++++++++++dragging on timeline......");
             if (currentClickedInstanceObjectIndex != (-1))  //is set in the identify-methods
             {
                 isInstance = true;
                 //if you click an object in timeline (for dragging)
-                //move object
-                updateObjectPosition(timelineInstanceObjects[currentClickedInstanceObjectIndex], getMousePos - diff); // hier muss die maus position minus pivot point genommen werden! oder so (s. dragdrop, da funktioniert das schon)
-                                                                                                                      //snapping/lock y-axis
+                updateObjectPosition(timelineInstanceObjects[currentClickedInstanceObjectIndex], getMousePos - diff); //snapping/lock y-axis
                 setObjectOnTimeline(timelineInstanceObjects[currentClickedInstanceObjectIndex], timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.position.x, this.transform.position.y);
                 // Debug.Log("pos X: " + timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().position.x);
+
+                //---------------------------------------------------------------------Stapeln von Ebenen
+                // for (int i = 0; i < timelineInstanceObjects.Count; i++)
+                // {
+                //     if (timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().position.x <= (timelineInstanceObjects[i].GetComponent<RectTransform>().position.x + timelineInstanceObjects[i].GetComponent<RectTransform>().rect.width) 
+                //     && timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().position.x != timelineInstanceObjects[i].GetComponent<RectTransform>().position.x)
+                //     {
+                //         Debug.Log("position x: " + timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().position.x + ", pos X Ende von i: " + timelineInstanceObjects[i].GetComponent<RectTransform>().position.x + timelineInstanceObjects[i].GetComponent<RectTransform>().rect.width);
+                //     }
+                // }
+                // -------------------------------------------------------------------
+
                 if (timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().position.x < (minX + 50))  // 50 is half the box Collider width (mouse pos is in the middle of the figure)
                 {
                     timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().position = new Vector2((float)minX + 50, GetComponent<RectTransform>().position.y);    // tendenziell muesste das eher in buttonUp

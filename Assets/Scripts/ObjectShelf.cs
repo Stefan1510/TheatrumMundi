@@ -40,7 +40,7 @@ public class ObjectShelf : MonoBehaviour
 
     void Start()
     {
-        SceneManaging.menueActive = 2;
+        SceneManaging.menueActive = 1;
         Debug.Log("testprint");
         //define the buttons
         //Debug.Log("this is the main menue");
@@ -62,8 +62,8 @@ public class ObjectShelf : MonoBehaviour
         // MenueButton02.SetActive(true);
         // MenueButton03.SetActive(true);
         // MenueButton04.SetActive(true);
-        MenueShelf01.SetActive(false);
-        MenueShelf02.SetActive(true);
+        MenueShelf01.SetActive(true);
+        MenueShelf02.SetActive(false);
         MenueShelf03.SetActive(false);
         try
         {
@@ -78,8 +78,8 @@ public class ObjectShelf : MonoBehaviour
             throw;
         }
 
-        HeadlineShelf01.gameObject.SetActive(false);
-        HeadlineShelf02.gameObject.SetActive(true);
+        HeadlineShelf01.gameObject.SetActive(true);
+        HeadlineShelf02.gameObject.SetActive(false);
         HeadlineShelf03.gameObject.SetActive(false);
         try
         {

@@ -600,21 +600,21 @@ public class RailMusicManager : MonoBehaviour
 
         float tmpLength = ((float)maxX - (float)minX) * newCopyOfFigure.GetComponent<MusicLength>().musicLength / maxTimeInSec;//UtilitiesTm.FloatRemap(newCopyOfFigure.GetComponent<MusicLength>().musicLength, 0, 614, (float)minX, (float)maxX);
         createRectangle(newCopyOfFigure, new Vector2(300, 50), colMusic, minX, tmpLength);
-        scaleObject(newCopyOfFigure, 100, 20, false);
-        scaleObject(newCopyOfFigure.transform.GetChild(0).gameObject, newCopyOfFigure.transform.GetChild(0).gameObject.GetComponent<RectTransform>().sizeDelta.x, 20, false);
+        scaleObject(newCopyOfFigure, 100, 80, false);
+        scaleObject(newCopyOfFigure.transform.GetChild(0).gameObject, newCopyOfFigure.transform.GetChild(0).gameObject.GetComponent<RectTransform>().sizeDelta.x, 80, false);
         newCopyOfFigure.transform.GetChild(0).GetComponent<RectTransform>().position = new Vector2(newCopyOfFigure.transform.GetChild(0).gameObject.GetComponent<RectTransform>().position.x + 26, newCopyOfFigure.transform.GetChild(0).gameObject.GetComponent<RectTransform>().position.y);
 
         figCounterCircle[musObjNr].transform.GetChild(0).GetComponent<Text>().text = (countName + 1).ToString();
 
         //parent and position
         float posX = UtilitiesTm.FloatRemap(moment, 0, AnimationTimer.GetMaxTime(), gameObject.GetComponent<RectTransform>().rect.width / -2, gameObject.GetComponent<RectTransform>().rect.width / 2);
-        newCopyOfFigure.transform.SetParent(gameObject.transform.GetChild(1).transform);
-        newCopyOfFigure.transform.localPosition = new Vector2(posX, 0);
-        scaleObject(newCopyOfFigure.transform.GetChild(1).gameObject, 100, 20, false);
+        newCopyOfFigure.transform.SetParent(gameObject.transform);
+        newCopyOfFigure.transform.localPosition = new Vector2(posX, newCopyOfFigure.transform.localPosition.y);
+        scaleObject(newCopyOfFigure.transform.GetChild(1).gameObject, 100, 80, false);
 
         //add object to list which objects are on timeline, set placed figures to timelineInstanceObjects-list
         updateObjectList(timelineInstanceObjects, newCopyOfFigure);
-        //openTimelineByClick(true);
+        openTimelineByClick(true);
         newCopyOfFigure.transform.localScale = Vector3.one;
 
         //openTimelineByClick(false);
