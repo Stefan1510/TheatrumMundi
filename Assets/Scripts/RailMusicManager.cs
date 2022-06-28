@@ -185,10 +185,10 @@ public class RailMusicManager : MonoBehaviour
             openCloseObjectInTimeline(true, timelineInstanceObjects, editTimelineObject);
             ImageTimelineSelection.SetRailNumber(6);
             ImageTimelineSelection.SetRailType(2);  // for rail-rails
-            if (!menue3.activeSelf)
-            {
-                parentMenue.GetComponent<ObjectShelf>().ButtonShelf03();
-            }
+            // if (!menue3.activeSelf)
+            // {
+            //     parentMenue.GetComponent<ObjectShelf>().ButtonShelf03();
+            // }
         }
         else if (isAnyTimelineOpen())
         {
@@ -205,10 +205,10 @@ public class RailMusicManager : MonoBehaviour
             }
             else
             {
-                if (!menue3.activeSelf)
-                {
-                    parentMenue.GetComponent<ObjectShelf>().ButtonShelf03();
-                }
+                // if (!menue3.activeSelf)
+                // {
+                //     parentMenue.GetComponent<ObjectShelf>().ButtonShelf03();
+                // }
                 // Debug.Log("++++ geklickte Schiene ist zu, aber eine andere ist offen und wird geschlossen: " + tl);
                 // a different rail is open - close it
                 for (int i = 0; i < gameController.GetComponent<UIController>().Rails.Length; i++)
@@ -730,7 +730,7 @@ public class RailMusicManager : MonoBehaviour
         }
 
         // if timeline is open and something is being dragged
-        if (draggingOnTimeline && editTimelineObject && isTimelineOpen)
+        if (draggingOnTimeline && isTimelineOpen)
         {
             //Debug.Log("+++++++++++++++++++++++++dragging on timeline......");
             //Debug.Log("--->before-if-index: "+currentClickedInstanceObjectIndex);
@@ -753,7 +753,7 @@ public class RailMusicManager : MonoBehaviour
                 {
                     SceneManaging.objectsTimeline = ((int)Char.GetNumericValue(timelineImage.name[17]) - 1);  // save old timeline to remove instance of this timeline
                     draggingObject = true;
-                    editTimelineObject = false;
+                    //editTimelineObject = false;
                     draggingOnTimeline = false;
                 }
             }

@@ -193,7 +193,7 @@ public class RailManager : MonoBehaviour
 
         return objName;
     }
-    public void openTimelineByClick(bool thisTimelineOpen, bool editObjOnTl)
+    public void openTimelineByClick(bool thisTimelineOpen)
     {
         if (isAnyTimelineOpen() == false)
         {
@@ -210,10 +210,10 @@ public class RailManager : MonoBehaviour
             openCloseObjectInTimeline(true, timelineInstanceObjects);
             ImageTimelineSelection.SetRailNumber((int)Char.GetNumericValue(timelineImage.name[17]) - 1);
             ImageTimelineSelection.SetRailType(0);  // for rail-rails
-            if (!menue1.activeSelf)
-            {
-                parentMenue.GetComponent<ObjectShelf>().ButtonShelf01();
-            }
+            // if (!menue1.activeSelf)
+            // {
+            //     parentMenue.GetComponent<ObjectShelf>().ButtonShelf01();
+            // }
         }
         else if (isAnyTimelineOpen())
         {
@@ -234,10 +234,10 @@ public class RailManager : MonoBehaviour
             }
             else
             {
-                if (!menue1.activeSelf)
-                {
-                    parentMenue.GetComponent<ObjectShelf>().ButtonShelf01();
-                }
+                // if (!menue1.activeSelf)
+                // {
+                //     parentMenue.GetComponent<ObjectShelf>().ButtonShelf01();
+                // }
                 // Debug.Log("++++ geklickte Schiene ist zu, aber eine andere ist offen und wird geschlossen: " + tl);
                 // a different rail is open - close it
                 for (int i = 0; i < gameController.GetComponent<UIController>().Rails.Length; i++)
@@ -261,7 +261,7 @@ public class RailManager : MonoBehaviour
                 gameController.GetComponent<UIController>().RailMusic.GetComponent<RectTransform>().sizeDelta = new Vector2(timelineImage.rectTransform.rect.width, heightClosed / gameObject.transform.lossyScale.x);
                 gameController.GetComponent<UIController>().RailMusic.GetComponent<BoxCollider2D>().size = new Vector2(timelineImage.GetComponent<BoxCollider2D>().size.x, heightClosed * 1.2f / gameObject.transform.lossyScale.x);
                 gameController.GetComponent<UIController>().RailMusic.GetComponent<RailMusicManager>().isTimelineOpen = false;
-                gameController.GetComponent<UIController>().RailMusic.GetComponent<RailMusicManager>().openCloseObjectInTimeline(false, gameController.GetComponent<UIController>().RailMusic.GetComponent<RailMusicManager>().timelineInstanceObjects, editObjOnTl);
+                gameController.GetComponent<UIController>().RailMusic.GetComponent<RailMusicManager>().openCloseObjectInTimeline(false, gameController.GetComponent<UIController>().RailMusic.GetComponent<RailMusicManager>().timelineInstanceObjects, false);
                 // open clicked rail
                 //Debug.Log("++++ geklickte Schiene wird geöffnet: " + tl);
                 //scale up timeline
@@ -755,8 +755,8 @@ public class RailManager : MonoBehaviour
         newCopyOfFigure.transform.GetComponent<BoxCollider2D>().size = newCopyOfFigure.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta;
         newCopyOfFigure.transform.GetComponent<BoxCollider2D>().offset = new Vector2(newCopyOfFigure.transform.GetComponent<BoxCollider2D>().size.x / 2 - 50f, newCopyOfFigure.transform.GetComponent<BoxCollider2D>().offset.y);
         //set 3d object to default position
-        GameObject curr3DObject = new GameObject();
-        curr3DObject = Instantiate(figureObjects3D[figureNr]);
+        //GameObject curr3DObject = new GameObject();
+        GameObject curr3DObject = Instantiate(figureObjects3D[figureNr]);
         timelineInstanceObjects3D.Add(curr3DObject);
         setParent(timelineInstanceObjects3D[timelineInstanceObjects3D.Count - 1], rail3dObj.transform.GetChild(0).gameObject);
         if (newCopyOfFigure.GetComponent<RectTransform>().position.x < (minX + 50))  // 50 is half the box Collider width (mouse pos is in the middle of the figure)
@@ -765,11 +765,11 @@ public class RailManager : MonoBehaviour
         }
         if (isTimelineOpen)
         {
-            openTimelineByClick(true, false);
+            openTimelineByClick(true);
         }
         else
         {
-            openTimelineByClick(false, false);
+            openTimelineByClick(false);
         }
         //Debug.Log("++++++++++++ 3D Object: " + curr3DObject.name + ", rail3d: " + rail3dObj + ", Pos: " + curr3DObject.transform.position + ", Instances of this obj: " + countName);//= countCopiesOfObject(figureObjects[currentClickedObjectIndex], timelineInstanceObjects););
         return curr3DObject;
@@ -840,7 +840,7 @@ public class RailManager : MonoBehaviour
             if (this.GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(getMousePos))
             {
                 //open or close timeline
-                openTimelineByClick(isTimelineOpen, editTimelineObject);
+                openTimelineByClick(isTimelineOpen);
                 //draggingOnTimeline = true;
             }
 
@@ -927,7 +927,7 @@ public class RailManager : MonoBehaviour
                 {
                     SceneManaging.objectsTimeline = ((int)Char.GetNumericValue(timelineImage.name[17]) - 1);  // save old timeline to remove instance of this timeline
                     draggingObject = true;
-                    editTimelineObject = false;
+                    //editTimelineObject = false;
                     draggingOnTimeline = false;
                 }
             }
@@ -1154,7 +1154,7 @@ public class RailManager : MonoBehaviour
                     StaticSceneData.StaticData.figureElements[currentClickedObjectIndex].figureInstanceElements.Add(thisFigureInstanceElement);
                     gameController.GetComponent<SceneDataController>().objects3dFigureInstances.Add(curr3DObject);
                     ///////////////////////////////////////////////////////////////////////////////////////////////////////
-
+                    //Destroy(curr3DObject);
                     currentClickedObjectIndex = -1; // set index back to -1 because nothing is being clicked anymore
                 }
             }

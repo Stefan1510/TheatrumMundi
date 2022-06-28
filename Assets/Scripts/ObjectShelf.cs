@@ -353,7 +353,7 @@ public class ObjectShelf : MonoBehaviour
         MenueButton03.SetActive(true);
         try
         {
-            MenueButton04.SetActive(false);
+            MenueButton04.SetActive(true);
         }
         catch (Exception ex)
         {
