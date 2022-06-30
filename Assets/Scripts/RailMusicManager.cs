@@ -80,7 +80,6 @@ public class RailMusicManager : MonoBehaviour
 
         timeSettings = timeSliderImage.transform.GetChild(0).gameObject; // GameObject.Find("ImageTimeSettingsArea");
     }
-
     void Start()
     {
         ResetScreenSize();
@@ -101,7 +100,6 @@ public class RailMusicManager : MonoBehaviour
         maxTimeInSec = (int)AnimationTimer.GetMaxTime();
         sizeDeltaAsFactor = new Vector2(1.0f, 1.0f);
     }
-
     public string identifyClickedObject()   //old
     {
         string objName = "";
@@ -417,26 +415,22 @@ public class RailMusicManager : MonoBehaviour
         //Debug.Log("method: timelineObjects count: "+objects.Count);
         for (int i = 0; i < objects.Count; i++)
         {
-            //Debug.Log("object size: "+objects[i].GetComponent<RectTransform>().sizeDelta);
+            objects[i].GetComponent<RectTransform>().anchoredPosition = new Vector2(objects[i].GetComponent<RectTransform>().anchoredPosition.x, -gameObject.GetComponent<RectTransform>().rect.height / 2);
             //if timeline open scale ALL objects up
             if (timelineOpen)
             {
-                scaleObject(objects[i], length, heightOpened / gameObject.transform.lossyScale.x, false);
-                scaleObject(objects[i].transform.GetChild(1).gameObject, objects[i].transform.GetChild(1).gameObject.GetComponent<RectTransform>().sizeDelta.x, heightOpened / gameObject.transform.lossyScale.x, false);
-                scaleObject(objects[i].transform.GetChild(0).gameObject, objects[i].transform.GetChild(0).gameObject.GetComponent<RectTransform>().sizeDelta.x, heightOpened / gameObject.transform.lossyScale.x, false);
-                objects[i].GetComponent<RectTransform>().anchoredPosition = new Vector2(objects[i].GetComponent<RectTransform>().anchoredPosition.x, -40.0f);
-                //objects[i].GetComponent<RectTransform>().sizeDelta=new Vector2(150.0f,50.0f);
-                //new Vector2(animationLength,scaleYUp);
+                scaleObject(objects[i], length, gameObject.GetComponent<RectTransform>().rect.height * 0.96f, false);
+                scaleObject(objects[i].transform.GetChild(1).gameObject, objects[i].transform.GetChild(1).gameObject.GetComponent<RectTransform>().sizeDelta.x, gameObject.GetComponent<RectTransform>().rect.height * 0.96f, false);
+                scaleObject(objects[i].transform.GetChild(0).gameObject, objects[i].transform.GetChild(0).gameObject.GetComponent<RectTransform>().sizeDelta.x, gameObject.GetComponent<RectTransform>().rect.height * 0.96f, false);
+
             }
-            else if ((timelineOpen == false) && (editObjOnTl == false))
+            else
             {
                 //otherwise scale ALL objects down
                 //Debug.Log("method: scale object down:");
-                scaleObject(objects[i], length, heightClosed / gameObject.transform.lossyScale.x, true);
-                scaleObject(objects[i].transform.GetChild(0).gameObject, objects[i].transform.GetChild(0).gameObject.GetComponent<RectTransform>().sizeDelta.x, heightClosed / gameObject.transform.lossyScale.x, true);
-                scaleObject(objects[i].transform.GetChild(1).gameObject, objects[i].transform.GetChild(1).gameObject.GetComponent<RectTransform>().sizeDelta.x, heightClosed / gameObject.transform.lossyScale.x, true);
-                objects[i].GetComponent<RectTransform>().anchoredPosition = new Vector2(objects[i].GetComponent<RectTransform>().anchoredPosition.x, -10.0f);
-                //objects[i].GetComponent<RectTransform>().sizeDelta=new Vector2(150.0f,10.0f);
+                scaleObject(objects[i], length, gameObject.GetComponent<RectTransform>().rect.height * 0.96f, true);
+                scaleObject(objects[i].transform.GetChild(0).gameObject, objects[i].transform.GetChild(0).gameObject.GetComponent<RectTransform>().sizeDelta.x, gameObject.GetComponent<RectTransform>().rect.height * 0.96f, true);
+                scaleObject(objects[i].transform.GetChild(1).gameObject, objects[i].transform.GetChild(1).gameObject.GetComponent<RectTransform>().sizeDelta.x, gameObject.GetComponent<RectTransform>().rect.height * 0.96f, true);
             }
         }
     }
@@ -494,7 +488,7 @@ public class RailMusicManager : MonoBehaviour
         obj.GetComponent<RectTransform>().pivot = new Vector2(0.0f, 0.5f);
         trans.anchoredPosition = new Vector2((obj.GetComponent<RectTransform>().rect.width / 2) * (-1), 0.0f);
         trans.SetSiblingIndex(0);
-        trans.sizeDelta = new Vector2((float)animLength, 80.0f); // custom size
+        trans.sizeDelta = new Vector2((float)animLength, size.y); // custom size
 
         Image image = imgObject.AddComponent<Image>();
         image.color = col;
@@ -503,6 +497,7 @@ public class RailMusicManager : MonoBehaviour
         image.color = tempColor;
         //set pivot point of sprite back to midpoint of sprite
         obj.GetComponent<RectTransform>().pivot = new Vector2(0.5f, 0.5f);
+        obj.GetComponent<RectTransform>().position = new Vector3(obj.GetComponent<RectTransform>().position.x, obj.GetComponent<RectTransform>().position.y, -1);
     }
     public int calculateFigureStartTimeInSec(GameObject fig, double animLength, int maxTimeLengthInSec, double railMinX, double railMaxX)
     {
@@ -599,9 +594,9 @@ public class RailMusicManager : MonoBehaviour
         newCopyOfFigure.name = figureObjects[musObjNr].name + "_instance" + countName.ToString("000");
 
         float tmpLength = ((float)maxX - (float)minX) * newCopyOfFigure.GetComponent<MusicLength>().musicLength / maxTimeInSec;//UtilitiesTm.FloatRemap(newCopyOfFigure.GetComponent<MusicLength>().musicLength, 0, 614, (float)minX, (float)maxX);
-        createRectangle(newCopyOfFigure, new Vector2(300, 50), colMusic, minX, tmpLength);
-        scaleObject(newCopyOfFigure, 100, 80, false);
-        scaleObject(newCopyOfFigure.transform.GetChild(0).gameObject, newCopyOfFigure.transform.GetChild(0).gameObject.GetComponent<RectTransform>().sizeDelta.x, 80, false);
+        createRectangle(newCopyOfFigure, new Vector2(300, gameObject.GetComponent<RectTransform>().rect.height * 0.96f), colMusic, minX, tmpLength);
+        scaleObject(newCopyOfFigure, 100, gameObject.GetComponent<RectTransform>().rect.height * 0.96f, false);
+        scaleObject(newCopyOfFigure.transform.GetChild(0).gameObject, newCopyOfFigure.transform.GetChild(0).gameObject.GetComponent<RectTransform>().sizeDelta.x, gameObject.GetComponent<RectTransform>().rect.height * 0.96f, false);
         newCopyOfFigure.transform.GetChild(0).GetComponent<RectTransform>().position = new Vector2(newCopyOfFigure.transform.GetChild(0).gameObject.GetComponent<RectTransform>().position.x + 26, newCopyOfFigure.transform.GetChild(0).gameObject.GetComponent<RectTransform>().position.y);
 
         figCounterCircle[musObjNr].transform.GetChild(0).GetComponent<Text>().text = (countName + 1).ToString();
@@ -610,7 +605,7 @@ public class RailMusicManager : MonoBehaviour
         float posX = UtilitiesTm.FloatRemap(moment, 0, AnimationTimer.GetMaxTime(), gameObject.GetComponent<RectTransform>().rect.width / -2, gameObject.GetComponent<RectTransform>().rect.width / 2);
         newCopyOfFigure.transform.SetParent(gameObject.transform);
         newCopyOfFigure.transform.localPosition = new Vector2(posX, newCopyOfFigure.transform.localPosition.y);
-        scaleObject(newCopyOfFigure.transform.GetChild(1).gameObject, 100, 80, false);
+        scaleObject(newCopyOfFigure.transform.GetChild(1).gameObject, 100, gameObject.GetComponent<RectTransform>().rect.height * 0.96f, false);
 
         //add object to list which objects are on timeline, set placed figures to timelineInstanceObjects-list
         updateObjectList(timelineInstanceObjects, newCopyOfFigure);
@@ -793,12 +788,9 @@ public class RailMusicManager : MonoBehaviour
                 openCloseObjectInTimeline(true, timelineInstanceObjects, editTimelineObject);
                 //and set animation-length
                 float animationLength = 100.0f;     //length of objects animation
-                float scaleY = 80.0f;             //size if the timeline is maximized
-                                                  //figureObjects[currentClickedObjectIndex].GetComponent<RectTransform>().sizeDelta=new Vector2(animationLength,scaleYUp);
-                                                  //scaleObject(figureObjects[currentClickedObjectIndex], animationLength, scaleYUp);
-                                                  //scale down the dragged figure (and childobject: image)
-                scaleObject(figureObjects[currentClickedObjectIndex], animationLength, scaleY, false);
-                scaleObject(figureObjects[currentClickedObjectIndex].transform.GetChild(0).gameObject, animationLength, scaleY, false);
+
+                scaleObject(figureObjects[currentClickedObjectIndex], animationLength, gameObject.GetComponent<RectTransform>().rect.height * 0.96f, false);
+                scaleObject(figureObjects[currentClickedObjectIndex].transform.GetChild(0).gameObject, animationLength, gameObject.GetComponent<RectTransform>().rect.height * 0.96f, false);
 
                 // change parent back
                 setParent(figureObjects[currentClickedObjectIndex], gameObject);
@@ -844,7 +836,7 @@ public class RailMusicManager : MonoBehaviour
                     newCopyOfFigure.name = figureObjects[currentClickedObjectIndex].name + "_instance" + countName.ToString("000");
 
                     float tmpLength = ((float)maxX - (float)minX) * newCopyOfFigure.GetComponent<MusicLength>().musicLength / 614;//UtilitiesTm.FloatRemap(newCopyOfFigure.GetComponent<MusicLength>().musicLength, 0, 614, (float)minX, (float)maxX);
-                    createRectangle(newCopyOfFigure, new Vector2(300, 50), colMusic, minX, tmpLength);
+                    createRectangle(newCopyOfFigure, new Vector2(300, gameObject.GetComponent<RectTransform>().rect.height * 0.96f), colMusic, minX, tmpLength);
 
                     figCounterCircle[currentClickedObjectIndex].transform.GetChild(0).GetComponent<Text>().text = (countName + 1).ToString();
 
@@ -852,7 +844,7 @@ public class RailMusicManager : MonoBehaviour
                     newCopyOfFigure.transform.SetParent(gameObject.transform);
                     newCopyOfFigure.transform.localScale = Vector3.one;
 
-                    if (figureObjects[currentClickedObjectIndex].GetComponent<RectTransform>().position.x < (minX + 0.035f * Screen.width))  // 50 is half the box Collider width (mouse pos is in the middle of the figure)
+                    if (figureObjects[currentClickedObjectIndex].GetComponent<RectTransform>().position.x < (minX + 0.03f * Screen.width))  // 50 is half the box Collider width (mouse pos is in the middle of the figure)
                     {
                         Debug.Log("achtung! " + figureObjects[currentClickedObjectIndex].GetComponent<RectTransform>().position.x + ", min X: " + minX);
                         newCopyOfFigure.GetComponent<RectTransform>().position = new Vector2((float)minX + 0.035f * Screen.width, figureObjects[currentClickedObjectIndex].transform.position.y);    // tendenziell muesste das eher in buttonUp

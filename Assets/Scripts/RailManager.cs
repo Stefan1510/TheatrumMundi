@@ -279,6 +279,27 @@ public class RailManager : MonoBehaviour
         openCloseTimeSettings(isAnyTimelineOpen(), timeSettings);
 
     }
+    public void openCloseObjectInTimeline(bool timelineOpen, List<GameObject> objects)
+    {
+        float length = objectAnimationLength;
+        //Debug.Log("method: timelineObjects count: "+objects.Count);
+        for (int i = 0; i < objects.Count; i++)
+        {
+            objects[i].GetComponent<RectTransform>().anchoredPosition = new Vector2(objects[i].GetComponent<RectTransform>().anchoredPosition.x, -gameObject.GetComponent<RectTransform>().rect.height / 2);
+            if (timelineOpen)
+            {
+                scaleObject(objects[i], length, heightOpened / gameObject.transform.lossyScale.x, false);
+                scaleObject(objects[i].transform.GetChild(1).gameObject, objects[i].transform.GetChild(1).gameObject.GetComponent<RectTransform>().sizeDelta.x, gameObject.GetComponent<RectTransform>().rect.height * 0.96f, false);
+                scaleObject(objects[i].transform.GetChild(0).gameObject, objects[i].transform.GetChild(0).gameObject.GetComponent<RectTransform>().sizeDelta.x, gameObject.GetComponent<RectTransform>().rect.height * 0.96f, false);
+            }
+            else
+            {
+                scaleObject(objects[i], length, heightOpened / gameObject.transform.lossyScale.x, true);
+                scaleObject(objects[i].transform.GetChild(1).gameObject, objects[i].transform.GetChild(1).gameObject.GetComponent<RectTransform>().sizeDelta.x, gameObject.GetComponent<RectTransform>().rect.height * 0.96f, true);
+                scaleObject(objects[i].transform.GetChild(0).gameObject, objects[i].transform.GetChild(0).gameObject.GetComponent<RectTransform>().sizeDelta.x, gameObject.GetComponent<RectTransform>().rect.height * 0.96f, true);
+            }
+        }
+    }
     public void openTimelineByDrag()
     {
         // if (open == "open")
@@ -353,6 +374,19 @@ public class RailManager : MonoBehaviour
             openCloseTimeSettings(isAnyTimelineOpen(), timeSettings);
         }
     }
+    public void openCloseTimeSettings(bool tlOpen, GameObject ts)
+    {
+        //activate the timeSettings at the bottom of the timeslider
+        //this method is called in the timelineOpen-methods
+        if ((tlOpen)) // && (ts.activeSelf==false)
+        {
+            ts.SetActive(true);
+        }
+        else
+        {
+            ts.SetActive(false);
+        }
+    }
     public bool isAnyTimelineOpen()
     {
         bool val = false;
@@ -369,19 +403,6 @@ public class RailManager : MonoBehaviour
             if (gameController.GetComponent<UIController>().RailLightBG[j].GetComponent<RailLightManager>().isTimelineOpen == true) val = true;
         }
         return val;
-    }
-    public void openCloseTimeSettings(bool tlOpen, GameObject ts)
-    {
-        //activate the timeSettings at the bottom of the timeslider
-        //this method is called in the timelineOpen-methods
-        if ((tlOpen)) // && (ts.activeSelf==false)
-        {
-            ts.SetActive(true);
-        }
-        else
-        {
-            ts.SetActive(false);
-        }
     }
     public void saveParent(GameObject obj)
     {
@@ -432,36 +453,6 @@ public class RailManager : MonoBehaviour
         }
         //Debug.Log("drag and hit " + hit);
         return hit;
-    }
-    public void openCloseObjectInTimeline(bool timelineOpen, List<GameObject> objects)
-    {
-        //float length = 100.0f;		//is this the animation-length of an object?
-        float length = objectAnimationLength;
-        //Debug.Log("method: timelineObjects count: "+objects.Count);
-        for (int i = 0; i < objects.Count; i++)
-        {
-            //Debug.Log("object size: "+objects[i].GetComponent<RectTransform>().sizeDelta);
-            //if timeline open scale ALL objects up
-            if (timelineOpen)
-            {
-                scaleObject(objects[i], length, heightOpened / gameObject.transform.lossyScale.x, false);
-                scaleObject(objects[i].transform.GetChild(1).gameObject, objects[i].transform.GetChild(1).gameObject.GetComponent<RectTransform>().sizeDelta.x, heightOpened / gameObject.transform.lossyScale.x, false);
-                scaleObject(objects[i].transform.GetChild(0).gameObject, objects[i].transform.GetChild(0).gameObject.GetComponent<RectTransform>().sizeDelta.x, heightOpened / gameObject.transform.lossyScale.x, false);
-                objects[i].GetComponent<RectTransform>().anchoredPosition = new Vector2(objects[i].GetComponent<RectTransform>().anchoredPosition.x, -40.0f);
-                //objects[i].GetComponent<RectTransform>().sizeDelta=new Vector2(150.0f,50.0f);
-                //new Vector2(animationLength,scaleYUp);
-            }
-            else if (timelineOpen == false)
-            {
-                //otherwise scale ALL objects down
-                Debug.Log("method: scale object down: " + objects[i]);
-                scaleObject(objects[i], length, heightClosed / gameObject.transform.lossyScale.x, true);
-                scaleObject(objects[i].transform.GetChild(0).gameObject, objects[i].transform.GetChild(0).gameObject.GetComponent<RectTransform>().sizeDelta.x, heightClosed / gameObject.transform.lossyScale.x, true);
-                scaleObject(objects[i].transform.GetChild(1).gameObject, objects[i].transform.GetChild(1).gameObject.GetComponent<RectTransform>().sizeDelta.x, heightClosed / gameObject.transform.lossyScale.x, true);
-                objects[i].GetComponent<RectTransform>().anchoredPosition = new Vector2(objects[i].GetComponent<RectTransform>().anchoredPosition.x, -10.0f);
-                //objects[i].GetComponent<RectTransform>().sizeDelta=new Vector2(150.0f,10.0f);
-            }
-        }
     }
     public void scaleObject(GameObject fig, float x, float y, bool boxCollZero)
     {
@@ -543,6 +534,7 @@ public class RailManager : MonoBehaviour
         image.color = tempColor;
         //set pivot point of sprite back to midpoint of sprite
         obj.GetComponent<RectTransform>().pivot = new Vector2(0.5f, 0.5f);
+        obj.GetComponent<RectTransform>().position = new Vector3(obj.GetComponent<RectTransform>().position.x, obj.GetComponent<RectTransform>().position.y, -1);
     }
     public int calculateFigureStartTimeInSec(GameObject fig, double animLength, int maxTimeLengthInSec, double railMinX, double railMaxX)
     {
@@ -733,36 +725,41 @@ public class RailManager : MonoBehaviour
             // openCloseObjectInTimeline(true,timelineInstanceObjects,false); 
             //openCloseTimelineByClick(true, timelineImage,false);
             //createRectangle(newCopyOfFigure, new Vector2(300, 80), colFigure, minX, 100.0f);
-            createRectangle(newCopyOfFigure, new Vector2(300, 80), colFigure, minX, objectAnimationLength);
-            scaleObject(newCopyOfFigure, 100, 80, false);      //scale the figure-picture in timeline to x: 100 and y: 80px
-            scaleObject(newCopyOfFigure.transform.GetChild(0).gameObject, newCopyOfFigure.transform.GetChild(0).gameObject.GetComponent<RectTransform>().sizeDelta.x, 80, false);
+            createRectangle(newCopyOfFigure, new Vector2(300, gameObject.GetComponent<RectTransform>().rect.height * 0.96f), colFigure, minX, objectAnimationLength);
+            scaleObject(newCopyOfFigure, 100, gameObject.GetComponent<RectTransform>().rect.height * 0.96f, false);      //scale the figure-picture in timeline to x: 100 and y: 80px
+            scaleObject(newCopyOfFigure.transform.GetChild(0).gameObject, newCopyOfFigure.transform.GetChild(0).gameObject.GetComponent<RectTransform>().sizeDelta.x, gameObject.GetComponent<RectTransform>().rect.height * 0.96f, false);
             newCopyOfFigure.transform.GetChild(0).GetComponent<RectTransform>().position = new Vector2(newCopyOfFigure.transform.GetChild(0).gameObject.GetComponent<RectTransform>().position.x + 25, newCopyOfFigure.transform.GetChild(0).gameObject.GetComponent<RectTransform>().position.y);
             scaleObject(newCopyOfFigure.transform.GetChild(1).gameObject, 100, 80, false);     //is this the blue rectangle size?
             gameController.GetComponent<SceneDataController>().objects2dFigureInstances.Add(newCopyOfFigure);
-            newCopyOfFigure.transform.localScale = Vector3.one;
             //newCopyOfFigure.transform.parent.GetChild(0).GetComponent<RectTransform>().position = new Vector2(newCopyOfFigure.transform.parent.GetChild(0).GetComponent<RectTransform>().position.x + 25, newCopyOfFigure.transform.parent.GetChild(0).GetComponent<RectTransform>().position.y);
         }
         else
         {
-            newCopyOfFigure.transform.position = new Vector2(momentOrPosX, figureObjects[figureNr].transform.position.y);
-            newCopyOfFigure.transform.localScale = Vector3.one;
+            if (newCopyOfFigure.transform.position.x < 0.03f * Screen.width)  // 50 is half the box Collider width (mouse pos is in the middle of the figure)
+            {
+                newCopyOfFigure.GetComponent<RectTransform>().anchoredPosition = new Vector2(0.03f * Screen.width, newCopyOfFigure.GetComponent<RectTransform>().anchoredPosition.y);
+                newCopyOfFigure.transform.position = new Vector2(newCopyOfFigure.transform.position.x, figureObjects[figureNr].transform.position.y);
+            }
+            else
+            {
+                newCopyOfFigure.transform.position = new Vector3(momentOrPosX, figureObjects[figureNr].transform.position.y);
+            }
+
             //createRectangle(newCopyOfFigure, new Vector2(300, 80), colFigure, minX, 100.0f);
-            createRectangle(newCopyOfFigure, new Vector2(300, 80), colFigure, minX, objectAnimationLength);
+            createRectangle(newCopyOfFigure, new Vector2(300, gameObject.GetComponent<RectTransform>().rect.height * 0.96f), colFigure, minX, objectAnimationLength);
         }
-        newCopyOfFigure.GetComponent<RectTransform>().position = new Vector3(newCopyOfFigure.GetComponent<RectTransform>().position.x, newCopyOfFigure.GetComponent<RectTransform>().position.y, -1.0f);
-        Debug.Log("Object: " + newCopyOfFigure.transform + ", size: " + newCopyOfFigure.GetComponent<RectTransform>().sizeDelta);
+
+        newCopyOfFigure.transform.localScale = Vector3.one;
         // size of rectangle becomes size for figure that is clickable
         newCopyOfFigure.transform.GetComponent<BoxCollider2D>().size = newCopyOfFigure.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta;
         newCopyOfFigure.transform.GetComponent<BoxCollider2D>().offset = new Vector2(newCopyOfFigure.transform.GetComponent<BoxCollider2D>().size.x / 2 - 50f, newCopyOfFigure.transform.GetComponent<BoxCollider2D>().offset.y);
+
+
         //set 3d object to default position
-        //GameObject curr3DObject = new GameObject();
         GameObject curr3DObject = Instantiate(figureObjects3D[figureNr]);
         timelineInstanceObjects3D.Add(curr3DObject);
         setParent(timelineInstanceObjects3D[timelineInstanceObjects3D.Count - 1], rail3dObj.transform.GetChild(0).gameObject);
-        if (newCopyOfFigure.GetComponent<RectTransform>().position.x < (minX + 50))  // 50 is half the box Collider width (mouse pos is in the middle of the figure)
-        {
-            newCopyOfFigure.GetComponent<RectTransform>().position = new Vector2((float)minX + 50, GetComponent<RectTransform>().position.y);
-        }
+
         if (isTimelineOpen)
         {
             openTimelineByClick(true);
@@ -918,9 +915,9 @@ public class RailManager : MonoBehaviour
                 // }
                 // -------------------------------------------------------------------
 
-                if (timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().position.x < (minX + 50))  // 50 is half the box Collider width (mouse pos is in the middle of the figure)
+                if (timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().anchoredPosition.x < (0.03f * Screen.width))  // 50 is half the box Collider width (mouse pos is in the middle of the figure)
                 {
-                    timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().position = new Vector2((float)minX + 50, GetComponent<RectTransform>().position.y);    // tendenziell muesste das eher in buttonUp
+                    timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().anchoredPosition = new Vector2(0.03f * Screen.width, timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().anchoredPosition.y);    // tendenziell muesste das eher in buttonUp
                 }
 
                 if (Physics2D.OverlapPoint(getMousePos) == false)       // mouse outside
@@ -1095,8 +1092,8 @@ public class RailManager : MonoBehaviour
                                                     //figureObjects[currentClickedObjectIndex].GetComponent<RectTransform>().sizeDelta=new Vector2(animationLength,scaleYUp);
                                                     //scaleObject(figureObjects[currentClickedObjectIndex], animationLength, scaleYUp);
                                                     //scale down the dragged figure (and childobject: image)
-                scaleObject(figureObjects[currentClickedObjectIndex], figPictureSize, heightOpened / gameObject.transform.lossyScale.x, false);
-                scaleObject(figureObjects[currentClickedObjectIndex].transform.GetChild(0).gameObject, figPictureSize, heightOpened / gameObject.transform.lossyScale.x, false);
+                scaleObject(figureObjects[currentClickedObjectIndex], figPictureSize, gameObject.GetComponent<RectTransform>().rect.height * 0.96f, false);
+                scaleObject(figureObjects[currentClickedObjectIndex].transform.GetChild(0).gameObject, figPictureSize, gameObject.GetComponent<RectTransform>().rect.height * 0.96f, false);
 
                 // change parent back
                 setParent(figureObjects[currentClickedObjectIndex], gameObject);
