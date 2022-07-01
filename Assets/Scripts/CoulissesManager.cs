@@ -88,7 +88,6 @@ public class CoulissesManager : MonoBehaviour
         mainMenue.GetComponent<RectTransform>().pivot = collections[0].GetComponent<RectTransform>().pivot;
         StaticSceneData.Sceneries3D(); //CreateScene der SceneryElements
     }
-
     void Update()
     {
         Vector2 getMousePos = Input.mousePosition;
@@ -182,6 +181,7 @@ public class CoulissesManager : MonoBehaviour
                 // coulisses[currentObjectIndex].transform.parent.GetChild(0).GetComponent<RectTransform>().GetComponent<Image>().color = colSilhouetteActive;
                 coulisses[currentObjectIndex].transform.SetParent(mainMenue.transform);
                 coulisses[currentObjectIndex].GetComponent<RectTransform>().sizeDelta = new Vector2(railWidth / 410 * coulisses[currentObjectIndex].GetComponent<CoulisseStats>().CoulisseWidth / coulisses[currentObjectIndex].transform.lossyScale.x, railWidth / 410 * coulisses[currentObjectIndex].GetComponent<CoulisseStats>().CoulisseHeight / coulisses[currentObjectIndex].transform.lossyScale.y);
+                //Debug.Log("1. ______________X: " + coulisses[currentObjectIndex].GetComponent<RectTransform>().rect.width);
                 coulisses[currentObjectIndex].GetComponent<BoxCollider2D>().size = coulisses[currentObjectIndex].GetComponent<RectTransform>().sizeDelta;
                 coulisses[currentObjectIndex].GetComponent<BoxCollider2D>().offset = new Vector2(0, coulisses[currentObjectIndex].GetComponent<RectTransform>().rect.height / 2);
             }
@@ -199,22 +199,27 @@ public class CoulissesManager : MonoBehaviour
 
         if (dragging)
         {
+            if (coulisses[currentObjectIndex].GetComponent<RectTransform>().rect.width == shelfSizeWidth[currentObjectIndex])
+            {
+                //Debug.Log("hallo");
+                coulisses[currentObjectIndex].GetComponent<RectTransform>().sizeDelta = new Vector2(railWidth / 410 * coulisses[currentObjectIndex].GetComponent<CoulisseStats>().CoulisseWidth / coulisses[currentObjectIndex].transform.lossyScale.x, railWidth / 410 * coulisses[currentObjectIndex].GetComponent<CoulisseStats>().CoulisseHeight / coulisses[currentObjectIndex].transform.lossyScale.y);
+            }
             coulisses[currentObjectIndex].transform.position = new Vector2(getMousePos.x - diff.x, getMousePos.y - diff.y); // diff is difference of mouse position to clicked position on coulisse so that the coulisse doesnt jump to the pivot all the time
             coulisses[currentObjectIndex].transform.SetParent(mainMenue.transform);
-
+            //Debug.Log("2. ______________X: " + coulisses[currentObjectIndex].GetComponent<RectTransform>().rect.width);
             //if inside settings window
             if (getMousePos.x > colliderSettings.transform.position.x - colliderSettings.GetComponent<RectTransform>().sizeDelta.x / 2 && getMousePos.y > colliderSettings.transform.position.y - colliderSettings.GetComponent<RectTransform>().sizeDelta.y / 2
             && getMousePos.x < colliderSettings.transform.position.x + colliderSettings.GetComponent<RectTransform>().sizeDelta.x / 2 && getMousePos.y < colliderSettings.transform.position.y + colliderSettings.GetComponent<RectTransform>().sizeDelta.y / 2)
             {
-                Debug.Log("mouse x: " + getMousePos.x + ", collider x min: " + (colliderSettings.transform.position.x - colliderSettings.GetComponent<RectTransform>().sizeDelta.x / 2));
+                //Debug.Log("mouse x: " + getMousePos.x + ", collider x min: " + (colliderSettings.transform.position.x - colliderSettings.GetComponent<RectTransform>().sizeDelta.x / 2));
                 highlight(currentObjectIndex, 2);
             }
             else
             {
-                Debug.Log("mouse outside of einstellungsfenster");
+                //Debug.Log("mouse outside of einstellungsfenster");
                 highlight(currentObjectIndex, 1);
             }
-
+            //Debug.Log("3. ______________X: " + coulisses[currentObjectIndex].GetComponent<RectTransform>().rect.width);
             // if coulisse is hitting a tab
             int hitIndexTab = checkHittingIndexTab(indexTabs, getMousePos);
             if (hitIndexTab != -1)
@@ -240,7 +245,6 @@ public class CoulissesManager : MonoBehaviour
                     objectInRail = true;
                     //Debug.Log("Ich bin auf der Schiene! object x: "+coulisses[currentObjectIndex].transform.position.x+", rail width: "+railWidth+ ", rail x min: "+railMinX);
                 }
-
             }
             // nothing is hit
             else
@@ -255,6 +259,7 @@ public class CoulissesManager : MonoBehaviour
             StaticSceneData.StaticData.sceneryElements[currentObjectIndex].x = 0.062f;
             StaticSceneData.Sceneries3D(); //CreateScene der SceneryElements
             ////////////////////////////////////////////////////////////////////////////////////////////
+            //Debug.Log("4. ______________X: " + coulisses[currentObjectIndex].GetComponent<RectTransform>().rect.width);
         }
 
         if (Input.GetMouseButtonUp(0)) //left mouse button up
@@ -435,8 +440,8 @@ public class CoulissesManager : MonoBehaviour
         if (color == 1)
         {
             coulisses[i].GetComponent<Image>().color = colHighlightedGrey;
-            //scenerySettings.SetActive(true);
-            //showDeleteButton(deleteButton, coulisses[i], true);
+            scenerySettings.SetActive(false);
+            showDeleteButton(deleteButton, coulisses[i], false);
             //Debug.Log("Delete Button pos: " + deleteButton.GetComponent<RectTransform>().anchoredPosition);
             //StaticSceneData.StaticData.sceneryElements[i].emission = true;
             //isHighlighted[i] = true;
@@ -446,7 +451,7 @@ public class CoulissesManager : MonoBehaviour
             coulisses[i].GetComponent<Image>().color = colHighlightedGreen;
             scenerySettings.SetActive(true);
             showDeleteButton(deleteButton, coulisses[i], true);
-            Debug.Log("Delete Button pos: " + deleteButton.GetComponent<RectTransform>().anchoredPosition);
+            //Debug.Log("Delete Button pos: " + deleteButton.GetComponent<RectTransform>().anchoredPosition);
             StaticSceneData.StaticData.sceneryElements[i].emission = true;
             isHighlighted[i] = true;
         }
@@ -459,9 +464,7 @@ public class CoulissesManager : MonoBehaviour
             scenerySettings.SetActive(false);
             //Debug.Log("unighlight Kulisse: " + i);
         }
-
     }
-
     public int identifyClickedObjectIndex()
     {
         int index = -1;
