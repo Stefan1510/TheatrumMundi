@@ -715,6 +715,8 @@ public class RailManager : MonoBehaviour
         figCounterCircle[figureNr].transform.GetChild(0).GetComponent<Text>().text = (countName + 1).ToString();
         //parent and position
         newCopyOfFigure.transform.SetParent(gameObject.transform);
+        newCopyOfFigure.transform.localScale = Vector3.one;
+
 
         if (loadFromFile)
         {
@@ -722,9 +724,7 @@ public class RailManager : MonoBehaviour
             //Debug.LogWarning("moment " + momentOrPosX + " // posX " + posX);
 
             newCopyOfFigure.transform.localPosition = new Vector2(posX, figureObjects[figureNr].transform.localPosition.y);
-            // openCloseObjectInTimeline(true,timelineInstanceObjects,false); 
-            //openCloseTimelineByClick(true, timelineImage,false);
-            //createRectangle(newCopyOfFigure, new Vector2(300, 80), colFigure, minX, 100.0f);
+
             createRectangle(newCopyOfFigure, new Vector2(300, gameObject.GetComponent<RectTransform>().rect.height * 0.96f), colFigure, minX, objectAnimationLength);
             scaleObject(newCopyOfFigure, 100, gameObject.GetComponent<RectTransform>().rect.height * 0.96f, false);      //scale the figure-picture in timeline to x: 100 and y: 80px
             scaleObject(newCopyOfFigure.transform.GetChild(0).gameObject, newCopyOfFigure.transform.GetChild(0).gameObject.GetComponent<RectTransform>().sizeDelta.x, gameObject.GetComponent<RectTransform>().rect.height * 0.96f, false);
@@ -735,6 +735,8 @@ public class RailManager : MonoBehaviour
         }
         else
         {
+            createRectangle(newCopyOfFigure, new Vector2(300, gameObject.GetComponent<RectTransform>().rect.height * 0.96f), colFigure, minX, objectAnimationLength);
+            //------------------------------------------limit front of rail---------------------------------------------//
             if (newCopyOfFigure.transform.position.x < 0.03f * Screen.width)  // 50 is half the box Collider width (mouse pos is in the middle of the figure)
             {
                 newCopyOfFigure.GetComponent<RectTransform>().anchoredPosition = new Vector2(0.03f * Screen.width, newCopyOfFigure.GetComponent<RectTransform>().anchoredPosition.y);
@@ -744,16 +746,18 @@ public class RailManager : MonoBehaviour
             {
                 newCopyOfFigure.transform.position = new Vector3(momentOrPosX, figureObjects[figureNr].transform.position.y);
             }
+            //-------------------------------------------------limit back of rail------------------------------------------//
 
-            //createRectangle(newCopyOfFigure, new Vector2(300, 80), colFigure, minX, 100.0f);
-            createRectangle(newCopyOfFigure, new Vector2(300, gameObject.GetComponent<RectTransform>().rect.height * 0.96f), colFigure, minX, objectAnimationLength);
+
         }
 
-        newCopyOfFigure.transform.localScale = Vector3.one;
         // size of rectangle becomes size for figure that is clickable
         newCopyOfFigure.transform.GetComponent<BoxCollider2D>().size = newCopyOfFigure.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta;
         newCopyOfFigure.transform.GetComponent<BoxCollider2D>().offset = new Vector2(newCopyOfFigure.transform.GetComponent<BoxCollider2D>().size.x / 2 - 50f, newCopyOfFigure.transform.GetComponent<BoxCollider2D>().offset.y);
-
+        if ((newCopyOfFigure.GetComponent<RectTransform>().anchoredPosition.x + newCopyOfFigure.transform.GetComponent<BoxCollider2D>().size.x) > (GetComponent<RectTransform>().rect.width + 0.03f * Screen.width))
+        {
+            newCopyOfFigure.GetComponent<RectTransform>().anchoredPosition = new Vector2((GetComponent<RectTransform>().rect.width + (0.03f * Screen.width) - newCopyOfFigure.transform.GetComponent<BoxCollider2D>().size.x), newCopyOfFigure.GetComponent<RectTransform>().anchoredPosition.y);
+        }
 
         //set 3d object to default position
         GameObject curr3DObject = Instantiate(figureObjects3D[figureNr]);
@@ -918,6 +922,13 @@ public class RailManager : MonoBehaviour
                 if (timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().anchoredPosition.x < (0.03f * Screen.width))  // 50 is half the box Collider width (mouse pos is in the middle of the figure)
                 {
                     timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().anchoredPosition = new Vector2(0.03f * Screen.width, timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().anchoredPosition.y);    // tendenziell muesste das eher in buttonUp
+                }
+
+                //-------------------------------------------------limit back of rail------------------------------------------//
+                if ((timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().anchoredPosition.x + newCopyOfFigure.transform.GetComponent<BoxCollider2D>().size.x) > (GetComponent<RectTransform>().rect.width + 0.03f * Screen.width))
+                {
+                    timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().anchoredPosition = new Vector2((GetComponent<RectTransform>().rect.width + (0.03f * Screen.width) - newCopyOfFigure.transform.GetComponent<BoxCollider2D>().size.x), newCopyOfFigure.GetComponent<RectTransform>().anchoredPosition.y);
+                    //Debug.LogWarning("JAAAAA! posx: " + (newCopyOfFigure.transform.position.x + newCopyOfFigure.transform.GetComponent<BoxCollider2D>().size.x) + ", anchored Pos: " + (newCopyOfFigure.GetComponent<RectTransform>().anchoredPosition.x + newCopyOfFigure.transform.GetComponent<BoxCollider2D>().size.x) + ", maxX: " + (GetComponent<RectTransform>().rect.width + 0.03f * Screen.width));
                 }
 
                 if (Physics2D.OverlapPoint(getMousePos) == false)       // mouse outside

@@ -434,7 +434,6 @@ public class RailMusicManager : MonoBehaviour
             }
         }
     }
-
     public void scaleObject(GameObject fig, float x, float y, bool boxCollZero)
     {
         //scale the object
@@ -728,20 +727,25 @@ public class RailMusicManager : MonoBehaviour
         if (draggingOnTimeline && isTimelineOpen)
         {
             //Debug.Log("+++++++++++++++++++++++++dragging on timeline......");
-            //Debug.Log("--->before-if-index: "+currentClickedInstanceObjectIndex);
             if (currentClickedInstanceObjectIndex != (-1))  //is set in the identify-methods
             {
-                // Debug.Log("achtung! " + timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().position.x);
                 isInstance = true;
                 //if you click an object in timeline (for dragging)
                 //move object
                 updateObjectPosition(timelineInstanceObjects[currentClickedInstanceObjectIndex], getMousePos - diff); // hier muss die maus position minus pivot point genommen werden! oder so
-                                                                                                                      //snapping/lock y-axis
+                //snapping/lock y-axis
                 setObjectOnTimeline(timelineInstanceObjects[currentClickedInstanceObjectIndex], timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.position.x, this.transform.position.y);
 
-                if (timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().position.x < (minX + 0.035f * Screen.width))  // 50 is half the box Collider width (mouse pos is in the middle of the figure)
+                //-------------------------------------------------limit front of rail------------------------------------------//
+                if (timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().position.x < (minX + 0.035f * Screen.width))
                 {
                     timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().position = new Vector2((float)minX + 0.035f * Screen.width, GetComponent<RectTransform>().position.y);    // tendenziell muesste das eher in buttonUp
+                }
+                //-------------------------------------------------limit back of rail------------------------------------------//
+                if ((timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().anchoredPosition.x + newCopyOfFigure.transform.GetComponent<BoxCollider2D>().size.x) > (GetComponent<RectTransform>().rect.width + 0.03f * Screen.width))
+                {
+                    timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().anchoredPosition = new Vector2((GetComponent<RectTransform>().rect.width + (0.03f * Screen.width) - newCopyOfFigure.transform.GetComponent<BoxCollider2D>().size.x), newCopyOfFigure.GetComponent<RectTransform>().anchoredPosition.y);
+                    //Debug.LogWarning("JAAAAA! posx: " + (newCopyOfFigure.transform.position.x + newCopyOfFigure.transform.GetComponent<BoxCollider2D>().size.x) + ", anchored Pos: " + (newCopyOfFigure.GetComponent<RectTransform>().anchoredPosition.x + newCopyOfFigure.transform.GetComponent<BoxCollider2D>().size.x) + ", maxX: " + (GetComponent<RectTransform>().rect.width + 0.03f * Screen.width));
                 }
 
                 if (Physics2D.OverlapPoint(getMousePos) == false)       // mouse outside
@@ -844,10 +848,11 @@ public class RailMusicManager : MonoBehaviour
                     newCopyOfFigure.transform.SetParent(gameObject.transform);
                     newCopyOfFigure.transform.localScale = Vector3.one;
 
+                    //------------------------------------------limit front of rail---------------------------------------------//
                     if (figureObjects[currentClickedObjectIndex].GetComponent<RectTransform>().position.x < (minX + 0.03f * Screen.width))  // 50 is half the box Collider width (mouse pos is in the middle of the figure)
                     {
-                        Debug.Log("achtung! " + figureObjects[currentClickedObjectIndex].GetComponent<RectTransform>().position.x + ", min X: " + minX);
-                        newCopyOfFigure.GetComponent<RectTransform>().position = new Vector2((float)minX + 0.035f * Screen.width, figureObjects[currentClickedObjectIndex].transform.position.y);    // tendenziell muesste das eher in buttonUp
+                        //Debug.Log("achtung! " + figureObjects[currentClickedObjectIndex].GetComponent<RectTransform>().position.x + ", min X: " + minX);
+                        newCopyOfFigure.GetComponent<RectTransform>().position = new Vector2((float)minX + 0.03f * Screen.width, figureObjects[currentClickedObjectIndex].transform.position.y);    // tendenziell muesste das eher in buttonUp
                     }
                     else
                     {
@@ -858,6 +863,19 @@ public class RailMusicManager : MonoBehaviour
                     newCopyOfFigure.GetComponent<RectTransform>().position = new Vector3(newCopyOfFigure.GetComponent<RectTransform>().position.x, newCopyOfFigure.GetComponent<RectTransform>().position.y, -1.0f);
                     newCopyOfFigure.transform.GetComponent<BoxCollider2D>().size = newCopyOfFigure.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta;
                     newCopyOfFigure.transform.GetComponent<BoxCollider2D>().offset = new Vector2(newCopyOfFigure.transform.GetComponent<BoxCollider2D>().size.x / 2 - 50, newCopyOfFigure.transform.GetComponent<BoxCollider2D>().offset.y);
+
+
+                    //------------------------------------------limit back of rail---------------------------------------------//
+                    if ((newCopyOfFigure.GetComponent<RectTransform>().anchoredPosition.x + newCopyOfFigure.transform.GetComponent<BoxCollider2D>().size.x) > (GetComponent<RectTransform>().rect.width + 0.03f * Screen.width))
+                    {
+                        newCopyOfFigure.GetComponent<RectTransform>().anchoredPosition = new Vector2((GetComponent<RectTransform>().rect.width + (0.03f * Screen.width) - newCopyOfFigure.transform.GetComponent<BoxCollider2D>().size.x), newCopyOfFigure.GetComponent<RectTransform>().anchoredPosition.y);
+                        //Debug.LogWarning("JAAAAA! posx: " + (newCopyOfFigure.transform.position.x + newCopyOfFigure.transform.GetComponent<BoxCollider2D>().size.x) + ", anchored Pos: " + (newCopyOfFigure.GetComponent<RectTransform>().anchoredPosition.x + newCopyOfFigure.transform.GetComponent<BoxCollider2D>().size.x) + ", maxX: " + (GetComponent<RectTransform>().rect.width + 0.03f * Screen.width));
+                    }
+                    else
+                    {
+                        //Debug.LogWarning("NEEEIN! posx: " + (newCopyOfFigure.transform.position.x + newCopyOfFigure.transform.GetComponent<BoxCollider2D>().size.x) + ", anchored Pos: " + (newCopyOfFigure.GetComponent<RectTransform>().anchoredPosition.x + newCopyOfFigure.transform.GetComponent<BoxCollider2D>().size.x) + ", maxX: " + (GetComponent<RectTransform>().rect.width + 0.03f * Screen.width));
+                    }
+
                     //add object to list which objects are on timeline, set placed figures to timelineInstanceObjects-list
                     updateObjectList(timelineInstanceObjects, newCopyOfFigure);
 
@@ -937,7 +955,7 @@ public class RailMusicManager : MonoBehaviour
                 double startSec = calculateFigureStartTimeInSec(timelineInstanceObjects[i], timelineInstanceObjects[i].GetComponent<MusicLength>().musicLength, maxTimeInSec, minX, maxX);
                 double endSec = calculateMusicEndTimeInSec(timelineInstanceObjects[i], timelineInstanceObjects[i].GetComponent<MusicLength>().musicLength, maxTimeInSec, minX, maxX);
                 float tmpTime = AnimationTimer.GetTime();
-                Debug.Log(", startSec: " + startSec + "endSec: " + endSec + ", Timer: " + AnimationTimer.GetTime());// + ", LENGTH: " + tmpLength);
+                //Debug.Log(", startSec: " + startSec + "endSec: " + endSec + ", Timer: " + AnimationTimer.GetTime());// + ", LENGTH: " + tmpLength);
 
                 // wenn timer im bereich musikstuecks und musik ist nicht an
                 if (AnimationTimer.GetTime() >= startSec && AnimationTimer.GetTime() <= endSec)
@@ -946,7 +964,7 @@ public class RailMusicManager : MonoBehaviour
                     // hitObject = ((int)Char.GetNumericValue(timelineInstanceObjects[i].name[17])); // instance index
                     SceneManaging.hitObject = i;
                     SceneManaging.hittingSomething = true;
-                    Debug.Log("hitobject: " + SceneManaging.hitObject);
+                    //Debug.Log("hitobject: " + SceneManaging.hitObject);
                     if (playingMusic == false)
                     {
                         playingMusic = true;
@@ -954,12 +972,12 @@ public class RailMusicManager : MonoBehaviour
                         currentClip = ((int)Char.GetNumericValue(timelineInstanceObjects[i].name[07]) - 1); // object index
                         audioSource.clip = clip[currentClip];
                         audioSource.Play();
-                        Debug.Log("++++++++++MUSIC STARTS ++++++ tmpTime: " + audioSource.time + ", current clip: " + currentClip + ", startsec: " + startSec + ", tmpTime: " + tmpTime);
+                        //Debug.Log("++++++++++MUSIC STARTS ++++++ tmpTime: " + audioSource.time + ", current clip: " + currentClip + ", startsec: " + startSec + ", tmpTime: " + tmpTime);
                     }
                     if (SceneManaging.updateMusic)
                     {
                         {
-                            Debug.Log("+++++++++++++++++++TimeSlider ist im music piece and slider is being dragged.");
+                            //Debug.Log("+++++++++++++++++++TimeSlider ist im music piece and slider is being dragged.");
                             //audioSource.time = tmpTime - (float)startSec;
                             //currentClip = ((int)Char.GetNumericValue(timelineInstanceObjects[i].name[07]) - 1); // object index
                             //audioSource.clip = clip[currentClip];
