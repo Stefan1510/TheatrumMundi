@@ -7,18 +7,11 @@ public class SwitchMenues : MonoBehaviour
     public GameObject ObjectMenueConfigMain;
     public GameObject ObjectMenueDirectorMain;
 
-    //// Start is called before the first frame update
+    // Start is called before the first frame update
     void Start()
     {
-        //SwitchToMenueDirector();
         SwitchToMenueConfig();
     }
-
-    //// Update is called once per frame
-    //void Update()
-    //{
-
-    //}
 
     public void SwitchToMenueDirector()
     {
@@ -26,9 +19,18 @@ public class SwitchMenues : MonoBehaviour
         ObjectMenueDirectorMain.SetActive(true);
         StaticSceneData.Everything3D();
         GetComponent<UIController>().Rails[0].GetComponent<RailManager>().PublicUpdate();
+
+        /////////////////////////////////// for VISITOR-Tool
+        SceneManaging.menueActive = 1;
+        ObjectMenueDirectorMain.GetComponent<ObjectShelf>().ButtonShelf01();
+        //////////////////////////////////
     }
     public void SwitchToMenueConfig()
     {
+        /////////////////////////////////// for VISITOR-Tool
+        SceneManaging.menueActive = 2;
+        //////////////////////////////////
+
         ObjectMenueDirectorMain.SetActive(false);
         ObjectMenueConfigMain.SetActive(true);
     }
