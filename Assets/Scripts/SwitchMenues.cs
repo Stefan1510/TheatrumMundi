@@ -33,5 +33,6 @@ public class SwitchMenues : MonoBehaviour
 
         ObjectMenueDirectorMain.SetActive(false);
         ObjectMenueConfigMain.SetActive(true);
+        GetComponent<UnitySwitchExpertUser>().DeactivateExpertTools();
     }
 }
