@@ -9,8 +9,9 @@ public class RailMusicManager : MonoBehaviour
     public Image timelineImage, timeSliderImage;
     AudioSource audioSource;
     public GameObject gameController, menue3;
+    //public GameObject[] musicSamples;
     private BoxCollider2D timeSlider;
-    bool draggingOnTimeline, draggingObject, editTimelineObject, releaseOnTimeline, playingMusic, isInstance;
+    bool draggingOnTimeline, draggingObject, editTimelineObject, releaseOnTimeline, playingMusic, isInstance, playingSample;
     public bool isTimelineOpen;
     Vector2 releaseObjMousePos, diff;
     double minX, maxX;
@@ -25,7 +26,7 @@ public class RailMusicManager : MonoBehaviour
     public GameObject objectLibrary, parentMenue; // mainMenue
     GameObject timeSettings;
     GameObject[] figCounterCircle, figureObjects;
-    int currentClickedObjectIndex;
+    int currentClickedObjectIndex, sampleButtonPressed;
     int currentClickedInstanceObjectIndex;
     private float currentLossyScale;
     public List<GameObject> timelineObjects, timelineInstanceObjects;
@@ -49,11 +50,9 @@ public class RailMusicManager : MonoBehaviour
         currentClip = 0;
         isTimelineOpen = false;
         isInstance = false;
-        // heightClosed = 20.0f;
-        // heightOpened = 80.0f;
+        sampleButtonPressed = -1;
 
         //load all objects given in the figuresShelf
-        //Debug.Log("objectscount: "+objectLibrary.transform.childCount);
         figureObjects = new GameObject[objectLibrary.transform.childCount];         //instead of a count like "3"
         objectShelfPosition = new Vector2[figureObjects.Length];
         objectShelfSize = new Vector2[figureObjects.Length];
@@ -70,9 +69,6 @@ public class RailMusicManager : MonoBehaviour
             objectShelfSize[i] = new Vector2(figureObjects[i].GetComponent<RectTransform>().rect.width, figureObjects[i].GetComponent<RectTransform>().rect.height);
             objectShelfParent[i] = figureObjects[i].transform.parent.gameObject;
         }
-
-        //Debug.Log("++++++figures loaded: " + figureObjects.Length);
-        //Debug.Log("++++++figures3D loaded: " + figureObjects3D.Length);
 
         currentClickedObjectIndex = -1;
         currentClickedInstanceObjectIndex = -1;
@@ -648,6 +644,21 @@ public class RailMusicManager : MonoBehaviour
             Debug.Log("size: " + timelineImage.GetComponent<RectTransform>().sizeDelta.y);
         }
     }
+    public void PlaySample(int i)
+    {
+        if (sampleButtonPressed == (i - 1))
+        {
+            playingSample = false;
+            sampleButtonPressed = -1;
+        }
+        else
+        {
+            playingSample = true;
+            audioSource.clip = clip[i - 1];
+            sampleButtonPressed = (i - 1);
+        }
+    }
+
     void Update()
     {
         if (currentLossyScale != transform.lossyScale.x)
@@ -658,13 +669,14 @@ public class RailMusicManager : MonoBehaviour
         }
 
         Vector2 getMousePos = Input.mousePosition;
+
         if (Input.GetMouseButtonDown(0)) //left mouse button down
         {
             //identify which gameobject you clicked
             string objectClicked = identifyClickedObject();         //method fills up the current clicked index
             identifyClickedObjectByList(timelineInstanceObjects);
             editTimelineObject = false;                             //flag to prevent closing the timeline if you click an object in timeline
-            releaseOnTimeline = false;                              //because you have not set on timeline anything
+            releaseOnTimeline = false;                              //because you have not set anything on timeline 
             releaseObjMousePos = new Vector2(0.0f, 0.0f);
 
             int tmpI = -1;
@@ -672,7 +684,6 @@ public class RailMusicManager : MonoBehaviour
             {
                 if (timelineInstanceObjects[i].GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(getMousePos))
                 {
-                    //Debug.Log("-----------found instance object!!!!->i: "+i);
                     tmpI = i;
                 }
             }
@@ -722,7 +733,6 @@ public class RailMusicManager : MonoBehaviour
             {
             }
         }
-
         // if timeline is open and something is being dragged
         if (draggingOnTimeline && isTimelineOpen)
         {
@@ -769,7 +779,6 @@ public class RailMusicManager : MonoBehaviour
             updateObjectPosition(timelineInstanceObjects[currentClickedInstanceObjectIndex], getMousePos);
             releaseOnTimeline = false;
         }
-
         // dragging an object from shelf to timeline
         if (draggingObject && editTimelineObject == false && isInstance == false)
         {
@@ -821,7 +830,6 @@ public class RailMusicManager : MonoBehaviour
                 releaseOnTimeline = false;
             }
         }
-
         //-------release mousebutton
         if (Input.GetMouseButtonUp(0)) //left mouse button up
         {
@@ -1020,13 +1028,33 @@ public class RailMusicManager : MonoBehaviour
                 //}
             }
         }
+
+        ///////////////////////////playing Sample/////////////////////////
+        else if (playingSample)
+        {
+            if (!audioSource.isPlaying)
+            {
+                audioSource.time = 50f;
+                //Debug.Log("hier");
+                audioSource.Play();
+            }
+            else
+            {
+                if (audioSource.time > 60f)
+                {
+                    playingSample = false;
+                }
+            }
+        }
+        /////////////////////////////////////////////////////////////////////
+
         else
         {
             audioSource.Stop();
             playingMusic = false;
         }
 
-        if (!anyInstanceIsPlaying)
+        if (!anyInstanceIsPlaying && playingSample == false)
         {
             audioSource.Stop();
             playingMusic = false;
