@@ -25,7 +25,7 @@ public class CoulissesManager : MonoBehaviour
     private Color colHighlightedGrey, colHighlightedGreen, colSilhouetteActive, colCoulisse, colSilhouette;
     private bool justChanging, objectInField;
     private int currentTabIndex;
-    private bool objectInRail, clickOnDelete;
+    private bool objectInRail, clickOnDelete, clickCoulisseFromShelf;
     private float railMinX, windowWidth, windowHeight, windowMinX;
     [HideInInspector] public float railWidth, railHeight;
     Vector2 diff;
@@ -178,12 +178,16 @@ public class CoulissesManager : MonoBehaviour
                 }
                 else highlight(currentObjectIndex, 2);
 
-                // coulisses[currentObjectIndex].transform.parent.GetChild(0).GetComponent<RectTransform>().GetComponent<Image>().color = colSilhouetteActive;
+                // if coulisse is clicked in shelf ('first time')
+                if (coulisses[currentObjectIndex].GetComponent<RectTransform>().rect.width == shelfSizeWidth[currentObjectIndex])
+                {
+                    coulisses[currentObjectIndex].GetComponent<RectTransform>().sizeDelta = new Vector2(railWidth / 410 * coulisses[currentObjectIndex].GetComponent<CoulisseStats>().CoulisseWidth / coulisses[currentObjectIndex].transform.lossyScale.x, railWidth / 410 * coulisses[currentObjectIndex].GetComponent<CoulisseStats>().CoulisseHeight / coulisses[currentObjectIndex].transform.lossyScale.y);
+                    coulisses[currentObjectIndex].GetComponent<BoxCollider2D>().size = coulisses[currentObjectIndex].GetComponent<RectTransform>().sizeDelta;
+                    coulisses[currentObjectIndex].GetComponent<BoxCollider2D>().offset = new Vector2(0, coulisses[currentObjectIndex].GetComponent<RectTransform>().rect.height / 2);
+                    clickCoulisseFromShelf = true;
+                }
                 coulisses[currentObjectIndex].transform.SetParent(mainMenue.transform);
-                coulisses[currentObjectIndex].GetComponent<RectTransform>().sizeDelta = new Vector2(railWidth / 410 * coulisses[currentObjectIndex].GetComponent<CoulisseStats>().CoulisseWidth / coulisses[currentObjectIndex].transform.lossyScale.x, railWidth / 410 * coulisses[currentObjectIndex].GetComponent<CoulisseStats>().CoulisseHeight / coulisses[currentObjectIndex].transform.lossyScale.y);
-                //Debug.Log("1. ______________X: " + coulisses[currentObjectIndex].GetComponent<RectTransform>().rect.width);
-                coulisses[currentObjectIndex].GetComponent<BoxCollider2D>().size = coulisses[currentObjectIndex].GetComponent<RectTransform>().sizeDelta;
-                coulisses[currentObjectIndex].GetComponent<BoxCollider2D>().offset = new Vector2(0, coulisses[currentObjectIndex].GetComponent<RectTransform>().rect.height / 2);
+
             }
 
             else if (currentObjectIndex == -1 && clickInSettingsWindow == -1) // if nothing is hit
@@ -201,54 +205,47 @@ public class CoulissesManager : MonoBehaviour
         {
             if (coulisses[currentObjectIndex].GetComponent<RectTransform>().rect.width == shelfSizeWidth[currentObjectIndex])
             {
-                //Debug.Log("hallo");
                 coulisses[currentObjectIndex].GetComponent<RectTransform>().sizeDelta = new Vector2(railWidth / 410 * coulisses[currentObjectIndex].GetComponent<CoulisseStats>().CoulisseWidth / coulisses[currentObjectIndex].transform.lossyScale.x, railWidth / 410 * coulisses[currentObjectIndex].GetComponent<CoulisseStats>().CoulisseHeight / coulisses[currentObjectIndex].transform.lossyScale.y);
             }
             coulisses[currentObjectIndex].transform.position = new Vector2(getMousePos.x - diff.x, getMousePos.y - diff.y); // diff is difference of mouse position to clicked position on coulisse so that the coulisse doesnt jump to the pivot all the time
             coulisses[currentObjectIndex].transform.SetParent(mainMenue.transform);
-            //Debug.Log("2. ______________X: " + coulisses[currentObjectIndex].GetComponent<RectTransform>().rect.width);
-            //if inside settings window
-            if (getMousePos.x > colliderSettings.transform.position.x - colliderSettings.GetComponent<RectTransform>().sizeDelta.x / 2 && getMousePos.y > colliderSettings.transform.position.y - colliderSettings.GetComponent<RectTransform>().sizeDelta.y / 2
-            && getMousePos.x < colliderSettings.transform.position.x + colliderSettings.GetComponent<RectTransform>().sizeDelta.x / 2 && getMousePos.y < colliderSettings.transform.position.y + colliderSettings.GetComponent<RectTransform>().sizeDelta.y / 2)
-            {
-                //Debug.Log("mouse x: " + getMousePos.x + ", collider x min: " + (colliderSettings.transform.position.x - colliderSettings.GetComponent<RectTransform>().sizeDelta.x / 2));
-                highlight(currentObjectIndex, 2);
-            }
-            else
-            {
-                //Debug.Log("mouse outside of einstellungsfenster");
-                highlight(currentObjectIndex, 1);
-            }
-            //Debug.Log("3. ______________X: " + coulisses[currentObjectIndex].GetComponent<RectTransform>().rect.width);
+
             // if coulisse is hitting a tab
             int hitIndexTab = checkHittingIndexTab(indexTabs, getMousePos);
             if (hitIndexTab != -1)
             {
                 SceneManaging.objectInIndexTab = hitIndexTab;
-                // Debug.Log("Ich bin im IndexTab! " + SceneManaging.objectInIndexTab);
                 if (SceneManaging.openUp)
                 {
                     setIndexTabActive(hitIndexTab);
                 }
             }
             // window or rail tab is hit
-            else if (checkHitting(new Vector2(windowMinX, windowMinY), new Vector2(windowWidth, windowHeight), coulisses[currentObjectIndex]))
+            else if (checkHitting(new Vector2(colliderSettings.transform.position.x, colliderSettings.transform.position.y), new Vector2(colliderSettings.GetComponent<RectTransform>().sizeDelta.x, colliderSettings.GetComponent<RectTransform>().sizeDelta.y), coulisses[currentObjectIndex]))
             {
-                sliderX.GetComponent<Slider>().value = coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.x / 270;
-                sliderY.GetComponent<Slider>().value = coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.y / 260;
+                if (clickCoulisseFromShelf)
+                {
+                    coulisses[currentObjectIndex].GetComponent<Image>().color = colHighlightedGreen;
+                }
+                else
+                {
+                    highlight(currentObjectIndex, 2);
+                    sliderX.GetComponent<Slider>().value = coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.x / 270;
+                    sliderY.GetComponent<Slider>().value = coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.y / 260;
+
+                }
                 justChanging = true;
                 objectInField = true;
                 objectInRail = false;
-                //Debug.Log("Ich bin im Fenster! " + objectInField);
                 if (checkHitting(new Vector2(railMinX, railMinY), new Vector2((railWidth * 2), railHeight), coulisses[currentObjectIndex]))
                 {
                     objectInRail = true;
-                    //Debug.Log("Ich bin auf der Schiene! object x: "+coulisses[currentObjectIndex].transform.position.x+", rail width: "+railWidth+ ", rail x min: "+railMinX);
                 }
             }
             // nothing is hit
             else
             {
+                highlight(currentObjectIndex, 1);
                 objectInField = false;
                 SceneManaging.objectInIndexTab = -1;
                 objectInRail = false;
@@ -265,6 +262,8 @@ public class CoulissesManager : MonoBehaviour
         if (Input.GetMouseButtonUp(0)) //left mouse button up
         {
             dragging = false;
+            clickCoulisseFromShelf = false;
+
             if (currentObjectIndex != -1)
             {
                 if (sliding)
@@ -282,7 +281,7 @@ public class CoulissesManager : MonoBehaviour
                     StaticSceneData.StaticData.sceneryElements[currentObjectIndex].y = (coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.y) / 260 - .035f;
                     StaticSceneData.StaticData.sceneryElements[currentObjectIndex].x = 0.062f;
                     StaticSceneData.Sceneries3D(); //CreateScene der SceneryElements
-                                                   ////////////////////////////////////////////////////////////////////////
+                    ////////////////////////////////////////////////////////////////////////
                 }
                 // if object is in settingsField
                 else if (objectInField)
@@ -299,11 +298,29 @@ public class CoulissesManager : MonoBehaviour
                         }
                         else
                         {
+
                             if (currentTabIndex == i)
                             {
                                 coulisses[currentObjectIndex].transform.SetParent(collections[i].transform);
                                 coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition = new Vector2(coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.x, 0.0f);
                             }
+                        }
+                        // limitierungen (snapping if dropped on the left/right of the min/max-value)
+                        if (coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.x < -540)
+                        {
+                            coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition = new Vector2(-540, coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.y);
+                        }
+                        if (coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.x > 540)
+                        {
+                            coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition = new Vector2(540, coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.y);
+                        }
+                        if (coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.y < -260)
+                        {
+                            coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition = new Vector2(coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.x, -260);
+                        }
+                        if (!scenerySettings.activeSelf)
+                        {
+                            highlight(currentObjectIndex, 2);
                         }
                     }
 
@@ -567,10 +584,10 @@ public class CoulissesManager : MonoBehaviour
         railMinX = (0.68f * Screen.width) - (railWidth / 2);
         railHeight = 0.093f * Screen.height;
         railMinY = 0.07f * Screen.height - (railHeight / 2);
-        windowWidth = 0.613f * Screen.width;
-        windowHeight = 0.331f * Screen.height;
-        windowMinX = (0.68f * Screen.width);
-        windowMinY = 0.166f * Screen.height;
+        // windowWidth = 0.63f * Screen.width;
+        // windowHeight = 0.331f * Screen.height;
+        // windowMinX = (0.74f * Screen.width);
+        // windowMinY = 0.164f * Screen.height;
     }
     public void removeCoulisse()
     {
