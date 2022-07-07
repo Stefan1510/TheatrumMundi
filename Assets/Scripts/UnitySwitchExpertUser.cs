@@ -6,6 +6,9 @@ using UnityEngine.UI;
 public class UnitySwitchExpertUser : MonoBehaviour
 {
     [SerializeField] private bool _isExpert =true;
+    ////////////////////////////////////////////////////
+    /// Config Menü
+    ////////////////////////////////////////////////////
     [SerializeField] private GameObject _panelLightAmbient;
     [SerializeField] private GameObject _buttonBuehne;
     [SerializeField] private GameObject _menueBuehne;
@@ -22,6 +25,15 @@ public class UnitySwitchExpertUser : MonoBehaviour
     [SerializeField] private GameObject[] _aInputFieldSave;
     [SerializeField] private GameObject _buttonLoad;
     [SerializeField] private GameObject _scrollViewFileSelect;
+
+
+    ////////////////////////////////////////////////////
+    /// Director Menü
+    ////////////////////////////////////////////////////
+    [SerializeField] private GameObject _menuLightShelf;
+    [SerializeField] private GameObject _buttonLights;
+
+    [SerializeField] private GameObject[] _aTimeSliderPanelControls;
 
 
     private bool _gameControllerStarted = false;         
@@ -46,6 +58,10 @@ public class UnitySwitchExpertUser : MonoBehaviour
             _buttonLoad.GetComponent<RectTransform>().Translate(0, -300, 0);
             RectTransform rectScrollView = _scrollViewFileSelect.GetComponent<RectTransform>();
             rectScrollView.sizeDelta = new Vector2(rectScrollView.sizeDelta.x, rectScrollView.sizeDelta.y + 300);
+            foreach (GameObject panelControl in _aTimeSliderPanelControls)
+            {
+                panelControl.SetActive(false);
+            }
         }
     }
 
@@ -66,6 +82,8 @@ public class UnitySwitchExpertUser : MonoBehaviour
             _menueBuehne.SetActive(false);
             _buttonLicht.SetActive(false);
             _menueLicht.SetActive(false);
+            _menuLightShelf.SetActive(false);
+            _buttonLights.SetActive(false);
         }
     }
 }
