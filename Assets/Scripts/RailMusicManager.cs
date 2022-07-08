@@ -622,26 +622,26 @@ public class RailMusicManager : MonoBehaviour
     }
     public void ResetScreenSize()
     {
-        Debug.Log("lossyScale: " + gameObject.transform.lossyScale);
+        //Debug.Log("lossyScale: " + gameObject.transform.lossyScale);
         //Debug.Log("Screen changed! ScreenX: " + Screen.width);
 
         minX = 0.146f * Screen.width;// / gameObject.transform.lossyScale.x; //301.0f;  //timeline-minX
-        Debug.Log("minX: " + minX);
+        //Debug.Log("minX: " + minX);
         railWidth = 0.69f * Screen.width;// / gameObject.transform.lossyScale.x;
         heightClosed = 0.018f * Screen.height;// / gameObject.transform.lossyScale.x;
         heightOpened = 0.074f * Screen.height;// / gameObject.transform.lossyScale.x;
         maxX = minX + railWidth;  //timeline-maxX
                                   //Debug.Log("rail start: " + minX);
-        Debug.Log("isTimelineopen: " + isTimelineOpen + "heightclosed: " + heightClosed);
+                                  //Debug.Log("isTimelineopen: " + isTimelineOpen + "heightclosed: " + heightClosed);
         if (isTimelineOpen)
         {
             timelineImage.GetComponent<RectTransform>().sizeDelta = gameObject.GetComponent<BoxCollider2D>().size = new Vector2(railWidth / gameObject.transform.lossyScale.x, heightOpened / gameObject.transform.lossyScale.x);
-            Debug.Log("size box collider: " + gameObject.GetComponent<BoxCollider2D>().size.y);
+            //Debug.Log("size box collider: " + gameObject.GetComponent<BoxCollider2D>().size.y);
         }
         else
         {
             timelineImage.GetComponent<RectTransform>().sizeDelta = gameObject.GetComponent<BoxCollider2D>().size = new Vector2(railWidth / gameObject.transform.lossyScale.x, heightClosed / gameObject.transform.lossyScale.x);
-            Debug.Log("size: " + timelineImage.GetComponent<RectTransform>().sizeDelta.y);
+            //Debug.Log("size: " + timelineImage.GetComponent<RectTransform>().sizeDelta.y);
         }
     }
     public void PlaySample(int i)

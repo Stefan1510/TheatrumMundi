@@ -219,7 +219,7 @@ public class SceneDataController : MonoBehaviour
         sceneData.backgroundPositions.Add(new BackgroundPosition());
 
         //music
-        foreach(AudioClip clip in objectsMusicClips)
+        foreach (AudioClip clip in objectsMusicClips)
         {
             MusicClipElement sceneMusicClipElement = new MusicClipElement
             {
@@ -449,13 +449,13 @@ public class SceneDataController : MonoBehaviour
         }
         imageTimelineRailMusic.GetComponent<RailMusicManager>().timelineInstanceObjects.Clear();
 
-        foreach(MusicClipElement mce in musicClipElements)
+        foreach (MusicClipElement mce in musicClipElements)
         {
             for (int i = 0; i < objectsMusicClips.Length; i++)
             {
                 if (mce.name == objectsMusicClips[i].name)
                 {
-                    foreach(MusicClipElementInstance mceInstance in mce.musicClipElementInstances)
+                    foreach (MusicClipElementInstance mceInstance in mce.musicClipElementInstances)
                     {
                         countActiveMusicClips++;
                         imageTimelineRailMusic.GetComponent<RailMusicManager>().CreateNew2DInstance(i, mceInstance.moment);

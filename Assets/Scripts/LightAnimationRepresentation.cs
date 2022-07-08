@@ -70,7 +70,7 @@ public class LightAnimationRepresentation : MonoBehaviour
         int secondCount = 0;
         int listLength = StaticSceneData.StaticData.lightingSets.Count;
 
-        Debug.Log("listLength " + listLength);
+        //Debug.Log("listLength " + listLength);
         Color32 colorGradient;
         for (int lightStates = 0; lightStates < listLength - 1; lightStates++)
         {
@@ -93,7 +93,7 @@ public class LightAnimationRepresentation : MonoBehaviour
                 _lightColorsColumn = ChangeColors(_lightColorsColumn, colorGradient);
                 //Debug.Log("secondCount " + secondCount + " -intensityGradient " + intensityGradient + " -_lightColorsColumn " + _lightColorsColumn);
                 _textureLightRepresentation.SetPixels32(secondCount, 0, 1, (int)intensityGradient, _lightColorsColumn);
-            }            
+            }
         }
         colorEnd = new Color32(StaticSceneData.StaticData.lightingSets[listLength - 1].r, StaticSceneData.StaticData.lightingSets[listLength - 1].g, StaticSceneData.StaticData.lightingSets[listLength - 1].b, 255);
         //Debug.Log(listLength + " - r  " + colorEnd.r + " - g  " + colorEnd.g + " - b  " + colorEnd.b + " - intensityGradient " + intensityGradient);
@@ -108,7 +108,7 @@ public class LightAnimationRepresentation : MonoBehaviour
 
     public void UpdateKnobPositions()
     {
-        foreach(Image image in _imagePositionKnobCollection)
+        foreach (Image image in _imagePositionKnobCollection)
         {
             Destroy(image.gameObject);
         }

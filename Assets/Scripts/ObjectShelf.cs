@@ -41,7 +41,7 @@ public class ObjectShelf : MonoBehaviour
     void Start()
     {
         SceneManaging.menueActive = 1;
-        Debug.Log("testprint");
+        //Debug.Log("testprint");
         //define the buttons
         //Debug.Log("this is the main menue");
         //mytext.text="this is text";
@@ -113,7 +113,7 @@ public class ObjectShelf : MonoBehaviour
 
     public void ButtonShelf01()
     {
-        Debug.Log("button for shelf01");
+        //Debug.Log("button for shelf01");
         //gameController.GetComponent<UIController>().Rails[0].openCloseTimelineByClick(false,gameController.GetComponent<UIController>().Rails[0].timelineImage,false);
         //show menue of buehne
         MenueShelf01.SetActive(true);
