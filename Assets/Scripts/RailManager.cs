@@ -10,7 +10,7 @@ public class RailManager : MonoBehaviour
     public GameObject gameController, rail3dObj, menue1;
     public Image timeSliderImage;
     private BoxCollider2D timeSlider;
-    bool draggingOnTimeline, draggingObject, editTimelineObject, releaseOnTimeline, isInstance, changedRail;
+    bool draggingOnTimeline, draggingObject, editTimelineObject, releaseOnTimeline, isInstance, changedRail, alreadyCountedMinus, alreadyCountedPlus;
     public bool isTimelineOpen;
     Vector2 releaseObjMousePos;
     double minX, minY, maxX;
@@ -26,7 +26,7 @@ public class RailManager : MonoBehaviour
     public GameObject objectLibrary, parentMenue; // mainMenue
     GameObject timeSettings;
     GameObject[] figCounterCircle, figureObjects, figureObjects3D;
-    int currentClickedObjectIndex, currentClickedInstanceObjectIndex, hitTimeline, sizeLayering;
+    int currentClickedObjectIndex, currentClickedInstanceObjectIndex, hitTimeline, sizeLayering, layerOverlaps;
     public List<GameObject> timelineInstanceObjects, timelineInstanceObjects3D;
     private FigureElement ThisFigureElement;    //element to set 3d object
     float heightOpened, heightClosed;
@@ -286,7 +286,7 @@ public class RailManager : MonoBehaviour
 
         for (int i = 0; i < objects.Count; i++)
         {
-            objects[i].GetComponent<RectTransform>().anchoredPosition = new Vector2(objects[i].GetComponent<RectTransform>().anchoredPosition.x, -gameObject.GetComponent<RectTransform>().rect.height / 2);
+            objects[i].GetComponent<RectTransform>().anchoredPosition = new Vector3(objects[i].GetComponent<RectTransform>().anchoredPosition.x, -gameObject.GetComponent<RectTransform>().rect.height / 2, -1);
 
             if (timelineOpen)
             {
@@ -319,12 +319,12 @@ public class RailManager : MonoBehaviour
                     if (objects[i].GetComponent<BoxCollider2D>().offset.y < 0)
                     {
                         Debug.Log("<0");
-                        objects[i].transform.position = new Vector2(objects[i].transform.position.x, objects[i].transform.position.y + gameObject.GetComponent<RectTransform>().rect.height / 1.25f);
+                        objects[i].transform.position = new Vector3(objects[i].transform.position.x, objects[i].transform.position.y + gameObject.GetComponent<RectTransform>().rect.height / 1.25f, -1);
                     }
                     else
                     {
                         Debug.Log(">0");
-                        objects[i].transform.position = new Vector2(objects[i].transform.position.x, objects[i].transform.position.y - gameObject.GetComponent<RectTransform>().rect.height / 1.25f);
+                        objects[i].transform.position = new Vector3(objects[i].transform.position.x, objects[i].transform.position.y - gameObject.GetComponent<RectTransform>().rect.height / 1.25f, -1);
                     }
                     scaleObject(objects[i], length, heightOpened / gameObject.transform.lossyScale.x / 2, true);
                     scaleObject(objects[i].transform.GetChild(1).gameObject, objects[i].transform.GetChild(1).gameObject.GetComponent<RectTransform>().sizeDelta.x, gameObject.GetComponent<RectTransform>().rect.height * 0.93f / 2, true);
@@ -756,12 +756,12 @@ public class RailManager : MonoBehaviour
             float posX = UtilitiesTm.FloatRemap(momentOrPosX, 0, AnimationTimer.GetMaxTime(), gameObject.GetComponent<RectTransform>().rect.width / -2, gameObject.GetComponent<RectTransform>().rect.width / 2);
             //Debug.LogWarning("moment " + momentOrPosX + " // posX " + posX);
 
-            newCopyOfFigure.transform.localPosition = new Vector2(posX, figureObjects[figureNr].transform.localPosition.y);
+            newCopyOfFigure.transform.localPosition = new Vector3(posX, figureObjects[figureNr].transform.localPosition.y, -1);
 
             createRectangle(newCopyOfFigure, new Vector2(300, gameObject.GetComponent<RectTransform>().rect.height * 0.96f), colFigure, minX, objectAnimationLength);
             scaleObject(newCopyOfFigure, 100, gameObject.GetComponent<RectTransform>().rect.height * 0.96f, false);      //scale the figure-picture in timeline to x: 100 and y: 80px
             scaleObject(newCopyOfFigure.transform.GetChild(0).gameObject, newCopyOfFigure.transform.GetChild(0).gameObject.GetComponent<RectTransform>().sizeDelta.x, gameObject.GetComponent<RectTransform>().rect.height * 0.96f, false);
-            newCopyOfFigure.transform.GetChild(0).GetComponent<RectTransform>().position = new Vector2(newCopyOfFigure.transform.GetChild(0).gameObject.GetComponent<RectTransform>().position.x + 25, newCopyOfFigure.transform.GetChild(0).gameObject.GetComponent<RectTransform>().position.y);
+            newCopyOfFigure.transform.GetChild(0).GetComponent<RectTransform>().position = new Vector3(newCopyOfFigure.transform.GetChild(0).gameObject.GetComponent<RectTransform>().position.x + 25, newCopyOfFigure.transform.GetChild(0).gameObject.GetComponent<RectTransform>().position.y, -1);
             scaleObject(newCopyOfFigure.transform.GetChild(1).gameObject, 100, 80, false);     //is this the blue rectangle size?
             gameController.GetComponent<SceneDataController>().objects2dFigureInstances.Add(newCopyOfFigure);
             //newCopyOfFigure.transform.parent.GetChild(0).GetComponent<RectTransform>().position = new Vector2(newCopyOfFigure.transform.parent.GetChild(0).GetComponent<RectTransform>().position.x + 25, newCopyOfFigure.transform.parent.GetChild(0).GetComponent<RectTransform>().position.y);
@@ -772,12 +772,12 @@ public class RailManager : MonoBehaviour
             //------------------------------------------limit front of rail---------------------------------------------//
             if (newCopyOfFigure.transform.position.x < 0.03f * Screen.width)  // 50 is half the box Collider width (mouse pos is in the middle of the figure)
             {
-                newCopyOfFigure.GetComponent<RectTransform>().anchoredPosition = new Vector2(0.03f * Screen.width, newCopyOfFigure.GetComponent<RectTransform>().anchoredPosition.y);
-                newCopyOfFigure.transform.position = new Vector2(newCopyOfFigure.transform.position.x, figureObjects[figureNr].transform.position.y);
+                newCopyOfFigure.GetComponent<RectTransform>().anchoredPosition = new Vector3(0.03f * Screen.width, newCopyOfFigure.GetComponent<RectTransform>().anchoredPosition.y, -1);
+                newCopyOfFigure.transform.position = new Vector3(newCopyOfFigure.transform.position.x, figureObjects[figureNr].transform.position.y, -1);
             }
             else
             {
-                newCopyOfFigure.transform.position = new Vector3(momentOrPosX, figureObjects[figureNr].transform.position.y);
+                newCopyOfFigure.transform.position = new Vector3(momentOrPosX, figureObjects[figureNr].transform.position.y, -1);
             }
             //-------------------------------------------------limit back of rail------------------------------------------//
 
@@ -787,7 +787,7 @@ public class RailManager : MonoBehaviour
         newCopyOfFigure.transform.GetComponent<BoxCollider2D>().offset = new Vector2(newCopyOfFigure.transform.GetComponent<BoxCollider2D>().size.x / 2 - 50f, newCopyOfFigure.transform.GetComponent<BoxCollider2D>().offset.y);
         if ((newCopyOfFigure.GetComponent<RectTransform>().anchoredPosition.x + newCopyOfFigure.transform.GetComponent<BoxCollider2D>().size.x) > (GetComponent<RectTransform>().rect.width + 0.03f * Screen.width))
         {
-            newCopyOfFigure.GetComponent<RectTransform>().anchoredPosition = new Vector2((GetComponent<RectTransform>().rect.width + (0.03f * Screen.width) - newCopyOfFigure.transform.GetComponent<BoxCollider2D>().size.x), newCopyOfFigure.GetComponent<RectTransform>().anchoredPosition.y);
+            newCopyOfFigure.GetComponent<RectTransform>().anchoredPosition = new Vector3((GetComponent<RectTransform>().rect.width + (0.03f * Screen.width) - newCopyOfFigure.transform.GetComponent<BoxCollider2D>().size.x), newCopyOfFigure.GetComponent<RectTransform>().anchoredPosition.y, -1);
         }
 
         //set 3d object to default position
@@ -807,9 +807,6 @@ public class RailManager : MonoBehaviour
     }
     public void ResetScreenSize()       // this probably has to be called globally, so that every Menue resizes (probably in the UIController). At the moment it is only scaled properly when rail tab is open e.g.
     {
-        //Debug.Log("lossyScale: " + gameObject.transform.lossyScale);
-        // Debug.Log("Screen changed! ScreenX: " + Screen.width);
-
         // I used the values that were put in FullHD (global: position.x) and calculated the percentage so that it works for all resolutions 
         minX = 0.146f * Screen.width;               //timeline-rail-minX
         railWidth = 0.69f * Screen.width;           //railwidth=1324.8px
@@ -940,48 +937,119 @@ public class RailManager : MonoBehaviour
                 //---------------------------------------------------------------------Stapeln von Ebenen-----------------------------------------------------
                 if (sizeLayering == 1)
                 {
+
                     for (int i = 0; i < timelineInstanceObjects.Count; i++)
                     {
-                        if (timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().position.x <= (timelineInstanceObjects[i].GetComponent<RectTransform>().position.x + timelineInstanceObjects[i].GetComponent<BoxCollider2D>().size.x)// + timelineInstanceObjects[i].transform.GetChild(0).GetComponent<RectTransform>().rect.width)
-                        && timelineInstanceObjects[currentClickedInstanceObjectIndex] != timelineInstanceObjects[i])
+                        if (timelineInstanceObjects[currentClickedInstanceObjectIndex] != timelineInstanceObjects[i]
+                        && (timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().position.x > timelineInstanceObjects[i].GetComponent<RectTransform>().position.x
+                        && (timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().position.x <= (timelineInstanceObjects[i].GetComponent<RectTransform>().position.x + timelineInstanceObjects[i].GetComponent<BoxCollider2D>().size.x))
+                        || ((timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().position.x + timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<BoxCollider2D>().size.x) >= timelineInstanceObjects[i].GetComponent<RectTransform>().position.x)
+                        && timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().position.x < timelineInstanceObjects[i].GetComponent<RectTransform>().position.x))
                         {
                             //Debug.Log("position x: " + timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().position.x + ", pos X Ende von i: " + timelineInstanceObjects[i].GetComponent<RectTransform>().position.x + timelineInstanceObjects[i].GetComponent<BoxCollider2D>().size.x);
-                            timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().sizeDelta = timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetComponent<RectTransform>().sizeDelta = new Vector2(timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().rect.width, (timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().rect.height / 2));
-                            timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(0).GetComponent<RectTransform>().rect.width, (timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(0).GetComponent<RectTransform>().rect.height / 2));
-                            timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<BoxCollider2D>().size = new Vector2(timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(0).GetComponent<RectTransform>().rect.width, (timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(0).GetComponent<RectTransform>().rect.height));
+                            timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().sizeDelta = timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetComponent<RectTransform>().sizeDelta = new Vector2(timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().rect.width, heightOpened / 2 * .96f);
+                            timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(0).GetComponent<RectTransform>().rect.width, heightOpened / 2);
+                            timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<BoxCollider2D>().size = new Vector2(timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(0).GetComponent<RectTransform>().rect.width, heightOpened / 2);
                             timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<BoxCollider2D>().offset = new Vector2(timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<BoxCollider2D>().offset.x, -timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(0).GetComponent<RectTransform>().rect.height / 2);
 
                             // change pos y
-                            timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetComponent<RectTransform>().pivot = new Vector2(timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetComponent<RectTransform>().pivot.x, 1);//timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetComponent<RectTransform>().pivot.y - timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().rect.height / 2);
+                            timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetComponent<RectTransform>().pivot = new Vector3(timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetComponent<RectTransform>().pivot.x, 1, -1);
 
                             //scale all other timelineobjects
                             for (int j = 0; j < timelineInstanceObjects.Count; j++)
                             {
                                 if (timelineInstanceObjects[j] != timelineInstanceObjects[currentClickedInstanceObjectIndex])
                                 {
-                                    scaleObject(timelineInstanceObjects[j], timelineInstanceObjects[j].GetComponent<RectTransform>().rect.width, timelineInstanceObjects[j].GetComponent<RectTransform>().rect.height / 2, false);
-                                    scaleObject(timelineInstanceObjects[j].transform.GetChild(0).gameObject, timelineInstanceObjects[j].transform.GetChild(0).GetComponent<RectTransform>().rect.width, timelineInstanceObjects[j].transform.GetChild(0).GetComponent<RectTransform>().rect.height / 2, false);
-                                    scaleObject(timelineInstanceObjects[j].transform.GetChild(1).gameObject, timelineInstanceObjects[j].transform.GetChild(1).GetComponent<RectTransform>().rect.width, timelineInstanceObjects[j].transform.GetChild(1).GetComponent<RectTransform>().rect.height / 2, false);
-                                    timelineInstanceObjects[j].GetComponent<BoxCollider2D>().size = new Vector2(timelineInstanceObjects[j].transform.GetChild(0).GetComponent<RectTransform>().rect.width, (timelineInstanceObjects[j].transform.GetChild(0).GetComponent<RectTransform>().rect.height));
+                                    scaleObject(timelineInstanceObjects[j], timelineInstanceObjects[j].GetComponent<RectTransform>().rect.width, heightOpened / 2, false);
+                                    scaleObject(timelineInstanceObjects[j].transform.GetChild(0).gameObject, timelineInstanceObjects[j].transform.GetChild(0).GetComponent<RectTransform>().rect.width, heightOpened / 2, false);
+                                    scaleObject(timelineInstanceObjects[j].transform.GetChild(1).gameObject, timelineInstanceObjects[j].transform.GetChild(1).GetComponent<RectTransform>().rect.width, heightOpened / 2, false);
+                                    timelineInstanceObjects[j].GetComponent<BoxCollider2D>().size = new Vector2(timelineInstanceObjects[j].transform.GetChild(0).GetComponent<RectTransform>().rect.width, heightOpened / 2);
                                     timelineInstanceObjects[j].transform.GetComponent<RectTransform>().pivot = new Vector2(timelineInstanceObjects[j].transform.GetComponent<RectTransform>().pivot.x, 0);//timelineInstanceObjects[j].transform.position.y + timelineInstanceObjects[j].GetComponent<RectTransform>().rect.height / 2);
                                     timelineInstanceObjects[j].GetComponent<BoxCollider2D>().offset = new Vector2(timelineInstanceObjects[j].GetComponent<BoxCollider2D>().offset.x, timelineInstanceObjects[j].transform.GetChild(0).GetComponent<RectTransform>().rect.height / 2);
                                 }
                             }
+
+
+                            if (!alreadyCountedPlus)
+                            {
+                                layerOverlaps++;
+                                Debug.Log("overlaps: " + layerOverlaps);
+                                alreadyCountedPlus = true;
+                            }
+                            else
+                            {
+                                //Debug.Log("else");
+                            }
                             sizeLayering = 2;
+                            alreadyCountedMinus = false;
+                            //}
+                            // else if (timelineInstanceObjects[currentClickedInstanceObjectIndex] != timelineInstanceObjects[i]
+                            // && (timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().position.x <= timelineInstanceObjects[i].GetComponent<RectTransform>().position.x
+                            // && (timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().position.x < (timelineInstanceObjects[i].GetComponent<RectTransform>().position.x + timelineInstanceObjects[i].GetComponent<BoxCollider2D>().size.x))
+                            // || ((timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().position.x + timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<BoxCollider2D>().size.x) > timelineInstanceObjects[i].GetComponent<RectTransform>().position.x)
+                            // && timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().position.x >= timelineInstanceObjects[i].GetComponent<RectTransform>().position.x))
+                            // {
+                            //     Debug.Log("Das hier ist else");
+                            // 
+                        }
+
+                    }
+                }
+                else if (sizeLayering == 2)
+                {
+                    for (int i = 0; i < timelineInstanceObjects.Count; i++)
+                    {
+                        if (timelineInstanceObjects[currentClickedInstanceObjectIndex] != timelineInstanceObjects[i]
+                        && (timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().position.x > timelineInstanceObjects[i].GetComponent<RectTransform>().position.x
+                        && (timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().position.x <= (timelineInstanceObjects[i].GetComponent<RectTransform>().position.x + timelineInstanceObjects[i].GetComponent<BoxCollider2D>().size.x))
+                        || ((timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().position.x + timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<BoxCollider2D>().size.x) >= timelineInstanceObjects[i].GetComponent<RectTransform>().position.x)
+                        && timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().position.x < timelineInstanceObjects[i].GetComponent<RectTransform>().position.x))
+                        {
+                        }
+                        else if (timelineInstanceObjects[currentClickedInstanceObjectIndex] != timelineInstanceObjects[i]
+                        && (timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().position.x <= timelineInstanceObjects[i].GetComponent<RectTransform>().position.x
+                        && (timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().position.x < (timelineInstanceObjects[i].GetComponent<RectTransform>().position.x + timelineInstanceObjects[i].GetComponent<BoxCollider2D>().size.x))
+                        || ((timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().position.x + timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<BoxCollider2D>().size.x) > timelineInstanceObjects[i].GetComponent<RectTransform>().position.x)
+                        && timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().position.x >= timelineInstanceObjects[i].GetComponent<RectTransform>().position.x))
+                        {
+                            //Debug.Log("Das hier ist else");
+                            if (!alreadyCountedMinus && layerOverlaps > 0)
+                            {
+                                layerOverlaps--;
+                                alreadyCountedMinus = true;
+                            }
+                        }
+                        //layerOverlaps--;
+                        if (layerOverlaps == 0)
+                        {
+                            Debug.Log("Hier muss die layer zu einer werden");
+                            //scale all timelineobjects
+                            for (int j = 0; j < timelineInstanceObjects.Count; j++)
+                            {
+                                scaleObject(timelineInstanceObjects[j], timelineInstanceObjects[j].GetComponent<RectTransform>().rect.width, timelineInstanceObjects[j].GetComponent<RectTransform>().rect.height * 0.96f, false);
+                                scaleObject(timelineInstanceObjects[j].transform.GetChild(0).gameObject, timelineInstanceObjects[j].transform.GetChild(0).GetComponent<RectTransform>().rect.width, heightOpened * 0.96f, false);
+                                scaleObject(timelineInstanceObjects[j].transform.GetChild(1).gameObject, timelineInstanceObjects[j].transform.GetChild(1).GetComponent<RectTransform>().rect.width, heightOpened * 0.96f, false);
+                                timelineInstanceObjects[j].GetComponent<BoxCollider2D>().size = new Vector2(timelineInstanceObjects[j].transform.GetChild(0).GetComponent<RectTransform>().rect.width, (timelineInstanceObjects[j].transform.GetChild(0).GetComponent<RectTransform>().rect.height));
+                                timelineInstanceObjects[j].transform.GetComponent<RectTransform>().pivot = new Vector2(timelineInstanceObjects[j].transform.GetComponent<RectTransform>().pivot.x, 0.5f);//timelineInstanceObjects[j].transform.position.y + timelineInstanceObjects[j].GetComponent<RectTransform>().rect.height / 2);
+                                timelineInstanceObjects[j].GetComponent<BoxCollider2D>().offset = new Vector2(timelineInstanceObjects[j].GetComponent<BoxCollider2D>().offset.x, 0);
+                            }
+                            sizeLayering = 1;
+                            alreadyCountedPlus = false;
                         }
                     }
                 }
+
                 // ----------------------------------------------------------------------------------------------------------------------------------------------
 
                 if (timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().anchoredPosition.x < (0.03f * Screen.width))  // 50 is half the box Collider width (mouse pos is in the middle of the figure)
                 {
-                    timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().anchoredPosition = new Vector2(0.03f * Screen.width, timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().anchoredPosition.y);    // tendenziell muesste das eher in buttonUp
+                    timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().anchoredPosition = new Vector3(0.03f * Screen.width, timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().anchoredPosition.y, -1);    // tendenziell muesste das eher in buttonUp
                 }
 
                 //-------------------------------------------------limit back of rail------------------------------------------//
                 if ((timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().anchoredPosition.x + timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetComponent<BoxCollider2D>().size.x) > (GetComponent<RectTransform>().rect.width + 0.03f * Screen.width))
                 {
-                    timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().anchoredPosition = new Vector2((GetComponent<RectTransform>().rect.width + (0.03f * Screen.width) - timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetComponent<BoxCollider2D>().size.x), timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().anchoredPosition.y);
+                    timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().anchoredPosition = new Vector3((GetComponent<RectTransform>().rect.width + (0.03f * Screen.width) - timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetComponent<BoxCollider2D>().size.x), timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().anchoredPosition.y, -1);
 
                 }
 
@@ -1138,7 +1206,7 @@ public class RailManager : MonoBehaviour
                         //2D object
                         timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.SetParent(gameController.GetComponent<UIController>().Rails[hitTimeline].transform);
                         timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(0).gameObject.SetActive(true);        // set rect active
-                        //von timeline obj alt loeschen, zu neu hinzufuegen
+                                                                                                                                            //von timeline obj alt loeschen, zu neu hinzufuegen
                         updateObjectList(gameController.GetComponent<UIController>().Rails[hitTimeline].timelineInstanceObjects, timelineInstanceObjects[currentClickedInstanceObjectIndex]);
                         //snapping/lock y-axis
                         setObjectOnTimeline(timelineInstanceObjects[currentClickedInstanceObjectIndex], gameController.GetComponent<UIController>().Rails[hitTimeline].transform.position.y);
@@ -1155,9 +1223,9 @@ public class RailManager : MonoBehaviour
                         //thisFigureInstanceElement.instanceNr = countCopiesOfObject(figureObjects[currentClickedObjectIndex]); //index
                         //thisFigureInstanceElement.name = timelineInstanceObjects3D[currentClickedInstanceObjectIndex].name + "_" + countCopiesOfObject(figureObjects[currentClickedObjectIndex]).ToString("000");
                         thisFigureInstanceElement.railStart = (int)Char.GetNumericValue(gameController.GetComponent<UIController>().Rails[hitTimeline].timelineImage.name[17]) - 1; //railIndex
-                        //StaticSceneData.StaticData.figureElements[currentClickedObjectIndex].figureInstanceElements.Add(thisFigureInstanceElement);
-                        //gameController.GetComponent<SceneDataController>().objects3dFigureInstances.Add(timelineInstanceObjects3D[currentClickedInstanceObjectIndex]);
-                        ///////////////////////////////////////////////////////////////////////////////////////////////////////
+                                                                                                                                                                                    //StaticSceneData.StaticData.figureElements[currentClickedObjectIndex].figureInstanceElements.Add(thisFigureInstanceElement);
+                                                                                                                                                                                    //gameController.GetComponent<SceneDataController>().objects3dFigureInstances.Add(timelineInstanceObjects3D[currentClickedInstanceObjectIndex]);
+                                                                                                                                                                                    ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
                         changedRail = false;
                     }
