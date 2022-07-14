@@ -545,6 +545,7 @@ public class RailManager : MonoBehaviour
         //double tmpLength = (maxX - minX) / 614.0f * animLength;	//614.0f = 10:14min in Seconds = maxTimeInSec
         //double tmpLength = (maxX-minX)/(maxTimeInSec*animLength);
         double tmpLength = calcSecondsToPixel(objectAnimationLength, minX, maxX, maxTimeInSec);
+        tmpLength = calcSecondsToPixel(objectAnimationLength, minX, maxX, maxTimeInSec) + 50;
 
         GameObject imgObject = new GameObject("RectBackground");
         RectTransform trans = imgObject.AddComponent<RectTransform>();
@@ -757,7 +758,10 @@ public class RailManager : MonoBehaviour
             //Debug.LogWarning("moment " + momentOrPosX + " // posX " + posX);
 
             newCopyOfFigure.transform.localPosition = new Vector3(posX, figureObjects[figureNr].transform.localPosition.y, -1);
-
+            float animDuration = rail3dObj.transform.GetChild(0).GetComponent<RailSpeedController>().GetEndTimeFromStartTime(momentOrPosX) * 5;
+            objectAnimationLength = animDuration;
+            Debug.LogWarning(rail3dObj.name + " animDuration: " + animDuration);
+            //createRectangle(newCopyOfFigure, new Vector2(300, gameObject.GetComponent<RectTransform>().rect.height * 0.96f), colFigure, minX, animDuration);
             createRectangle(newCopyOfFigure, new Vector2(300, gameObject.GetComponent<RectTransform>().rect.height * 0.96f), colFigure, minX, objectAnimationLength);
             scaleObject(newCopyOfFigure, 100, gameObject.GetComponent<RectTransform>().rect.height * 0.96f, false);      //scale the figure-picture in timeline to x: 100 and y: 80px
             scaleObject(newCopyOfFigure.transform.GetChild(0).gameObject, newCopyOfFigure.transform.GetChild(0).gameObject.GetComponent<RectTransform>().sizeDelta.x, gameObject.GetComponent<RectTransform>().rect.height * 0.96f, false);
@@ -1278,7 +1282,7 @@ public class RailManager : MonoBehaviour
 
                 float moment = UtilitiesTm.FloatRemap(timelineInstanceObjects[i].transform.localPosition.x, gameObject.GetComponent<RectTransform>().rect.width / -2, gameObject.GetComponent<RectTransform>().rect.width / 2, 0, AnimationTimer.GetMaxTime());
                 float zPosFigure = (rail3dObj.transform.GetChild(0).GetComponent<RailSpeedController>().GetDistanceAtTime((float)startSec)) / 10;
-                if (zPosFigure < 0) // wenn die Figur auf eine Position noch vor dem empty gesetzt werden würde, würde erscheinen bevor sie auf den rails da ist
+                if (zPosFigure < 0) // wenn die Figur auf eine Position noch vor dem empty gesetzt werden würde, würde sie erscheinen bevor sie auf den rails da ist
                 {
                     zPosFigure = 500f;      // deshalb wird die Figur komplett außerhalb der Szene abgesetzt.
                 }

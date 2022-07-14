@@ -14,10 +14,7 @@ public class MoveRails : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _myLibrary.Test();
-
         _startPosSchiene = transform.localPosition;
-
     }
 
     public void ChangeValueSliderX(float val)

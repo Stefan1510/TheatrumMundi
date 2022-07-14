@@ -38,6 +38,28 @@ public class RailSpeedController : MonoBehaviour
     //  v(t) is the velocity at time t 
     //  v1 and v2 are the velocities at time t1 and t2
     //  a is the uniform rate of acceleration.
+
+    
+
+    public float GetEndTimeFromStartTime(float tStart, float distance = 4.1f)
+    {
+        float deltaT = 0;
+        float vt = 0, t1 = 0, t2 = 0, v1 = 0, v2 = 0;
+
+        List<RailElementSpeed> railElementSpeeds = StaticSceneData.StaticData.railElements[railIndex].railElementSpeeds;
+        int momentAfter = railElementSpeeds.FindIndex(speed => speed.moment > tStart);      //sucht von vorne aus und findet den ersten Moment, der nach t liegt
+        int momentBefore = railElementSpeeds.FindLastIndex(speed => speed.moment <= tStart); //sucht von hinten aus und findet den ersten Moment, der vor t liegt
+        // Debug.LogWarning("Before: " + momentBefore + " - After: " + momentAfter);
+        if (momentBefore == 0 && momentAfter == -1) //ein momentBefore existiert immer, da der erste Wert von railElementSpeeds bei Programmstart gesetzt wird
+        {
+            v1 = v2 = railElementSpeeds[0].speed;
+            //distance = GetDistanceBetweenTwoMoments(0, tStart, v1, v2);
+            deltaT = 2 * distance / v1;
+        }
+
+        return deltaT;
+    }
+
     public float GetDistanceAtTime(float t)    //time in Sekunden
     {
         float distance = 0;
