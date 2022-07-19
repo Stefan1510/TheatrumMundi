@@ -427,7 +427,7 @@ public class SceneDataController : MonoBehaviour
                         // imageTimelineRails[feInstance.railStart].GetComponent<RailManager>().timelineInstanceObjects3D.Add(curr3DObject);
                         //Debug.LogError("+++timeline3D: "+imageTimelineRails[feInstance.railStart].GetComponent<RailManager>().timelineInstanceObjects3D.Count);
                         // curr3DObject.transform.SetParent(objectsRailElements[feInstance.railStart].transform.GetChild(0));
-                        curr3DObject.transform.localPosition = new Vector3(curr3DObject.transform.localPosition.x, curr3DObject.transform.localPosition.y, (objectsRailElements[feInstance.railStart].transform.GetChild(0).GetComponent<RailSpeedController>().GetDistanceAtTime(feInstance.moment) / 10));
+                        curr3DObject.transform.localPosition = new Vector3(curr3DObject.transform.localPosition.x, curr3DObject.transform.localPosition.y, (objectsRailElements[feInstance.railStart].transform.GetChild(0).GetComponent<RailSpeedController>().GetDistanceAtTime(feInstance.moment)));
                         objects3dFigureInstances.Add(curr3DObject);
 
                     }

@@ -44,18 +44,72 @@ public class RailSpeedController : MonoBehaviour
     public float GetEndTimeFromStartTime(float tStart, float distance = 4.1f)
     {
         float deltaT = 0;
-        float vt = 0, t1 = 0, t2 = 0, v1 = 0, v2 = 0;
+        float vt = 0, t1 = 0, t2 = 0, v1 = 0, v2 = 0, a=0;
+        float currentDistance = 0;
 
         List<RailElementSpeed> railElementSpeeds = StaticSceneData.StaticData.railElements[railIndex].railElementSpeeds;
         int momentAfter = railElementSpeeds.FindIndex(speed => speed.moment > tStart);      //sucht von vorne aus und findet den ersten Moment, der nach t liegt
         int momentBefore = railElementSpeeds.FindLastIndex(speed => speed.moment <= tStart); //sucht von hinten aus und findet den ersten Moment, der vor t liegt
+        int momentCount = railElementSpeeds.Count;
+        
         // Debug.LogWarning("Before: " + momentBefore + " - After: " + momentAfter);
-        if (momentBefore == 0 && momentAfter == -1) //ein momentBefore existiert immer, da der erste Wert von railElementSpeeds bei Programmstart gesetzt wird
+        if (momentAfter == -1) //ein momentBefore existiert immer, da der erste Wert von railElementSpeeds bei Programmstart gesetzt wird
         {
-            v1 = v2 = railElementSpeeds[0].speed;
+            v1 = v2 = railElementSpeeds[momentBefore].speed;
             //distance = GetDistanceBetweenTwoMoments(0, tStart, v1, v2);
             deltaT = 2 * distance / v1;
         }
+        else
+        {
+            t1 = railElementSpeeds[momentBefore].moment;
+            t2 = railElementSpeeds[momentAfter].moment;
+            v1 = railElementSpeeds[momentBefore].speed;
+            v2 = railElementSpeeds[momentAfter].speed;
+            vt = UtilitiesTm.FloatRemap(tStart, t1, t2, v1, v2);
+            currentDistance = GetDistanceBetweenTwoMoments(tStart, t2, vt, v2);
+
+            Debug.LogWarning(" t1   ; tStart ;   t2   ;   v1   ;   vt   ;   v2   ; currentDistance \n   \t   " + t1 + " ; " + tStart + "  " + t2 + " ; " + v1 + " ; " + vt + " ; " + v2 + " ; " + currentDistance);
+
+
+            if (currentDistance < distance)
+            {
+                deltaT += (t2 - tStart);
+            }
+            else
+            {
+                currentDistance = 0;
+            }
+
+            int i = momentAfter;
+            //while (i < momentCount - 1 && currentDistance < distance)
+            //{
+            //    t1 = railElementSpeeds[i].moment;
+            //    t2 = railElementSpeeds[i + 1].moment;
+            //    v1 = railElementSpeeds[i].speed;
+            //    v2 = railElementSpeeds[i + 1].speed;
+            //    currentDistance += GetDistanceBetweenTwoMoments(t1, t2, v1, v2);
+            //    if (currentDistance < distance)
+            //    {
+            //        deltaT += (t2 - t1);
+            //    }
+            //    i++;
+            //}
+            //if (currentDistance < distance)
+            {
+                t1 = railElementSpeeds[i].moment;
+                t2 = railElementSpeeds[i + 1].moment;
+                v1 = railElementSpeeds[i].speed;
+                v2 = railElementSpeeds[i + 1].speed;
+                a = (v2 - v1) / (t2 - t1);
+                float sRest = distance - currentDistance;
+                //float tRest = Mathf.Sqrt((2 * sRest) / a);
+                float tRest = -(v1 / a) + Mathf.Sqrt(((v1 * v1) / (a * a)) + (2 * sRest / a));
+
+                deltaT += tRest;
+                Debug.LogWarning("sRest ; deltaT ; distance ; currentDistance \n" + sRest + " ; " + deltaT + " ; " + distance + " ; " + currentDistance);
+            }
+        }
+
 
         return deltaT;
     }
@@ -118,7 +172,7 @@ public class RailSpeedController : MonoBehaviour
             distance += GetDistanceBetweenTwoMoments(t1, t2, v1, v2);
             _speedAtTime = vt;
         }
-        return distance;
+        return distance*Mathf.Abs(speed);
     }
 
     float GetDistanceBetweenTwoMoments(float t1, float t2, float v1, float v2)

@@ -827,7 +827,7 @@ public class RailManager : MonoBehaviour
 
         //Debug.LogWarning("set locPos: " + newCopyOfFigure.transform.localPosition.x);
         float moment = UtilitiesTm.FloatRemap(newCopyOfFigure.transform.localPosition.x, gameObject.GetComponent<RectTransform>().rect.width / -2, gameObject.GetComponent<RectTransform>().rect.width / 2, 0, AnimationTimer.GetMaxTime());
-        float animDuration = rail3dObj.transform.GetChild(0).GetComponent<RailSpeedController>().GetEndTimeFromStartTime(moment) * 5;
+        float animDuration = rail3dObj.transform.GetChild(0).GetComponent<RailSpeedController>().GetEndTimeFromStartTime(moment);
         //Debug.LogWarning(rail3dObj.name + " Duration: " + animDuration + " - moment: " + moment);
         objectAnimationLength = animDuration;
         createRectangle(newCopyOfFigure, new Vector2(300, gameObject.GetComponent<RectTransform>().rect.height * 0.96f), colFigure, minX, objectAnimationLength);
@@ -1395,7 +1395,7 @@ public class RailManager : MonoBehaviour
                 double startSec = calculateFigureStartTimeInSec(timelineInstanceObjects[i], objectAnimationLength, maxTimeInSec, minX, maxX);
 
                 float moment = UtilitiesTm.FloatRemap(timelineInstanceObjects[i].transform.localPosition.x, gameObject.GetComponent<RectTransform>().rect.width / -2, gameObject.GetComponent<RectTransform>().rect.width / 2, 0, AnimationTimer.GetMaxTime());
-                float zPosFigure = (rail3dObj.transform.GetChild(0).GetComponent<RailSpeedController>().GetDistanceAtTime((float)startSec)) / 10;
+                float zPosFigure = (rail3dObj.transform.GetChild(0).GetComponent<RailSpeedController>().GetDistanceAtTime((float)startSec));
                 if (zPosFigure < 0) // wenn die Figur auf eine Position noch vor dem empty gesetzt werden würde, würde sie erscheinen bevor sie auf den rails da ist
                 {
                     zPosFigure = 500f;      // deshalb wird die Figur komplett außerhalb der Szene abgesetzt.
