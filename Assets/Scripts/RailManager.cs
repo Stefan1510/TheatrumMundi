@@ -542,7 +542,7 @@ public class RailManager : MonoBehaviour
         //double tmpLength = (maxX - minX) / 614.0f * animLength;	//614.0f = 10:14min in Seconds = maxTimeInSec
         //double tmpLength = (maxX-minX)/(maxTimeInSec*animLength);
         double tmpLength = calcSecondsToPixel(objectAnimationLength, minX, maxX, maxTimeInSec);
-        tmpLength = calcSecondsToPixel(objectAnimationLength, minX, maxX, maxTimeInSec) + 50;
+        tmpLength = calcSecondsToPixel(objectAnimationLength, minX, maxX, maxTimeInSec) / 2 + 50;
 
         GameObject imgObject = new GameObject("RectBackground");
         RectTransform trans = imgObject.AddComponent<RectTransform>();

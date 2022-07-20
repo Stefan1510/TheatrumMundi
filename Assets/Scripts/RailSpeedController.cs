@@ -66,19 +66,19 @@ public class RailSpeedController : MonoBehaviour
             v1 = railElementSpeeds[momentBefore].speed;
             v2 = railElementSpeeds[momentAfter].speed;
             vt = UtilitiesTm.FloatRemap(tStart, t1, t2, v1, v2);
-            currentDistance = GetDistanceBetweenTwoMoments(tStart, t2, vt, v2);
+            //currentDistance = GetDistanceBetweenTwoMoments(tStart, t2, vt, v2);
 
-            Debug.LogWarning(" t1   ; tStart ;   t2   ;   v1   ;   vt   ;   v2   ; currentDistance \n   \t   " + t1 + " ; " + tStart + "  " + t2 + " ; " + v1 + " ; " + vt + " ; " + v2 + " ; " + currentDistance);
+            //Debug.LogWarning(" t1   ; tStart ;   t2   ;   v1   ;   vt   ;   v2   ; currentDistance \n   \t   " + t1 + " ; " + tStart + "  " + t2 + " ; " + v1 + " ; " + vt + " ; " + v2 + " ; " + currentDistance);
 
 
-            if (currentDistance < distance)
-            {
-                deltaT += (t2 - tStart);
-            }
-            else
-            {
-                currentDistance = 0;
-            }
+            //if (currentDistance < distance)
+            //{
+            //    deltaT += (t2 - tStart);
+            //}
+            //else
+            //{
+            //    currentDistance = 0;
+            //}
 
             int i = momentAfter;
             //while (i < momentCount - 1 && currentDistance < distance)
@@ -96,17 +96,29 @@ public class RailSpeedController : MonoBehaviour
             //}
             //if (currentDistance < distance)
             {
-                t1 = railElementSpeeds[i].moment;
-                t2 = railElementSpeeds[i + 1].moment;
-                v1 = railElementSpeeds[i].speed;
-                v2 = railElementSpeeds[i + 1].speed;
+                //t1 = railElementSpeeds[i].moment;
+                //t2 = railElementSpeeds[i + 1].moment;
+                //v1 = railElementSpeeds[i].speed;
+                //v2 = railElementSpeeds[i + 1].speed;
                 a = (v2 - v1) / (t2 - t1);
-                float sRest = distance - currentDistance;
+                //float sRest = distance - currentDistance;
+                float sRest = distance;
                 //float tRest = Mathf.Sqrt((2 * sRest) / a);
-                float tRest = -(v1 / a) + Mathf.Sqrt(((v1 * v1) / (a * a)) + (2 * sRest / a));
+
+                float tRest = 0;
+
+                Debug.LogWarning("v1 \t v2 \t t1 \t t2 \t a \t sRest \n\t" + v1 + " \t " + v2 + " \t " + t1 + " \t " + t2 + " \t " + a + " \t " + sRest);
+                if (a==0)
+                {
+                    tRest = 2 * distance / v1;
+                }
+                else
+                {
+                    tRest = -(v1 / a) + Mathf.Sqrt(((v1 * v1) / (a * a)) + (2 * sRest / a));
+                }
 
                 deltaT += tRest;
-                Debug.LogWarning("sRest ; deltaT ; distance ; currentDistance \n" + sRest + " ; " + deltaT + " ; " + distance + " ; " + currentDistance);
+                Debug.LogWarning("sRest \t deltaT \t distanc \t currentDistance \n" + sRest + " \t " + deltaT + " \t " + distance + " \t " + currentDistance);
             }
         }
 
