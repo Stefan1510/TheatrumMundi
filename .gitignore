@@ -61,3 +61,4 @@ crashlytics-build.properties
 /.idea/
 UserSettings/EditorUserSettings.asset
 UserSettings/EditorUserSettings.asset
+Assets/Scripts/RailManager.cs

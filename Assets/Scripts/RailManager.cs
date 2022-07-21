@@ -525,14 +525,14 @@ public class RailManager : MonoBehaviour
             objects.Add(obj);
         }
     }
-    public double calcSecondsToPixel(double animLength, double railMinX, double railMaxX, int maxTimeLengthInSec)
+    public double calcSecondsToPixel(double animLength, int maxTimeLengthInSec)
     {
         double px = 0;
-        double width = railMaxX - railMinX;
+        double width = maxX - minX;
         px = (width * animLength) / maxTimeLengthInSec;
         return px;
     }
-    public void createRectangle(GameObject obj, Vector2 size, Color col, double railMinX, double animLength) // start pos brauch ich eigentlich nicht
+    public void createRectangle(GameObject obj, Color col, double rectHeight) // start pos brauch ich eigentlich nicht
     {
         //PROBLEMS:
         //animLength are in seconds but this is not 100 pixel!!! ->calc seconds to pixel is required
@@ -541,8 +541,9 @@ public class RailManager : MonoBehaviour
 
         //double tmpLength = (maxX - minX) / 614.0f * animLength;	//614.0f = 10:14min in Seconds = maxTimeInSec
         //double tmpLength = (maxX-minX)/(maxTimeInSec*animLength);
-        double tmpLength = calcSecondsToPixel(objectAnimationLength, minX, maxX, maxTimeInSec);
-        tmpLength = calcSecondsToPixel(objectAnimationLength, minX, maxX, maxTimeInSec) / 2 + 50;
+
+        double tmpLength = calcSecondsToPixel(objectAnimationLength, maxTimeInSec) / 2 + 25;
+
 
         GameObject imgObject = new GameObject("RectBackground");
         RectTransform trans = imgObject.AddComponent<RectTransform>();
@@ -556,7 +557,7 @@ public class RailManager : MonoBehaviour
         trans.anchoredPosition = new Vector2((obj.GetComponent<RectTransform>().rect.width / 2) * (-1), 0.0f);
         trans.SetSiblingIndex(0);
         //trans.sizeDelta = new Vector2((float)animLength, size.y); // custom size
-        trans.sizeDelta = new Vector2((float)tmpLength, size.y);    //size related to animationLength
+        trans.sizeDelta = new Vector2((float)tmpLength, (float)rectHeight);    //size related to animationLength
 
         Image image = imgObject.AddComponent<Image>();
         image.color = col;
@@ -785,7 +786,6 @@ public class RailManager : MonoBehaviour
         newCopyOfFigure.transform.SetParent(timelineImage.transform);
         newCopyOfFigure.transform.localScale = Vector3.one;
 
-
         if (loadFromFile)
         {
             float posX = UtilitiesTm.FloatRemap(momentOrPosX, 0, AnimationTimer.GetMaxTime(), gameObject.GetComponent<RectTransform>().rect.width / -2, gameObject.GetComponent<RectTransform>().rect.width / 2);
@@ -811,6 +811,14 @@ public class RailManager : MonoBehaviour
             //-------------------------------------------------limit back of rail------------------------------------------//
 
         }
+
+        //Debug.LogWarning("set locPos: " + newCopyOfFigure.transform.localPosition.x);
+        float moment = UtilitiesTm.FloatRemap(newCopyOfFigure.transform.localPosition.x, gameObject.GetComponent<RectTransform>().rect.width / -2, gameObject.GetComponent<RectTransform>().rect.width / 2, 0, AnimationTimer.GetMaxTime()) - 25;
+        objectAnimationLength = rail3dObj.transform.GetChild(0).GetComponent<RailSpeedController>().GetEndTimeFromStartTime(moment);
+
+        createRectangle(newCopyOfFigure, colFigure, gameObject.GetComponent<RectTransform>().rect.height * 0.96f);
+        //createRectangle(newCopyOfFigure, new Vector2(300, gameObject.GetComponent<RectTransform>().rect.height * 0.96f), colFigure, minX, animDuration);
+
         // size of rectangle becomes size for figure that is clickable
         newCopyOfFigure.transform.GetComponent<BoxCollider2D>().size = newCopyOfFigure.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta;
         newCopyOfFigure.transform.GetComponent<BoxCollider2D>().offset = new Vector2(newCopyOfFigure.transform.GetComponent<BoxCollider2D>().size.x / 2 - 50f, newCopyOfFigure.transform.GetComponent<BoxCollider2D>().offset.y);
@@ -823,15 +831,6 @@ public class RailManager : MonoBehaviour
         GameObject curr3DObject = Instantiate(figureObjects3D[figureNr]);
         timelineInstanceObjects3D.Add(curr3DObject);
         setParent(timelineInstanceObjects3D[timelineInstanceObjects3D.Count - 1], rail3dObj.transform.GetChild(0).gameObject);
-
-
-        //Debug.LogWarning("set locPos: " + newCopyOfFigure.transform.localPosition.x);
-        float moment = UtilitiesTm.FloatRemap(newCopyOfFigure.transform.localPosition.x, gameObject.GetComponent<RectTransform>().rect.width / -2, gameObject.GetComponent<RectTransform>().rect.width / 2, 0, AnimationTimer.GetMaxTime());
-        float animDuration = rail3dObj.transform.GetChild(0).GetComponent<RailSpeedController>().GetEndTimeFromStartTime(moment);
-        //Debug.LogWarning(rail3dObj.name + " Duration: " + animDuration + " - moment: " + moment);
-        objectAnimationLength = animDuration;
-        createRectangle(newCopyOfFigure, new Vector2(300, gameObject.GetComponent<RectTransform>().rect.height * 0.96f), colFigure, minX, objectAnimationLength);
-        //createRectangle(newCopyOfFigure, new Vector2(300, gameObject.GetComponent<RectTransform>().rect.height * 0.96f), colFigure, minX, animDuration);
 
         scaleObject(newCopyOfFigure, 100, gameObject.GetComponent<RectTransform>().rect.height * 0.96f, false);      //scale the figure-picture in timeline to x: 100 and y: 80px
         scaleObject(newCopyOfFigure.transform.GetChild(0).gameObject, newCopyOfFigure.transform.GetChild(0).gameObject.GetComponent<RectTransform>().sizeDelta.x, gameObject.GetComponent<RectTransform>().rect.height * 0.96f, false);
@@ -1057,7 +1056,7 @@ public class RailManager : MonoBehaviour
                         if (!alreadyCountedPlus)
                         {
                             layerOverlaps++;
-                            //Debug.Log("overlaps ++");
+                            Debug.Log("overlaps ++");
                             //Debug.Log("overlaps: " + layerOverlaps);
                             alreadyCountedPlus = true;
                         }
@@ -1083,7 +1082,7 @@ public class RailManager : MonoBehaviour
                             if (!alreadyCountedMinus && layerOverlaps > 0)
                             {
                                 layerOverlaps--;
-                                //Debug.Log("overlaps --");
+                                Debug.Log("overlaps --");
                                 alreadyCountedMinus = true;
                             }
                         }
@@ -1096,6 +1095,7 @@ public class RailManager : MonoBehaviour
                                 // change pos y
                                 timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetComponent<RectTransform>().pivot = new Vector3(timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetComponent<RectTransform>().pivot.x, 1, -1);
                                 timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<BoxCollider2D>().offset = new Vector2(timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<BoxCollider2D>().offset.x, -timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(0).GetComponent<RectTransform>().rect.height / 2);
+                                layerOverlaps++;
                             }
                         }
                         else
@@ -1107,7 +1107,7 @@ public class RailManager : MonoBehaviour
                                 timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetComponent<RectTransform>().pivot = new Vector3(timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetComponent<RectTransform>().pivot.x, 0, -1);
                                 timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<BoxCollider2D>().offset = new Vector2(timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<BoxCollider2D>().offset.x, timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(0).GetComponent<RectTransform>().rect.height / 2);
                                 layerOverlaps--;
-                                //Debug.Log("overlaps --");
+                                Debug.Log("overlaps --");
                             }
                         }
                         if (layerOverlaps == 0)
@@ -1124,15 +1124,17 @@ public class RailManager : MonoBehaviour
                                 timelineInstanceObjects[j].GetComponent<BoxCollider2D>().size = new Vector2(timelineInstanceObjects[j].transform.GetChild(0).GetComponent<RectTransform>().rect.width, (timelineInstanceObjects[j].transform.GetChild(0).GetComponent<RectTransform>().rect.height));
                                 timelineInstanceObjects[j].transform.GetComponent<RectTransform>().pivot = new Vector2(timelineInstanceObjects[j].transform.GetComponent<RectTransform>().pivot.x, 0.5f);//timelineInstanceObjects[j].transform.position.y + timelineInstanceObjects[j].GetComponent<RectTransform>().rect.height / 2);
                                 timelineInstanceObjects[j].GetComponent<BoxCollider2D>().offset = new Vector2(timelineInstanceObjects[j].GetComponent<BoxCollider2D>().offset.x, 0);
-                                figuresLayer2.Remove(timelineInstanceObjects[j]);
-                                figuresLayer1.Add(timelineInstanceObjects[j]);
-                                // }
+                                if (figuresLayer2.Contains(timelineInstanceObjects[j]))
+                                {
+                                    figuresLayer2.Remove(timelineInstanceObjects[j]);
+                                    figuresLayer1.Add(timelineInstanceObjects[j]);
+                                }
                             }
                             sizeLayering = 1;
                             alreadyCountedPlus = false;
                         }
-                        //Debug.Log("Layer1: " + figuresLayer1.Count + ", layer2: " + figuresLayer2.Count);
-                        //Debug.Log("overlaps: " + layerOverlaps);
+                        Debug.Log("Layer1: " + figuresLayer1.Count + ", layer2: " + figuresLayer2.Count);
+                        Debug.Log("overlaps: " + layerOverlaps);
                     }
                 }
 
@@ -1178,7 +1180,7 @@ public class RailManager : MonoBehaviour
 
                 // scale down the dragged figure (and childobject: image)
                 scaleObject(timelineInstanceObjects[currentClickedInstanceObjectIndex], 100f, heightOpened, false);
-                double tmpLength = calcSecondsToPixel(objectAnimationLength, minX, maxX, maxTimeInSec);
+                double tmpLength = calcSecondsToPixel(objectAnimationLength, maxTimeInSec);
                 scaleObject(timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(0).gameObject, (float)tmpLength, heightOpened, false);    // rect
                 scaleObject(timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).gameObject, 100f, heightOpened, false);    // sprite of figure
 
