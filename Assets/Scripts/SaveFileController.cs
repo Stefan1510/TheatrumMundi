@@ -143,6 +143,16 @@ public class SaveFileController : MonoBehaviour
 
     public void LoadSceneFromFile(string fileName)
     {
+        if (fileName.Substring(0, fileName.Length - 5) != StaticSceneData.StaticData.fileName)
+        {
+            //Debug.LogWarning("Scene Not Loaded! weee uu wee uu");
+            SceneManaging.isPreviewLoaded = false;
+        }
+        else
+        {
+            //Debug.LogWarning("grün!");
+            SceneManaging.isPreviewLoaded = true;
+        }
         _selectedFile = fileName;
         if (_isWebGl)
         {
@@ -160,10 +170,11 @@ public class SaveFileController : MonoBehaviour
         Button fileButtonInstance = Instantiate(fileSelectButton, contentFileSelect.transform);
         //Debug.LogError(fileName.Substring(0, fileName.Length - 5));
         fileButtonInstance.name = fileName;
-        if (fileName.Substring(0,fileName.Length-5) == StaticSceneData.StaticData.fileName)
+        if (fileName.Substring(0, fileName.Length - 5) == StaticSceneData.StaticData.fileName)
         {
-            //Debug.LogError("gleicher Filename !!!! einesse  q344l   1243keaskr");
             fileButtonInstance.GetComponent<Button>().image.color = new Color32(64, 192, 16, 192);
+            //Debug.LogWarning("Loaded --> grüüün");
+            SceneManaging.isPreviewLoaded = true;
         }
         fileButtonInstance.GetComponentInChildren<Text>().text = fileName;
         fileButtonInstance.gameObject.SetActive(true);

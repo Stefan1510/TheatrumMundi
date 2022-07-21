@@ -38,28 +38,46 @@ public class PressHelp : MonoBehaviour
 		}
     }
 
+    private void HelpAnimation()
+    {
+        float x = _idleTimer - _helpAnimWaitTime;
+        float y = -4 * Mathf.Pow(x - 0.5f, 2) + 1;
+        Color32 buttonColor = Color32.Lerp(Color.white, new Color32(255, 191, 63, 255), y);
+        GetComponent<Button>().image.color = buttonColor;
+        transform.localScale = new Vector3(1 + y / 4, 1 + y / 4, 1 + y / 4);
+        //Debug.LogWarning(x + " : " + y);
+    }
+
+    private void StopHelpAnimation()
+    {
+        //Debug.LogWarning(_idleTimer);
+        GetComponent<Button>().image.color = Color.white;
+        transform.localScale = Vector3.one;
+        _idleTimer = 0;
+    }
+
     private void Update()
     {
         if (Input.GetMouseButtonDown(0))
         {
-            _idleTimer = 0;
+            StopHelpAnimation();
+        }
+        if (Input.anyKeyDown)
+        {
+            StopHelpAnimation();
+        }
+        if(Input.GetMouseButton(0))
+        {
+            StopHelpAnimation();
         }
         _idleTimer += Time.deltaTime;
         if (_idleTimer > _helpAnimWaitTime)
         {
-            float x = _idleTimer - _helpAnimWaitTime;
-            float y = -4 * Mathf.Pow(x - 0.5f, 2) + 1;
-            Color32 buttonColor = Color32.Lerp(Color.white, new Color32(255, 191, 63, 255), y);
-            GetComponent<Button>().image.color = buttonColor;
-            transform.localScale = new Vector3(1 + y / 4, 1 + y / 4, 1 + y / 4);
-            //Debug.LogWarning(x + " : " + y);
+            HelpAnimation();
         }
         if (_idleTimer >= _helpAnimWaitTime + _helpAnimDuration)
         {
-            //Debug.LogWarning(_idleTimer);
-            GetComponent<Button>().image.color = Color.white;
-            transform.localScale = Vector3.one;
-            _idleTimer = 0;
+            StopHelpAnimation();
         }
     }
 

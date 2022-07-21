@@ -33,6 +33,11 @@ public class ObjectShelf : MonoBehaviour
 
     // Start is called before the first frame update
 
+    public bool SwitchWithoutLoad()
+    {
+        return true;
+    }
+
     private void Awake()
     {
         gameController = GameObject.Find("GameController");
@@ -116,6 +121,15 @@ public class ObjectShelf : MonoBehaviour
         //Debug.Log("button for shelf01");
         //gameController.GetComponent<UIController>().Rails[0].openCloseTimelineByClick(false,gameController.GetComponent<UIController>().Rails[0].timelineImage,false);
         //show menue of buehne
+
+        if (SceneManaging.mainMenuActive == 1 && SceneManaging.menueActive == 4)
+        {
+            if (SwitchWithoutLoad())
+            {
+
+            }
+        }
+
         MenueShelf01.SetActive(true);
         SceneManaging.menueActive = 1;
         if (ImageTimelineSelection.GetMainMenuType() == 1)

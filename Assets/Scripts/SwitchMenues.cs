@@ -22,6 +22,7 @@ public class SwitchMenues : MonoBehaviour
 
         /////////////////////////////////// for VISITOR-Tool
         SceneManaging.menueActive = 1;
+        SceneManaging.mainMenuActive = 2;
         ObjectMenueDirectorMain.GetComponent<ObjectShelf>().ButtonShelf01();
         //////////////////////////////////
     }
@@ -29,6 +30,7 @@ public class SwitchMenues : MonoBehaviour
     {
         /////////////////////////////////// for VISITOR-Tool
         SceneManaging.menueActive = 2;
+        SceneManaging.mainMenuActive = 1;
         //////////////////////////////////
 
         ObjectMenueDirectorMain.SetActive(false);
