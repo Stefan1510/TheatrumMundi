@@ -4,7 +4,6 @@ using UnityEngine;
 
 public static class SceneManaging
 {
-    public static DragDrop dragDrop;                // aktuelles dragDrop-Script ("this" in Dragdrop)
     public static int triggerActive = new int();
     public static int objectInIndexTab;
     public static bool triggerEinstellungen = new bool();
@@ -20,7 +19,7 @@ public static class SceneManaging
     public static bool highlighted;                 //global variable since only one object can be highlighted - everything else is unhighlighted
 
     public static int objectsTimeline;
-    public  static bool openUp;
+    public static bool openUp;
     public static bool hittingSomething;
     public static int hitObject;
     public static int menueActive;

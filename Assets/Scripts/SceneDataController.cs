@@ -404,7 +404,10 @@ public class SceneDataController : MonoBehaviour
                 //Debug.LogWarning(obj3d);
                 Destroy(obj3d);
             }
+            imageTimeLineRail.GetComponent<RailManager>().layerOverlaps = 0;
             imageTimeLineRail.GetComponent<RailManager>().timelineInstanceObjects.Clear();
+            imageTimeLineRail.GetComponent<RailManager>().figuresLayer1.Clear();
+            imageTimeLineRail.GetComponent<RailManager>().figuresLayer2.Clear();
             imageTimeLineRail.GetComponent<RailManager>().timelineInstanceObjects3D.Clear();
         }
 
@@ -422,7 +425,8 @@ public class SceneDataController : MonoBehaviour
                     {
                         countActiveFigureElements++;
                         //Debug.LogWarning("Create Instance here: " + feInstance.name);
-                        GameObject curr3DObject = imageTimelineRails[feInstance.railStart].GetComponent<RailManager>().CreateNew2DInstance(i, feInstance.moment, true);
+                        //Debug.Log("layer scene data: " + feInstance.layer);
+                        GameObject curr3DObject = imageTimelineRails[feInstance.railStart].GetComponent<RailManager>().CreateNew2DInstance(i, feInstance.moment, true, feInstance.layer);
                         // curr3DObject = Instantiate(objectsFigureElements[i]);
                         // imageTimelineRails[feInstance.railStart].GetComponent<RailManager>().timelineInstanceObjects3D.Add(curr3DObject);
                         //Debug.LogError("+++timeline3D: "+imageTimelineRails[feInstance.railStart].GetComponent<RailManager>().timelineInstanceObjects3D.Count);

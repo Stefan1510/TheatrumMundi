@@ -198,7 +198,7 @@ public class ObjectShelf : MonoBehaviour
     }
     public void ButtonShelf02()
     {
-        Debug.Log("button for shelf02");
+        //Debug.Log("button for shelf02");
         // gameController.GetComponent<UIController>().RailLightBG[0].openCloseTimelineByClick(false,gameController.GetComponent<UIController>().RailLightBG[0].timel);
         //Debug.Log("+++timeline: "+gameController.GetComponent<UIController>().RailLightBG[0].timeSliderImage);
         //show menue of buehne

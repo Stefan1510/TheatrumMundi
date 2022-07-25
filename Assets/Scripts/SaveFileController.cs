@@ -19,15 +19,15 @@ public class SaveFileController : MonoBehaviour
     private string _directorySaves;
     private string _basepath;
     private bool _isWebGl;
-    //// Start is called before the first frame update
+
 
     private void Awake()
     {
-        #if UNITY_WEBGL
+#if UNITY_WEBGL
             _isWebGl = true;
-        #else
-            //Debug.LogWarning("any other");
-        #endif
+#else
+        //Debug.LogWarning("any other");
+#endif
 
         if (_isWebGl)
         {
@@ -47,7 +47,7 @@ public class SaveFileController : MonoBehaviour
             _basepath += "\\theatrum mundi";
         }
         //Debug.LogError(Application.absoluteURL);
-        
+
     }
 
     void Start()
@@ -159,7 +159,7 @@ public class SaveFileController : MonoBehaviour
             StartCoroutine(LoadFileFromWWW(fileName));
         }
         else
-        {            
+        {
             LoadFileFromDirectory(fileName);
         }
         //Debug.Log("_____________ selected File: " + _selectedFile);

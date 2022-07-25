@@ -20,22 +20,22 @@ public class RailElementSpeed
 [System.Serializable]
 public class RailElement
 {
-	//schiene
+    //schiene
     public string name;
     public float x;
     public float y;
     public float z;
-	public float width;
-	public float height;
-	public float velocity;
-	public string direction;	//"toRight"=band moves from left to right, "toLeft"=band moves from left to right
+    public float width;
+    public float height;
+    public float velocity;
+    public string direction;	//"toRight"=band moves from left to right, "toLeft"=band moves from left to right
     public List<RailElementSpeed> railElementSpeeds;
 }
 
 [System.Serializable]
 public class SceneryElement
 {
-	//kulisse
+    //kulisse
     public string name;
     public string description;
     public float x;
@@ -44,8 +44,8 @@ public class SceneryElement
     public string parent;
     public int railnumber;
     public bool active;
-	public int zPos;//0=backgound, 1=mid-pos, 2=front
-	public bool mirrored;
+    public int zPos;//0=backgound, 1=mid-pos, 2=front
+    public bool mirrored;
     public bool emission;
 }
 
@@ -55,47 +55,48 @@ public class SceneryElement
 public class FigureInstanceElement
 {
     public string name;
-    public int instanceNr;        
+    public int instanceNr;
     public float moment;
     public int railStart;         // empty auf der es sein soll
+    public int layer;
 }
 [System.Serializable]
 public class FigureElement
 {
-	//figur
+    //figur
     public string name;
     public float x;
     public float y;
     public float z;
     public string parent;
     public bool active;
-	public bool mirrored;
-	public float width;
-	public float height;
-	public float velocity;
-	public float wheelsize;
-	public int railnumber;
-	public string direction;
+    public bool mirrored;
+    public float width;
+    public float height;
+    public float velocity;
+    public float wheelsize;
+    public int railnumber;
+    public string direction;
     public List<FigureInstanceElement> figureInstanceElements;
 }
 
 [System.Serializable]
 public class LightElement
 {
-	//licht
+    //licht
     public string name;
     public float x;
     public float y;
     public float z;
     public bool active;
     //have some more parameters
-	public int railnumber;
-	public float r;
-	public float g;
-	public float b;
-	public float intensity;
-	public int angle_h;
-	public int angle_v;
+    public int railnumber;
+    public float r;
+    public float g;
+    public float b;
+    public float intensity;
+    public int angle_h;
+    public int angle_v;
     public int stagePosition;  //{ 0- BeforeRail, 1- leftRail, 2- rightRail};
 }
 
@@ -134,7 +135,7 @@ public class MusicClipElement
 //[System.Serializable]
 public class SceneData
 {
-	//enthält alle objekte
+    //enthält alle objekte
     public string fileName;
     public string fileAuthor;
     public string fileDate;
@@ -142,7 +143,7 @@ public class SceneData
     public List<MusicClipElement> musicClipElements;
     public List<RailElement> railElements;
     public List<SceneryElement> sceneryElements;
-	public List<FigureElement> figureElements;
+    public List<FigureElement> figureElements;
     public List<LightElement> lightElements;
     public List<LightingSet> lightingSets;
     public List<BackgroundPosition> backgroundPositions;
