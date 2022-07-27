@@ -21,9 +21,9 @@ public class PressHelp : MonoBehaviour
         helpButtonPressed.SetActive(false);
         helpOverlayMenue2.SetActive(false);
         helpOverlayMenue3.SetActive(false);
-
-        //Debug.Log("Button: "+helpButtonPressed+" hidden.");
-
+        
+        Debug.Log("Button: "+helpButtonPressed+" hidden.");
+        
         try
         {
             helpOverlayMenue4.SetActive(false);
@@ -35,7 +35,7 @@ public class PressHelp : MonoBehaviour
                 return;
             }
             throw;
-        }
+		}
     }
 
     private void HelpAnimation()
@@ -66,7 +66,7 @@ public class PressHelp : MonoBehaviour
         {
             StopHelpAnimation();
         }
-        if (Input.GetMouseButton(0))
+        if(Input.GetMouseButton(0))
         {
             StopHelpAnimation();
         }
@@ -91,7 +91,7 @@ public class PressHelp : MonoBehaviour
             helpOverlayMenue3.SetActive(false);
             helpButtonPressed.SetActive(false);
             pressed = false;
-
+                       
             try
             {
                 helpOverlayMenue4.SetActive(false);
@@ -108,39 +108,39 @@ public class PressHelp : MonoBehaviour
 
         else
         {
-            if (SceneManaging.menueActive == 1)
-            {
-                helpButtonPressed.SetActive(true);
-                helpOverlayMenue1.SetActive(true);
-            }
-            else if (SceneManaging.menueActive == 2)
-            {
-                helpButtonPressed.SetActive(true);
-                helpOverlayMenue2.SetActive(true);
-            }
-            else if (SceneManaging.menueActive == 3)
-            {
-                helpButtonPressed.SetActive(true);
-                helpOverlayMenue3.SetActive(true);
-            }
-            else if (SceneManaging.menueActive == 4)
-            {
-                helpButtonPressed.SetActive(true);
-                try
+                if (SceneManaging.menueActive == 1)
                 {
-                    helpOverlayMenue4.SetActive(true);
+                    helpButtonPressed.SetActive(true);
+                    helpOverlayMenue1.SetActive(true);
                 }
-                catch (Exception ex)
+                else if (SceneManaging.menueActive == 2)
                 {
-                    if (ex is NullReferenceException || ex is UnassignedReferenceException)
+                    helpButtonPressed.SetActive(true);
+                    helpOverlayMenue2.SetActive(true);
+                }
+                else if (SceneManaging.menueActive == 3)
+                {
+                    helpButtonPressed.SetActive(true);
+                    helpOverlayMenue3.SetActive(true);
+                }
+                else if (SceneManaging.menueActive == 4)
+                {
+                    helpButtonPressed.SetActive(true);
+                    try
                     {
-                        return;
+                        helpOverlayMenue4.SetActive(true);
                     }
-                    throw;
-                }
+                    catch (Exception ex)
+                    {
+                        if (ex is NullReferenceException || ex is UnassignedReferenceException)
+                        {
+                            return;
+                        }
+                        throw;
+                    }
 
             }
-
+            
             pressed = true;
         }
     }

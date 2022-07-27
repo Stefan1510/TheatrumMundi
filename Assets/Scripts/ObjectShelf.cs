@@ -27,19 +27,35 @@ public class ObjectShelf : MonoBehaviour
     public GameObject MenueButton03;
     public GameObject MenueButton04;
 
+    public GameObject panelPreviewNotLoaded;
+    private bool _warningIgnored;
+    private bool _switchWithoutLoad;
+
     GameObject gameController;
 
     //private GameObject lvcamera;
 
     // Start is called before the first frame update
 
-    public bool SwitchWithoutLoad()
+    void SwitchWithoutLoad()
     {
-        return true;
+        if (!SceneManaging.isPreviewLoaded)
+        {
+            //panelPreviewNotLoaded.GetComponent<WarningPanelLoad>().SetIgnore(false);
+            //panelPreviewNotLoaded.SetActive(true);
+            StartCoroutine(panelPreviewNotLoaded.GetComponent<WarningPanelLoad>().GetIgnoreIEnum());
+            //_warningIgnored = _temp;
+        }
+        else
+        {
+            _warningIgnored = true;
+        }
     }
 
     private void Awake()
     {
+        _warningIgnored = false;
+        _switchWithoutLoad = false;
         gameController = GameObject.Find("GameController");
     }
 
@@ -124,81 +140,82 @@ public class ObjectShelf : MonoBehaviour
 
         if (SceneManaging.mainMenuActive == 1 && SceneManaging.menueActive == 4)
         {
-            if (SwitchWithoutLoad())
+            SwitchWithoutLoad();
+            Debug.LogWarning("please load");
+        }
+
+        if (SceneManaging.mainMenuActive == 1 && SceneManaging.menueActive == 4 && _warningIgnored)
+        {
+            MenueShelf01.SetActive(true);
+            SceneManaging.menueActive = 1;
+            if (ImageTimelineSelection.GetMainMenuType() == 1)
             {
-
+                ImageTimelineSelection.SetRailType(0);
             }
-        }
-
-        MenueShelf01.SetActive(true);
-        SceneManaging.menueActive = 1;
-        if (ImageTimelineSelection.GetMainMenuType() == 1)
-        {
-            ImageTimelineSelection.SetRailType(0);
-        }
-        MenueShelf02.SetActive(false);
-        MenueShelf03.SetActive(false);
-        try
-        {
-            MenueShelf04.SetActive(false);
-        }
-        catch (Exception ex)
-        {
-            if (ex is NullReferenceException || ex is UnassignedReferenceException)
+            MenueShelf02.SetActive(false);
+            MenueShelf03.SetActive(false);
+            try
             {
-                return;
+                MenueShelf04.SetActive(false);
             }
-            throw;
-        }
-
-        //show headline of buehne
-        //HeadlineBuehne.text="bababababa";
-        //HeadlineBuehne.color=Color.red;
-        HeadlineShelf01.gameObject.SetActive(true);
-        HeadlineShelf02.gameObject.SetActive(false);
-        HeadlineShelf03.gameObject.SetActive(false);
-        try
-        {
-            HeadlineShelf04.gameObject.SetActive(false);
-        }
-        catch (Exception ex)
-        {
-            if (ex is NullReferenceException || ex is UnassignedReferenceException)
+            catch (Exception ex)
             {
-                return;
+                if (ex is NullReferenceException || ex is UnassignedReferenceException)
+                {
+                    return;
+                }
+                throw;
             }
-            throw;
-        }
-        //HeadlineKulisse.show(false);
-        //HeadlineLicht.show(false);
-        //mytext.text="this is buehne";
-        //Debug.Log(mytext);
-        //lvcamera=GameObject.Find("LVCam");
-        //Debug.Log("lvc");
-        //lvcamera.transform.position=new Vector3(8f,4f,5f);
 
-        MenueButton01.SetActive(true);
-        MenueButton02.SetActive(true);
-        MenueButton03.SetActive(true);
-        try
-        {
-            MenueButton04.SetActive(true);
-        }
-        catch (Exception ex)
-        {
-            if (ex is NullReferenceException || ex is UnassignedReferenceException)
+            //show headline of buehne
+            //HeadlineBuehne.text="bababababa";
+            //HeadlineBuehne.color=Color.red;
+            HeadlineShelf01.gameObject.SetActive(true);
+            HeadlineShelf02.gameObject.SetActive(false);
+            HeadlineShelf03.gameObject.SetActive(false);
+            try
             {
-                return;
+                HeadlineShelf04.gameObject.SetActive(false);
             }
-            throw;
-        }
+            catch (Exception ex)
+            {
+                if (ex is NullReferenceException || ex is UnassignedReferenceException)
+                {
+                    return;
+                }
+                throw;
+            }
+            //HeadlineKulisse.show(false);
+            //HeadlineLicht.show(false);
+            //mytext.text="this is buehne";
+            //Debug.Log(mytext);
+            //lvcamera=GameObject.Find("LVCam");
+            //Debug.Log("lvc");
+            //lvcamera.transform.position=new Vector3(8f,4f,5f);
 
-        StaticSceneData.Everything3D();
-        gameController.GetComponent<UIController>().Rails[0].GetComponent<RailManager>().PublicUpdate();
+            MenueButton01.SetActive(true);
+            MenueButton02.SetActive(true);
+            MenueButton03.SetActive(true);
+            try
+            {
+                MenueButton04.SetActive(true);
+            }
+            catch (Exception ex)
+            {
+                if (ex is NullReferenceException || ex is UnassignedReferenceException)
+                {
+                    return;
+                }
+                throw;
+            }
+
+            StaticSceneData.Everything3D();
+            gameController.GetComponent<UIController>().Rails[0].GetComponent<RailManager>().PublicUpdate();
+        }
     }
     public void ButtonShelf02()
     {
-        //Debug.Log("button for shelf02");
+        Debug.Log("button for shelf02");
         // gameController.GetComponent<UIController>().RailLightBG[0].openCloseTimelineByClick(false,gameController.GetComponent<UIController>().RailLightBG[0].timel);
         //Debug.Log("+++timeline: "+gameController.GetComponent<UIController>().RailLightBG[0].timeSliderImage);
         //show menue of buehne
@@ -380,8 +397,8 @@ public class ObjectShelf : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
-    {
+    //void Update()
+    //{
 
-    }
+    //}
 }
