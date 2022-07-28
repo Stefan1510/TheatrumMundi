@@ -47,7 +47,7 @@ public class SaveFileController : MonoBehaviour
             _basepath += "\\theatrum mundi";
         }
         //Debug.LogError(Application.absoluteURL);
-
+        SceneManaging.isPreviewLoaded = true;
     }
 
     void Start()

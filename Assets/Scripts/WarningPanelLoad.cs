@@ -9,61 +9,66 @@ public class WarningPanelLoad : MonoBehaviour
 
     [SerializeField] private Button _buttonIgnore;
     [SerializeField] private Button _buttonBack;
-    private bool _ignore;
-    private string _buttonClicked;
+    [HideInInspector] public string buttonClicked;
+    [HideInInspector] public bool isButtonClicked;
 
     private void Awake()
     {
-        _buttonIgnore.onClick.AddListener(() => clickedIgnore());
-        _buttonBack.onClick.AddListener(() => clickedBack());
-        _ignore = false;
-        _buttonClicked = null;
+        _buttonIgnore.onClick.AddListener(() => ClickedIgnore());
+        _buttonBack.onClick.AddListener(() => ClickedBack());
+        buttonClicked = "notnull";
     }
 
-    IEnumerator waitForButtonClick()
+    public IEnumerator WaitForButtonClick()
     {
-        _buttonClicked = null;
-        while (_buttonClicked==null)
+        buttonClicked = null;
+        gameObject.SetActive(true);
+        while (buttonClicked==null)
         {
             yield return null;
         }
+        isButtonClicked = true;
     }
 
-    private void clickedIgnore()
+    private void ClickedIgnore()
     {
         gameObject.SetActive(false);
-        _buttonClicked = "ignore";
+        buttonClicked = "ignore";
     }
 
-    private void clickedBack()
+    private void ClickedBack()
     {
         gameObject.SetActive(false);
-        _buttonClicked = "back";
+        buttonClicked = "back";
     }
 
     public IEnumerator GetIgnoreIEnum()
     {
-        gameObject.SetActive(true);
-        _ignore = false;
-        yield return waitForButtonClick();
-        Debug.LogWarning(_buttonClicked);
-        if (_buttonClicked == "ignore")
-        {
-            Debug.LogWarning("_buttonClicked == ignore");
-        }
-        else if (_buttonClicked == "back")
-        {
-            Debug.LogWarning("_buttonClicked == back");
-        }
-        else
-        {
-            Debug.LogWarning("_buttonClicked == DDD:");
-        }
+        yield return WaitForButtonClick();
+        Debug.LogWarning(buttonClicked);
+        //if (buttonClicked == "ignore")
+        //{
+        //    Debug.LogWarning("_buttonClicked == ignore");
+        //}
+        //else if (buttonClicked == "back")
+        //{
+        //    Debug.LogWarning("_buttonClicked == back");
+        //}
+        //else
+        //{
+        //    Debug.LogWarning("_buttonClicked == DDD:");
+        //}
     }
 
     public void GetIgnore()
     {
+        gameObject.SetActive(true);
         StartCoroutine(GetIgnoreIEnum());
+        //while (_buttonClicked==null)
+        //{
+
+        //}
+        Debug.LogWarning("============== Boink ==============");
     }
 
     //public void SetIgnore(bool val)
@@ -77,8 +82,8 @@ public class WarningPanelLoad : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
-    {
+    //void Update()
+    //{
         
-    }
+    //}
 }
