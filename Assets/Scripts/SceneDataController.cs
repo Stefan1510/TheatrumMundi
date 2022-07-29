@@ -426,7 +426,8 @@ public class SceneDataController : MonoBehaviour
                         countActiveFigureElements++;
                         //Debug.LogWarning("Create Instance here: " + feInstance.name);
                         //Debug.Log("layer scene data: " + feInstance.layer);
-                        GameObject curr3DObject = imageTimelineRails[feInstance.railStart].GetComponent<RailManager>().CreateNew2DInstance(i, feInstance.moment, true, feInstance.layer);
+                        GameObject curr3DObject = imageTimelineRails[feInstance.railStart].GetComponent<RailManager>().CreateNew2DInstance(i, feInstance.moment, true);
+                        //Debug.Log("box collider enabled: " + imageTimelineRails[feInstance.railStart].GetComponent<RailManager>().timelineInstanceObjects[imageTimelineRails[feInstance.railStart].GetComponent<RailManager>().timelineInstanceObjects.Count - 1].GetComponent<BoxCollider2D>().enabled);
                         // curr3DObject = Instantiate(objectsFigureElements[i]);
                         // imageTimelineRails[feInstance.railStart].GetComponent<RailManager>().timelineInstanceObjects3D.Add(curr3DObject);
                         //Debug.LogError("+++timeline3D: "+imageTimelineRails[feInstance.railStart].GetComponent<RailManager>().timelineInstanceObjects3D.Count);

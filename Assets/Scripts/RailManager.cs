@@ -89,9 +89,7 @@ public class RailManager : MonoBehaviour
         currentClickedInstanceObjectIndex = -1;
         timeSettings = timeSliderImage.transform.GetChild(0).gameObject;
         currentLossyScale = 0.0f;   // lossyScale is global Scale that I use to get the moment when ScreenSize is being changed (doesn't happen exactly when Screen Size is changed, but somehow shortly after, so I use this parameter instead)
-    }
-    void Start()
-    {
+
         ResetScreenSize();
         timelineImage.GetComponent<RectTransform>().sizeDelta = new Vector2(railWidth / gameObject.transform.lossyScale.x, heightClosed / gameObject.transform.lossyScale.x);
         gameObject.GetComponent<BoxCollider2D>().size = new Vector2(railWidth / gameObject.transform.lossyScale.x, heightClosed / gameObject.transform.lossyScale.x * 1.2f);
@@ -127,6 +125,10 @@ public class RailManager : MonoBehaviour
 
             }
         }
+    }
+    void Start()
+    {
+
     }
     public string identifyClickedObject()   //old
     {
@@ -808,7 +810,7 @@ public class RailManager : MonoBehaviour
         }
 
     }
-    public GameObject CreateNew2DInstance(int figureNr, float momentOrPosX, bool loadFromFile, int layer)
+    public GameObject CreateNew2DInstance(int figureNr, float momentOrPosX, bool loadFromFile)
     {
         int countName = 0;
         countName = countCopiesOfObject(figureObjects[figureNr]);
@@ -857,7 +859,10 @@ public class RailManager : MonoBehaviour
 
         float moment = UtilitiesTm.FloatRemap(newCopyOfFigure.transform.localPosition.x, gameObject.GetComponent<RectTransform>().rect.width / -2, gameObject.GetComponent<RectTransform>().rect.width / 2, 0, AnimationTimer.GetMaxTime()) - 25;
         objectAnimationLength = rail3dObj.transform.GetChild(0).GetComponent<RailSpeedController>().GetEndTimeFromStartTime(moment);
-
+        if (float.IsInfinity(objectAnimationLength))
+        {
+            objectAnimationLength = 100;
+        }
         createRectangle(newCopyOfFigure, colFigure, gameObject.GetComponent<RectTransform>().rect.height * 0.96f);
 
 
@@ -1397,7 +1402,7 @@ public class RailManager : MonoBehaviour
                     {
                         GameObject curr3DObject;
                         //create a copy of this timelineObject and keep the original one
-                        curr3DObject = CreateNew2DInstance(currentClickedObjectIndex, getMousePos.x, false, 0);
+                        curr3DObject = CreateNew2DInstance(currentClickedObjectIndex, getMousePos.x, false);
 
                         ///////////////////////////////////////////////////////////////////////////////////////////////////////
                         // Save to SceneData:
