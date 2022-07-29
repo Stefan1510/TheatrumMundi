@@ -42,7 +42,7 @@ public class ObjectShelf : MonoBehaviour
     void Start()
     {
         SceneManaging.mainMenuActive = 1;
-        SceneManaging.menueActive = 1;
+        SceneManaging.configMenueActive = 1;
         //Debug.Log("testprint");
         //define the buttons
         //Debug.Log("this is the main menue");
@@ -71,12 +71,10 @@ public class ObjectShelf : MonoBehaviour
     {
         //Debug.Log("button for shelf01");
         //gameController.GetComponent<UIController>().Rails[0].openCloseTimelineByClick(false,gameController.GetComponent<UIController>().Rails[0].timelineImage,false);
-        //show menue of buehne
+        //show menue of buehne or figuren
 
-        if (SceneManaging.mainMenuActive == 1 && SceneManaging.menueActive == 4 && !SceneManaging.isPreviewLoaded)
+        if (SceneManaging.mainMenuActive == 1 && SceneManaging.configMenueActive == 4 && !SceneManaging.isPreviewLoaded)
         {
-            //SwitchWithoutLoad();
-
             StartCoroutine(panelPreviewNotLoaded.GetComponent<WarningPanelLoad>().WaitForButtonClick());
             StartCoroutine(ButtonShelfI(1));
             //Debug.LogWarning("please load");
@@ -90,184 +88,51 @@ public class ObjectShelf : MonoBehaviour
     }
     public void ButtonShelf02()
     {
-        Debug.Log("button for shelf02");
+        //Debug.Log("button for shelf02");
         // gameController.GetComponent<UIController>().RailLightBG[0].openCloseTimelineByClick(false,gameController.GetComponent<UIController>().RailLightBG[0].timel);
         //Debug.Log("+++timeline: "+gameController.GetComponent<UIController>().RailLightBG[0].timeSliderImage);
-        //show menue of buehne
-        MenueShelf01.SetActive(false);
-        MenueShelf02.SetActive(true);
-        SceneManaging.menueActive = 2;
-        if (ImageTimelineSelection.GetMainMenuType() == 1)
+        //show menue of kulissen or licht
+        if (SceneManaging.mainMenuActive == 1 && SceneManaging.configMenueActive == 4 && !SceneManaging.isPreviewLoaded)
         {
-            ImageTimelineSelection.SetRailType(1);
+            StartCoroutine(panelPreviewNotLoaded.GetComponent<WarningPanelLoad>().WaitForButtonClick());
+            StartCoroutine(ButtonShelfI(2));
+            //Debug.LogWarning("please load");
         }
-        MenueShelf03.SetActive(false);
-        try
+        else
         {
-            MenueShelf04.SetActive(false);
+            StartCoroutine(ButtonShelfI(2));
         }
-        catch (Exception ex)
-        {
-            if (ex is NullReferenceException || ex is UnassignedReferenceException)
-            {
-                return;
-            }
-            throw;
-        }
-        HeadlineShelf01.gameObject.SetActive(false);
-        HeadlineShelf02.gameObject.SetActive(true);
-        HeadlineShelf03.gameObject.SetActive(false);
-        try
-        {
-            HeadlineShelf04.gameObject.SetActive(false);
-        }
-        catch (Exception ex)
-        {
-            if (ex is NullReferenceException || ex is UnassignedReferenceException)
-            {
-                return;
-            }
-            throw;
-        }
-        //mytext.text="in kulisse";
-        //Debug.Log(mytext);
-        //show headline of buehne
-        //HeadlineBuehne.SetActive(true);
-        //HeadlineKulisse.SetActive(false);
-        //HeadlineLicht.SetActive(false););
-
-        MenueButton01.SetActive(true);
-        MenueButton02.SetActive(true);
-        MenueButton03.SetActive(true);
-        try
-        {
-            MenueButton04.SetActive(true);
-        }
-        catch (Exception ex)
-        {
-            if (ex is NullReferenceException || ex is UnassignedReferenceException)
-            {
-                return;
-            }
-            throw;
-        }
-
-        StaticSceneData.Everything3D();
-        gameController.GetComponent<UIController>().Rails[0].GetComponent<RailManager>().PublicUpdate();
     }
     public void ButtonShelf03()
     {
-        Debug.Log("button for shelf03");
+        //Debug.Log("button for shelf03");
         //gameController.GetComponent<UIController>().RailMusic.openCloseTimelineByClick(false,gameController.GetComponent<UIController>().RailMusic.timelineImage,false);
-        //show menue of buehne
-        MenueShelf01.SetActive(false);
-        MenueShelf02.SetActive(false);
-        MenueShelf03.SetActive(true);
-        SceneManaging.menueActive = 3;
-        if (ImageTimelineSelection.GetMainMenuType() == 1)
+        //show menue of lichtkonfiguration or musik
+        if (SceneManaging.mainMenuActive == 1 && SceneManaging.configMenueActive == 4 && !SceneManaging.isPreviewLoaded)
         {
-            ImageTimelineSelection.SetRailType(2);
+            StartCoroutine(panelPreviewNotLoaded.GetComponent<WarningPanelLoad>().WaitForButtonClick());
+            StartCoroutine(ButtonShelfI(3));
+            //Debug.LogWarning("please load");
         }
-        try
+        else
         {
-            MenueShelf04.SetActive(false);
+            StartCoroutine(ButtonShelfI(3));
         }
-        catch (Exception ex)
-        {
-            if (ex is NullReferenceException || ex is UnassignedReferenceException)
-            {
-                return;
-            }
-            throw;
-        }
-        //show headline of buehne
-        HeadlineShelf01.gameObject.SetActive(false);
-        HeadlineShelf02.gameObject.SetActive(false);
-        HeadlineShelf03.gameObject.SetActive(true);
-        try
-        {
-            HeadlineShelf04.gameObject.SetActive(false);
-        }
-        catch (Exception ex)
-        {
-            if (ex is NullReferenceException || ex is UnassignedReferenceException)
-            {
-                return;
-            }
-            throw;
-        }
-
-        MenueButton01.SetActive(true);
-        MenueButton02.SetActive(true);
-        MenueButton03.SetActive(true);
-        try
-        {
-            MenueButton04.SetActive(true);
-        }
-        catch (Exception ex)
-        {
-            if (ex is NullReferenceException || ex is UnassignedReferenceException)
-            {
-                return;
-            }
-            throw;
-        }
-
-        StaticSceneData.Everything3D();
-        gameController.GetComponent<UIController>().Rails[0].GetComponent<RailManager>().PublicUpdate();
     }
 
     public void ButtonShelf04()
     {
-        Debug.Log("button for shelf04");
-        //show menue of buehne
-        MenueShelf01.SetActive(false);
-        MenueShelf02.SetActive(false);
-        MenueShelf03.SetActive(false);
-        try
+        //Debug.Log("button for shelf04");
+        //show menue of ladenspeichern
+        if (SceneManaging.mainMenuActive == 1 && SceneManaging.configMenueActive == 4 && !SceneManaging.isPreviewLoaded)
         {
-            MenueShelf04.SetActive(true);
-            SceneManaging.menueActive = 4;
+            StartCoroutine(panelPreviewNotLoaded.GetComponent<WarningPanelLoad>().WaitForButtonClick());
+            StartCoroutine(ButtonShelfI(4));
+            //Debug.LogWarning("please load");
         }
-        catch (Exception ex)
+        else
         {
-            if (ex is NullReferenceException || ex is UnassignedReferenceException)
-            {
-                return;
-            }
-            throw;
-        }
-        //show headline of buehne
-        HeadlineShelf01.gameObject.SetActive(false);
-        HeadlineShelf02.gameObject.SetActive(false);
-        HeadlineShelf03.gameObject.SetActive(false);
-        try
-        {
-            HeadlineShelf04.gameObject.SetActive(true);
-        }
-        catch (Exception ex)
-        {
-            if (ex is NullReferenceException || ex is UnassignedReferenceException)
-            {
-                return;
-            }
-            throw;
-        }
-
-        MenueButton01.SetActive(true);
-        MenueButton02.SetActive(true);
-        MenueButton03.SetActive(true);
-        try
-        {
-            MenueButton04.SetActive(true);
-        }
-        catch (Exception ex)
-        {
-            if (ex is NullReferenceException || ex is UnassignedReferenceException)
-            {
-                return;
-            }
-            throw;
+            StartCoroutine(ButtonShelfI(4));
         }
     }
 
@@ -346,24 +211,24 @@ public class ObjectShelf : MonoBehaviour
             case 1:
                 MenueShelf01.SetActive(true);
                 HeadlineShelf01.gameObject.SetActive(true); 
-                SceneManaging.menueActive = 1;
+                //SceneManaging.menueActive = 1;
                 break;
             case 2:
                 MenueShelf02.SetActive(true);
                 HeadlineShelf02.gameObject.SetActive(true);
-                SceneManaging.menueActive = 2;
+                //SceneManaging.menueActive = 2;
                 break;
             case 3:
                 MenueShelf03.SetActive(true);
                 HeadlineShelf03.gameObject.SetActive(true);
-                SceneManaging.menueActive = 3;
+                //SceneManaging.menueActive = 3;
                 break;
             case 4:
                 try
                 {
                     MenueShelf04.SetActive(true);
                     HeadlineShelf04.gameObject.SetActive(true);
-                    SceneManaging.menueActive = 4;
+                    //SceneManaging.menueActive = 4;
                 }
                 catch (Exception ex)
                 {

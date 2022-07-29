@@ -108,22 +108,22 @@ public class PressHelp : MonoBehaviour
 
         else
         {
-                if (SceneManaging.menueActive == 1)
-                {
-                    helpButtonPressed.SetActive(true);
+            if (SceneManaging.configMenueActive == 1 || SceneManaging.directorMenueActive == 1)
+            {
+                helpButtonPressed.SetActive(true);
                     helpOverlayMenue1.SetActive(true);
                 }
-                else if (SceneManaging.menueActive == 2)
+                else if (SceneManaging.configMenueActive == 2 || SceneManaging.directorMenueActive == 2)
                 {
                     helpButtonPressed.SetActive(true);
                     helpOverlayMenue2.SetActive(true);
                 }
-                else if (SceneManaging.menueActive == 3)
+                else if (SceneManaging.configMenueActive == 3 || SceneManaging.directorMenueActive == 3)
                 {
                     helpButtonPressed.SetActive(true);
                     helpOverlayMenue3.SetActive(true);
                 }
-                else if (SceneManaging.menueActive == 4)
+                else if (SceneManaging.configMenueActive == 4)
                 {
                     helpButtonPressed.SetActive(true);
                     try

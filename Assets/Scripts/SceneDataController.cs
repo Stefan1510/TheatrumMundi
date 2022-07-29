@@ -69,13 +69,13 @@ public class SceneDataController : MonoBehaviour
         StaticSceneData.StaticData = CreateSceneData();
     }
 
-    private void Start()
-    {
+    //private void Start()
+    //{
 
-        // Debug.Log("------- staticSceneDataJSON" + StaticSceneData.StaticData.ToString());
-        // Debug.Log("------- staticSceneDataJSON" + CreateJsonFromSceneData(StaticSceneData.StaticData));
+    //    // Debug.Log("------- staticSceneDataJSON" + StaticSceneData.StaticData.ToString());
+    //    // Debug.Log("------- staticSceneDataJSON" + CreateJsonFromSceneData(StaticSceneData.StaticData));
 
-    }
+    //}
 
     private void GetFileMetaDataFromScene()
     {
@@ -261,7 +261,6 @@ public class SceneDataController : MonoBehaviour
         {
             imageTimelineRails[i].GetComponent<RailManager>().PublicUpdate();
         }
-
     }
 
     public void RailsApplyToScene(List<RailElement> railElements)

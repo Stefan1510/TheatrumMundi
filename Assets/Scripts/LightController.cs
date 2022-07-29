@@ -37,10 +37,8 @@ public class LightController : MonoBehaviour
     //{
     //}
 
-    // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
-        thisLightElement = StaticSceneData.StaticData.lightElements.Find(le => le.name == gameObject.name);
         _startPosition = transform.localPosition.z;
         _startYAngle = transform.localEulerAngles.y;
         _startHeight = transform.localPosition.y;
@@ -65,6 +63,12 @@ public class LightController : MonoBehaviour
         ChangeHeight(0);
         PanelLbImage = toggleLb.transform.parent.parent.GetComponent<Image>();
         PanelLbImage.color = new Color(171f / 255f, 171f / 255f, 171f / 255f, 160f / 255f);
+    }
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        thisLightElement = StaticSceneData.StaticData.lightElements.Find(le => le.name == gameObject.name);
         //Debug.Log(PanelLbImage);
         LightActivation(false);
     }

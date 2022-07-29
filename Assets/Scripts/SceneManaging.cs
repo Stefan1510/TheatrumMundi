@@ -22,7 +22,8 @@ public static class SceneManaging
     public static bool openUp;
     public static bool hittingSomething;
     public static int hitObject;
-    public static int menueActive;
+    public static int configMenueActive;
+    public static int directorMenueActive;
     public static int mainMenuActive;
 
     public static bool isPreviewLoaded;    // Variable zur Abfrage, ob die Szene in der Vorschau auch geladen wurde.

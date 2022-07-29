@@ -22,12 +22,17 @@ public class UIController : MonoBehaviour
     public CoulissesManager CoulissesMan;
     private int currenScreenWidth;
 
-    // Start is called before the first frame update
-    void Start()
+
+    private void Awake()
     {
-        currenScreenWidth = Screen.width;
-        objectsLightElements = GetComponent<SceneDataController>().objectsLightElements;
+        currenScreenWidth = Screen.width;    
+        objectsLightElements = GetComponent<SceneDataController>().objectsLightElements;    
     }
+
+    // Start is called before the first frame update
+    //void Start()
+    //{
+    //}
 
     // Update is called once per frame
     void Update()

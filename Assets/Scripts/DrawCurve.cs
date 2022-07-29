@@ -21,9 +21,9 @@ public class DrawCurve : MonoBehaviour
     private bool _gameObjectStarted = false;
 
     // Start is called before the first frame update
-    void Start()
+
+    private void Awake()
     {
-        _gameObjectStarted = true;
         _textureCurve = new Texture2D((int)(GetComponent<RectTransform>().rect.width), (int)(GetComponent<RectTransform>().rect.height), TextureFormat.RGBA32, false); // wird durch Panel RectTransform stretch automatisch gescaled
         _backColors = new Color32[_textureCurve.width * _textureCurve.height];
         _backColors = UtilitiesTm.ChangeColors(_backColors, new Color32(255, 255, 255, 31));
@@ -41,6 +41,11 @@ public class DrawCurve : MonoBehaviour
         eventTriggerEntry.eventID = EventTriggerType.PointerUp;
         eventTriggerEntry.callback.AddListener((data) => { AddValue((PointerEventData)data); });
         _valueSlider.GetComponent<EventTrigger>().triggers.Add(eventTriggerEntry);
+    }
+    void Start()
+    {
+        _gameObjectStarted = true;
+
     }
 
     private void OnEnable()

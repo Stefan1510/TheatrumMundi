@@ -143,6 +143,7 @@ public class SaveFileController : MonoBehaviour
 
     public void LoadSceneFromFile(string fileName)
     {
+        SceneManaging.isPreviewLoaded = false;
         if (fileName.Substring(0, fileName.Length - 5) != StaticSceneData.StaticData.fileName)
         {
             //Debug.LogWarning("Scene Not Loaded! weee uu wee uu");

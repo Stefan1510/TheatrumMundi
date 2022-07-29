@@ -21,7 +21,7 @@ public class SwitchMenues : MonoBehaviour
         GetComponent<UIController>().Rails[0].GetComponent<RailManager>().PublicUpdate();
 
         /////////////////////////////////// for VISITOR-Tool
-        SceneManaging.menueActive = 1;
+        SceneManaging.directorMenueActive = 1;
         SceneManaging.mainMenuActive = 2;
         ObjectMenueDirectorMain.GetComponent<ObjectShelf>().ButtonShelf01();
         //////////////////////////////////
@@ -29,12 +29,13 @@ public class SwitchMenues : MonoBehaviour
     public void SwitchToMenueConfig()
     {
         /////////////////////////////////// for VISITOR-Tool
-        SceneManaging.menueActive = 2;
+        //SceneManaging.configMenueActive = 2;
         SceneManaging.mainMenuActive = 1;
         //////////////////////////////////
 
         ObjectMenueDirectorMain.SetActive(false);
         ObjectMenueConfigMain.SetActive(true);
+        StaticSceneData.Everything3D();
         GetComponent<UnitySwitchExpertUser>().DeactivateExpertTools();
     }
 }

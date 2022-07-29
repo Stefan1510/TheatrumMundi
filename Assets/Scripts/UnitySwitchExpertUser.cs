@@ -36,12 +36,10 @@ public class UnitySwitchExpertUser : MonoBehaviour
     [SerializeField] private GameObject[] _aTimeSliderPanelControls;
 
 
-    private bool _gameControllerStarted = false;         
+    private bool _gameControllerStarted = false;
 
-    // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
-        _gameControllerStarted = true;
         if (!_isExpert)
         {
             _buttonKulissen.GetComponent<RectTransform>().Translate(0, 137, 0);
@@ -62,7 +60,14 @@ public class UnitySwitchExpertUser : MonoBehaviour
             {
                 panelControl.SetActive(false);
             }
-        }
+        }        
+    }
+
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        _gameControllerStarted = true;
     }
 
     // Update is called once per frame

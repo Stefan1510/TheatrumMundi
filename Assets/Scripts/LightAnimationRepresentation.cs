@@ -21,12 +21,6 @@ public class LightAnimationRepresentation : MonoBehaviour
     private void Awake()
     {
         _maxIntensity = _sliderIntensity.maxValue;
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        _gameObjectStarted = true;
         //_maxTime = (int)_sliderTime.maxValue;
         //_maxTime = 10 * 60 + 10;
         _maxTime = AnimationTimer.GetMaxTime();
@@ -37,6 +31,12 @@ public class LightAnimationRepresentation : MonoBehaviour
         _lightColorsColumn = new Color32[_textureLightRepresentation.height];
         _imagePositionKnob.gameObject.SetActive(false);
         _imagePositionKnobCollection = new List<Image>();
+    }
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        _gameObjectStarted = true;
         ChangeImage();
     }
 
