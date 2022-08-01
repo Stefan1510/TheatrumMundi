@@ -465,18 +465,20 @@ public class RailMusicManager : MonoBehaviour
     }
     public void createRectangle(GameObject obj, float height, double animLength)
     {
-        double tmpLength = (maxX - minX) / 614.0f * animLength;
-
+        //double tmpLength = (maxX - minX) / 614.0f * animLength;
+        animLength += 50;
         GameObject imgObject = new GameObject("RectBackground");
         RectTransform trans = imgObject.AddComponent<RectTransform>();
         trans.transform.SetParent(obj.transform); // setting parent
         trans.localScale = Vector3.one;
+
+        trans.sizeDelta = new Vector2((float)animLength, height); // custom size
+
         trans.pivot = new Vector2(0.0f, 0.5f);
         //set pivot point of sprite  to left border, so that rect aligns with sprite
         obj.GetComponent<RectTransform>().pivot = new Vector2(0.0f, 0.5f);
         trans.anchoredPosition = new Vector2((obj.GetComponent<RectTransform>().rect.width / 2) * (-1), 0.0f);
         trans.SetSiblingIndex(0);
-        trans.sizeDelta = new Vector2((float)animLength, height); // custom size
 
         Image image = imgObject.AddComponent<Image>();
         image.color = colMusic;
@@ -490,11 +492,11 @@ public class RailMusicManager : MonoBehaviour
     public int calculateFigureStartTimeInSec(GameObject fig, double animLength, int maxTimeLengthInSec)
     {
         int sec = 0;
-        double tmpX = fig.GetComponent<RectTransform>().position.x - minX - 20;  //x-pos is screenX from left border, minX is the rail-startpoint
+        double tmpX = fig.GetComponent<RectTransform>().position.x - minX;  //x-pos is screenX from left border, minX is the rail-startpoint
         Vector2 tmpSize = fig.GetComponent<RectTransform>().sizeDelta;
         double tmpMinX = (double)tmpX - (tmpSize.x / 2.0f); //if tmpX is the midpoint of figure
-        double tmpMaxX = tmpMinX + animLength;  //length of figure is related to rail speed, here named as animationLength
-                                                //get figure minX related to timelineMinX
+                                                            //double tmpMaxX = tmpMinX + animLength;  //length of figure is related to rail speed, here named as animationLength
+                                                            //get figure minX related to timelineMinX
         double percentageOfRail = tmpMinX / (maxX - minX);  //max-min=real length, percentage: e.g. 0,3823124 (38%)
         sec = (int)(((double)maxTimeLengthInSec) * percentageOfRail);
         //Debug.Log("method: fig: "+fig+" tmpX: "+tmpX+" tmpSize: "+tmpSize+" tmpMinX: "+tmpMinX+" railMaxX: "+railMaxX+" percentage: "+percentageOfRail+" sec: "+sec);
@@ -503,11 +505,11 @@ public class RailMusicManager : MonoBehaviour
     public int calculateMusicEndTimeInSec(GameObject fig, double animLength, int maxTimeLengthInSec)
     {
         int sec = 0;
-        double tmpX = fig.GetComponent<RectTransform>().position.x - minX - 20;  //x-pos is screenX from left border, minX is the rail-startpoint
+        double tmpX = fig.GetComponent<RectTransform>().position.x - minX;  //x-pos is screenX from left border, minX is the rail-startpoint
         Vector2 tmpSize = fig.GetComponent<RectTransform>().sizeDelta;
         double tmpMinX = (double)tmpX - (tmpSize.x / 2.0f); //if tmpX is the midpoint of figure
-        double tmpMaxX = tmpMinX + animLength;  //length of figure is related to rail speed, here named as animationLength
-                                                //get figure minX related to timelineMinX
+                                                            //double tmpMaxX = tmpMinX + animLength;  //length of figure is related to rail speed, here named as animationLength
+                                                            //get figure minX related to timelineMinX
         double percentageOfRail = tmpMinX / (maxX - minX);  //max-min=real length, percentage: e.g. 0,3823124 (38%)
         sec = (int)((((double)maxTimeLengthInSec) * percentageOfRail) + animLength);
         return sec;
@@ -605,18 +607,6 @@ public class RailMusicManager : MonoBehaviour
         newCopyOfFigure.GetComponent<RectTransform>().position = new Vector3(newCopyOfFigure.GetComponent<RectTransform>().position.x, newCopyOfFigure.GetComponent<RectTransform>().position.y, -1.0f);
         newCopyOfFigure.transform.GetComponent<BoxCollider2D>().size = newCopyOfFigure.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta;
         newCopyOfFigure.transform.GetComponent<BoxCollider2D>().offset = new Vector2(newCopyOfFigure.transform.GetComponent<BoxCollider2D>().size.x / 2 - 50, newCopyOfFigure.transform.GetComponent<BoxCollider2D>().offset.y);
-        //openTimelineByClick(false);
-
-        ////set original image back to shelf
-        //setParent(figureObjects[currentClickedObjectIndex], objectShelfParent[musObjNr]);
-        ////scale to default values
-        //scaleObject(figureObjects[musObjNr], objectShelfSize[musObjNr].x, objectShelfSize[musObjNr].y);
-        //scaleObject(figureObjects[musObjNr].transform.GetChild(0).gameObject, objectShelfSize[musObjNr].x, objectShelfSize[musObjNr].y);
-
-        ////set this position
-        //figureObjects[musObjNr].GetComponent<RectTransform>().anchoredPosition = new Vector2(75.0f, -75.0f);
-        //// bring object back to position two, so that its visible
-        //figureObjects[musObjNr].transform.SetSiblingIndex(1);
     }
     public void ResetScreenSize()
     {
@@ -859,6 +849,7 @@ public class RailMusicManager : MonoBehaviour
                     newCopyOfFigure.name = figureObjects[currentClickedObjectIndex].name + "_instance" + countName.ToString("000");
 
                     float tmpLength = ((float)maxX - (float)minX) * newCopyOfFigure.GetComponent<MusicLength>().musicLength / 614;//UtilitiesTm.FloatRemap(newCopyOfFigure.GetComponent<MusicLength>().musicLength, 0, 614, (float)minX, (float)maxX);
+                    //Debug.Log("minX: " + minX + ", maxX: " + maxX + ", tmplengh: " + tmpLength);
                     createRectangle(newCopyOfFigure, gameObject.GetComponent<RectTransform>().rect.height * 0.96f, tmpLength);
 
                     figCounterCircle[currentClickedObjectIndex].transform.GetChild(0).GetComponent<Text>().text = (countName + 1).ToString();
@@ -979,7 +970,6 @@ public class RailMusicManager : MonoBehaviour
                 if (AnimationTimer.GetTime() >= startSec && AnimationTimer.GetTime() <= endSec)
                 {
                     anyInstanceIsPlaying = true;
-                    // hitObject = ((int)Char.GetNumericValue(timelineInstanceObjects[i].name[17])); // instance index
                     SceneManaging.hitObject = i;
                     SceneManaging.hittingSomething = true;
                     //Debug.Log("hitobject: " + SceneManaging.hitObject);
@@ -995,47 +985,12 @@ public class RailMusicManager : MonoBehaviour
                     if (SceneManaging.updateMusic)
                     {
                         {
-                            //Debug.Log("+++++++++++++++++++TimeSlider ist im music piece and slider is being dragged.");
-                            //audioSource.time = tmpTime - (float)startSec;
-                            //currentClip = ((int)Char.GetNumericValue(timelineInstanceObjects[i].name[07]) - 1); // object index
-                            //audioSource.clip = clip[currentClip];
                             playingMusic = false;
                         }
                     }
-                    // else if (AnimationTimer.GetTime() < startSec || AnimationTimer.GetTime() > endSec && playingMusic == true)
-                    // {
-                    //     if(((int)Char.GetNumericValue(timelineInstanceObjects[SceneManaging.hitObject].name[7])-1) == currentClip)
-                    //     {
-                    //         Debug.Log(" slider ist beim aktuellen clip ");
-                    //     }
-                    //     playingMusic = false;
-                    //     Debug.Log("+++++++++++++++++++TimeSlider ist ausserhalb und die Musik stoppt.");
-                    //     audioSource.Stop();
-                    //     SceneManaging.hittingSomething = false;
-                    //     SceneManaging.hitObject = -1;
-                    // }
 
-                    // else if (SceneManaging.updateMusic)
-                    // {
-                    //     if (AnimationTimer.GetTime() >= startSec && AnimationTimer.GetTime() <= endSec)
-                    //     {
-                    //         Debug.Log("+++++++++++++++++++TimeSlider ist im music piece and slider is being dragged.");
-                    //         audioSource.time = tmpTime - (float)startSec;
-                    //     }
-                    // if ((AnimationTimer.GetTime() < startSec || AnimationTimer.GetTime() > endSec) && playingMusic == true)
-                    // {
-                    //     Debug.Log("+++++++++++++++++++TimeSlider wird aussesrhalb des stuecks gescrubbt.");
-                    //     audioSource.Stop();
-                    //     playingMusic = false;
-                    // }
                 }
 
-                //else if (SceneManaging.hitObject != 0 && SceneManaging.hitObject != 1 && SceneManaging.hitObject != 2 && SceneManaging.hitObject != 3 && SceneManaging.hitObject != 4 && SceneManaging.hitObject != 5)
-                //{
-                //    audioSource.Stop();
-                //    playingMusic = false;
-                //    Debug.Log("stop");
-                //}
             }
         }
 
