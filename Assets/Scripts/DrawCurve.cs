@@ -18,7 +18,7 @@ public class DrawCurve : MonoBehaviour
     private float _maxTime;
     private float _minValue;
     private float _maxValue;
-    private bool _gameObjectStarted = false;
+    //private bool _gameObjectStarted = false;
 
     // Start is called before the first frame update
 
@@ -44,21 +44,21 @@ public class DrawCurve : MonoBehaviour
     }
     void Start()
     {
-        _gameObjectStarted = true;
+        StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds[0] = new RailElementSpeed { moment = 0, speed = _valueSlider.value };  // im SceneDataController MUSS ein erstes Element hinzugefügt werden, bevor es hier angesprochen werden kann
+        //StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds[0] = new RailElementSpeed { moment = 0, speed = 1 };  // im SceneDataController MUSS ein erstes Element hinzugefügt werden, bevor es hier angesprochen werden kann
+        //Debug.LogWarning(_valueSlider.value);
+        StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds.Sort((x, y) => x.moment.CompareTo(y.moment));   // sortiert die railElementSpeeds anhand der Eigenschaft moment
+        ChangeCurve();
+        //_gameObjectStarted = true;
 
     }
 
-    private void OnEnable()
-    {
-        if (_gameObjectStarted)
-        {
-            StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds[0] = new RailElementSpeed { moment = 0, speed = _valueSlider.value };  // im SceneDataController MUSS ein erstes Element hinzugefügt werden, bevor es hier angesprochen werden kann
-            //StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds[0] = new RailElementSpeed { moment = 0, speed = 1 };  // im SceneDataController MUSS ein erstes Element hinzugefügt werden, bevor es hier angesprochen werden kann
-            //Debug.LogWarning(_valueSlider.value);
-            StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds.Sort((x, y) => x.moment.CompareTo(y.moment));   // sortiert die railElementSpeeds anhand der Eigenschaft moment
-            ChangeCurve();
-        }
-    }
+    //private void OnEnable()
+    //{
+    //    if (_gameObjectStarted)
+    //    {
+    //    }
+    //}
 
     //// Update is called once per frame
     //void Update()
