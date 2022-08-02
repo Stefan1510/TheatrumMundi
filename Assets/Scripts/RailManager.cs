@@ -518,19 +518,22 @@ public class RailManager : MonoBehaviour
             //do nothing
         }
     }
-    public void scaleToLayerSize(GameObject obj, int layer)
+    public void scaleToLayerSize(GameObject obj, int layer, GameObject timeline)
     {
         if (layer == 0) // only one layer
         {
             scaleObject(obj, 100, gameObject.GetComponent<RectTransform>().rect.height * 0.96f, false);      //scale the figure-picture in timeline to x: 100 and y: 80px
-            scaleObject(obj.transform.GetChild(0).gameObject, obj.transform.GetChild(0).gameObject.GetComponent<RectTransform>().sizeDelta.x, gameObject.GetComponent<RectTransform>().rect.height * 0.96f, false);
-            scaleObject(obj.transform.GetChild(1).gameObject, 100, heightOpened * 0.96f, false);     //is this the blue rectangle size? no! This is the Button for Moving the figure :)
+            scaleObject(obj.transform.GetChild(0).gameObject, obj.transform.GetChild(0).gameObject.GetComponent<RectTransform>().sizeDelta.x, timeline.GetComponent<RectTransform>().rect.height * 0.96f, false);
+            scaleObject(obj.transform.GetChild(1).gameObject, 100, heightOpened * 0.96f, false);
+            obj.transform.GetComponent<RectTransform>().pivot = new Vector3(obj.transform.GetComponent<RectTransform>().pivot.x, 0.5f, -1);
+            obj.GetComponent<BoxCollider2D>().size = new Vector2(obj.transform.GetChild(0).GetComponent<RectTransform>().rect.width, heightOpened);
+            obj.GetComponent<BoxCollider2D>().offset = new Vector2(obj.GetComponent<BoxCollider2D>().offset.x, 0);
         }
         if (layer == 1) // 2 layers, but object in layer 1
         {
             scaleObject(obj, 100, gameObject.GetComponent<RectTransform>().rect.height / 2 * 0.96f, false);
-            scaleObject(obj.transform.GetChild(0).gameObject, obj.transform.GetChild(0).gameObject.GetComponent<RectTransform>().sizeDelta.x, gameObject.GetComponent<RectTransform>().rect.height / 2 * 0.96f, false);
-            scaleObject(obj.transform.GetChild(1).gameObject, 100, heightOpened / 2 * 0.96f, false);     //is this the blue rectangle size? no! This is the Button for Moving the figure :)
+            scaleObject(obj.transform.GetChild(0).gameObject, obj.transform.GetChild(0).gameObject.GetComponent<RectTransform>().sizeDelta.x, timeline.GetComponent<RectTransform>().rect.height / 2 * 0.96f, false);
+            scaleObject(obj.transform.GetChild(1).gameObject, 100, heightOpened / 2 * 0.96f, false);
             obj.transform.GetComponent<RectTransform>().pivot = new Vector3(obj.transform.GetComponent<RectTransform>().pivot.x, 0, -1);
 
             obj.GetComponent<BoxCollider2D>().size = new Vector2(obj.transform.GetChild(0).GetComponent<RectTransform>().rect.width, heightOpened / 2);
@@ -540,8 +543,8 @@ public class RailManager : MonoBehaviour
         else if (layer == 2)    // 2 layers and object in layer 2
         {
             scaleObject(obj, 100, gameObject.GetComponent<RectTransform>().rect.height / 2 * 0.96f, false);
-            scaleObject(obj.transform.GetChild(0).gameObject, obj.transform.GetChild(0).gameObject.GetComponent<RectTransform>().sizeDelta.x, gameObject.GetComponent<RectTransform>().rect.height / 2 * 0.96f, false);
-            scaleObject(obj.transform.GetChild(1).gameObject, 100, heightOpened / 2 * 0.96f, false);     //is this the blue rectangle size? no! This is the Button for Moving the figure :)
+            scaleObject(obj.transform.GetChild(0).gameObject, obj.transform.GetChild(0).gameObject.GetComponent<RectTransform>().sizeDelta.x, timeline.GetComponent<RectTransform>().rect.height / 2 * 0.96f, false);
+            scaleObject(obj.transform.GetChild(1).gameObject, 100, heightOpened / 2 * 0.96f, false);
             obj.transform.GetComponent<RectTransform>().pivot = new Vector3(obj.transform.GetComponent<RectTransform>().pivot.x, 1, -1);
             obj.GetComponent<BoxCollider2D>().size = new Vector2(obj.transform.GetChild(0).GetComponent<RectTransform>().rect.width, heightOpened / 2);
             obj.GetComponent<BoxCollider2D>().offset = new Vector2(obj.GetComponent<BoxCollider2D>().offset.x, -obj.transform.GetChild(0).GetComponent<RectTransform>().rect.height / 2);
@@ -689,6 +692,7 @@ public class RailManager : MonoBehaviour
             layerOverlaps--;
             Debug.LogWarning("overlaps: " + layerOverlaps);
         }
+        Debug.Log("removed: " + obj);
         // if (figuresLayer3.Contains(obj))
         // {
         //     figuresLayer3.Remove(obj);
@@ -702,7 +706,6 @@ public class RailManager : MonoBehaviour
         timelineInstanceObjects3D.Remove(obj3D);
         figCounterCircle[tmpNr - 1].transform.GetChild(0).GetComponent<Text>().text = (currentCounterNr - 1).ToString();
         StaticSceneData.StaticData.figureElements[Int32.Parse(obj.name.Substring(6, 2)) - 1].figureInstanceElements.Remove(StaticSceneData.StaticData.figureElements[Int32.Parse(obj.name.Substring(6, 2)) - 1].figureInstanceElements[Int32.Parse(obj.name.Substring(17))]);
-
 
         Destroy(obj);
         Destroy(obj3D);
@@ -728,7 +731,6 @@ public class RailManager : MonoBehaviour
         {
             figuresLayer2.Remove(timelineInstanceObjects[val]);
             layerOverlaps--;
-            Debug.LogWarning("overlaps: " + layerOverlaps);
         }
         // if (figuresLayer3.Contains(timelineInstanceObjects[val]))
         // {
@@ -744,9 +746,6 @@ public class RailManager : MonoBehaviour
         timelineInstanceObjects3D.Remove(timelineInstanceObjects3D[val]);
         figCounterCircle[tmpNr - 1].transform.GetChild(0).GetComponent<Text>().text = (currentCounterNr - 1).ToString();
 
-
-
-        //erase from SceneData (passiert offenbar schon automatisch, weil bei ButtonUp immer wieder neu die Instances von timelineInstances geschrieben werden :) ) 
         StaticSceneData.StaticData.figureElements[Int32.Parse(obj.name.Substring(6, 2)) - 1].figureInstanceElements.Remove(StaticSceneData.StaticData.figureElements[Int32.Parse(obj.name.Substring(6, 2)) - 1].figureInstanceElements[Int32.Parse(obj.name.Substring(17))]);
     }
     public int checkHittingAnyTimeline(GameObject obj, Vector2 mousePos)
@@ -877,7 +876,7 @@ public class RailManager : MonoBehaviour
         if (isCurrentFigureOverlapping(newCopyOfFigure))
         {
             layerOverlaps++;
-            scaleToLayerSize(newCopyOfFigure, 2);
+            scaleToLayerSize(newCopyOfFigure, 2, gameObject);
             newCopyOfFigure.transform.GetChild(0).GetComponent<RectTransform>().position = new Vector3(newCopyOfFigure.transform.GetChild(0).GetComponent<RectTransform>().position.x + 25, newCopyOfFigure.transform.GetChild(0).GetComponent<RectTransform>().position.y, -1);
 
             figuresLayer2.Add(newCopyOfFigure);
@@ -887,7 +886,7 @@ public class RailManager : MonoBehaviour
             {
                 if (figuresLayer1.Contains((timelineInstanceObjects[i])))
                 {
-                    scaleToLayerSize(timelineInstanceObjects[i], 1);
+                    scaleToLayerSize(timelineInstanceObjects[i], 1, gameObject);
                     // size of rectangle becomes size for figure that is clickable
                     timelineInstanceObjects[i].transform.GetComponent<BoxCollider2D>().size = timelineInstanceObjects[i].transform.GetChild(0).GetComponent<RectTransform>().sizeDelta;
                     timelineInstanceObjects[i].transform.GetComponent<BoxCollider2D>().offset = new Vector2(timelineInstanceObjects[i].transform.GetComponent<BoxCollider2D>().size.x / 2 - 50f, timelineInstanceObjects[i].transform.GetComponent<BoxCollider2D>().offset.y);
@@ -898,13 +897,14 @@ public class RailManager : MonoBehaviour
         else
         {
             figuresLayer1.Add(newCopyOfFigure);
+            //Debug.Log("layer1: " + figuresLayer1.Count);
             if (sizeLayering == 2)
             {
-                scaleToLayerSize(newCopyOfFigure, 1);
+                scaleToLayerSize(newCopyOfFigure, 1, gameObject);
             }
             else //if (sizeLayering == 1)
             {
-                scaleToLayerSize(newCopyOfFigure, 0);
+                scaleToLayerSize(newCopyOfFigure, 0, gameObject);
             }
             newCopyOfFigure.transform.GetChild(0).GetComponent<RectTransform>().position = new Vector3(newCopyOfFigure.transform.GetChild(0).gameObject.GetComponent<RectTransform>().position.x + 25, newCopyOfFigure.transform.GetChild(0).gameObject.GetComponent<RectTransform>().position.y, -1);
 
@@ -1115,7 +1115,7 @@ public class RailManager : MonoBehaviour
                 {
                     if (isSomethingOverlapping())
                     {
-                        scaleToLayerSize(timelineInstanceObjects[currentClickedInstanceObjectIndex], 2);
+                        scaleToLayerSize(timelineInstanceObjects[currentClickedInstanceObjectIndex], 2, gameObject);
 
                         figuresLayer1.Remove(timelineInstanceObjects[currentClickedInstanceObjectIndex]);
                         figuresLayer2.Add(timelineInstanceObjects[currentClickedInstanceObjectIndex]);
@@ -1125,25 +1125,20 @@ public class RailManager : MonoBehaviour
                         {
                             if (figuresLayer1[j] != timelineInstanceObjects[currentClickedInstanceObjectIndex])
                             {
-                                scaleToLayerSize(figuresLayer1[j], 1);
+                                scaleToLayerSize(figuresLayer1[j], 1, gameObject);
                             }
                         }
 
                         if (!alreadyCountedPlus)
                         {
                             layerOverlaps++;
-                            Debug.Log("overlaps ++");
-                            //Debug.Log("overlaps: " + layerOverlaps);
                             alreadyCountedPlus = true;
                         }
                         else
                         {
-                            //Debug.Log("else");
                         }
                         sizeLayering = 2;
                         alreadyCountedMinus = false;
-                        // bool val = isSomethingOverlapping();
-                        // Debug.Log(val);
                     }
 
                 }
@@ -1158,7 +1153,6 @@ public class RailManager : MonoBehaviour
                             if (!alreadyCountedMinus && layerOverlaps > 0)
                             {
                                 layerOverlaps--;
-                                Debug.Log("overlaps --");
                                 alreadyCountedMinus = true;
                             }
                         }
@@ -1183,7 +1177,6 @@ public class RailManager : MonoBehaviour
                                 timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetComponent<RectTransform>().pivot = new Vector3(timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetComponent<RectTransform>().pivot.x, 0, -1);
                                 timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<BoxCollider2D>().offset = new Vector2(timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<BoxCollider2D>().offset.x, timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(0).GetComponent<RectTransform>().rect.height / 2);
                                 layerOverlaps--;
-                                Debug.Log("overlaps --");
                             }
                         }
                         if (layerOverlaps == 0)
@@ -1206,8 +1199,6 @@ public class RailManager : MonoBehaviour
                             sizeLayering = 1;
                             alreadyCountedPlus = false;
                         }
-
-                        //Debug.Log("overlaps: " + layerOverlaps);
                     }
                 }
 
@@ -1254,7 +1245,7 @@ public class RailManager : MonoBehaviour
                 // scale down the dragged figure (and childobject: image)
                 scaleObject(timelineInstanceObjects[currentClickedInstanceObjectIndex], 100f, heightOpened, false);
                 double tmpLength = calcSecondsToPixel(objectAnimationLength, maxTimeInSec);
-                scaleObject(timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(0).gameObject, (float)tmpLength, heightOpened, false);    // rect
+                scaleObject(timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(0).gameObject, timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(0).GetComponent<RectTransform>().sizeDelta.x, heightOpened, false);    // rect
                 scaleObject(timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).gameObject, 100f, heightOpened, false);    // sprite of figure
 
                 releaseOnTimeline = true;
@@ -1264,6 +1255,7 @@ public class RailManager : MonoBehaviour
 
             else // if no timeline is hit
             {
+                Debug.Log("no timeline hit");
                 //temporarily change parent, so that object appears in front of the shelf
                 setParent(timelineInstanceObjects[currentClickedInstanceObjectIndex], parentMenue);
                 //Debug.Log("no timeline hit");
@@ -1274,6 +1266,7 @@ public class RailManager : MonoBehaviour
                 //scaleObject(timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).gameObject, 150, 150, false);
 
                 releaseOnTimeline = false;
+                changedRail = false;
             }
         }
         // dragging an object from shelf to timeline
@@ -1371,7 +1364,7 @@ public class RailManager : MonoBehaviour
                 {
                     if (changedRail)    // if rail has been changed
                     {
-                        if (hitTimeline == (int.Parse(gameObject.name.Substring(17)) - 1))
+                        if (hitTimeline == (int.Parse(gameObject.name.Substring(17)) - 1))  // if rail is the same as before
                         {
                             timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.SetParent(gameObject.transform);
                             timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(0).gameObject.SetActive(true);        // set rect active
@@ -1384,11 +1377,33 @@ public class RailManager : MonoBehaviour
                         }
                         else
                         {
+                            // organise layers
+                            if (figuresLayer2.Contains(timelineInstanceObjects[currentClickedInstanceObjectIndex]))
+                            {
+                                figuresLayer2.Remove(timelineInstanceObjects[currentClickedInstanceObjectIndex]);
+                            }
+                            else if (figuresLayer1.Contains(timelineInstanceObjects[currentClickedInstanceObjectIndex]))
+                            {
+                                figuresLayer1.Remove(timelineInstanceObjects[currentClickedInstanceObjectIndex]);
+                            }
+
+
                             //2D object
                             timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.SetParent(gameController.GetComponent<UIController>().Rails[hitTimeline].transform);
                             timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(0).gameObject.SetActive(true);        // set rect active
-                                                                                                                                                //von timeline obj alt loeschen, zu neu hinzufuegen
+
+                            if (gameController.GetComponent<UIController>().Rails[hitTimeline].sizeLayering == 1)
+                            {
+                                scaleToLayerSize(timelineInstanceObjects[currentClickedInstanceObjectIndex], 0, gameController.GetComponent<UIController>().Rails[hitTimeline].gameObject);
+                                gameController.GetComponent<UIController>().Rails[hitTimeline].figuresLayer1.Add(timelineInstanceObjects[currentClickedInstanceObjectIndex]);
+                                //Debug.Log("figuresLayer1: " + gameController.GetComponent<UIController>().Rails[hitTimeline].figuresLayer1.Count);
+                            }
+
+                            //von timeline obj alt loeschen, zu neu hinzufuegen
                             updateObjectList(gameController.GetComponent<UIController>().Rails[hitTimeline].timelineInstanceObjects, timelineInstanceObjects[currentClickedInstanceObjectIndex]);
+
+                            //Debug.Log("layer1 old: " + figuresLayer1.Count + ", layer1 new: " + gameController.GetComponent<UIController>().Rails[hitTimeline].figuresLayer1.Count);
+
                             //snapping/lock y-axis
                             setObjectOnTimeline(timelineInstanceObjects[currentClickedInstanceObjectIndex], gameController.GetComponent<UIController>().Rails[hitTimeline].transform.position.y);
                             timelineInstanceObjects.Remove(timelineInstanceObjects[currentClickedInstanceObjectIndex]);
@@ -1397,11 +1412,11 @@ public class RailManager : MonoBehaviour
                             timelineInstanceObjects3D[currentClickedInstanceObjectIndex].transform.SetParent(gameController.GetComponent<SceneDataController>().objectsRailElements[hitTimeline].transform.GetChild(0));
                             gameController.GetComponent<UIController>().Rails[hitTimeline].timelineInstanceObjects3D.Add(timelineInstanceObjects3D[currentClickedInstanceObjectIndex]);
                             timelineInstanceObjects3D.Remove(timelineInstanceObjects3D[currentClickedInstanceObjectIndex]);
+                            Debug.Log("staticSceneData: " + StaticSceneData.StaticData.figureElements[Int32.Parse(gameController.GetComponent<UIController>().Rails[hitTimeline].timelineInstanceObjects[gameController.GetComponent<UIController>().Rails[hitTimeline].timelineInstanceObjects.Count - 1].name.Substring(6, 2)) - 1].figureInstanceElements[Int32.Parse(gameController.GetComponent<UIController>().Rails[hitTimeline].timelineInstanceObjects[gameController.GetComponent<UIController>().Rails[hitTimeline].timelineInstanceObjects.Count - 1].name.Substring(17))].railStart);
+                            StaticSceneData.StaticData.figureElements[Int32.Parse(gameController.GetComponent<UIController>().Rails[hitTimeline].timelineInstanceObjects[gameController.GetComponent<UIController>().Rails[hitTimeline].timelineInstanceObjects.Count - 1].name.Substring(6, 2)) - 1].figureInstanceElements[Int32.Parse(gameController.GetComponent<UIController>().Rails[hitTimeline].timelineInstanceObjects[gameController.GetComponent<UIController>().Rails[hitTimeline].timelineInstanceObjects.Count - 1].name.Substring(17))].railStart = hitTimeline;
 
-                            StaticSceneData.StaticData.figureElements[Int32.Parse(gameController.GetComponent<UIController>().Rails[hitTimeline].timelineInstanceObjects[currentClickedInstanceObjectIndex].name.Substring(6, 2)) - 1].figureInstanceElements[Int32.Parse(gameController.GetComponent<UIController>().Rails[hitTimeline].timelineInstanceObjects[currentClickedInstanceObjectIndex].name.Substring(17))].railStart = hitTimeline;
-
+                            changedRail = false;
                         }
-                        changedRail = false;
 
                     }
                     else
@@ -1434,8 +1449,10 @@ public class RailManager : MonoBehaviour
                 figureObjects[currentClickedObjectIndex].GetComponent<RectTransform>().anchoredPosition = new Vector2(75.0f, -75.0f);
             }
 
+            // if instance is dropped somewhere else than on timeline: delete instance
             else if (releaseOnTimeline == false && currentClickedInstanceObjectIndex != -1 && isInstance)
             {
+                Debug.Log("komm ich hier her? ");
                 removeObjectFromTimeline(timelineInstanceObjects[currentClickedInstanceObjectIndex], timelineInstanceObjects3D[currentClickedInstanceObjectIndex]);
             }
 
@@ -1461,7 +1478,6 @@ public class RailManager : MonoBehaviour
                 {
                     timelineInstanceObjects3D[i].transform.localPosition = new Vector3(rail3dObj.transform.GetChild(0).transform.localPosition.x, (-rail3dObj.transform.GetChild(0).transform.localPosition.y - 0.01f), zPosFigure);
                 }
-
 
                 //this is for: (kris) damit die Figuren auch in die Richtung schauen, in die sie laufen
                 if (rail3dObj.transform.GetChild(0).GetComponent<RailSpeedController>().railIndex % 2 == 1)
@@ -1490,6 +1506,7 @@ public class RailManager : MonoBehaviour
             isInstance = false;
         }
 
+        // enable binnenanimation when playing
         for (int i = 0; i < timelineInstanceObjects3D.Count; i++)
         {
             // start Animation on play
