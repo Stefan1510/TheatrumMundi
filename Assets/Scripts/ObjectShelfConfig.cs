@@ -74,7 +74,7 @@ public class ObjectShelfConfig : MonoBehaviour
         HeadlineShelf03.gameObject.SetActive(false);
         HeadlineShelf04.gameObject.SetActive(false);
 
-        MenueButton01.SetActive(true);
+        MenueButton01.SetActive(false);
         MenueButton02.SetActive(true);
         MenueButton03.SetActive(true);
         MenueButton04.SetActive(true);
@@ -219,24 +219,28 @@ public class ObjectShelfConfig : MonoBehaviour
                 //gameController.GetComponent<SwitchMenues>().SwitchToMenueConfig();
                 MenueShelf01.SetActive(true);
                 HeadlineShelf01.gameObject.SetActive(true);
+                MenueButton01.SetActive(false);
                 SceneManaging.configMenueActive = 1;
                 break;
             case 2:
                 //gameController.GetComponent<SwitchMenues>().SwitchToMenueConfig();
                 MenueShelf02.SetActive(true);
                 HeadlineShelf02.gameObject.SetActive(true);
+                MenueButton02.SetActive(false);
                 SceneManaging.configMenueActive = 2;
                 break;
             case 3:
                 //gameController.GetComponent<SwitchMenues>().SwitchToMenueConfig();
                 MenueShelf03.SetActive(true);
                 HeadlineShelf03.gameObject.SetActive(true);
+                MenueButton03.SetActive(false);
                 SceneManaging.configMenueActive = 3;
                 break;
             case 4:
                 //gameController.GetComponent<SwitchMenues>().SwitchToMenueConfig();
                 MenueShelf04.SetActive(true);
                 HeadlineShelf04.gameObject.SetActive(true);
+                MenueButton04.SetActive(false);
                 SceneManaging.configMenueActive = 4;
                 break;
             case 5:
