@@ -65,6 +65,8 @@ public class ObjectShelf : MonoBehaviour
         MenueButton03.SetActive(true);
         MenueButton04.SetActive(true);
         //ButtonShelf01();
+
+
     }
 
     public void ButtonShelf01()

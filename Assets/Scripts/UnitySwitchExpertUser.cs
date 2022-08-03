@@ -42,8 +42,8 @@ public class UnitySwitchExpertUser : MonoBehaviour
     {
         if (!_isExpert)
         {
-            _buttonKulissen.GetComponent<RectTransform>().Translate(0, 137, 0);
-            _buttonLadenSpeichern.GetComponent<RectTransform>().Translate(0, 2 * 137, 0);
+            _buttonKulissen.GetComponent<RectTransform>().Translate(0, 150, 0);
+            _buttonLadenSpeichern.GetComponent<RectTransform>().Translate(0, 2 * 150, 0);
             _panelLightAmbient.SetActive(false);
             _buttonDelete.SetActive(false);
             _buttonSave.SetActive(false);
@@ -52,7 +52,6 @@ public class UnitySwitchExpertUser : MonoBehaviour
             {
                 inputFieldSave.SetActive(false);
             }
-            _menueKulissen.SetActive(true);
             _buttonLoad.GetComponent<RectTransform>().Translate(0, -300, 0);
             RectTransform rectScrollView = _scrollViewFileSelect.GetComponent<RectTransform>();
             rectScrollView.sizeDelta = new Vector2(rectScrollView.sizeDelta.x, rectScrollView.sizeDelta.y + 300);
@@ -68,6 +67,10 @@ public class UnitySwitchExpertUser : MonoBehaviour
     void Start()
     {
         _gameControllerStarted = true;
+        if (!_isExpert)
+        {
+            _menueKulissen.SetActive(true);
+        }
     }
 
     // Update is called once per frame

@@ -60,7 +60,7 @@ public class ObjectShelfDirector : MonoBehaviour
         HeadlineShelf02.gameObject.SetActive(false);
         HeadlineShelf03.gameObject.SetActive(false);
 
-        MenueButton01.SetActive(true);
+        MenueButton01.SetActive(false);
         MenueButton02.SetActive(true);
         MenueButton03.SetActive(true);
         //ButtonShelf01();
@@ -176,18 +176,21 @@ public class ObjectShelfDirector : MonoBehaviour
                 //gameController.GetComponent<SwitchMenues>().SwitchToMenueDirector();
                 MenueShelf01.SetActive(true);
                 HeadlineShelf01.gameObject.SetActive(true);
+                MenueButton01.SetActive(false);
                 SceneManaging.directorMenueActive = 1;
                 break;
             case 2:
                 //gameController.GetComponent<SwitchMenues>().SwitchToMenueDirector();
                 MenueShelf02.SetActive(true);
                 HeadlineShelf02.gameObject.SetActive(true);
+                MenueButton02.SetActive(false);
                 SceneManaging.directorMenueActive = 2;
                 break;
             case 3:
                 //gameController.GetComponent<SwitchMenues>().SwitchToMenueDirector();
                 MenueShelf03.SetActive(true);
                 HeadlineShelf03.gameObject.SetActive(true);
+                MenueButton03.SetActive(false);
                 SceneManaging.directorMenueActive = 3;
                 break;
             case 4:
