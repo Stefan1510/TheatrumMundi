@@ -941,7 +941,7 @@ public class RailManager : MonoBehaviour
     {
         // I used the values that were put in FullHD (global: position.x) and calculated the percentage so that it works for all resolutions 
         minX = 0.146f * Screen.width;               //timeline-rail-minX
-        railWidth = 0.69f * Screen.width;           //railwidth=1324.8px
+        railWidth = 0.8855f * Screen.width;           //railwidth=1700.16px
         heightClosed = 0.018f * Screen.height;
         heightOpened = 0.074f * Screen.height;
         maxX = minX + railWidth;                    //timeline-rail-maxX
