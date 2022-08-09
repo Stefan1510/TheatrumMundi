@@ -48,11 +48,10 @@ public class ObjectShelfConfig : MonoBehaviour
     void Start()
     {       
         /////////////////////////////////// for VISITOR-Tool
-        SceneManaging.configMenueActive = 2;
         SceneManaging.mainMenuActive = 1;
+        SceneManaging.configMenueActive = 2;
         //////////////////////////////////
 
-        ObjectMenueDirectorMain.SetActive(false);
         gameObject.SetActive(true);
         gameController.GetComponent<UnitySwitchExpertUser>().DeactivateExpertTools();
         SceneManaging.mainMenuActive = 1;
@@ -78,6 +77,7 @@ public class ObjectShelfConfig : MonoBehaviour
         MenueButton02.SetActive(true);
         MenueButton03.SetActive(true);
         MenueButton04.SetActive(true);
+        ObjectMenueDirectorMain.SetActive(false);
         //ButtonShelf01();
     }
 
@@ -170,7 +170,7 @@ public class ObjectShelfConfig : MonoBehaviour
         }
         else
         {
-            gameController.GetComponent<SwitchMenues>().SwitchToMenueDirector();
+            StartCoroutine(ButtonShelfI(5));
         }
     }
 
@@ -247,9 +247,11 @@ public class ObjectShelfConfig : MonoBehaviour
                 ObjectMenueDirectorMain.SetActive(true);
 
                 /////////////////////////////////// for VISITOR-Tool
-                //SceneManaging.configMenueActive = 1;
                 SceneManaging.mainMenuActive = 2;
-                ObjectMenueDirectorMain.GetComponent<ObjectShelf>().ButtonShelf01();
+                //////////////////////////////////
+
+                //ObjectMenueDirectorMain.GetComponent<ObjectShelfDirector>().ButtonShelf01();
+                gameController.GetComponent<UnitySwitchExpertUser>().DeactivateExpertTools();
                 break;
         }
 

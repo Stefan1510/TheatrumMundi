@@ -60,7 +60,7 @@ public class ObjectShelf : MonoBehaviour
         HeadlineShelf03.gameObject.SetActive(false);
         HeadlineShelf04.gameObject.SetActive(false);
 
-        MenueButton01.SetActive(true);
+        MenueButton01.SetActive(false);
         MenueButton02.SetActive(true);
         MenueButton03.SetActive(true);
         MenueButton04.SetActive(true);

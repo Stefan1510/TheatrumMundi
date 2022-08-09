@@ -129,8 +129,7 @@ public class ObjectShelfDirector : MonoBehaviour
         }
         else
         {
-            gameController.GetComponent<SwitchMenues>().SwitchToMenueConfig();
-            SceneManaging.isPreviewLoaded = true;
+            StartCoroutine(ButtonShelfI(5));
         }
     }
 
@@ -168,7 +167,6 @@ public class ObjectShelfDirector : MonoBehaviour
             MenueButton02.SetActive(true);
             MenueButton03.SetActive(true);
         }
-
 
         switch (shelfNumber)
         {
