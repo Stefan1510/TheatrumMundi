@@ -18,6 +18,13 @@ public class UnitySwitchExpertUser : MonoBehaviour
     [SerializeField] private GameObject _buttonKulissen;
     [SerializeField] private GameObject _menueKulissen;
     [SerializeField] private GameObject _buttonLadenSpeichern;
+    
+    
+    [SerializeField] private GameObject _buttonFigures;
+    [SerializeField] private GameObject _buttonMusic;
+    [SerializeField] private GameObject _buttonAbout;
+    [SerializeField] private GameObject _buttonDummy;
+
 
     [SerializeField] private GameObject _buttonDelete;
     [SerializeField] private GameObject _buttonSave;
@@ -43,10 +50,17 @@ public class UnitySwitchExpertUser : MonoBehaviour
         if (!_isExpert)
         {
             _buttonKulissen.GetComponent<RectTransform>().Translate(0, 150, 0);
-            _buttonLadenSpeichern.GetComponent<RectTransform>().Translate(0, 2 * 150, 0);
+            _buttonKulissen.transform.SetParent(_buttonKulissen.transform.parent.parent);
+            _buttonFigures.GetComponent<RectTransform>().Translate(0, -150, 0);
+            _buttonFigures.transform.SetParent(_buttonFigures.transform.parent.parent);
+            _buttonMusic.GetComponent<RectTransform>().Translate(0, -150, 0);
+            _buttonMusic.transform.SetParent(_buttonMusic.transform.parent.parent);
+            _buttonLadenSpeichern.GetComponent<RectTransform>().Translate(0, 0 * 150, 0);
+            _buttonLadenSpeichern.transform.SetParent(_buttonLadenSpeichern.transform.parent.parent);
             _panelLightAmbient.SetActive(false);
             _buttonDelete.SetActive(false);
             _buttonSave.SetActive(false);
+            _buttonDummy.SetActive(false);
             _textSave.SetActive(false);
             foreach(GameObject inputFieldSave in _aInputFieldSave)
             {
@@ -79,6 +93,8 @@ public class UnitySwitchExpertUser : MonoBehaviour
         if (_gameControllerStarted)
         {
             DeactivateExpertTools();
+            _menueKulissen.SetActive(true);
+            _gameControllerStarted = false;
         }
     }
 
@@ -92,6 +108,7 @@ public class UnitySwitchExpertUser : MonoBehaviour
             _menueLicht.SetActive(false);
             _menuLightShelf.SetActive(false);
             _buttonLights.SetActive(false);
+            _buttonAbout.SetActive(false);
         }
     }
 }

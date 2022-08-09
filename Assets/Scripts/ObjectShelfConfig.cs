@@ -212,7 +212,7 @@ public class ObjectShelfConfig : MonoBehaviour
             MenueButton04.SetActive(true);
         }
 
-
+        gameObject.SetActive(true);
         switch (shelfNumber)
         {
             case 1:
@@ -254,6 +254,7 @@ public class ObjectShelfConfig : MonoBehaviour
                 gameController.GetComponent<UnitySwitchExpertUser>().DeactivateExpertTools();
                 break;
         }
+        ObjectMenueDirectorMain.SetActive(false);
 
         StaticSceneData.Everything3D();
         gameController.GetComponent<UIController>().Rails[0].GetComponent<RailManager>().PublicUpdate();
