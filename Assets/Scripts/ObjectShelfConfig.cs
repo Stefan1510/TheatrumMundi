@@ -263,6 +263,7 @@ public class ObjectShelfConfig : MonoBehaviour
         if (shelfNumber == 5)
         {
             Debug.LogWarning("setze config.active jetzt false");
+            ObjectMenueDirectorMain.SetActive(true);
             gameObject.SetActive(false);
         }
     }

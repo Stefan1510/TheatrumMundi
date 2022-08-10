@@ -51,6 +51,7 @@ public class UnitySwitchExpertUser : MonoBehaviour
         {
             _buttonKulissen.GetComponent<RectTransform>().Translate(0, 150, 0);
             _buttonKulissen.transform.SetParent(_buttonKulissen.transform.parent.parent);
+            _buttonKulissen.transform.SetSiblingIndex(6);
             _buttonFigures.GetComponent<RectTransform>().Translate(0, -150, 0);
             _buttonFigures.transform.SetParent(_buttonFigures.transform.parent.parent);
             _buttonMusic.GetComponent<RectTransform>().Translate(0, -150, 0);
@@ -93,8 +94,11 @@ public class UnitySwitchExpertUser : MonoBehaviour
         if (_gameControllerStarted)
         {
             DeactivateExpertTools();
-            _menueKulissen.SetActive(true);
-            _gameControllerStarted = false;
+            if (!_isExpert)
+            {
+                _menueKulissen.SetActive(true);
+                _gameControllerStarted = false;
+            }
         }
     }
 
