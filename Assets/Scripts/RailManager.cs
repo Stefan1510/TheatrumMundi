@@ -940,7 +940,7 @@ public class RailManager : MonoBehaviour
     public void ResetScreenSize()       // this probably has to be called globally, so that every Menue resizes (probably in the UIController). At the moment it is only scaled properly when rail tab is open e.g.
     {
         // I used the values that were put in FullHD (global: position.x) and calculated the percentage so that it works for all resolutions 
-        minX = 0.146f * Screen.width;               //timeline-rail-minX
+        minX = 0.087f * Screen.width;               //timeline-rail-minX
         railWidth = 0.87f * Screen.width;           //railwidth=1670.4px
         heightClosed = 0.018f * Screen.height;
         heightOpened = 0.074f * Screen.height;

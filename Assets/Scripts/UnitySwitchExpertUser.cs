@@ -52,12 +52,19 @@ public class UnitySwitchExpertUser : MonoBehaviour
             _buttonKulissen.GetComponent<RectTransform>().Translate(0, 150, 0);
             _buttonKulissen.transform.SetParent(_buttonKulissen.transform.parent.parent);
             _buttonKulissen.transform.SetSiblingIndex(6);
+
             _buttonFigures.GetComponent<RectTransform>().Translate(0, -150, 0);
             _buttonFigures.transform.SetParent(_buttonFigures.transform.parent.parent);
+            _buttonFigures.transform.SetSiblingIndex(6);
+
             _buttonMusic.GetComponent<RectTransform>().Translate(0, -150, 0);
-            _buttonMusic.transform.SetParent(_buttonMusic.transform.parent.parent);
+            _buttonMusic.transform.SetParent(_buttonMusic.transform.parent.parent); ;
+            _buttonMusic.transform.SetSiblingIndex(6);
+
             _buttonLadenSpeichern.GetComponent<RectTransform>().Translate(0, 0 * 150, 0);
-            _buttonLadenSpeichern.transform.SetParent(_buttonLadenSpeichern.transform.parent.parent);
+            _buttonLadenSpeichern.transform.SetParent(_buttonLadenSpeichern.transform.parent.parent); ;
+            _buttonLadenSpeichern.transform.SetSiblingIndex(6);
+
             _panelLightAmbient.SetActive(false);
             _buttonDelete.SetActive(false);
             _buttonSave.SetActive(false);
