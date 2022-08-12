@@ -9,19 +9,25 @@ namespace RockVR.Video.Demo
     {
         public GameObject gameController;
         public Text TimerText;
-        public Button PlayButton;
-        public Button StopButton;
-        public Sprite PauseSprite;
-        public Sprite PlaySprite;
-        public Sprite StopSprite;
+        public Button[] aPlayButtons;
+        public Button[] aStopButtons;
+        public Sprite[] aPlaySprites;
+        public Sprite[] aPauseSprites;
+        public Sprite[] aStopSprites;
         private float _f = 0.0f;
         private float _fps = 0.0f;
         private bool renderButtonPressed = false;
         // Start is called before the first frame update
         void Start()
         {
-            PlayButton.transform.GetComponent<Image>().sprite = PlaySprite;
-            StopButton.transform.GetComponent<Image>().sprite = StopSprite;
+            for (int i = 0; i < aPlayButtons.Length; i++)
+            {
+                aPlayButtons[i].transform.GetComponent<Image>().sprite = aPlaySprites[i];
+            }
+            for (int i = 0; i < aStopButtons.Length; i++)
+            {
+                aStopButtons[i].transform.GetComponent<Image>().sprite = aStopSprites[i];
+            }
         }
 
         // Update is called once per frame
@@ -48,17 +54,26 @@ namespace RockVR.Video.Demo
                 case AnimationTimer.TimerState.stopped:
                     AnimationTimer.StartTimer();
                     SceneManaging.playing = true;
-                    PlayButton.transform.GetComponent<Image>().sprite = PauseSprite;
+                    for (int i = 0; i < aPlayButtons.Length; i++)
+                    {
+                        aPlayButtons[i].transform.GetComponent<Image>().sprite = aPauseSprites[i];
+                    }
                     break;
                 case AnimationTimer.TimerState.playing:
                     AnimationTimer.PauseTimer();
                     SceneManaging.playing = false;
-                    PlayButton.transform.GetComponent<Image>().sprite = PlaySprite;
+                    for (int i = 0; i < aPlayButtons.Length; i++)
+                    {
+                        aPlayButtons[i].transform.GetComponent<Image>().sprite = aPlaySprites[i];
+                    }
                     break;
                 case AnimationTimer.TimerState.paused:
                     AnimationTimer.StartTimer();
                     SceneManaging.playing = true;
-                    PlayButton.transform.GetComponent<Image>().sprite = PauseSprite;
+                    for (int i = 0; i < aPlayButtons.Length; i++)
+                    {
+                        aPlayButtons[i].transform.GetComponent<Image>().sprite = aPauseSprites[i];
+                    }
                     break;
             }
         }
@@ -71,7 +86,10 @@ namespace RockVR.Video.Demo
                 case AnimationTimer.TimerState.playing:
                     AnimationTimer.StopTimer();
                     SceneManaging.playing = false;
-                    PlayButton.transform.GetComponent<Image>().sprite = PlaySprite;
+                    for (int i = 0; i < aPlayButtons.Length; i++)
+                    {
+                        aPlayButtons[i].transform.GetComponent<Image>().sprite = aPlaySprites[i];
+                    }
                     break;
                 case AnimationTimer.TimerState.paused:
                     AnimationTimer.StopTimer();

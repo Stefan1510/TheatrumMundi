@@ -53,7 +53,7 @@ public class ObjectShelfAll : MonoBehaviour
         SceneManaging.configMenueActive = 2;
         //////////////////////////////////
 
-        gameController.GetComponent<UnitySwitchExpertUser>().DeactivateExpertTools();
+        //gameController.GetComponent<UnitySwitchExpertUser>().DeactivateExpertTools();
         SceneManaging.mainMenuActive = 1;
         SceneManaging.configMenueActive = 1;
         //Debug.Log("testprint");
@@ -267,7 +267,7 @@ public class ObjectShelfAll : MonoBehaviour
         }
 
         MenueShelf01.SetActive(false);
-        MenueShelf02.SetActive(true);
+        MenueShelf02.SetActive(false);
         MenueShelf03.SetActive(false);
         MenueShelf04.SetActive(false);
         MenueShelf05.SetActive(false);
@@ -369,9 +369,9 @@ public class ObjectShelfAll : MonoBehaviour
                 SceneManaging.mainMenuActive = 1;
                 //////////////////////////////////
 
-                MenueShelf01.SetActive(true);
-                MenueButton01.SetActive(false);
-                SceneManaging.directorMenueActive = 1;
+                MenueShelf02.SetActive(true);
+                MenueButton02.SetActive(false);
+                SceneManaging.configMenueActive = 2;
 
                 ObjectMenueDirectorMain.SetActive(false);
 

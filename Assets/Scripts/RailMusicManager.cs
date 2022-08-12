@@ -895,7 +895,7 @@ public class RailMusicManager : MonoBehaviour
                     scaleObject(figureObjects[currentClickedObjectIndex].transform.GetChild(0).gameObject, objectShelfSize[currentClickedObjectIndex].x, objectShelfSize[currentClickedObjectIndex].y, false);
 
                     //set this position
-                    figureObjects[currentClickedObjectIndex].GetComponent<RectTransform>().anchoredPosition = new Vector2(75.0f, -75.0f);
+                    figureObjects[currentClickedObjectIndex].GetComponent<RectTransform>().anchoredPosition = new Vector2(95.0f, -73.0f);
                     // bring object back to position two, so that its visible
                     figureObjects[currentClickedObjectIndex].transform.SetSiblingIndex(1);
 
@@ -923,7 +923,7 @@ public class RailMusicManager : MonoBehaviour
                 setParent(figureObjects[currentClickedObjectIndex], objectShelfParent[currentClickedObjectIndex]);
                 // bring object back to position two, so that its visible and change position back to default
                 figureObjects[currentClickedObjectIndex].transform.SetSiblingIndex(1);
-                figureObjects[currentClickedObjectIndex].GetComponent<RectTransform>().anchoredPosition = new Vector2(75.0f, -75.0f);
+                figureObjects[currentClickedObjectIndex].GetComponent<RectTransform>().anchoredPosition = new Vector2(95.0f, -73.0f);
             }
             else if (releaseOnTimeline == false && currentClickedInstanceObjectIndex != -1 && isInstance)
             {

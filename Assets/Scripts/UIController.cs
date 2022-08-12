@@ -81,41 +81,44 @@ public class UIController : MonoBehaviour
 
     public void LightsApplyToUI()
     {
-        foreach (LightElement le in StaticSceneData.StaticData.lightElements)
+        if (SceneManaging.isExpert)
         {
-            foreach (objectsLightElement objectLightElement in objectsLightElements)
+            foreach (LightElement le in StaticSceneData.StaticData.lightElements)
             {
-                if (le.name == objectLightElement.goLightElement.name)
+                foreach (objectsLightElement objectLightElement in objectsLightElements)
                 {
-                    GameObject gameObjectLe = objectLightElement.goLightElement;
-                    switch (objectLightElement.lightStagePosition)
+                    if (le.name == objectLightElement.goLightElement.name)
                     {
-                        case 0:
-                            gameObjectLe.GetComponent<LightBbController>().thisLightElement = StaticSceneData.StaticData.lightElements.Find(DataLe => DataLe.name == le.name);
-                            gameObjectLe.GetComponent<LightBbController>().toggleBb.isOn = le.active;
-                            break;
-                        case 1:
-                            gameObjectLe.GetComponent<LightController>().thisLightElement = StaticSceneData.StaticData.lightElements.Find(DataLe => DataLe.name == le.name);
-                            gameObjectLe.GetComponent<LightController>().toggleLb.isOn = le.active;
-                            gameObjectLe.GetComponent<LightController>().sliderLbIntensity.value = le.intensity;
-                            gameObjectLe.GetComponent<LightController>().sliderLbPosition.value = le.z;
-                            gameObjectLe.GetComponent<LightController>().sliderLbHeight.value = le.y;
-                            gameObjectLe.GetComponent<LightController>().sliderLbHorizontal.value = le.angle_h;
-                            gameObjectLe.GetComponent<LightController>().sliderLbVertical.value = le.angle_v;
-                            break;
-                        case 2:
-                            gameObjectLe.GetComponent<LightController>().thisLightElement = StaticSceneData.StaticData.lightElements.Find(DataLe => DataLe.name == le.name);
-                            gameObjectLe.GetComponent<LightController>().toggleLb.isOn = le.active;
-                            gameObjectLe.GetComponent<LightController>().sliderLbIntensity.value = le.intensity;
-                            gameObjectLe.GetComponent<LightController>().sliderLbPosition.value = le.z;
-                            gameObjectLe.GetComponent<LightController>().sliderLbHeight.value = le.y;
-                            gameObjectLe.GetComponent<LightController>().sliderLbHorizontal.value = le.angle_h;
-                            gameObjectLe.GetComponent<LightController>().sliderLbVertical.value = le.angle_v;
-                            break;
-                        case 3:
-                            gameObjectLe.GetComponent<LightHbController>().thisLightElement = StaticSceneData.StaticData.lightElements.Find(DataLe => DataLe.name == le.name);
-                            gameObjectLe.GetComponent<LightHbController>().SliderHb.value = le.intensity;
-                            break;
+                        GameObject gameObjectLe = objectLightElement.goLightElement;
+                        switch (objectLightElement.lightStagePosition)
+                        {
+                            case 0:
+                                gameObjectLe.GetComponent<LightBbController>().thisLightElement = StaticSceneData.StaticData.lightElements.Find(DataLe => DataLe.name == le.name);
+                                gameObjectLe.GetComponent<LightBbController>().toggleBb.isOn = le.active;
+                                break;
+                            case 1:
+                                gameObjectLe.GetComponent<LightController>().thisLightElement = StaticSceneData.StaticData.lightElements.Find(DataLe => DataLe.name == le.name);
+                                gameObjectLe.GetComponent<LightController>().toggleLb.isOn = le.active;
+                                gameObjectLe.GetComponent<LightController>().sliderLbIntensity.value = le.intensity;
+                                gameObjectLe.GetComponent<LightController>().sliderLbPosition.value = le.z;
+                                gameObjectLe.GetComponent<LightController>().sliderLbHeight.value = le.y;
+                                gameObjectLe.GetComponent<LightController>().sliderLbHorizontal.value = le.angle_h;
+                                gameObjectLe.GetComponent<LightController>().sliderLbVertical.value = le.angle_v;
+                                break;
+                            case 2:
+                                gameObjectLe.GetComponent<LightController>().thisLightElement = StaticSceneData.StaticData.lightElements.Find(DataLe => DataLe.name == le.name);
+                                gameObjectLe.GetComponent<LightController>().toggleLb.isOn = le.active;
+                                gameObjectLe.GetComponent<LightController>().sliderLbIntensity.value = le.intensity;
+                                gameObjectLe.GetComponent<LightController>().sliderLbPosition.value = le.z;
+                                gameObjectLe.GetComponent<LightController>().sliderLbHeight.value = le.y;
+                                gameObjectLe.GetComponent<LightController>().sliderLbHorizontal.value = le.angle_h;
+                                gameObjectLe.GetComponent<LightController>().sliderLbVertical.value = le.angle_v;
+                                break;
+                            case 3:
+                                gameObjectLe.GetComponent<LightHbController>().thisLightElement = StaticSceneData.StaticData.lightElements.Find(DataLe => DataLe.name == le.name);
+                                gameObjectLe.GetComponent<LightHbController>().SliderHb.value = le.intensity;
+                                break;
+                        }
                     }
                 }
             }
@@ -124,51 +127,54 @@ public class UIController : MonoBehaviour
 
     public void RailsApplyToUI()
     {
-        for (int i = 0; i < goRailDistSliders.Length; i++)
+        if (SceneManaging.isExpert)
         {
-            //if (i == 0)
-            //{
-            //    //Debug.LogWarning("odd index // railname: " + goRailDistSliders[i].name + " static: " + StaticSceneData.StaticData.railElements[i + 1].x);
-            //    //goRailDistSliders[i].GetComponent<Slider>().value = -(StaticSceneData.StaticData.railElements[i + 1].x * 2);
-            //    goRailDistSliders[i].GetComponent<Slider>().value = -(StaticSceneData.StaticData.railElements[i + 1].x + 0.12f) * 2;
-            //    //Debug.LogWarning("railname: " + goRailDistSliders[i].name + " slider: " + goRailDistSliders[i].GetComponent<Slider>().value + " static: " + StaticSceneData.StaticData.railElements[i + 1].x);
-            //}
-            //else if (i == 1)
-            //{
-            //    //Debug.LogWarning("odd index // railname: " + goRailDistSliders[i].name + " static: " + StaticSceneData.StaticData.railElements[i + 1].x);
-            //    //goRailDistSliders[i].GetComponent<Slider>().value = -(StaticSceneData.StaticData.railElements[i + 1].x + 0.44f) * 2;
-            //    goRailDistSliders[i].GetComponent<Slider>().value = -(StaticSceneData.StaticData.railElements[i + 1].x + 0.2f) * 2;
-            //    //Debug.LogWarning("railname: " + goRailDistSliders[i].name + " slider: " + goRailDistSliders[i].GetComponent<Slider>().value + " static: " + StaticSceneData.StaticData.railElements[i + 1].x);
-            //}
-            //else if (i%2==0)
-            if (i%2==0)
+            for (int i = 0; i < goRailDistSliders.Length; i++)
             {
-                //Debug.LogWarning("even index // railname: " + goRailDistSliders[i].name + " static: " + StaticSceneData.StaticData.railElements[i + 1].x);
-                goRailDistSliders[i].GetComponent<Slider>().value = -(StaticSceneData.StaticData.railElements[i + 1].x + 0.12f) * 2;
-                //Debug.LogWarning("railname: " + goRailSliders[i].name + " slider: " + goRailSliders[i].GetComponent<Slider>().value + " static: " + StaticSceneData.StaticData.railElements[i + 1].x);
+                //if (i == 0)
+                //{
+                //    //Debug.LogWarning("odd index // railname: " + goRailDistSliders[i].name + " static: " + StaticSceneData.StaticData.railElements[i + 1].x);
+                //    //goRailDistSliders[i].GetComponent<Slider>().value = -(StaticSceneData.StaticData.railElements[i + 1].x * 2);
+                //    goRailDistSliders[i].GetComponent<Slider>().value = -(StaticSceneData.StaticData.railElements[i + 1].x + 0.12f) * 2;
+                //    //Debug.LogWarning("railname: " + goRailDistSliders[i].name + " slider: " + goRailDistSliders[i].GetComponent<Slider>().value + " static: " + StaticSceneData.StaticData.railElements[i + 1].x);
+                //}
+                //else if (i == 1)
+                //{
+                //    //Debug.LogWarning("odd index // railname: " + goRailDistSliders[i].name + " static: " + StaticSceneData.StaticData.railElements[i + 1].x);
+                //    //goRailDistSliders[i].GetComponent<Slider>().value = -(StaticSceneData.StaticData.railElements[i + 1].x + 0.44f) * 2;
+                //    goRailDistSliders[i].GetComponent<Slider>().value = -(StaticSceneData.StaticData.railElements[i + 1].x + 0.2f) * 2;
+                //    //Debug.LogWarning("railname: " + goRailDistSliders[i].name + " slider: " + goRailDistSliders[i].GetComponent<Slider>().value + " static: " + StaticSceneData.StaticData.railElements[i + 1].x);
+                //}
+                //else if (i%2==0)
+                if (i % 2 == 0)
+                {
+                    //Debug.LogWarning("even index // railname: " + goRailDistSliders[i].name + " static: " + StaticSceneData.StaticData.railElements[i + 1].x);
+                    goRailDistSliders[i].GetComponent<Slider>().value = -(StaticSceneData.StaticData.railElements[i + 1].x + 0.12f) * 2;
+                    //Debug.LogWarning("railname: " + goRailSliders[i].name + " slider: " + goRailSliders[i].GetComponent<Slider>().value + " static: " + StaticSceneData.StaticData.railElements[i + 1].x);
+                }
+                else
+                {
+                    //Debug.LogWarning("odd index // railname: " + goRailDistSliders[i].name + " static: " + StaticSceneData.StaticData.railElements[i + 1].x);
+                    goRailDistSliders[i].GetComponent<Slider>().value = -(StaticSceneData.StaticData.railElements[i + 1].x + 0.2f) * 2;
+                }
+                goRailDistSliders[i].GetComponent<sliderValueToInputValue>().OnSliderChange();
+                //Debug.LogWarning("railname: " + goRailDistSliders[i].name + " slider: " + goRailDistSliders[i].GetComponent<Slider>().value + " static: " + StaticSceneData.StaticData.railElements[i + 1].x);
             }
-            else
-            {
-                //Debug.LogWarning("odd index // railname: " + goRailDistSliders[i].name + " static: " + StaticSceneData.StaticData.railElements[i + 1].x);
-                goRailDistSliders[i].GetComponent<Slider>().value = -(StaticSceneData.StaticData.railElements[i + 1].x + 0.2f) * 2;
-            }
-            goRailDistSliders[i].GetComponent<sliderValueToInputValue>().OnSliderChange();
-            //Debug.LogWarning("railname: " + goRailDistSliders[i].name + " slider: " + goRailDistSliders[i].GetComponent<Slider>().value + " static: " + StaticSceneData.StaticData.railElements[i + 1].x);
-        }
 
-        for (int i = 0; i< goRailHeightSliders.Length;i++)
-        {
-            //Debug.LogWarning(" index // railname: " + goRailHeightSliders[i].name + " static: " + StaticSceneData.StaticData.railElements[i * 2].name + " " + StaticSceneData.StaticData.railElements[i * 2].y);
-            if (i==0)
+            for (int i = 0; i < goRailHeightSliders.Length; i++)
             {
-                goRailHeightSliders[i].GetComponent<Slider>().value = (StaticSceneData.StaticData.railElements[i * 2].y - 0.06f) * 2;
+                //Debug.LogWarning(" index // railname: " + goRailHeightSliders[i].name + " static: " + StaticSceneData.StaticData.railElements[i * 2].name + " " + StaticSceneData.StaticData.railElements[i * 2].y);
+                if (i == 0)
+                {
+                    goRailHeightSliders[i].GetComponent<Slider>().value = (StaticSceneData.StaticData.railElements[i * 2].y - 0.06f) * 2;
+                }
+                else
+                {
+                    goRailHeightSliders[i].GetComponent<Slider>().value = (StaticSceneData.StaticData.railElements[i * 2].y * 2);
+                }
+                goRailHeightSliders[i].GetComponent<sliderValueToInputValue>().OnSliderChange();
+                //Debug.LogWarning("railname: " + goRailHeightSliders[i].name + " slider: " + goRailHeightSliders[i].GetComponent<Slider>().value + " static: " + StaticSceneData.StaticData.railElements[i + 1].x);
             }
-            else
-            {
-                goRailHeightSliders[i].GetComponent<Slider>().value = (StaticSceneData.StaticData.railElements[i * 2].y * 2);                
-            }
-            goRailHeightSliders[i].GetComponent<sliderValueToInputValue>().OnSliderChange();
-            //Debug.LogWarning("railname: " + goRailHeightSliders[i].name + " slider: " + goRailHeightSliders[i].GetComponent<Slider>().value + " static: " + StaticSceneData.StaticData.railElements[i + 1].x);
         }
     }
 

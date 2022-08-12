@@ -42,6 +42,10 @@ public class UnitySwitchExpertUser : MonoBehaviour
 
     [SerializeField] private GameObject[] _aTimeSliderPanelControls;
 
+    [SerializeField] private GameObject _imageTimelineRailBg;
+    [SerializeField] private GameObject _imageTimelineRailLight;
+    [SerializeField] private GameObject[] _aImageTimeSliderSettings;
+
 
     private bool _gameControllerStarted = false;
 
@@ -76,12 +80,20 @@ public class UnitySwitchExpertUser : MonoBehaviour
                 inputFieldSave.SetActive(false);
             }
             _buttonLoad.GetComponent<RectTransform>().Translate(0, -300, 0);
+
             RectTransform rectScrollView = _scrollViewFileSelect.GetComponent<RectTransform>();
             rectScrollView.sizeDelta = new Vector2(rectScrollView.sizeDelta.x, rectScrollView.sizeDelta.y + 300);
             foreach (GameObject panelControl in _aTimeSliderPanelControls)
             {
                 panelControl.SetActive(false);
             }
+            _imageTimelineRailBg.SetActive(false);
+            _imageTimelineRailLight.SetActive(false);
+            foreach(GameObject imageTimeSliderSetting in _aImageTimeSliderSettings)
+            {
+                imageTimeSliderSetting.SetActive(false);
+            }
+
         }        
     }
 

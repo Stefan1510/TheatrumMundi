@@ -11,14 +11,12 @@ using UnityEngine.EventSystems;
 public class TimeSliderController : MonoBehaviour, IPointerUpHandler, IDragHandler
 {
     [SerializeField] private Text _textTime;
+    [SerializeField] private Text _textMaxTime;
     [SerializeField] private Toggle _toggleKeyConfigControlls;
     [SerializeField] private GameObject _panelControls;
     [SerializeField] private GameObject _panelRailSpeedControls;
     [SerializeField] private GameObject _panelLightControls;
     [SerializeField] private GameObject _panelBackgroundPositionControls;
-
-    [SerializeField] private Slider sliderTestTestTestSlider;
-    [SerializeField] private Slider sliderTestTestTestSlider2;
 
     private Slider _thisSlider;
     // Start is called before the first frame update
@@ -26,34 +24,21 @@ public class TimeSliderController : MonoBehaviour, IPointerUpHandler, IDragHandl
     {
         _thisSlider = GetComponent<Slider>();
         _textTime.text = UtilitiesTm.FloaTTimeToString(_thisSlider.value);
+        _textMaxTime.text = UtilitiesTm.FloaTTimeToString(AnimationTimer.GetMaxTime());
         //_thisSlider.onValueChanged.AddListener(delegate { UpdateTimeSLider(); });
         _thisSlider.onValueChanged.AddListener((float value) => UpdateTimeSlider(value));
         _toggleKeyConfigControlls.onValueChanged.AddListener((bool value) => SwitchKeyConfigControls(value));
         UpdateTimeSlider(0);
         SwitchKeyConfigControls(false);
         ChangeControlsFromTimelineSelection();
-        sliderTestTestTestSlider.onValueChanged.AddListener((float testTestTest) => TestTestTestTest(testTestTest));
-        sliderTestTestTestSlider2.onValueChanged.AddListener((float testTestTest) => TestTestTestTest2(testTestTest));
-
     }
-
-    void TestTestTestTest(float testTestTest)
-    {
-        int selection = (int)testTestTest;
-        ImageTimelineSelection.SetRailType(selection);
-    }
-    void TestTestTestTest2(float testTestTest)
-    {
-        int selection = (int)testTestTest;
-        ImageTimelineSelection.SetRailNumber(selection);
-    }
-
 
     // Update is called once per frame
     void Update()
     {
         _thisSlider.value = AnimationTimer.GetTime();
         _textTime.text = UtilitiesTm.FloaTTimeToString(_thisSlider.value);
+        _textMaxTime.text = UtilitiesTm.FloaTTimeToString(AnimationTimer.GetMaxTime());
         if (ImageTimelineSelection.UpdateNecessary())
         {
             ChangeControlsFromTimelineSelection();
@@ -87,19 +72,22 @@ public class TimeSliderController : MonoBehaviour, IPointerUpHandler, IDragHandl
         _panelRailSpeedControls.SetActive(false);
         _panelLightControls.SetActive(false);
         _panelBackgroundPositionControls.SetActive(false);
-        switch(ImageTimelineSelection.GetRailType())
+        if (SceneManaging.isExpert)
         {
-            case 0:
-                _panelRailSpeedControls.SetActive(true);
-                break;
-            case 1:
-                _panelLightControls.SetActive(true);
-                break;
-            case 2:
-                break;
-            case 3:
-                _panelBackgroundPositionControls.SetActive(true);
-                break;
+            switch (ImageTimelineSelection.GetRailType())
+            {
+                case 0:
+                    _panelRailSpeedControls.SetActive(true);
+                    break;
+                case 1:
+                    _panelLightControls.SetActive(true);
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    _panelBackgroundPositionControls.SetActive(true);
+                    break;
+            }
         }
     }
 
