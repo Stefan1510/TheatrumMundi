@@ -613,7 +613,7 @@ public class RailMusicManager : MonoBehaviour
         //Debug.Log("lossyScale: " + gameObject.transform.lossyScale);
         //Debug.Log("Screen changed! ScreenX: " + Screen.width);
 
-        minX = 0.146f * Screen.width;// / gameObject.transform.lossyScale.x; //301.0f;  //timeline-minX
+        minX = 0.087f * Screen.width;// / gameObject.transform.lossyScale.x; //301.0f;  //timeline-minX
                                      //Debug.Log("minX: " + minX);
         railWidth = 0.87f * Screen.width;           //railwidth=1670.4px; / gameObject.transform.lossyScale.x;
         heightClosed = 0.018f * Screen.height;// / gameObject.transform.lossyScale.x;

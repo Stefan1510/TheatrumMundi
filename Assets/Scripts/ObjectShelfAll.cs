@@ -61,8 +61,8 @@ public class ObjectShelfAll : MonoBehaviour
         //Debug.Log("this is the main menue");
         //mytext.text="this is text";
 
-        MenueShelf01.SetActive(true);
-        MenueShelf02.SetActive(false);
+        MenueShelf01.SetActive(false);
+        MenueShelf02.SetActive(true);
         MenueShelf03.SetActive(false);
         MenueShelf04.SetActive(false);
         MenueShelf05.SetActive(false);
@@ -70,12 +70,23 @@ public class ObjectShelfAll : MonoBehaviour
         MenueShelf07.SetActive(false);
 
         MenueButton01.SetActive(false);
-        MenueButton02.SetActive(true);
-        MenueButton03.SetActive(true);
+        MenueButton02.SetActive(false);
+        MenueButton03.SetActive(false);
         MenueButton04.SetActive(true);
         MenueButton05.SetActive(true);
-        MenueButton06.SetActive(true);
+        MenueButton06.SetActive(false);
         MenueButton07.SetActive(true);
+
+        if(SceneManaging.isExpert)
+        {
+            MenueShelf01.SetActive(true);
+            MenueShelf02.SetActive(false);
+
+            MenueButton01.SetActive(false);
+            MenueButton02.SetActive(true);
+            MenueButton03.SetActive(true);
+            MenueButton06.SetActive(true);
+        }
         ObjectMenueConfigMain.SetActive(true);
         ObjectMenueDirectorMain.SetActive(false);
     }
@@ -255,21 +266,32 @@ public class ObjectShelfAll : MonoBehaviour
             //Debug.LogWarning("_buttonClicked == DDD:");
         }
 
-            MenueShelf01.SetActive(false);
-            MenueShelf02.SetActive(false);
-            MenueShelf03.SetActive(false);
-            MenueShelf04.SetActive(false);
-            MenueShelf05.SetActive(false);
-            MenueShelf06.SetActive(false);
-            MenueShelf07.SetActive(false);
+        MenueShelf01.SetActive(false);
+        MenueShelf02.SetActive(true);
+        MenueShelf03.SetActive(false);
+        MenueShelf04.SetActive(false);
+        MenueShelf05.SetActive(false);
+        MenueShelf06.SetActive(false);
+        MenueShelf07.SetActive(false);
 
-            MenueButton01.SetActive(true);
+        MenueButton01.SetActive(false);
+        MenueButton02.SetActive(true);
+        MenueButton03.SetActive(false);
+        MenueButton04.SetActive(true);
+        MenueButton05.SetActive(true);
+        MenueButton06.SetActive(false);
+        MenueButton07.SetActive(true);
+
+        if (SceneManaging.isExpert)
+        {
+            MenueShelf01.SetActive(true);
+            MenueShelf02.SetActive(false);
+
+            MenueButton01.SetActive(false);
             MenueButton02.SetActive(true);
             MenueButton03.SetActive(true);
-            MenueButton04.SetActive(true);
-            MenueButton05.SetActive(true);
             MenueButton06.SetActive(true);
-            MenueButton07.SetActive(true);
+        }
 
         switch (shelfNumber)
         {
@@ -284,7 +306,7 @@ public class ObjectShelfAll : MonoBehaviour
                 MenueShelf02.SetActive(true);
                 MenueButton02.SetActive(false);
                 ObjectMenueDirectorMain.SetActive(false);
-                gameController.GetComponent<UnitySwitchExpertUser>().DeactivateExpertTools();
+                //gameController.GetComponent<UnitySwitchExpertUser>().DeactivateExpertTools();
                 SceneManaging.configMenueActive = 1;
                 SceneManaging.configMenueActive = 2;
                 break;
@@ -299,7 +321,7 @@ public class ObjectShelfAll : MonoBehaviour
                 MenueShelf04.SetActive(true);
                 MenueButton04.SetActive(false);
                 ObjectMenueDirectorMain.SetActive(false);
-                gameController.GetComponent<UnitySwitchExpertUser>().DeactivateExpertTools();
+                //gameController.GetComponent<UnitySwitchExpertUser>().DeactivateExpertTools();
                 SceneManaging.configMenueActive = 1;
                 SceneManaging.configMenueActive = 4;
                 break;
@@ -308,7 +330,7 @@ public class ObjectShelfAll : MonoBehaviour
                 MenueShelf05.SetActive(true);
                 MenueButton05.SetActive(false);
                 ObjectMenueConfigMain.SetActive(false);
-                gameController.GetComponent<UnitySwitchExpertUser>().DeactivateExpertTools();
+                //gameController.GetComponent<UnitySwitchExpertUser>().DeactivateExpertTools();
                 SceneManaging.mainMenuActive = 2;
                 SceneManaging.directorMenueActive = 1;
                 break;
@@ -323,7 +345,7 @@ public class ObjectShelfAll : MonoBehaviour
                 MenueShelf07.SetActive(true);
                 MenueButton07.SetActive(false);
                 ObjectMenueConfigMain.SetActive(false);
-                gameController.GetComponent<UnitySwitchExpertUser>().DeactivateExpertTools();
+                //gameController.GetComponent<UnitySwitchExpertUser>().DeactivateExpertTools();
                 SceneManaging.mainMenuActive = 2;
                 SceneManaging.directorMenueActive = 3;
                 break;
@@ -339,7 +361,7 @@ public class ObjectShelfAll : MonoBehaviour
                 SceneManaging.directorMenueActive = 1;
 
                 ObjectMenueConfigMain.SetActive(false);
-                gameController.GetComponent<UnitySwitchExpertUser>().DeactivateExpertTools();
+                //gameController.GetComponent<UnitySwitchExpertUser>().DeactivateExpertTools();
                 break;
             case 9:         // MenueConfigMain
                 ObjectMenueConfigMain.SetActive(true);
@@ -353,7 +375,7 @@ public class ObjectShelfAll : MonoBehaviour
 
                 ObjectMenueDirectorMain.SetActive(false);
 
-                gameController.GetComponent<UnitySwitchExpertUser>().DeactivateExpertTools();
+                //gameController.GetComponent<UnitySwitchExpertUser>().DeactivateExpertTools();
                 break;
         }
         StaticSceneData.Everything3D();
