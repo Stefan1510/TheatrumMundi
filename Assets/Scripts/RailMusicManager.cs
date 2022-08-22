@@ -380,7 +380,7 @@ public class RailMusicManager : MonoBehaviour
         //obj.transform.SetParent(mainMenue.transform);
         setParent(obj, gameObject);
         //move object
-        obj.transform.position = new Vector3(mousePos.x, mousePos.y, -1.0f);
+        obj.transform.position = new Vector2(mousePos.x, mousePos.y);
         //set up flags
         //Debug.Log("mouse: " + mousePos);
     }
@@ -404,7 +404,7 @@ public class RailMusicManager : MonoBehaviour
         //Debug.Log("method: timelineObjects count: "+objects.Count);
         for (int i = 0; i < objects.Count; i++)
         {
-            objects[i].GetComponent<RectTransform>().anchoredPosition = new Vector2(objects[i].GetComponent<RectTransform>().anchoredPosition.x, -gameObject.GetComponent<RectTransform>().rect.height / 2);
+            objects[i].GetComponent<RectTransform>().anchoredPosition = new Vector3(objects[i].GetComponent<RectTransform>().anchoredPosition.x, -gameObject.GetComponent<RectTransform>().rect.height / 2, -1);
             //if timeline open scale ALL objects up
             if (timelineOpen)
             {
@@ -449,7 +449,8 @@ public class RailMusicManager : MonoBehaviour
     }
     public void setObjectOnTimeline(GameObject fig, float x, float y)
     {
-        fig.transform.position = new Vector3(fig.transform.position.x, y, -1.0f);
+        fig.transform.position = new Vector2(fig.transform.position.x, y);
+        fig.transform.localPosition = new Vector3(fig.transform.localPosition.x, fig.transform.localPosition.y, -1);
     }
     public void updateObjectList(List<GameObject> objects, GameObject obj)
     {
@@ -466,7 +467,7 @@ public class RailMusicManager : MonoBehaviour
     public void createRectangle(GameObject obj, float height, double animLength)
     {
         //double tmpLength = (maxX - minX) / 614.0f * animLength;
-        animLength += 50;
+        animLength -= 25;
         GameObject imgObject = new GameObject("RectBackground");
         RectTransform trans = imgObject.AddComponent<RectTransform>();
         trans.transform.SetParent(obj.transform); // setting parent
@@ -477,7 +478,8 @@ public class RailMusicManager : MonoBehaviour
         trans.pivot = new Vector2(0.0f, 0.5f);
         //set pivot point of sprite  to left border, so that rect aligns with sprite
         obj.GetComponent<RectTransform>().pivot = new Vector2(0.0f, 0.5f);
-        trans.anchoredPosition = new Vector2((obj.GetComponent<RectTransform>().rect.width / 2) * (-1), 0.0f);
+        trans.anchoredPosition = new Vector2(0, 0);
+        // trans.anchoredPosition = new Vector2((obj.GetComponent<RectTransform>().rect.width / 2) * (-1), 0.0f);
         trans.SetSiblingIndex(0);
 
         Image image = imgObject.AddComponent<Image>();
@@ -487,19 +489,17 @@ public class RailMusicManager : MonoBehaviour
         image.color = tempColor;
         //set pivot point of sprite back to midpoint of sprite
         obj.GetComponent<RectTransform>().pivot = new Vector2(0.5f, 0.5f);
-        obj.GetComponent<RectTransform>().position = new Vector3(obj.GetComponent<RectTransform>().position.x, obj.GetComponent<RectTransform>().position.y, -1);
+        //obj.GetComponent<RectTransform>().localPosition = new Vector3(obj.GetComponent<RectTransform>().localPosition.x, obj.GetComponent<RectTransform>().localPosition.y, -1);
     }
     public int calculateFigureStartTimeInSec(GameObject fig, double animLength, int maxTimeLengthInSec)
     {
         int sec = 0;
         double tmpX = fig.GetComponent<RectTransform>().position.x - minX;  //x-pos is screenX from left border, minX is the rail-startpoint
         Vector2 tmpSize = fig.GetComponent<RectTransform>().sizeDelta;
-        double tmpMinX = (double)tmpX - (tmpSize.x / 2.0f); //if tmpX is the midpoint of figure
-                                                            //double tmpMaxX = tmpMinX + animLength;  //length of figure is related to rail speed, here named as animationLength
-                                                            //get figure minX related to timelineMinX
+        double tmpMinX = (double)tmpX - (tmpSize.x / 2.0f) + 25; //if tmpX is the midpoint of figure
+        //get figure minX related to timelineMinX
         double percentageOfRail = tmpMinX / (maxX - minX);  //max-min=real length, percentage: e.g. 0,3823124 (38%)
         sec = (int)(((double)maxTimeLengthInSec) * percentageOfRail);
-        //Debug.Log("method: fig: "+fig+" tmpX: "+tmpX+" tmpSize: "+tmpSize+" tmpMinX: "+tmpMinX+" railMaxX: "+railMaxX+" percentage: "+percentageOfRail+" sec: "+sec);
         return sec;
     }
     public int calculateMusicEndTimeInSec(GameObject fig, double animLength, int maxTimeLengthInSec)
@@ -507,9 +507,8 @@ public class RailMusicManager : MonoBehaviour
         int sec = 0;
         double tmpX = fig.GetComponent<RectTransform>().position.x - minX;  //x-pos is screenX from left border, minX is the rail-startpoint
         Vector2 tmpSize = fig.GetComponent<RectTransform>().sizeDelta;
-        double tmpMinX = (double)tmpX - (tmpSize.x / 2.0f); //if tmpX is the midpoint of figure
-                                                            //double tmpMaxX = tmpMinX + animLength;  //length of figure is related to rail speed, here named as animationLength
-                                                            //get figure minX related to timelineMinX
+        double tmpMinX = (double)tmpX - (tmpSize.x / 2.0f) + 25; //if tmpX is the midpoint of figure
+        //get figure minX related to timelineMinX
         double percentageOfRail = tmpMinX / (maxX - minX);  //max-min=real length, percentage: e.g. 0,3823124 (38%)
         sec = (int)((((double)maxTimeLengthInSec) * percentageOfRail) + animLength);
         return sec;
@@ -588,14 +587,14 @@ public class RailMusicManager : MonoBehaviour
 
         scaleObject(newCopyOfFigure, 100, gameObject.GetComponent<RectTransform>().rect.height * 0.96f, false);
         scaleObject(newCopyOfFigure.transform.GetChild(0).gameObject, newCopyOfFigure.transform.GetChild(0).gameObject.GetComponent<RectTransform>().sizeDelta.x, gameObject.GetComponent<RectTransform>().rect.height * 0.96f, false);
-        newCopyOfFigure.transform.GetChild(0).GetComponent<RectTransform>().position = new Vector2(newCopyOfFigure.transform.GetChild(0).gameObject.GetComponent<RectTransform>().position.x + 26, newCopyOfFigure.transform.GetChild(0).gameObject.GetComponent<RectTransform>().position.y);
+        newCopyOfFigure.transform.GetChild(0).GetComponent<RectTransform>().position = new Vector3(newCopyOfFigure.transform.GetChild(0).gameObject.GetComponent<RectTransform>().position.x + 26, newCopyOfFigure.transform.GetChild(0).gameObject.GetComponent<RectTransform>().position.y, -1);
 
         figCounterCircle[musObjNr].transform.GetChild(0).GetComponent<Text>().text = (countName + 1).ToString();
 
         //parent and position
         float posX = UtilitiesTm.FloatRemap(moment, 0, AnimationTimer.GetMaxTime(), gameObject.GetComponent<RectTransform>().rect.width / -2, gameObject.GetComponent<RectTransform>().rect.width / 2);
         newCopyOfFigure.transform.SetParent(gameObject.transform);
-        newCopyOfFigure.transform.localPosition = new Vector2(posX, 0);
+        newCopyOfFigure.transform.localPosition = new Vector3(posX, 0, -1);
         scaleObject(newCopyOfFigure.transform.GetChild(1).gameObject, 100, gameObject.GetComponent<RectTransform>().rect.height * 0.96f, false);
 
         //add object to list which objects are on timeline, set placed figures to timelineInstanceObjects-list
@@ -750,12 +749,12 @@ public class RailMusicManager : MonoBehaviour
                 //-------------------------------------------------limit front of rail------------------------------------------//
                 if (timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().position.x < (minX + 0.035f * Screen.width))
                 {
-                    timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().position = new Vector2((float)minX + 0.035f * Screen.width, GetComponent<RectTransform>().position.y);    // tendenziell muesste das eher in buttonUp
+                    timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().position = new Vector3((float)minX + 0.035f * Screen.width, GetComponent<RectTransform>().position.y, -1);    // tendenziell muesste das eher in buttonUp
                 }
                 //-------------------------------------------------limit back of rail------------------------------------------//
                 if ((timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().anchoredPosition.x + newCopyOfFigure.transform.GetComponent<BoxCollider2D>().size.x) > (GetComponent<RectTransform>().rect.width + 0.03f * Screen.width))
                 {
-                    timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().anchoredPosition = new Vector2((GetComponent<RectTransform>().rect.width + (0.03f * Screen.width) - newCopyOfFigure.transform.GetComponent<BoxCollider2D>().size.x), newCopyOfFigure.GetComponent<RectTransform>().anchoredPosition.y);
+                    timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().anchoredPosition = new Vector3((GetComponent<RectTransform>().rect.width + (0.03f * Screen.width) - newCopyOfFigure.transform.GetComponent<BoxCollider2D>().size.x), newCopyOfFigure.GetComponent<RectTransform>().anchoredPosition.y, -1);
                     //Debug.LogWarning("JAAAAA! posx: " + (newCopyOfFigure.transform.position.x + newCopyOfFigure.transform.GetComponent<BoxCollider2D>().size.x) + ", anchored Pos: " + (newCopyOfFigure.GetComponent<RectTransform>().anchoredPosition.x + newCopyOfFigure.transform.GetComponent<BoxCollider2D>().size.x) + ", maxX: " + (GetComponent<RectTransform>().rect.width + 0.03f * Screen.width));
                 }
 
@@ -862,17 +861,17 @@ public class RailMusicManager : MonoBehaviour
                     if (figureObjects[currentClickedObjectIndex].GetComponent<RectTransform>().position.x < (minX + 0.03f * Screen.width))  // 50 is half the box Collider width (mouse pos is in the middle of the figure)
                     {
                         //Debug.Log("achtung! " + figureObjects[currentClickedObjectIndex].GetComponent<RectTransform>().position.x + ", min X: " + minX);
-                        newCopyOfFigure.GetComponent<RectTransform>().position = new Vector2((float)minX + 0.03f * Screen.width, figureObjects[currentClickedObjectIndex].transform.position.y);    // tendenziell muesste das eher in buttonUp
+                        newCopyOfFigure.GetComponent<RectTransform>().position = new Vector3((float)minX + 0.03f * Screen.width, figureObjects[currentClickedObjectIndex].transform.position.y, -1);    // tendenziell muesste das eher in buttonUp
                     }
                     else
                     {
-                        newCopyOfFigure.transform.position = new Vector2(figureObjects[currentClickedObjectIndex].transform.position.x, figureObjects[currentClickedObjectIndex].transform.position.y);
+                        newCopyOfFigure.transform.position = new Vector3(figureObjects[currentClickedObjectIndex].transform.position.x, figureObjects[currentClickedObjectIndex].transform.position.y, -1);
                     }
 
                     //------------------------------------------limit back of rail---------------------------------------------//
                     if ((newCopyOfFigure.GetComponent<RectTransform>().anchoredPosition.x + newCopyOfFigure.transform.GetComponent<BoxCollider2D>().size.x) > (GetComponent<RectTransform>().rect.width + 0.03f * Screen.width))
                     {
-                        newCopyOfFigure.GetComponent<RectTransform>().anchoredPosition = new Vector2((GetComponent<RectTransform>().rect.width + (0.03f * Screen.width) - newCopyOfFigure.transform.GetComponent<BoxCollider2D>().size.x), newCopyOfFigure.GetComponent<RectTransform>().anchoredPosition.y);
+                        newCopyOfFigure.GetComponent<RectTransform>().anchoredPosition = new Vector3((GetComponent<RectTransform>().rect.width + (0.03f * Screen.width) - newCopyOfFigure.transform.GetComponent<BoxCollider2D>().size.x), newCopyOfFigure.GetComponent<RectTransform>().anchoredPosition.y, -1);
                         //Debug.LogWarning("JAAAAA! posx: " + (newCopyOfFigure.transform.position.x + newCopyOfFigure.transform.GetComponent<BoxCollider2D>().size.x) + ", anchored Pos: " + (newCopyOfFigure.GetComponent<RectTransform>().anchoredPosition.x + newCopyOfFigure.transform.GetComponent<BoxCollider2D>().size.x) + ", maxX: " + (GetComponent<RectTransform>().rect.width + 0.03f * Screen.width));
                     }
                     else
@@ -881,13 +880,12 @@ public class RailMusicManager : MonoBehaviour
                     }
 
                     // size of rectangle becomes size for figure that is clickable
-                    newCopyOfFigure.GetComponent<RectTransform>().position = new Vector3(newCopyOfFigure.GetComponent<RectTransform>().position.x, newCopyOfFigure.GetComponent<RectTransform>().position.y, -1.0f);
+                    newCopyOfFigure.GetComponent<RectTransform>().localPosition = new Vector3(newCopyOfFigure.GetComponent<RectTransform>().localPosition.x, newCopyOfFigure.GetComponent<RectTransform>().localPosition.y, -1.0f);
                     newCopyOfFigure.transform.GetComponent<BoxCollider2D>().size = newCopyOfFigure.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta;
                     newCopyOfFigure.transform.GetComponent<BoxCollider2D>().offset = new Vector2(newCopyOfFigure.transform.GetComponent<BoxCollider2D>().size.x / 2 - 50, newCopyOfFigure.transform.GetComponent<BoxCollider2D>().offset.y);
 
                     //add object to list which objects are on timeline, set placed figures to timelineInstanceObjects-list
                     updateObjectList(timelineInstanceObjects, newCopyOfFigure);
-
                     //set original image back to shelf
                     setParent(figureObjects[currentClickedObjectIndex], objectShelfParent[currentClickedObjectIndex]);
                     //scale to default values
@@ -964,7 +962,6 @@ public class RailMusicManager : MonoBehaviour
                 double startSec = calculateFigureStartTimeInSec(timelineInstanceObjects[i], timelineInstanceObjects[i].GetComponent<MusicLength>().musicLength, maxTimeInSec);
                 double endSec = calculateMusicEndTimeInSec(timelineInstanceObjects[i], timelineInstanceObjects[i].GetComponent<MusicLength>().musicLength, maxTimeInSec);
                 float tmpTime = AnimationTimer.GetTime();
-                Debug.Log(", startSec: " + startSec + "endSec: " + endSec + ", Timer: " + AnimationTimer.GetTime());// + ", LENGTH: " + tmpLength);
 
                 // wenn timer im bereich musikstuecks und musik ist nicht an
                 if (AnimationTimer.GetTime() >= startSec && AnimationTimer.GetTime() <= endSec)
