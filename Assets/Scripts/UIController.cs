@@ -25,8 +25,8 @@ public class UIController : MonoBehaviour
 
     private void Awake()
     {
-        currenScreenWidth = Screen.width;    
-        objectsLightElements = GetComponent<SceneDataController>().objectsLightElements;    
+        currenScreenWidth = Screen.width;
+        objectsLightElements = GetComponent<SceneDataController>().objectsLightElements;
     }
 
     // Start is called before the first frame update
@@ -37,7 +37,7 @@ public class UIController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Screen.width != currenScreenWidth)
+        if (Screen.width != currenScreenWidth)
         {
             // for(int i=0;i<Rails.Length;i++)
             // {
@@ -62,16 +62,18 @@ public class UIController : MonoBehaviour
                 goButtonSceneryElements[i].GetComponent<RectTransform>().anchoredPosition = new Vector2(StaticSceneData.StaticData.sceneryElements[i].z * 270, (StaticSceneData.StaticData.sceneryElements[i].y - 0.02f) * 260);
                 SceneManaging.statusReiter = StaticSceneData.StaticData.sceneryElements[i].railnumber;
                 //Spiegelung
-                if(StaticSceneData.StaticData.sceneryElements[i].mirrored) goButtonSceneryElements[i].GetComponent<RectTransform>().localScale = new Vector2(-1,1);
+                if (StaticSceneData.StaticData.sceneryElements[i].mirrored) goButtonSceneryElements[i].GetComponent<RectTransform>().localScale = new Vector2(-1, 1);
                 // Größe der Kulissen
                 goButtonSceneryElements[i].GetComponent<RectTransform>().sizeDelta = new Vector2(goMenueKulissen.GetComponent<CoulissesManager>().railWidth / 410 * goMenueKulissen.GetComponent<CoulissesManager>().coulisses[i].GetComponent<CoulisseStats>().CoulisseWidth, goMenueKulissen.GetComponent<CoulissesManager>().railWidth / 410 * goMenueKulissen.GetComponent<CoulissesManager>().coulisses[i].GetComponent<CoulisseStats>().CoulisseHeight);
                 goButtonSceneryElements[i].GetComponent<BoxCollider2D>().size = goMenueKulissen.GetComponent<CoulissesManager>().coulisses[i].GetComponent<RectTransform>().sizeDelta;
+
             }
             else
             {
                 goButtonSceneryElements[i].transform.SetParent(goMenueKulissen.GetComponent<CoulissesManager>().parentStart[i].transform);
-                goButtonSceneryElements[i].GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
+                //goButtonSceneryElements[i].GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
                 //goButtonSceneryElements[i].GetComponent<DragDrop>().schieneKulisse = 0;
+
             }
 
             // Debug.Log("----- Schiene-Kulisse: +++" + StaticSceneData.StaticData.sceneryElements[i].railnumber + "+++");

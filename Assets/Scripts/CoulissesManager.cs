@@ -570,6 +570,7 @@ public class CoulissesManager : MonoBehaviour
         coulisses[i].transform.SetParent(parentStart[i].transform);
         coulisses[i].GetComponent<RectTransform>().sizeDelta = new Vector2(shelfSizeWidth[i], shelfSizeHeight[i]);
         coulisses[i].GetComponent<RectTransform>().localPosition = new Vector2(0.0f, -(coulisses[i].GetComponent<RectTransform>().rect.height / 2));
+        Debug.Log("position in shelf: " + coulisses[i].GetComponent<RectTransform>().localPosition);
         coulisses[i].GetComponent<BoxCollider2D>().offset = new Vector2(0, -coulisses[i].GetComponent<RectTransform>().localPosition.y);
         coulisses[i].GetComponent<BoxCollider2D>().size = new Vector2(shelfSizeWidth[i], shelfSizeHeight[i]);
         highlight(i, 0);

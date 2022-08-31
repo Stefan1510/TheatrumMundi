@@ -847,7 +847,10 @@ public class RailMusicManager : MonoBehaviour
                     countName = countCopiesOfObject(figureObjects[currentClickedObjectIndex], timelineInstanceObjects);
                     newCopyOfFigure.name = figureObjects[currentClickedObjectIndex].name + "_instance" + countName.ToString("000");
 
-                    float tmpLength = ((float)maxX - (float)minX) * newCopyOfFigure.GetComponent<MusicLength>().musicLength / 614;//UtilitiesTm.FloatRemap(newCopyOfFigure.GetComponent<MusicLength>().musicLength, 0, 614, (float)minX, (float)maxX);
+                    //float tmpLength = ((float)maxX - (float)minX) * newCopyOfFigure.GetComponent<MusicLength>().musicLength / AnimationTimer.GetMaxTime();
+                    float tmpLength = UtilitiesTm.FloatRemap(newCopyOfFigure.GetComponent<MusicLength>().musicLength, 0, AnimationTimer.GetMaxTime(), 0, (float)railWidth);
+                    Debug.Log("minx: " + minX + ", maxX: " + maxX);
+
                     //Debug.Log("minX: " + minX + ", maxX: " + maxX + ", tmplengh: " + tmpLength);
                     createRectangle(newCopyOfFigure, gameObject.GetComponent<RectTransform>().rect.height * 0.96f, tmpLength);
 

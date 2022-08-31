@@ -92,7 +92,7 @@ public class SceneDataController : MonoBehaviour
         inputFieldFileComment.text = sceneFileComment;
     }
 
-    public SceneData CreateSceneData()
+    public SceneData CreateSceneData()  // only in awake
     {
         SceneData sceneData = new SceneData();
         GetFileMetaDataFromScene();
@@ -257,10 +257,11 @@ public class SceneDataController : MonoBehaviour
 
         //music title elements (Musik)
         MusicApplyToScene(sceneData.musicClipElements);
-        for (int i = 0; i < imageTimelineRails.Length; i++)
-        {
-            imageTimelineRails[i].GetComponent<RailManager>().PublicUpdate();
-        }
+
+        // for (int i = 0; i < imageTimelineRails.Length; i++)
+        // {
+        //     imageTimelineRails[i].GetComponent<RailManager>().PublicUpdate();
+        // }
     }
 
     public void RailsApplyToScene(List<RailElement> railElements)
@@ -287,7 +288,7 @@ public class SceneDataController : MonoBehaviour
                 if (se.name == goSceneryElement.name)
                 {
                     se.railnumber = int.Parse(se.parent.Substring(7));
-                    //Debug.Log("-----" + se.railnumber + "-----");
+                    Debug.Log("-----name: " + se.name + "-----");
                     goSceneryElement.transform.parent = GameObject.Find(se.parent).transform;
                     goSceneryElement.transform.localPosition = new Vector3(se.x + (se.zPos * 0.01f), se.y, se.z);
                     //goSceneryElement.GetComponent<SceneryController>().sceneryActive = se.active;
