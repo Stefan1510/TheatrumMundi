@@ -6,7 +6,7 @@ using System;
 
 public class PressHelp : MonoBehaviour
 {
-    [SerializeField] GameObject helpButtonPressed, helpOverlayMenue2, helpOverlayMenue1, helpOverlayMenue3, helpOverlayMenue4, menueConfigMain, menuDirMain;
+    [SerializeField] GameObject helpButtonPressed, helpOverlayMenue2, helpOverlayMenue1, helpOverlayMenue3, helpOverlayMenue4, menueConfigMain, menuDirMain, aboutScreen;
 
     private bool pressed = false;
     private float _idleTimer;
@@ -23,12 +23,13 @@ public class PressHelp : MonoBehaviour
         helpButtonPressed.SetActive(false);
         helpOverlayMenue2.SetActive(false);
         helpOverlayMenue3.SetActive(false);
+        aboutScreen.SetActive(false);
         _buttonColorStart = GetComponent<Button>().image.color;
         //_buttonColorAttention = new Color32(221, 159, 63, 255);
         _buttonColorAttention = new Color32(86, 133, 172, 255);
 
-        Debug.Log("Button: "+helpButtonPressed+" hidden.");
-        
+        Debug.Log("Button: " + helpButtonPressed + " hidden.");
+
         try
         {
             helpOverlayMenue4.SetActive(false);
@@ -40,7 +41,7 @@ public class PressHelp : MonoBehaviour
                 return;
             }
             throw;
-		}
+        }
     }
 
     private void HelpAnimation()
@@ -71,7 +72,7 @@ public class PressHelp : MonoBehaviour
         {
             StopHelpAnimation();
         }
-        if(Input.GetMouseButton(0))
+        if (Input.GetMouseButton(0))
         {
             StopHelpAnimation();
         }
@@ -87,35 +88,37 @@ public class PressHelp : MonoBehaviour
     }
 
 
-    public void OnClick()
+    public void OnClick(int i)
     {
-        if (pressed)
+        if (i == 0) // help
         {
-            helpOverlayMenue1.SetActive(false);
-            helpOverlayMenue2.SetActive(false);
-            helpOverlayMenue3.SetActive(false);
-            helpButtonPressed.SetActive(false);
-            pressed = false;
-                       
-            try
+            if (pressed)
             {
-                helpOverlayMenue4.SetActive(false);
-            }
-            catch (Exception ex)
-            {
-                if (ex is NullReferenceException || ex is UnassignedReferenceException)
-                {
-                    return;
-                }
-                throw;
-            }
-        }
+                helpOverlayMenue1.SetActive(false);
+                helpOverlayMenue2.SetActive(false);
+                helpOverlayMenue3.SetActive(false);
+                helpButtonPressed.SetActive(false);
+                pressed = false;
 
-        else
-        {
-            if (SceneManaging.configMenueActive == 1 || SceneManaging.directorMenueActive == 1)
+                try
+                {
+                    helpOverlayMenue4.SetActive(false);
+                }
+                catch (Exception ex)
+                {
+                    if (ex is NullReferenceException || ex is UnassignedReferenceException)
+                    {
+                        return;
+                    }
+                    throw;
+                }
+            }
+
+            else
             {
-                helpButtonPressed.SetActive(true);
+                if (SceneManaging.configMenueActive == 1 || SceneManaging.directorMenueActive == 1)
+                {
+                    helpButtonPressed.SetActive(true);
                     helpOverlayMenue1.SetActive(true);
                 }
                 else if (SceneManaging.configMenueActive == 2 || SceneManaging.directorMenueActive == 2)
@@ -144,9 +147,19 @@ public class PressHelp : MonoBehaviour
                         throw;
                     }
 
+                }
+
+                pressed = true;
             }
-            
-            pressed = true;
+
+        }
+        else if(i==1) // open about
+        {
+            aboutScreen.SetActive(true);
+        }
+        else // close about
+        {
+            aboutScreen.SetActive(false);
         }
     }
 }
