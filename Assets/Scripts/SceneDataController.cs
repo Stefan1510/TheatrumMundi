@@ -288,7 +288,6 @@ public class SceneDataController : MonoBehaviour
                 if (se.name == goSceneryElement.name)
                 {
                     se.railnumber = int.Parse(se.parent.Substring(7));
-                    Debug.Log("-----name: " + se.name + "-----");
                     goSceneryElement.transform.parent = GameObject.Find(se.parent).transform;
                     goSceneryElement.transform.localPosition = new Vector3(se.x + (se.zPos * 0.01f), se.y, se.z);
                     //goSceneryElement.GetComponent<SceneryController>().sceneryActive = se.active;

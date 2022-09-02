@@ -6,9 +6,10 @@ using UnityEngine.UI;
 
 public class RailMusicManager : MonoBehaviour
 {
+    #region variables
     public Image timelineImage, timeSliderImage;
     AudioSource audioSource;
-    public GameObject gameController, menue3;
+    public GameObject gameController, menue3, UICanvas;
     //public GameObject[] musicSamples;
     private BoxCollider2D timeSlider;
     bool draggingOnTimeline, draggingObject, editTimelineObject, releaseOnTimeline, playingMusic, isInstance, playingSample;
@@ -34,8 +35,7 @@ public class RailMusicManager : MonoBehaviour
     float heightClosed, heightOpened;
 
     public AudioClip[] clip;         // ought to be 6 audioclips
-
-
+    #endregion
     void Awake()
     {
         clip = gameController.GetComponent<SceneDataController>().objectsMusicClips;
@@ -161,8 +161,13 @@ public class RailMusicManager : MonoBehaviour
 
         return objName;
     }
-    public void openTimelineByClick(bool thisTimelineOpen)
+    public void openTimelineByClick(bool thisTimelineOpen, bool fromShelf)
     {
+        if (fromShelf == false && SceneManaging.mainMenuActive == 2 && SceneManaging.directorMenueActive != 3)
+        {
+            Debug.Log("from shelf = false");
+            UICanvas.GetComponent<ObjectShelfAll>().ButtonShelf07(true);
+        }
         if (isAnyTimelineOpen() == false)
         {
             // Debug.Log("++++ es ist keine schiene geöffnet, deswegen wird geklickte Schiene geöffnet: " + tl);
@@ -177,10 +182,6 @@ public class RailMusicManager : MonoBehaviour
             openCloseObjectInTimeline(true, timelineInstanceObjects, editTimelineObject);
             ImageTimelineSelection.SetRailNumber(6);
             ImageTimelineSelection.SetRailType(2);  // for rail-rails
-            // if (!menue3.activeSelf)
-            // {
-            //     parentMenue.GetComponent<ObjectShelf>().ButtonShelf03();
-            // }
         }
         else if (isAnyTimelineOpen())
         {
@@ -193,11 +194,6 @@ public class RailMusicManager : MonoBehaviour
             }
             else
             {
-                // if (!menue3.activeSelf)
-                // {
-                //     parentMenue.GetComponent<ObjectShelf>().ButtonShelf03();
-                // }
-                // Debug.Log("++++ geklickte Schiene ist zu, aber eine andere ist offen und wird geschlossen: " + tl);
                 // a different rail is open - close it
                 for (int i = 0; i < gameController.GetComponent<UIController>().Rails.Length; i++)
                 {
@@ -226,12 +222,8 @@ public class RailMusicManager : MonoBehaviour
                     }
 
                 }
-
-                // gameController.GetComponent<UIController>().RailMusic.GetComponent<RectTransform>().sizeDelta = new Vector2(timelineImage.rectTransform.rect.width, heightClosed / gameObject.transform.lossyScale.x);
-                // gameController.GetComponent<UIController>().RailMusic.GetComponent<BoxCollider2D>().size = new Vector2(timelineImage.GetComponent<BoxCollider2D>().size.x, heightClosed / gameObject.transform.lossyScale.x);
-                // gameController.GetComponent<UIController>().RailMusic.isTimelineOpen = false;
                 // open clicked rail
-                //Debug.Log("++++ geklickte Schiene wird geöffnet: " + tl);
+                Debug.Log("++++ geklickte Schiene wird geöffnet: " + timelineImage);
                 //scale up timeline
                 timelineImage.rectTransform.sizeDelta = new Vector2(timelineImage.rectTransform.rect.width, heightOpened / gameObject.transform.lossyScale.x);
                 //scale up the collider
@@ -599,7 +591,7 @@ public class RailMusicManager : MonoBehaviour
 
         //add object to list which objects are on timeline, set placed figures to timelineInstanceObjects-list
         updateObjectList(timelineInstanceObjects, newCopyOfFigure);
-        openTimelineByClick(true);
+        openTimelineByClick(true, true);
         newCopyOfFigure.transform.localScale = Vector3.one;
 
         // size of rectangle becomes size for figure that is clickable
@@ -687,7 +679,7 @@ public class RailMusicManager : MonoBehaviour
             if (this.GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(getMousePos))
             {
                 //open or close timeline
-                openTimelineByClick(isTimelineOpen);
+                openTimelineByClick(isTimelineOpen, false);
                 //draggingOnTimeline = true;
             }
 

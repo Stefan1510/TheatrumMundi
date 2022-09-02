@@ -63,12 +63,6 @@ public class SaveFileController : MonoBehaviour
         }
     }
 
-    //// Update is called once per frame
-    //void Update()
-    //{
-
-    //}
-
     public void SaveSceneToFile()
     {
         SceneData sceneDataSave = this.GetComponent<SceneDataController>().CreateSceneData();

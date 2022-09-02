@@ -116,20 +116,23 @@ public class PressHelp : MonoBehaviour
 
             else
             {
-                if (SceneManaging.configMenueActive == 1 || SceneManaging.directorMenueActive == 1)
+                if (SceneManaging.mainMenuActive == 1 && SceneManaging.configMenueActive == 1 || SceneManaging.mainMenuActive == 2 && SceneManaging.directorMenueActive == 1)
                 {
                     helpButtonPressed.SetActive(true);
                     helpOverlayMenue1.SetActive(true);
+                    Debug.Log("overlay 1");
                 }
                 else if (SceneManaging.configMenueActive == 2 || SceneManaging.directorMenueActive == 2)
                 {
                     helpButtonPressed.SetActive(true);
                     helpOverlayMenue2.SetActive(true);
+                    Debug.Log("overlay 2");
                 }
-                else if (SceneManaging.configMenueActive == 3 || SceneManaging.directorMenueActive == 3)
+                else if (SceneManaging.mainMenuActive == 1 && SceneManaging.configMenueActive == 3 || SceneManaging.directorMenueActive == 3 && SceneManaging.mainMenuActive == 2)
                 {
                     helpButtonPressed.SetActive(true);
                     helpOverlayMenue3.SetActive(true);
+                    Debug.Log("overlay 3");
                 }
                 else if (SceneManaging.configMenueActive == 4)
                 {
@@ -137,6 +140,7 @@ public class PressHelp : MonoBehaviour
                     try
                     {
                         helpOverlayMenue4.SetActive(true);
+                        Debug.Log("overlay 4");
                     }
                     catch (Exception ex)
                     {
@@ -153,7 +157,7 @@ public class PressHelp : MonoBehaviour
             }
 
         }
-        else if(i==1) // open about
+        else if (i == 1) // open about
         {
             aboutScreen.SetActive(true);
         }

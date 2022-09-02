@@ -23,7 +23,7 @@ public class RailManager : MonoBehaviour
     Vector2 objectSceneSize;
     float objectAnimationLength;
 
-    public GameObject objectLibrary, parentMenue; // mainMenue
+    public GameObject objectLibrary, UICanvas, parentMenue; // mainMenue
     GameObject timeSettings;
     GameObject[] figCounterCircle, figureObjects, figureObjects3D;
     int currentClickedObjectIndex, currentClickedInstanceObjectIndex, hitTimeline, sizeLayering;
@@ -197,8 +197,13 @@ public class RailManager : MonoBehaviour
 
         return objName;
     }
-    public void openTimelineByClick(bool thisTimelineOpen, Image tlImage)
+    public void openTimelineByClick(bool thisTimelineOpen, Image tlImage, bool fromShelf)
     {
+        if (fromShelf == false && SceneManaging.mainMenuActive == 2 && SceneManaging.directorMenueActive != 1)
+        {
+            Debug.Log("from shelf = false");
+            UICanvas.GetComponent<ObjectShelfAll>().ButtonShelf05(true);
+        }
         if (isAnyTimelineOpen() == false)
         {
             // Debug.Log("++++ es ist keine schiene geöffnet, deswegen wird geklickte Schiene geöffnet: " + tl);
@@ -929,11 +934,11 @@ public class RailManager : MonoBehaviour
 
         if (isTimelineOpen)
         {
-            openTimelineByClick(true, timelineImage);
+            openTimelineByClick(true, timelineImage, true);
         }
         else
         {
-            openTimelineByClick(false, timelineImage);
+            openTimelineByClick(false, timelineImage, true);
         }
         return curr3DObject;
     }
@@ -1046,7 +1051,7 @@ public class RailManager : MonoBehaviour
             if (this.GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(getMousePos))
             {
                 //open or close timeline
-                openTimelineByClick(isTimelineOpen, timelineImage);
+                openTimelineByClick(isTimelineOpen, timelineImage, false);
                 //draggingOnTimeline = true;
             }
             //if you click on an object in shelf 

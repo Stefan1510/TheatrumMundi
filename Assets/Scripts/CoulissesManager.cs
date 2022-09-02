@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class CoulissesManager : MonoBehaviour
 {
+    #region variables
     public GameObject gameController;
     public GameObject[] indexTabs, collections, indexTabImages;
     [HideInInspector] public GameObject[] coulisses;
@@ -30,6 +31,7 @@ public class CoulissesManager : MonoBehaviour
     [HideInInspector] public float railWidth, railHeight;
     Vector2 diff;
     private float railMinY, windowMinY, currentLossyScale;
+    #endregion
 
     //private float myPercentage;
     void Awake()

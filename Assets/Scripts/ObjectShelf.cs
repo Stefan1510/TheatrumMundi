@@ -86,7 +86,7 @@ public class ObjectShelf : MonoBehaviour
             StartCoroutine(ButtonShelfI(1));
         }
 
- 
+
     }
     public void ButtonShelf02()
     {
@@ -160,7 +160,7 @@ public class ObjectShelf : MonoBehaviour
 
         MenueShelf01.SetActive(false);
         MenueShelf02.SetActive(false);
-        MenueShelf03.SetActive(false); 
+        MenueShelf03.SetActive(false);
         try
         {
             MenueShelf04.SetActive(false);
@@ -212,24 +212,28 @@ public class ObjectShelf : MonoBehaviour
         {
             case 1:
                 MenueShelf01.SetActive(true);
-                HeadlineShelf01.gameObject.SetActive(true); 
+                HeadlineShelf01.gameObject.SetActive(true);
                 //SceneManaging.menueActive = 1;
+                Debug.Log("shelf 1");
                 break;
             case 2:
                 MenueShelf02.SetActive(true);
                 HeadlineShelf02.gameObject.SetActive(true);
                 //SceneManaging.menueActive = 2;
+                Debug.Log("shelf 2");
                 break;
             case 3:
                 MenueShelf03.SetActive(true);
                 HeadlineShelf03.gameObject.SetActive(true);
                 //SceneManaging.menueActive = 3;
+                Debug.Log("shelf 3");
                 break;
             case 4:
                 try
                 {
                     MenueShelf04.SetActive(true);
                     HeadlineShelf04.gameObject.SetActive(true);
+                    Debug.Log("shelf 4");
                     //SceneManaging.menueActive = 4;
                 }
                 catch (Exception ex)
