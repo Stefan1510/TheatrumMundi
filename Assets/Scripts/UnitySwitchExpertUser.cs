@@ -5,9 +5,9 @@ using UnityEngine.UI;
 
 public class UnitySwitchExpertUser : MonoBehaviour
 {
-    [SerializeField] private bool _isExpert =true;
+    [SerializeField] private bool _isExpert = true;
     ////////////////////////////////////////////////////
-    /// Config Menü
+    /// Config Menï¿½
     ////////////////////////////////////////////////////
     [SerializeField] private GameObject _panelLightAmbient;
     [SerializeField] private GameObject _buttonBuehne;
@@ -18,13 +18,14 @@ public class UnitySwitchExpertUser : MonoBehaviour
     [SerializeField] private GameObject _buttonKulissen;
     [SerializeField] private GameObject _menueKulissen;
     [SerializeField] private GameObject _buttonLadenSpeichern;
-    
-    
+
+
     [SerializeField] private GameObject _buttonFigures;
     [SerializeField] private GameObject _buttonMusic;
     [SerializeField] private GameObject _buttonAbout;
     [SerializeField] private GameObject _buttonDummy;
 
+    [SerializeField] private GameObject _buttonMenueDirector;
 
     [SerializeField] private GameObject _buttonDelete;
     [SerializeField] private GameObject _buttonSave;
@@ -35,7 +36,7 @@ public class UnitySwitchExpertUser : MonoBehaviour
 
 
     ////////////////////////////////////////////////////
-    /// Director Menü
+    /// Director Menï¿½
     ////////////////////////////////////////////////////
     [SerializeField] private GameObject _menuLightShelf;
     [SerializeField] private GameObject _buttonLights;
@@ -70,31 +71,37 @@ public class UnitySwitchExpertUser : MonoBehaviour
             _buttonLadenSpeichern.transform.SetParent(_buttonLadenSpeichern.transform.parent.parent); ;
             _buttonLadenSpeichern.transform.SetSiblingIndex(5);
 
-            _panelLightAmbient.SetActive(false);
-            _buttonDelete.SetActive(false);
-            _buttonSave.SetActive(false);
-            _buttonDummy.SetActive(false);
-            _textSave.SetActive(false);
-            foreach(GameObject inputFieldSave in _aInputFieldSave)
-            {
-                inputFieldSave.SetActive(false);
-            }
-            _buttonLoad.GetComponent<RectTransform>().Translate(0, -300, 0);
+            _buttonMenueDirector.transform.GetChild(0).GetComponent<Image>().enabled = false; // switch button ausgrauen
+            _buttonMenueDirector.GetComponent<Button>().enabled = false;
 
-            RectTransform rectScrollView = _scrollViewFileSelect.GetComponent<RectTransform>();
-            rectScrollView.sizeDelta = new Vector2(rectScrollView.sizeDelta.x, rectScrollView.sizeDelta.y + 300);
+            //_panelLightAmbient.SetActive(false);
+            //_buttonDelete.SetActive(false);
+            //_buttonSave.SetActive(false);
+            _buttonDummy.SetActive(false);
+            //_textSave.SetActive(false);
+            //foreach (GameObject inputFieldSave in _aInputFieldSave)
+            //{
+            //inputFieldSave.SetActive(false);
+            //}
+            //_buttonLoad.GetComponent<RectTransform>().Translate(0, -300, 0);
+
+            // RectTransform rectScrollView = _scrollViewFileSelect.GetComponent<RectTransform>();
+            // rectScrollView.sizeDelta = new Vector2(rectScrollView.sizeDelta.x, rectScrollView.sizeDelta.y + 300);
             foreach (GameObject panelControl in _aTimeSliderPanelControls)
             {
                 panelControl.SetActive(false);
             }
-            _imageTimelineRailBg.SetActive(false);
-            _imageTimelineRailLight.SetActive(false);
-            foreach(GameObject imageTimeSliderSetting in _aImageTimeSliderSettings)
-            {
-                imageTimeSliderSetting.SetActive(false);
-            }
+            //_imageTimelineRailBg.SetActive(false);
+            _imageTimelineRailBg.GetComponent<Image>().color = Color.gray;
+            //_imageTimelineRailBg.GetComponent<RailLightManager>().enabled = false;
+            _imageTimelineRailBg.GetComponent<BoxCollider2D>().enabled = false;
+            // _imageTimelineRailLight.SetActive(false);
+            // foreach (GameObject imageTimeSliderSetting in _aImageTimeSliderSettings)
+            // {
+            //     imageTimeSliderSetting.SetActive(false);
+            // }
 
-        }        
+        }
     }
 
 
@@ -104,8 +111,13 @@ public class UnitySwitchExpertUser : MonoBehaviour
         _gameControllerStarted = true;
         if (!_isExpert)
         {
+            //this.GetComponent<SaveFileController>().LoadSceneFromFile("*Musterszene_leer.json", true);
             _menueKulissen.SetActive(true);
             _buttonKulissen.transform.GetChild(1).gameObject.SetActive(false);
+            // for (int j = 0; j < this.GetComponent<SceneDataController>().objectsLightElements.Length; j++)
+            // {
+            //     this.GetComponent<SceneDataController>().objectsLightElements[j].goLightElement.GetComponent<Light>().enabled = true;
+            // }
         }
     }
 
@@ -131,9 +143,13 @@ public class UnitySwitchExpertUser : MonoBehaviour
             _menueBuehne.SetActive(false);
             _buttonLicht.SetActive(false);
             _menueLicht.SetActive(false);
-            _menuLightShelf.SetActive(false);
-            _buttonLights.SetActive(false);
+            // _menuLightShelf.SetActive(false);
+            // _buttonLights.SetActive(false);
             _buttonAbout.SetActive(false);
+            // for (int j = 0; j < this.GetComponent<SceneDataController>().objectsLightElements.Length; j++)
+            // {
+            //     this.GetComponent<SceneDataController>().objectsLightElements[j].goLightElement.GetComponent<Light>().enabled = true;
+            // }
         }
     }
 }

@@ -8,7 +8,7 @@ public class PressHelp : MonoBehaviour
 {
     [SerializeField] GameObject helpButtonPressed, helpOverlayMenue2, helpOverlayMenue1, helpOverlayMenue3, helpOverlayMenue4, menueConfigMain, menuDirMain, aboutScreen;
 
-    private bool pressed = false;
+    private bool pressed = false, secondHighlight = false;
     private float _idleTimer;
     private float _helpAnimDuration;
     private float _helpAnimWaitTime;
@@ -24,9 +24,9 @@ public class PressHelp : MonoBehaviour
         helpOverlayMenue2.SetActive(false);
         helpOverlayMenue3.SetActive(false);
         aboutScreen.SetActive(false);
-        _buttonColorStart = GetComponent<Button>().image.color;
+        _buttonColorStart = new Color(255, 255, 255, 0);
         //_buttonColorAttention = new Color32(221, 159, 63, 255);
-        _buttonColorAttention = new Color32(86, 133, 172, 255);
+        _buttonColorAttention = new Color32(255, 255, 255, 70);
 
         Debug.Log("Button: " + helpButtonPressed + " hidden.");
 
@@ -48,16 +48,21 @@ public class PressHelp : MonoBehaviour
     {
         float x = _idleTimer - _helpAnimWaitTime;
         float y = -4 * Mathf.Pow(x - 0.5f, 2) + 1;
+        //Color32 buttonColor = Color32.Lerp(_buttonColorStart, _buttonColorAttention, y);
+        //transform.GetChild(0).GetComponent<Image>().color = buttonColor;
         Color32 buttonColor = Color32.Lerp(_buttonColorStart, _buttonColorAttention, y);
-        GetComponent<Button>().image.color = buttonColor;
-        transform.localScale = new Vector3(1 + y / 4, 1 + y / 4, 1 + y / 4);
-        //Debug.LogWarning(x + " : " + y);
+        transform.GetChild(1).GetComponent<Image>().color = buttonColor;
+        transform.GetChild(0).localScale = new Vector3(1 + y / 4, 1 + y / 4, 1 + y / 4);
+        transform.GetChild(1).localScale = new Vector3(1 + y / 4, 1 + y / 4, 1 + y / 4);
+        if (x > 1 && secondHighlight == false)
+        {
+            _idleTimer = 10.01f;
+            secondHighlight = true;
+        }
     }
-
     private void StopHelpAnimation()
     {
-        //Debug.LogWarning(_idleTimer);
-        GetComponent<Button>().image.color = _buttonColorStart;
+        transform.GetChild(1).GetComponent<Image>().color = _buttonColorStart;
         transform.localScale = Vector3.one;
         _idleTimer = 0;
     }
@@ -67,6 +72,14 @@ public class PressHelp : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             StopHelpAnimation();
+            if (pressed)
+            {
+                helpOverlayMenue1.SetActive(false);
+                helpOverlayMenue2.SetActive(false);
+                helpOverlayMenue3.SetActive(false);
+                helpButtonPressed.SetActive(false);
+                pressed = false;
+            }
         }
         if (Input.anyKeyDown)
         {
@@ -84,10 +97,9 @@ public class PressHelp : MonoBehaviour
         if (_idleTimer >= _helpAnimWaitTime + _helpAnimDuration)
         {
             StopHelpAnimation();
+            secondHighlight = false;
         }
     }
-
-
     public void OnClick(int i)
     {
         if (i == 0) // help

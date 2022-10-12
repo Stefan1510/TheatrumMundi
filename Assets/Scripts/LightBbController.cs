@@ -20,12 +20,6 @@ public class LightBbController : MonoBehaviour
         PanelBbImage.color = new Color(171f / 255f, 171f / 255f, 171f / 255f, 160f / 255f);
     }
 
-    //// Update is called once per frame
-    //void Update()
-    //{
-
-    //}
-
     public void LightActivation(bool onOffSwitch)
     {
         thisLightElement.active = onOffSwitch;

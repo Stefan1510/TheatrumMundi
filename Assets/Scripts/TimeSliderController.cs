@@ -16,12 +16,13 @@ public class TimeSliderController : MonoBehaviour, IPointerUpHandler, IDragHandl
     [SerializeField] private GameObject _panelControls;
     [SerializeField] private GameObject _panelRailSpeedControls;
     [SerializeField] private GameObject _panelLightControls;
-    [SerializeField] private GameObject _panelBackgroundPositionControls;
+    [SerializeField] private GameObject _panelBackgroundPositionControls, imgTimelineSettingsArea;
 
     private Slider _thisSlider;
     // Start is called before the first frame update
     void Start()
     {
+        if (SceneManaging.isExpert) imgTimelineSettingsArea.SetActive(true);
         _thisSlider = GetComponent<Slider>();
         _textTime.text = UtilitiesTm.FloaTTimeToString(_thisSlider.value);
         _textMaxTime.text = UtilitiesTm.FloaTTimeToString(AnimationTimer.GetMaxTime());
@@ -89,6 +90,26 @@ public class TimeSliderController : MonoBehaviour, IPointerUpHandler, IDragHandl
                     break;
             }
         }
+        else
+        {
+            switch (ImageTimelineSelection.GetRailType())
+            {
+                case 0:
+                    imgTimelineSettingsArea.SetActive(false);
+                    break;
+                case 1:
+                    _panelLightControls.SetActive(true);
+                    imgTimelineSettingsArea.SetActive(true);
+                    break;
+                case 2:
+                    imgTimelineSettingsArea.SetActive(false);
+                    break;
+                case 3:
+                    imgTimelineSettingsArea.SetActive(false);
+                    break;
+            }
+        }
+
     }
 
 

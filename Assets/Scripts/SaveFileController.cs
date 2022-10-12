@@ -7,19 +7,21 @@ using System.IO;
 
 public class SaveFileController : MonoBehaviour
 {
+    #region variables
     //private string[] _fileList;
     private string _jsonString;
-    public GameObject contentFileSelect;
+    public GameObject contentFileSelect, panelCodeInput, panelSaveShowCode, menuKulissen;
+    public InputField inputFieldShowCode;
     public Button fileSelectButton;
     private List<Button> _buttonsFileList = new List<Button>();
-    public Text textFileMetaData;
-    public Text textFileContentData;
+    public Text textFileMetaData, textFileContentData, textShowCode;
     private SceneData tempSceneData;
     private string _selectedFile;
     private string _directorySaves;
     private string _basepath;
     private bool _isWebGl;
-
+    private string characters = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ";
+    #endregion
 
     private void Awake()
     {
@@ -43,11 +45,13 @@ public class SaveFileController : MonoBehaviour
         }
         else
         {
-            _basepath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments);
-            _basepath += "\\theatrum mundi";
+            // _basepath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments);
+            // _basepath += "\\theatrum mundi";
+            _basepath = "https://lightframefx.de/extras/theatrum-mundi/";
         }
         //Debug.LogError(Application.absoluteURL);
         SceneManaging.isPreviewLoaded = true;
+
     }
 
     void Start()
@@ -55,16 +59,21 @@ public class SaveFileController : MonoBehaviour
         _directorySaves = "Saves";
         if (_isWebGl)
         {
-            StartCoroutine(LoadFilesFromServer());
+            StartCoroutine(LoadFilesFromServer(""));
         }
         else
         {
-            ShowFilesFromDirectory();
+            StartCoroutine(LoadFilesFromServer(""));
+            //ShowFilesFromDirectory();
         }
+        menuKulissen.SetActive(true);
+
     }
 
     public void SaveSceneToFile()
     {
+        string code = "";
+        string filePath;
         SceneData sceneDataSave = this.GetComponent<SceneDataController>().CreateSceneData();
         //string sceneDataSaveString = this.GetComponent<SceneDataController>().CreateJsonFromSceneData(sceneDataSave);
         StaticSceneData.StaticData.fileName = sceneDataSave.fileName;
@@ -74,7 +83,25 @@ public class SaveFileController : MonoBehaviour
         string sceneDataSaveString = this.GetComponent<SceneDataController>().CreateJsonFromSceneData(StaticSceneData.StaticData);
         //var path = EditorUtility.SaveFilePanel("Save Settings as JSON", "", ".json", "json");
 
-        string filePath = sceneDataSave.fileName + ".json";
+        // create code if not expert
+        if (!SceneManaging.isExpert)
+        {
+            for (int i = 0; i < 6; i++)
+            {
+                int a = UnityEngine.Random.Range(0, characters.Length);
+                code += characters[a].ToString();
+            }
+            filePath = code + sceneDataSave.fileName + ".json";
+            Debug.Log("filepath: " + filePath);
+            panelSaveShowCode.SetActive(true);
+            textShowCode.text = code;
+        }
+        else
+        {
+            filePath = sceneDataSave.fileName + ".json";
+            Debug.Log("filepath: " + filePath);
+        }
+
         if (sceneDataSaveString.Length != 0)
         {
             //File.WriteAllText(path, json);
@@ -85,12 +112,12 @@ public class SaveFileController : MonoBehaviour
             }
             else
             {
-                WriteFileToDirectory(sceneDataSaveString, filePath);
+                StartCoroutine(WriteToServer(sceneDataSaveString, filePath));
+                // WriteFileToDirectory(sceneDataSaveString, filePath);
             }
             //GenerateFileButton(filePath);
         }
     }
-
     public void LoadSceneFromTempToStatic()
     {
         StaticSceneData.StaticData = tempSceneData;
@@ -101,16 +128,16 @@ public class SaveFileController : MonoBehaviour
         GetComponent<SceneDataController>().SetFileMetaDataToScene();
         if (_isWebGl)
         {
-            StartCoroutine(LoadFilesFromServer());
+            StartCoroutine(LoadFilesFromServer(""));
         }
         else
         {
-            ShowFilesFromDirectory();
+            StartCoroutine(LoadFilesFromServer(""));
+            // ShowFilesFromDirectory();
         }
         AnimationTimer.SetTime(0);
         GetComponent<UIController>().Rails[0].GetComponent<RailManager>().PublicUpdate();
     }
-
     public void DeleteFile()
     {
         if (_selectedFile != "")
@@ -127,15 +154,15 @@ public class SaveFileController : MonoBehaviour
 
         if (_isWebGl)
         {
-            StartCoroutine(LoadFilesFromServer());
+            StartCoroutine(LoadFilesFromServer(""));
         }
         else
         {
-            ShowFilesFromDirectory();
+            // ShowFilesFromDirectory();
+            StartCoroutine(LoadFilesFromServer(""));
         }
     }
-
-    public void LoadSceneFromFile(string fileName)
+    public void LoadSceneFromFile(string fileName, bool fromCode)
     {
         SceneManaging.isPreviewLoaded = false;
         if (fileName.Substring(0, fileName.Length - 5) != StaticSceneData.StaticData.fileName)
@@ -151,15 +178,17 @@ public class SaveFileController : MonoBehaviour
         _selectedFile = fileName;
         if (_isWebGl)
         {
-            StartCoroutine(LoadFileFromWWW(fileName));
+            if (fromCode) StartCoroutine(LoadFileFromWWW(fileName, true));
+            else StartCoroutine(LoadFileFromWWW(fileName, false));
         }
         else
         {
-            LoadFileFromDirectory(fileName);
+            if (fromCode) StartCoroutine(LoadFileFromWWW(fileName, true));            // LoadFileFromDirectory(fileName);
+            else StartCoroutine(LoadFileFromWWW(fileName, false));
+
         }
         //Debug.Log("_____________ selected File: " + _selectedFile);
     }
-
     private void GenerateFileButton(string fileName)
     {
         Button fileButtonInstance = Instantiate(fileSelectButton, contentFileSelect.transform);
@@ -173,10 +202,23 @@ public class SaveFileController : MonoBehaviour
         }
         fileButtonInstance.GetComponentInChildren<Text>().text = fileName;
         fileButtonInstance.gameObject.SetActive(true);
-        fileButtonInstance.onClick.AddListener(() => LoadSceneFromFile(fileName));
+        fileButtonInstance.onClick.AddListener(() => LoadSceneFromFile(fileName, false));
         _buttonsFileList.Add(fileButtonInstance);
     }
-
+    public void ShowInputFieldForCode()
+    {
+        panelCodeInput.SetActive(true);
+    }
+    public void LoadCodeNow()
+    {
+        Debug.Log("code: " + inputFieldShowCode.text);
+        panelCodeInput.SetActive(false);
+        StartCoroutine(LoadFilesFromServer(inputFieldShowCode.text));
+    }
+    public void ClosePanelShowCode()
+    {
+        panelSaveShowCode.SetActive(false);
+    }
     private void ClearFileButtons()
     {
         foreach (Button fileButton in _buttonsFileList)
@@ -185,7 +227,6 @@ public class SaveFileController : MonoBehaviour
         }
         _buttonsFileList.Clear();
     }
-
     //public void GenerateFileButtonList()
     //{
     //    StartCoroutine(LoadFilesFromServer());
@@ -196,8 +237,7 @@ public class SaveFileController : MonoBehaviour
     //        GenerateFileButton(fileEntry);
     //    }
     //}
-
-    private IEnumerator LoadFilesFromServer()
+    private IEnumerator LoadFilesFromServer(string code)
     {
         ClearFileButtons();
         fileSelectButton.gameObject.SetActive(true);
@@ -205,41 +245,53 @@ public class SaveFileController : MonoBehaviour
         WWW www = new WWW(_basepath + "LoadFileNames.php", form);
         yield return www;
 
-
         string line = www.text;
         //print("www-text: " + line);
         string[] arr = line.Split('?');
-        foreach (string fileEntry in arr)
+        if (!string.IsNullOrEmpty(code))
         {
-            if (fileEntry.Length > 4)
+            foreach (string fileEntry in arr)
             {
-                GenerateFileButton(fileEntry);
-            }
-        }
-        fileSelectButton.gameObject.SetActive(false);
-    }
-
-    private void ShowFilesFromDirectory()
-    {
-        ClearFileButtons();
-        fileSelectButton.gameObject.SetActive(true);
-        //Debug.LogError(_basepath);
-        if (Directory.Exists(_basepath))
-        {
-            DirectoryInfo d = new DirectoryInfo(_basepath);
-            foreach (var fileEntry in d.GetFiles("*.json"))
-            {
-                //Debug.LogWarning(fileEntry.Name);
-                GenerateFileButton(fileEntry.Name);
+                if (fileEntry.Contains(code))
+                {
+                    LoadSceneFromFile(fileEntry, true);//Debug.Log("File gefunden: " + fileEntry.Substring(6));
+                }
             }
         }
         else
         {
-            Directory.CreateDirectory(_basepath);
-            return;
+            foreach (string fileEntry in arr)
+            {
+                if (fileEntry.Length > 4)
+                {
+                    if (fileEntry.Substring(0, 1) == "*") GenerateFileButton(fileEntry);
+                }
+            }
+            fileSelectButton.gameObject.SetActive(false);
         }
-        fileSelectButton.gameObject.SetActive(false);
     }
+
+    // private void ShowFilesFromDirectory()
+    // {
+    //     ClearFileButtons();
+    //     fileSelectButton.gameObject.SetActive(true);
+    //     //Debug.LogError(_basepath);
+    //     if (Directory.Exists(_basepath))
+    //     {
+    //         DirectoryInfo d = new DirectoryInfo(_basepath);
+    //         foreach (var fileEntry in d.GetFiles("*.json"))
+    //         {
+    //             //Debug.LogWarning(fileEntry.Name);
+    //             GenerateFileButton(fileEntry.Name);
+    //         }
+    //     }
+    //     else
+    //     {
+    //         Directory.CreateDirectory(_basepath);
+    //         return;
+    //     }
+    //     fileSelectButton.gameObject.SetActive(false);
+    // }
 
     private IEnumerator WriteToServer(string json, string filePath)
     {
@@ -248,24 +300,22 @@ public class SaveFileController : MonoBehaviour
         form.AddField("text", json);
 
         WWW www = new WWW(_basepath + "WriteFile.php", form);
-
         yield return www;
 
         Debug.Log("www: " + www.text);
-        yield return StartCoroutine(LoadFilesFromServer());
+        yield return StartCoroutine(LoadFilesFromServer(""));
     }
-
-    private void WriteFileToDirectory(string json, string filePath)
-    {
-        string path = _basepath + "\\" + filePath;
-        Debug.LogWarning(path);
-        StreamWriter writer = new StreamWriter(path, true);
-        writer.Write(json);
-        writer.Close();
-        ShowFilesFromDirectory();
-    }
-
-    private IEnumerator LoadFileFromWWW(string fileName)
+    /* private void WriteFileToDirectory(string json, string filePath)
+     {
+         string path = _basepath + "\\" + filePath;
+         Debug.LogWarning(path);
+         StreamWriter writer = new StreamWriter(path, true);
+         writer.Write(json);
+         writer.Close();
+         // ShowFilesFromDirectory();
+         StartCoroutine(LoadFilesFromServer(false));
+     }*/
+    private IEnumerator LoadFileFromWWW(string fileName, bool fromCode)
     {
         WWW www = new WWW(_basepath + "Saves/" + fileName);
         yield return www;
@@ -286,33 +336,38 @@ public class SaveFileController : MonoBehaviour
         sceneContentData += "Lichter: " + this.GetComponent<SceneDataController>().countActiveLightElements.ToString() + "\n\n";
         sceneContentData += "Musik: " + this.GetComponent<SceneDataController>().countActiveMusicClips.ToString() + "\n\n";
         textFileContentData.text = sceneContentData;
+        if (fromCode)
+        {
+            LoadSceneFromTempToStatic();
+        }
     }
-
-    private void LoadFileFromDirectory(string fileName)
-    {
-        string path = _basepath + "\\" + fileName;
-        //Read the text from directly from the test.txt file
-        StreamReader reader = new StreamReader(path);
-        _jsonString = reader.ReadToEnd();
-        reader.Close();
-        tempSceneData = this.GetComponent<SceneDataController>().CreateSceneDataFromJSON(_jsonString);
-        this.GetComponent<SceneDataController>().CreateScene(tempSceneData);
-        string sceneMetaData = "";
-        sceneMetaData += tempSceneData.fileName + "\n\n";
-        sceneMetaData += "erstellt: " + tempSceneData.fileDate + "\n\n";
-        sceneMetaData += "Ersteller: " + tempSceneData.fileAuthor + "\n\n";
-        sceneMetaData += "Kommentar:\n" + tempSceneData.fileComment;
-        textFileMetaData.text = sceneMetaData;
-        string sceneContentData = "";
-        sceneContentData += "Dateiinformationen:\n\n";
-        sceneContentData += "Kulissen: " + this.GetComponent<SceneDataController>().countActiveSceneryElements.ToString() + "\n\n";
-        sceneContentData += "Figuren: " + this.GetComponent<SceneDataController>().countActiveFigureElements.ToString() + "\n\n";
-        sceneContentData += "Länge: " + "\n\n";
-        sceneContentData += "Lichter: " + this.GetComponent<SceneDataController>().countActiveLightElements.ToString() + "\n\n";
-        sceneContentData += "Musik: " + this.GetComponent<SceneDataController>().countActiveMusicClips.ToString() + "\n\n";
-        textFileContentData.text = sceneContentData;
-    }
-
+    // private void LoadFileFromDirectory(string fileName)
+    // {
+    //     string path = _basepath + "\\" + fileName;
+    //     Debug.Log("path: " + path);
+    //     //Read the text directly from the test.txt file
+    //     StreamReader reader = new StreamReader(path);
+    //     _jsonString = reader.ReadToEnd();
+    //     Debug.Log("jsonstring: " + _jsonString);
+    //     reader.Close();
+    //     tempSceneData = this.GetComponent<SceneDataController>().CreateSceneDataFromJSON(_jsonString);
+    //     Debug.Log("tmp scene date: " + tempSceneData);
+    //     this.GetComponent<SceneDataController>().CreateScene(tempSceneData);
+    //     string sceneMetaData = "";
+    //     sceneMetaData += tempSceneData.fileName + "\n\n";
+    //     sceneMetaData += "erstellt: " + tempSceneData.fileDate + "\n\n";
+    //     sceneMetaData += "Ersteller: " + tempSceneData.fileAuthor + "\n\n";
+    //     sceneMetaData += "Kommentar:\n" + tempSceneData.fileComment;
+    //     textFileMetaData.text = sceneMetaData;
+    //     string sceneContentData = "";
+    //     sceneContentData += "Dateiinformationen:\n\n";
+    //     sceneContentData += "Kulissen: " + this.GetComponent<SceneDataController>().countActiveSceneryElements.ToString() + "\n\n";
+    //     sceneContentData += "Figuren: " + this.GetComponent<SceneDataController>().countActiveFigureElements.ToString() + "\n\n";
+    //     sceneContentData += "Länge: " + "\n\n";
+    //     sceneContentData += "Lichter: " + this.GetComponent<SceneDataController>().countActiveLightElements.ToString() + "\n\n";
+    //     sceneContentData += "Musik: " + this.GetComponent<SceneDataController>().countActiveMusicClips.ToString() + "\n\n";
+    //     textFileContentData.text = sceneContentData;
+    // }
     private IEnumerator DeleteFileFromServer(string FileName)
     {
         WWWForm form = new WWWForm();
@@ -331,13 +386,11 @@ public class SaveFileController : MonoBehaviour
             Debug.Log("Script Successfull");
         }
     }
-
     private void DeleteFileFromDirectory(string FileName)
     {
         string path = _basepath + "\\" + FileName;
         File.Delete(path);
-        ShowFilesFromDirectory();
+        // ShowFilesFromDirectory();
+        StartCoroutine(LoadFilesFromServer(""));
     }
-
-
 }

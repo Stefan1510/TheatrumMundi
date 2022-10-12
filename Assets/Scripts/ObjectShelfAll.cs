@@ -169,7 +169,6 @@ public class ObjectShelfAll : MonoBehaviour
 
     public void ButtonShelf05(bool fromRail)
     {
-
         //show menue of buehne or figuren
 
         if (SceneManaging.mainMenuActive == 1 && SceneManaging.configMenueActive == 4 && !SceneManaging.isPreviewLoaded)
@@ -183,7 +182,6 @@ public class ObjectShelfAll : MonoBehaviour
             StartCoroutine(ButtonShelfI(5));
             if (fromRail == false)
             {
-                Debug.Log("fromrail = false");
                 gameController.GetComponent<UIController>().Rails[0].openTimelineByClick(false, gameController.GetComponent<UIController>().Rails[0].timelineImage, true);
             }
         }
@@ -388,19 +386,10 @@ public class ObjectShelfAll : MonoBehaviour
                 SceneManaging.configMenueActive = 2;
 
                 ObjectMenueDirectorMain.SetActive(false);
-
-                //gameController.GetComponent<UnitySwitchExpertUser>().DeactivateExpertTools();
                 break;
         }
         StaticSceneData.Everything3D();
         gameController.GetComponent<UIController>().Rails[0].GetComponent<RailManager>().PublicUpdate();
         SceneManaging.isPreviewLoaded = true;
-
     }
-
-    //// Update is called once per frame
-    //void Update()
-    //{
-
-    //}
 }

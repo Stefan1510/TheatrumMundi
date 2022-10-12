@@ -39,19 +39,19 @@ public class RailSpeedController : MonoBehaviour
     //  v1 and v2 are the velocities at time t1 and t2
     //  a is the uniform rate of acceleration.
 
-    
+
 
     public float GetEndTimeFromStartTime(float tStart, float distance = 4.1f)
     {
         float deltaT = 0;
-        float vt = 0, t1 = 0, t2 = 0, v1 = 0, v2 = 0, a=0;
+        float vt = 0, t1 = 0, t2 = 0, v1 = 0, v2 = 0, a = 0;
         float currentDistance = 0;
 
         List<RailElementSpeed> railElementSpeeds = StaticSceneData.StaticData.railElements[railIndex].railElementSpeeds;
         int momentAfter = railElementSpeeds.FindIndex(speed => speed.moment > tStart);      //sucht von vorne aus und findet den ersten Moment, der nach t liegt
         int momentBefore = railElementSpeeds.FindLastIndex(speed => speed.moment <= tStart); //sucht von hinten aus und findet den ersten Moment, der vor t liegt
         int momentCount = railElementSpeeds.Count;
-        
+
         // Debug.LogWarning("Before: " + momentBefore + " - After: " + momentAfter);
         if (momentAfter == -1) //ein momentBefore existiert immer, da der erste Wert von railElementSpeeds bei Programmstart gesetzt wird
         {
@@ -108,7 +108,7 @@ public class RailSpeedController : MonoBehaviour
                 float tRest = 0;
 
                 Debug.LogWarning("v1 \t v2 \t t1 \t t2 \t a \t sRest \n\t" + v1 + " \t " + v2 + " \t " + t1 + " \t " + t2 + " \t " + a + " \t " + sRest);
-                if (a==0)
+                if (a == 0)
                 {
                     tRest = 2 * distance / v1;
                 }
@@ -121,8 +121,6 @@ public class RailSpeedController : MonoBehaviour
                 Debug.LogWarning("sRest \t deltaT \t distanc \t currentDistance \n" + sRest + " \t " + deltaT + " \t " + distance + " \t " + currentDistance);
             }
         }
-
-
         return deltaT;
     }
 
@@ -184,7 +182,7 @@ public class RailSpeedController : MonoBehaviour
             distance += GetDistanceBetweenTwoMoments(t1, t2, v1, v2);
             _speedAtTime = vt;
         }
-        return distance*Mathf.Abs(speed);
+        return distance * Mathf.Abs(speed);
     }
 
     float GetDistanceBetweenTwoMoments(float t1, float t2, float v1, float v2)
@@ -210,7 +208,7 @@ public class RailSpeedController : MonoBehaviour
         return _speedAtTime;
     }
 
-    public float GetDurationFromTime (float t)
+    public float GetDurationFromTime(float t)
     {
         float startDistance = GetDistanceAtTime(t);
         float endDistance = startDistance + 4.1f;

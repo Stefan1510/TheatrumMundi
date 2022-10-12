@@ -21,7 +21,7 @@ public class RailLightManager : MonoBehaviour
     void Awake()
     {
         timelineImage = this.GetComponent<Image>();
-        timeSettings = timeSliderImage.transform.GetChild(0).gameObject; // GameObject.Find("ImageTimeSettingsArea");
+        timeSettings = timeSliderImage.transform.GetChild(0).gameObject;
     }
     void Start()
     {
@@ -36,10 +36,6 @@ public class RailLightManager : MonoBehaviour
     {
         if (isAnyTimelineOpen() == false)
         {
-            // if (!menue2.activeSelf)
-            // {
-            //     parentMenue.GetComponent<ObjectShelf>().ButtonShelf02();
-            // }
             //set global flag
             SceneManaging.anyTimelineOpen = true;
             isTimelineOpen = true;
@@ -66,10 +62,6 @@ public class RailLightManager : MonoBehaviour
             }
             else
             {
-                // if (!menue2.activeSelf)
-                // {
-                //     parentMenue.GetComponent<ObjectShelf>().ButtonShelf02();
-                // }
                 // a different rail is open - close it
                 for (int i = 0; i < gameController.GetComponent<UIController>().Rails.Length; i++)
                 {
