@@ -23,9 +23,9 @@ public class UnitySwitchExpertUser : MonoBehaviour
     [SerializeField] private GameObject _buttonFigures;
     [SerializeField] private GameObject _buttonMusic;
     [SerializeField] private GameObject _buttonAbout;
-    [SerializeField] private GameObject _buttonDummy;
+    [SerializeField] private GameObject _buttonDummy; // leeres dummy
 
-    [SerializeField] private GameObject _buttonMenueDirector;
+    [SerializeField] private GameObject _buttonMenueDirector, _buttonHelp, _buttonHelpPressed, _buttonAboutWebGL, _buttonSend;
 
     [SerializeField] private GameObject _buttonDelete;
     [SerializeField] private GameObject _buttonSave;
@@ -55,25 +55,30 @@ public class UnitySwitchExpertUser : MonoBehaviour
         SceneManaging.isExpert = _isExpert;
         if (!_isExpert)
         {
-            _buttonKulissen.GetComponent<RectTransform>().Translate(0, 150, 0);
             _buttonKulissen.transform.SetParent(_buttonKulissen.transform.parent.parent);
+            _buttonKulissen.GetComponent<RectTransform>().anchoredPosition = new Vector2(_buttonKulissen.GetComponent<RectTransform>().anchoredPosition.x, 465);
             _buttonKulissen.transform.SetSiblingIndex(5);
 
-            _buttonFigures.GetComponent<RectTransform>().Translate(0, -150, 0);
             _buttonFigures.transform.SetParent(_buttonFigures.transform.parent.parent);
+            _buttonFigures.GetComponent<RectTransform>().anchoredPosition = new Vector2(_buttonKulissen.GetComponent<RectTransform>().anchoredPosition.x, 315);
             _buttonFigures.transform.SetSiblingIndex(5);
 
-            _buttonMusic.GetComponent<RectTransform>().Translate(0, -150, 0);
-            _buttonMusic.transform.SetParent(_buttonMusic.transform.parent.parent); ;
+            _buttonMusic.transform.SetParent(_buttonMusic.transform.parent.parent);
+            _buttonMusic.GetComponent<RectTransform>().anchoredPosition = new Vector2(_buttonKulissen.GetComponent<RectTransform>().anchoredPosition.x, 165);
             _buttonMusic.transform.SetSiblingIndex(5);
 
-            _buttonLadenSpeichern.GetComponent<RectTransform>().Translate(0, 0 * 150, 0);
-            _buttonLadenSpeichern.transform.SetParent(_buttonLadenSpeichern.transform.parent.parent); ;
+            _buttonLadenSpeichern.transform.SetParent(_buttonLadenSpeichern.transform.parent.parent);
+            _buttonLadenSpeichern.GetComponent<RectTransform>().anchoredPosition = new Vector2(_buttonKulissen.GetComponent<RectTransform>().anchoredPosition.x, 15);
             _buttonLadenSpeichern.transform.SetSiblingIndex(5);
 
             _buttonMenueDirector.transform.GetChild(0).GetComponent<Image>().enabled = false; // switch button ausgrauen
             _buttonMenueDirector.GetComponent<Button>().enabled = false;
 
+            _buttonHelp.GetComponent<RectTransform>().anchoredPosition = new Vector2(_buttonHelp.GetComponent<RectTransform>().anchoredPosition.x, 465);
+            _buttonHelpPressed.GetComponent<RectTransform>().anchoredPosition = _buttonHelp.GetComponent<RectTransform>().anchoredPosition;
+            _buttonAboutWebGL.GetComponent<RectTransform>().anchoredPosition = new Vector2(_buttonAboutWebGL.GetComponent<RectTransform>().anchoredPosition.x, 315);
+            _buttonMenueDirector.GetComponent<RectTransform>().anchoredPosition = new Vector2(_buttonMenueDirector.GetComponent<RectTransform>().anchoredPosition.x, 165);
+            _buttonSend.GetComponent<RectTransform>().anchoredPosition = new Vector2(_buttonSend.GetComponent<RectTransform>().anchoredPosition.x, 15);
             //_panelLightAmbient.SetActive(false);
             //_buttonDelete.SetActive(false);
             //_buttonSave.SetActive(false);
