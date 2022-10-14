@@ -25,7 +25,7 @@ public class UnitySwitchExpertUser : MonoBehaviour
     [SerializeField] private GameObject _buttonAbout;
     [SerializeField] private GameObject _buttonDummy; // leeres dummy
 
-    [SerializeField] private GameObject _buttonMenueDirector, _buttonHelp, _buttonHelpPressed, _buttonAboutWebGL, _buttonSend;
+    [SerializeField] private GameObject _buttonMenueDirector, _buttonMenueConfig, _buttonHelp, _buttonHelpPressed, _buttonAboutWebGL, _buttonSend, _buttonMovie;
 
     [SerializeField] private GameObject _buttonDelete;
     [SerializeField] private GameObject _buttonSave;
@@ -53,6 +53,7 @@ public class UnitySwitchExpertUser : MonoBehaviour
     private void Awake()
     {
         SceneManaging.isExpert = _isExpert;
+        _buttonAboutWebGL.gameObject.SetActive(false);
         if (!_isExpert)
         {
             _buttonKulissen.transform.SetParent(_buttonKulissen.transform.parent.parent);
@@ -74,11 +75,16 @@ public class UnitySwitchExpertUser : MonoBehaviour
             _buttonMenueDirector.transform.GetChild(0).GetComponent<Image>().enabled = false; // switch button ausgrauen
             _buttonMenueDirector.GetComponent<Button>().enabled = false;
 
+            _buttonMenueConfig.SetActive(false);
+
             _buttonHelp.GetComponent<RectTransform>().anchoredPosition = new Vector2(_buttonHelp.GetComponent<RectTransform>().anchoredPosition.x, 465);
             _buttonHelpPressed.GetComponent<RectTransform>().anchoredPosition = _buttonHelp.GetComponent<RectTransform>().anchoredPosition;
+            _buttonAboutWebGL.gameObject.SetActive(true);
             _buttonAboutWebGL.GetComponent<RectTransform>().anchoredPosition = new Vector2(_buttonAboutWebGL.GetComponent<RectTransform>().anchoredPosition.x, 315);
             _buttonMenueDirector.GetComponent<RectTransform>().anchoredPosition = new Vector2(_buttonMenueDirector.GetComponent<RectTransform>().anchoredPosition.x, 165);
             _buttonSend.GetComponent<RectTransform>().anchoredPosition = new Vector2(_buttonSend.GetComponent<RectTransform>().anchoredPosition.x, 15);
+            _buttonSend.transform.GetChild(0).gameObject.SetActive(false);
+            _buttonMovie.transform.GetChild(0).gameObject.SetActive(false);
             //_panelLightAmbient.SetActive(false);
             //_buttonDelete.SetActive(false);
             //_buttonSave.SetActive(false);

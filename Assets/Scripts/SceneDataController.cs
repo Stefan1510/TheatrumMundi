@@ -141,7 +141,7 @@ public class SceneDataController : MonoBehaviour
                 x = objectSceneryElement.transform.position.x,
                 y = objectSceneryElement.transform.position.y,
                 z = objectSceneryElement.transform.position.z,
-                active = objectSceneryElement.GetComponent<SceneryController>().sceneryActive,
+                //active = objectSceneryElement.GetComponent<SceneryController>().sceneryActive,
                 parent = objectSceneryElement.transform.parent.name,
                 zPos = 0,
                 mirrored = false,

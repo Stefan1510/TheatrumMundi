@@ -26,7 +26,7 @@ public class SaveFileController : MonoBehaviour
     private void Awake()
     {
 #if UNITY_WEBGL
-            _isWebGl = true;
+        _isWebGl = true;
 #else
         //Debug.LogWarning("any other");
 #endif
@@ -120,6 +120,7 @@ public class SaveFileController : MonoBehaviour
     }
     public void LoadSceneFromTempToStatic()
     {
+        for (int i = 0; i < this.GetComponent<UIController>().goButtonSceneryElements.Length; i++) menuKulissen.GetComponent<CoulissesManager>().placeInShelf(i);   // alle kulissen zurueck ins shelf
         StaticSceneData.StaticData = tempSceneData;
         //UIController.SceneriesApplyToUI();
         GetComponent<UIController>().SceneriesApplyToUI();

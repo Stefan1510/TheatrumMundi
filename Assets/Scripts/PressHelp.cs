@@ -6,7 +6,7 @@ using System;
 
 public class PressHelp : MonoBehaviour
 {
-    [SerializeField] GameObject helpButtonPressed, helpOverlayMenue2, helpOverlayMenue1, helpOverlayMenue3, helpOverlayMenue4, menueConfigMain, menuDirMain, aboutScreen;
+    [SerializeField] GameObject helpButtonPressed, helpOverlayMenue2, helpOverlayMenue1, helpOverlayMenue3, helpOverlayMenue4, helpOverlayMenue5, helpOverlayMenue6, menueConfigMain, menuDirMain, aboutScreen;
 
     private bool pressed = false, secondHighlight = false;
     private float _idleTimer;
@@ -77,6 +77,9 @@ public class PressHelp : MonoBehaviour
                 helpOverlayMenue1.SetActive(false);
                 helpOverlayMenue2.SetActive(false);
                 helpOverlayMenue3.SetActive(false);
+                helpOverlayMenue4.SetActive(false);
+                helpOverlayMenue5.SetActive(false);
+                helpOverlayMenue6.SetActive(false);
                 helpButtonPressed.SetActive(false);
                 pressed = false;
             }
@@ -128,43 +131,36 @@ public class PressHelp : MonoBehaviour
 
             else
             {
-                if (SceneManaging.mainMenuActive == 1 && SceneManaging.configMenueActive == 1 || SceneManaging.mainMenuActive == 2 && SceneManaging.directorMenueActive == 1)
+                helpButtonPressed.SetActive(true);
+                if (SceneManaging.mainMenuActive == 1 && SceneManaging.configMenueActive == 1)  // Buehne
                 {
-                    helpButtonPressed.SetActive(true);
                     helpOverlayMenue1.SetActive(true);
-                    Debug.Log("overlay 1");
                 }
-                else if (SceneManaging.configMenueActive == 2 || SceneManaging.directorMenueActive == 2)
+                else if (SceneManaging.mainMenuActive == 2 && SceneManaging.directorMenueActive == 1)   // Figuren
                 {
-                    helpButtonPressed.SetActive(true);
+                    helpOverlayMenue5.SetActive(true);
+                }
+                else if (SceneManaging.mainMenuActive == 1 && SceneManaging.configMenueActive == 2)    // kulissen
+                {
                     helpOverlayMenue2.SetActive(true);
-                    Debug.Log("overlay 2");
                 }
-                else if (SceneManaging.mainMenuActive == 1 && SceneManaging.configMenueActive == 3 || SceneManaging.directorMenueActive == 3 && SceneManaging.mainMenuActive == 2)
+                /*else if (SceneManaging.mainMenuActive == 2 && SceneManaging.directorMenueActive == 2)    // (light director) verworfen
                 {
-                    helpButtonPressed.SetActive(true);
+                    helpOverlayMenue2.SetActive(true);
+                    Debug.Log("overlay 6");
+                }*/
+                else if (SceneManaging.mainMenuActive == 1 && SceneManaging.configMenueActive == 3)  // licht
+                {
                     helpOverlayMenue3.SetActive(true);
-                    Debug.Log("overlay 3");
                 }
-                else if (SceneManaging.configMenueActive == 4)
+                else if (SceneManaging.directorMenueActive == 3 && SceneManaging.mainMenuActive == 2)  // musik
                 {
-                    helpButtonPressed.SetActive(true);
-                    try
-                    {
-                        helpOverlayMenue4.SetActive(true);
-                        Debug.Log("overlay 4");
-                    }
-                    catch (Exception ex)
-                    {
-                        if (ex is NullReferenceException || ex is UnassignedReferenceException)
-                        {
-                            return;
-                        }
-                        throw;
-                    }
-
+                    helpOverlayMenue6.SetActive(true);
                 }
-
+                else if (SceneManaging.configMenueActive == 4)  // speichern
+                {
+                    helpOverlayMenue4.SetActive(true);
+                }
                 pressed = true;
             }
 

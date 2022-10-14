@@ -12,7 +12,7 @@ public class CoulissesManager : MonoBehaviour
     public GameObject scenerySettings, mainMenue, textPositionZCoulisses, colliderSettings, colliderRailImage;
     public GameObject deleteButton, sliderX, sliderY, sliderPosX, sliderPosY;
     public Text sceneryName;
-    [HideInInspector] public List<GameObject> coulissesOnRails;
+    public List<GameObject> coulissesOnRails;
     [HideInInspector] public GameObject[] coulisses;
     [HideInInspector] public float railWidth, railHeight;
     [HideInInspector] public GameObject[] parentStart;
@@ -101,33 +101,47 @@ public class CoulissesManager : MonoBehaviour
 
             for (int i = 0; i < coulisses.Length; i++)
             {
-                if (!coulissesOnRails.Contains(coulisses[i]))
+                if (!isWide[i])
                 {
-                    if (!isWide[i])
-                    {
-                        shelfSizeWidth[i] = Screen.width * 0.104f / coulisses[i].GetComponent<CoulisseStats>().CoulisseHeight * coulisses[i].GetComponent<CoulisseStats>().CoulisseWidth / coulisses[i].transform.lossyScale.x;
-                        shelfSizeHeight[i] = shelfSizeWidth[i] * coulisses[i].GetComponent<CoulisseStats>().CoulisseHeight / coulisses[i].GetComponent<CoulisseStats>().CoulisseWidth;
+                    shelfSizeWidth[i] = Screen.width * 0.104f / coulisses[i].GetComponent<CoulisseStats>().CoulisseHeight * coulisses[i].GetComponent<CoulisseStats>().CoulisseWidth / coulisses[i].transform.lossyScale.x;
+                    shelfSizeHeight[i] = shelfSizeWidth[i] * coulisses[i].GetComponent<CoulisseStats>().CoulisseHeight / coulisses[i].GetComponent<CoulisseStats>().CoulisseWidth;
 
-                        coulisses[i].GetComponent<RectTransform>().sizeDelta = coulisses[i].transform.parent.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(shelfSizeWidth[i], shelfSizeHeight[i]);
-                        coulisses[i].GetComponent<BoxCollider2D>().size = new Vector2(shelfSizeWidth[i], Screen.height * 0.185f);
-                        coulisses[i].transform.GetComponent<RectTransform>().anchoredPosition = new Vector2(coulisses[i].transform.GetComponent<RectTransform>().anchoredPosition.x, -100);
+                    coulisses[i].GetComponent<RectTransform>().sizeDelta = coulisses[i].GetComponent<BoxCollider2D>().size = coulisses[i].transform.parent.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(shelfSizeWidth[i], shelfSizeHeight[i]);
+                    //coulisses[i].GetComponent<BoxCollider2D>().size = new Vector2(shelfSizeWidth[i], Screen.height * 0.185f);
+                    if (coulissesOnRails.Contains(coulisses[i]))
+                    {
+                        // coulisses[i].GetComponent<RectTransform>().sizeDelta = new Vector2(railWidth / 410 * coulisses[i].GetComponent<CoulisseStats>().CoulisseWidth / coulisses[i].transform.lossyScale.x, railWidth / 410 * coulisses[i].GetComponent<CoulisseStats>().CoulisseHeight / coulisses[i].transform.lossyScale.y);
+                        // Debug.Log("coulisse: " + coulisses[i].name + ", size: " + coulisses[i].GetComponent<RectTransform>().sizeDelta);
                     }
                     else
                     {
-                        shelfSizeWidth[i] = Screen.width * 0.104f / coulisses[i].transform.lossyScale.x;
-                        shelfSizeHeight[i] = shelfSizeWidth[i] / coulisses[i].GetComponent<CoulisseStats>().CoulisseWidth * coulisses[i].GetComponent<CoulisseStats>().CoulisseHeight;
-
-                        coulisses[i].GetComponent<RectTransform>().sizeDelta = coulisses[i].transform.parent.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(shelfSizeWidth[i], shelfSizeHeight[i]);
-                        coulisses[i].GetComponent<BoxCollider2D>().size = new Vector2(Screen.width * 0.104f, shelfSizeHeight[i]);
-                        coulisses[i].transform.GetComponent<RectTransform>().anchoredPosition = new Vector2(coulisses[i].transform.GetComponent<RectTransform>().anchoredPosition.x, -shelfSizeHeight[i] / 2);
+                        coulisses[i].transform.GetComponent<RectTransform>().anchoredPosition = new Vector2(coulisses[i].transform.GetComponent<RectTransform>().anchoredPosition.x, -100);
                     }
 
+                }
+                else
+                {
+                    shelfSizeWidth[i] = Screen.width * 0.104f / coulisses[i].transform.lossyScale.x;
+                    shelfSizeHeight[i] = shelfSizeWidth[i] / coulisses[i].GetComponent<CoulisseStats>().CoulisseWidth * coulisses[i].GetComponent<CoulisseStats>().CoulisseHeight;
+
+                    coulisses[i].GetComponent<RectTransform>().sizeDelta = coulisses[i].GetComponent<BoxCollider2D>().size = coulisses[i].transform.parent.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(shelfSizeWidth[i], shelfSizeHeight[i]);
+                    //coulisses[i].GetComponent<BoxCollider2D>().size = new Vector2(Screen.width * 0.104f, shelfSizeHeight[i]);
+                    if (coulissesOnRails.Contains(coulisses[i]))
+                    {
+                        // coulisses[i].GetComponent<RectTransform>().sizeDelta = new Vector2(railWidth / 410 * coulisses[i].GetComponent<CoulisseStats>().CoulisseWidth / coulisses[i].transform.lossyScale.x, railWidth / 410 * coulisses[i].GetComponent<CoulisseStats>().CoulisseHeight / coulisses[i].transform.lossyScale.y);
+                        // Debug.Log("coulisseOnRails sizedelta: " + coulisses[i].GetComponent<RectTransform>().sizeDelta);
+                    }
+                    else
+                    {
+                        coulisses[i].transform.GetComponent<RectTransform>().anchoredPosition = new Vector2(coulisses[i].transform.GetComponent<RectTransform>().anchoredPosition.x, -shelfSizeHeight[i] / 2);
+                    }
                 }
             }
             for (int j = 0; j < coulissesOnRails.Count; j++)
             {
-                // Debug.Log("coulisseOnRails: " + coulissesOnRails[j]);
-                coulissesOnRails[j].GetComponent<RectTransform>().sizeDelta = new Vector2(colliderRailImage.GetComponent<RectTransform>().sizeDelta.x / 410 * coulissesOnRails[j].GetComponent<CoulisseStats>().CoulisseWidth / coulissesOnRails[j].transform.lossyScale.x, colliderRailImage.GetComponent<RectTransform>().sizeDelta.x / 410 * coulissesOnRails[j].GetComponent<CoulisseStats>().CoulisseHeight / coulissesOnRails[j].transform.lossyScale.y);
+
+                coulissesOnRails[j].GetComponent<RectTransform>().sizeDelta = new Vector2(railWidth / 410 * coulissesOnRails[j].GetComponent<CoulisseStats>().CoulisseWidth / coulissesOnRails[j].transform.lossyScale.x, railWidth / 410 * coulissesOnRails[j].GetComponent<CoulisseStats>().CoulisseHeight / coulissesOnRails[j].transform.lossyScale.y);
+                //Debug.Log("coulisseOnRails: " + coulissesOnRails[j].name + ", size: " + coulissesOnRails[j].GetComponent<RectTransform>().sizeDelta);
                 coulissesOnRails[j].GetComponent<BoxCollider2D>().size = coulissesOnRails[j].GetComponent<RectTransform>().sizeDelta;
                 coulissesOnRails[j].GetComponent<BoxCollider2D>().offset = new Vector2(0, coulissesOnRails[j].GetComponent<RectTransform>().rect.height / 2);
             }
@@ -190,14 +204,16 @@ public class CoulissesManager : MonoBehaviour
                     highlight(currentObjectIndex, 2);
                     showDeleteButton(deleteButton, coulisses[currentObjectIndex], false);
                 }
-
+                Debug.Log(coulisses[currentObjectIndex].GetComponent<RectTransform>().rect.width + ", width: " + shelfSizeWidth[currentObjectIndex]);
                 // if coulisse is clicked in shelf ('first time')
-                if (coulisses[currentObjectIndex].GetComponent<RectTransform>().rect.width == shelfSizeWidth[currentObjectIndex])
+                if (coulisses[currentObjectIndex].GetComponent<RectTransform>().rect.width.ToString().Substring(0, 5) == shelfSizeWidth[currentObjectIndex].ToString().Substring(0, 5))
                 {
+                    Debug.Log("size before: " + coulisses[currentObjectIndex].GetComponent<RectTransform>().sizeDelta);
                     coulisses[currentObjectIndex].GetComponent<RectTransform>().sizeDelta = new Vector2(railWidth / 410 * coulisses[currentObjectIndex].GetComponent<CoulisseStats>().CoulisseWidth / coulisses[currentObjectIndex].transform.lossyScale.x, railWidth / 410 * coulisses[currentObjectIndex].GetComponent<CoulisseStats>().CoulisseHeight / coulisses[currentObjectIndex].transform.lossyScale.y);
                     coulisses[currentObjectIndex].GetComponent<BoxCollider2D>().size = coulisses[currentObjectIndex].GetComponent<RectTransform>().sizeDelta;
                     coulisses[currentObjectIndex].GetComponent<BoxCollider2D>().offset = new Vector2(0, coulisses[currentObjectIndex].GetComponent<RectTransform>().rect.height / 2);
                     clickCoulisseFromShelf = true;
+                    Debug.Log("size after: " + coulisses[currentObjectIndex].GetComponent<RectTransform>().sizeDelta);
                 }
                 publicSibling = coulisses[currentObjectIndex].transform.GetSiblingIndex();
                 textPositionZCoulisses.GetComponent<Text>().text = (publicSibling + 1) + "/" + coulisses[currentObjectIndex].transform.parent.transform.childCount;
@@ -351,12 +367,12 @@ public class CoulissesManager : MonoBehaviour
 
                     //////////////////////////////////////////////////////////////////////////
                     // all coulisses need to be organised if one of the siblings changed
-                    // for (int i = 0; i < coulisses[currentObjectIndex].transform.parent.transform.childCount; i++)
-                    // {
-                    //     StaticSceneData.StaticData.sceneryElements[int.Parse(coulisses[currentObjectIndex].transform.parent.transform.GetChild(i).name.Substring(8, 2)) - 1].zPos = coulisses[currentObjectIndex].transform.parent.transform.GetChild(i).GetSiblingIndex();
-                    //     Debug.Log("coulisse: " + coulisses[currentObjectIndex].transform.parent.transform.GetChild(i).GetSiblingIndex() + ", index: " + StaticSceneData.StaticData.sceneryElements[int.Parse(coulisses[currentObjectIndex].transform.parent.transform.GetChild(i).name.Substring(8, 2)) - 1].zPos);
-                    //     textPositionZCoulisses.GetComponent<Text>().text = (coulisses[currentObjectIndex].transform.parent.transform.GetChild(i).GetSiblingIndex() + 1) + "/" + coulisses[currentObjectIndex].transform.parent.transform.childCount;
-                    // }
+                    for (int i = 0; i < coulisses[currentObjectIndex].transform.parent.transform.childCount; i++)
+                    {
+                        StaticSceneData.StaticData.sceneryElements[int.Parse(coulisses[currentObjectIndex].transform.parent.transform.GetChild(i).name.Substring(8, 2)) - 1].zPos = coulisses[currentObjectIndex].transform.parent.transform.GetChild(i).GetSiblingIndex();
+                        //Debug.Log("coulisse: " + coulisses[currentObjectIndex].transform.parent.transform.GetChild(i).GetSiblingIndex() + ", index: " + StaticSceneData.StaticData.sceneryElements[int.Parse(coulisses[currentObjectIndex].transform.parent.transform.GetChild(i).name.Substring(8, 2)) - 1].zPos);
+                        textPositionZCoulisses.GetComponent<Text>().text = (coulisses[currentObjectIndex].transform.parent.transform.GetChild(i).GetSiblingIndex() + 1) + "/" + coulisses[currentObjectIndex].transform.parent.transform.childCount;
+                    }
                     StaticSceneData.StaticData.sceneryElements[currentObjectIndex].z = coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.x / 270;
                     StaticSceneData.StaticData.sceneryElements[currentObjectIndex].y = (coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.y) / 260 + .515f;
                     StaticSceneData.StaticData.sceneryElements[currentObjectIndex].x = 0.062f;
@@ -586,7 +602,7 @@ public class CoulissesManager : MonoBehaviour
         coulisses[i].transform.SetParent(parentStart[i].transform);
         coulisses[i].GetComponent<RectTransform>().sizeDelta = new Vector2(shelfSizeWidth[i], shelfSizeHeight[i]);
         coulisses[i].GetComponent<RectTransform>().localPosition = new Vector2(0.0f, -(coulisses[i].GetComponent<RectTransform>().rect.height / 2));
-        Debug.Log("position in shelf: " + coulisses[i].GetComponent<RectTransform>().localPosition);
+        //Debug.Log("position in shelf: " + coulisses[i].GetComponent<RectTransform>().localPosition);
         coulisses[i].GetComponent<BoxCollider2D>().offset = new Vector2(0, -coulisses[i].GetComponent<RectTransform>().localPosition.y);
         coulisses[i].GetComponent<BoxCollider2D>().size = new Vector2(shelfSizeWidth[i], shelfSizeHeight[i]);
         highlight(i, 0);
