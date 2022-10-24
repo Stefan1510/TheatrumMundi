@@ -48,7 +48,6 @@ public class ObjectShelfAll : MonoBehaviour
         ButtonMenueConfig.GetComponent<Button>().onClick.AddListener(() => SwitchToMenueConfig());
     }
 
-    // Start is called before the first frame update
     void Start()
     {
         /////////////////////////////////// for VISITOR-Tool
@@ -96,7 +95,6 @@ public class ObjectShelfAll : MonoBehaviour
         {
             StartCoroutine(panelPreviewNotLoaded.GetComponent<WarningPanelLoad>().WaitForButtonClick());
             StartCoroutine(ButtonShelfI(1));
-            //Debug.LogWarning("please load");
         }
         else
         {
@@ -115,14 +113,11 @@ public class ObjectShelfAll : MonoBehaviour
     }
     public void ButtonShelf03()
     {
-        //Debug.Log("button for shelf03");
-        //gameController.GetComponent<UIController>().RailMusic.openCloseTimelineByClick(false,gameController.GetComponent<UIController>().RailMusic.timelineImage,false);
         //show menue of lichtkonfiguration or musik
         if (SceneManaging.mainMenuActive == 1 && SceneManaging.configMenueActive == 4 && !SceneManaging.isPreviewLoaded)
         {
             StartCoroutine(panelPreviewNotLoaded.GetComponent<WarningPanelLoad>().WaitForButtonClick());
             StartCoroutine(ButtonShelfI(3));
-            //Debug.LogWarning("please load");
         }
         else StartCoroutine(ButtonShelfI(3));
     }
@@ -164,7 +159,6 @@ public class ObjectShelfAll : MonoBehaviour
         {
             StartCoroutine(panelPreviewNotLoaded.GetComponent<WarningPanelLoad>().WaitForButtonClick());
             StartCoroutine(ButtonShelfI(6));
-            //Debug.LogWarning("please load");
         }
         else
         {
@@ -190,7 +184,6 @@ public class ObjectShelfAll : MonoBehaviour
     }
     public void ButtonShelf08()
     {
-        Debug.Log("button for shelf08");
         if (SceneManaging.mainMenuActive == 1 && SceneManaging.configMenueActive == 4 && !SceneManaging.isPreviewLoaded)
         {
             StartCoroutine(panelPreviewNotLoaded.GetComponent<WarningPanelLoad>().WaitForButtonClick());
@@ -204,7 +197,6 @@ public class ObjectShelfAll : MonoBehaviour
         {
             StartCoroutine(panelPreviewNotLoaded.GetComponent<WarningPanelLoad>().WaitForButtonClick());
             StartCoroutine(ButtonShelfI(10));
-            //Debug.LogWarning("please load");
         }
         else
         {
@@ -217,7 +209,6 @@ public class ObjectShelfAll : MonoBehaviour
         {
             StartCoroutine(panelPreviewNotLoaded.GetComponent<WarningPanelLoad>().WaitForButtonClick());
             StartCoroutine(ButtonShelfI(9));
-            //Debug.LogWarning("please load");
         }
         else
         {
@@ -233,16 +224,10 @@ public class ObjectShelfAll : MonoBehaviour
         }
         if (panelPreviewNotLoaded.GetComponent<WarningPanelLoad>().buttonClicked == "ignore")
         {
-            //Debug.LogWarning("_buttonClicked == ignore");
         }
         else if (panelPreviewNotLoaded.GetComponent<WarningPanelLoad>().buttonClicked == "back")
         {
-            //Debug.LogWarning("_buttonClicked == back");
             shelfNumber = 4;
-        }
-        else
-        {
-            //Debug.LogWarning("_buttonClicked == DDD:");
         }
 
         MenueShelf01.SetActive(false);
@@ -281,34 +266,28 @@ public class ObjectShelfAll : MonoBehaviour
                 MenueButton01.SetActive(false);
                 SceneManaging.configMenueActive = 1;
                 SceneManaging.mainMenuActive = 1;
-                Debug.Log("shelf 1");
                 break;
             case 2:         // MenueKulissen
                 ObjectMenueConfigMain.SetActive(true);
                 MenueShelf02.SetActive(true);
                 MenueButton02.SetActive(false);
                 ObjectMenueDirectorMain.SetActive(false);
-                //gameController.GetComponent<UnitySwitchExpertUser>().DeactivateExpertTools();
                 SceneManaging.mainMenuActive = 1;
                 SceneManaging.configMenueActive = 2;
-                Debug.Log("shelf 2");
                 break;
             case 3:         // MenueLicht
                 MenueShelf03.SetActive(true);
                 MenueButton03.SetActive(false);
                 SceneManaging.mainMenuActive = 1;
                 SceneManaging.configMenueActive = 3;
-                Debug.Log("shelf 3");
                 break;
             case 4:         // MenueLadenSpeichern
                 ObjectMenueConfigMain.SetActive(true);
                 MenueShelf04.SetActive(true);
                 MenueButton04.SetActive(false);
                 ObjectMenueDirectorMain.SetActive(false);
-                //gameController.GetComponent<UnitySwitchExpertUser>().DeactivateExpertTools();
                 SceneManaging.mainMenuActive = 1;
                 SceneManaging.configMenueActive = 4;
-                Debug.Log("shelf 4");
                 break;
             case 5:         // MenueObjectsShelf
                 ObjectMenueDirectorMain.SetActive(true);
@@ -317,14 +296,12 @@ public class ObjectShelfAll : MonoBehaviour
                 ObjectMenueConfigMain.SetActive(false);
                 SceneManaging.mainMenuActive = 2;
                 SceneManaging.directorMenueActive = 1;
-                Debug.Log("shelf 5");
                 break;
             case 6:         // MenueLightShelf
                 MenueShelf06.SetActive(true);
                 MenueButton06.SetActive(false);
                 SceneManaging.mainMenuActive = 2;
                 SceneManaging.directorMenueActive = 2;
-                Debug.Log("shelf 6");
                 break;
             case 7:         // MenueMusicShelf
                 ObjectMenueDirectorMain.SetActive(true);
@@ -335,10 +312,8 @@ public class ObjectShelfAll : MonoBehaviour
                 SceneManaging.directorMenueActive = 3;
                 break;
             case 8:         // MenueAboutShelf
-                //ObjectMenueDirectorMain.SetActive(true);
                 MenueShelf08.SetActive(true);
                 MenueButton08.SetActive(false);
-                //ObjectMenueConfigMain.SetActive(false);
                 SceneManaging.mainMenuActive = 2;
                 SceneManaging.directorMenueActive = 2;
                 Debug.Log("shelf 8");
@@ -368,7 +343,6 @@ public class ObjectShelfAll : MonoBehaviour
                 SceneManaging.directorMenueActive = 1;
 
                 ObjectMenueConfigMain.SetActive(false);
-                //gameController.GetComponent<UnitySwitchExpertUser>().DeactivateExpertTools();
                 break;
         }
         StaticSceneData.Everything3D();

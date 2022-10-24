@@ -8,12 +8,13 @@ public class PressHelp : MonoBehaviour
 {
     [SerializeField] GameObject helpButtonPressed, helpOverlayMenue2, helpOverlayMenue1, helpOverlayMenue3, helpOverlayMenue4, helpOverlayMenue5, helpOverlayMenue6, menueConfigMain, menuDirMain, aboutScreen;
 
-    private bool pressed = false, secondHighlight = false;
+    private bool pressed = false, pressedLiveView = false, secondHighlight = false;
     private float _idleTimer;
     private float _helpAnimDuration;
     private float _helpAnimWaitTime;
     private Color32 _buttonColorStart;
     private Color32 _buttonColorAttention;
+    public GameObject helpTextLiveView;
 
     private void Awake()
     {
@@ -25,10 +26,7 @@ public class PressHelp : MonoBehaviour
         helpOverlayMenue3.SetActive(false);
         aboutScreen.SetActive(false);
         _buttonColorStart = new Color(255, 255, 255, 0);
-        //_buttonColorAttention = new Color32(221, 159, 63, 255);
         _buttonColorAttention = new Color32(255, 255, 255, 70);
-
-        Debug.Log("Button: " + helpButtonPressed + " hidden.");
 
         try
         {
@@ -72,6 +70,8 @@ public class PressHelp : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             StopHelpAnimation();
+            helpTextLiveView.SetActive(false);
+
             if (pressed)
             {
                 helpOverlayMenue1.SetActive(false);
@@ -101,6 +101,19 @@ public class PressHelp : MonoBehaviour
         {
             StopHelpAnimation();
             secondHighlight = false;
+        }
+    }
+    public void ClickOnLiveView()
+    {
+        if (pressedLiveView)
+        {
+            helpTextLiveView.SetActive(false);
+            pressedLiveView = false;
+        }
+        else
+        {
+            helpTextLiveView.SetActive(true);
+            pressedLiveView = true;
         }
     }
     public void OnClick(int i)

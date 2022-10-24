@@ -10,19 +10,16 @@ public class SaveFileController : MonoBehaviour
     #region variables
     //private string[] _fileList;
     private string _jsonString;
-    public GameObject contentFileSelect, panelCodeInput, panelSaveShowCode, menuKulissen;
+    public GameObject contentFileSelect, panelCodeInput, panelSaveShowCode, panelWarningInput, menuKulissen;
     public InputField inputFieldShowCode;
     public Button fileSelectButton;
     private List<Button> _buttonsFileList = new List<Button>();
     public Text textFileMetaData, textFileContentData, textShowCode;
     private SceneData tempSceneData;
-    private string _selectedFile;
-    private string _directorySaves;
-    private string _basepath;
+    private string _selectedFile, _directorySaves, _basepath;
     private bool _isWebGl;
     private string characters = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ";
     #endregion
-
     private void Awake()
     {
 #if UNITY_WEBGL
@@ -53,7 +50,6 @@ public class SaveFileController : MonoBehaviour
         SceneManaging.isPreviewLoaded = true;
 
     }
-
     void Start()
     {
         _directorySaves = "Saves";
@@ -69,11 +65,10 @@ public class SaveFileController : MonoBehaviour
         menuKulissen.SetActive(true);
 
     }
-
     public void SaveSceneToFile()
     {
         string code = "";
-        string filePath;
+        string filePath = "";
         SceneData sceneDataSave = this.GetComponent<SceneDataController>().CreateSceneData();
         //string sceneDataSaveString = this.GetComponent<SceneDataController>().CreateJsonFromSceneData(sceneDataSave);
         StaticSceneData.StaticData.fileName = sceneDataSave.fileName;
@@ -83,46 +78,54 @@ public class SaveFileController : MonoBehaviour
         string sceneDataSaveString = this.GetComponent<SceneDataController>().CreateJsonFromSceneData(StaticSceneData.StaticData);
         //var path = EditorUtility.SaveFilePanel("Save Settings as JSON", "", ".json", "json");
 
-        // create code if not expert
-        if (!SceneManaging.isExpert)
+        if (string.IsNullOrEmpty(sceneDataSave.fileName.ToString())) // Warnung, dass ein name eingegeben werden muss
         {
-            for (int i = 0; i < 6; i++)
-            {
-                int a = UnityEngine.Random.Range(0, characters.Length);
-                code += characters[a].ToString();
-            }
-            filePath = code + sceneDataSave.fileName + ".json";
-            Debug.Log("filepath: " + filePath);
-            panelSaveShowCode.SetActive(true);
-            textShowCode.text = code;
+            panelWarningInput.SetActive(true);
         }
         else
         {
-            filePath = sceneDataSave.fileName + ".json";
-            Debug.Log("filepath: " + filePath);
-        }
-
-        if (sceneDataSaveString.Length != 0)
-        {
-            //File.WriteAllText(path, json);
-
-            if (_isWebGl)
+            // create code if not expert
+            if (!SceneManaging.isExpert)
             {
-                StartCoroutine(WriteToServer(sceneDataSaveString, filePath));
+
+                for (int i = 0; i < 6; i++)
+                {
+                    int a = UnityEngine.Random.Range(0, characters.Length);
+                    code += characters[a].ToString();
+                }
+                filePath = code + sceneDataSave.fileName + ".json";
+                Debug.Log("filepath: " + filePath);
+                panelSaveShowCode.SetActive(true);
+                textShowCode.text = code;
             }
+
             else
             {
-                StartCoroutine(WriteToServer(sceneDataSaveString, filePath));
-                // WriteFileToDirectory(sceneDataSaveString, filePath);
+                filePath = sceneDataSave.fileName + ".json";
+                Debug.Log("filepath: " + filePath);
             }
-            //GenerateFileButton(filePath);
+
+            if (sceneDataSaveString.Length != 0)
+            {
+                //File.WriteAllText(path, json);
+
+                if (_isWebGl)
+                {
+                    StartCoroutine(WriteToServer(sceneDataSaveString, filePath));
+                }
+                else
+                {
+                    StartCoroutine(WriteToServer(sceneDataSaveString, filePath));
+                    // WriteFileToDirectory(sceneDataSaveString, filePath);
+                }
+                //GenerateFileButton(filePath);
+            }
         }
     }
     public void LoadSceneFromTempToStatic()
     {
         for (int i = 0; i < this.GetComponent<UIController>().goButtonSceneryElements.Length; i++) menuKulissen.GetComponent<CoulissesManager>().placeInShelf(i);   // alle kulissen zurueck ins shelf
         StaticSceneData.StaticData = tempSceneData;
-        //UIController.SceneriesApplyToUI();
         GetComponent<UIController>().SceneriesApplyToUI();
         GetComponent<UIController>().LightsApplyToUI();
         GetComponent<UIController>().RailsApplyToUI();
@@ -168,12 +171,10 @@ public class SaveFileController : MonoBehaviour
         SceneManaging.isPreviewLoaded = false;
         if (fileName.Substring(0, fileName.Length - 5) != StaticSceneData.StaticData.fileName)
         {
-            //Debug.LogWarning("Scene Not Loaded! weee uu wee uu");
             SceneManaging.isPreviewLoaded = false;
         }
         else
         {
-            //Debug.LogWarning("grün!");
             SceneManaging.isPreviewLoaded = true;
         }
         _selectedFile = fileName;
@@ -188,7 +189,6 @@ public class SaveFileController : MonoBehaviour
             else StartCoroutine(LoadFileFromWWW(fileName, false));
 
         }
-        //Debug.Log("_____________ selected File: " + _selectedFile);
     }
     private void GenerateFileButton(string fileName)
     {
@@ -212,13 +212,12 @@ public class SaveFileController : MonoBehaviour
     }
     public void LoadCodeNow()
     {
-        Debug.Log("code: " + inputFieldShowCode.text);
         panelCodeInput.SetActive(false);
         StartCoroutine(LoadFilesFromServer(inputFieldShowCode.text));
     }
-    public void ClosePanelShowCode()
+    public void ClosePanelShowCode(GameObject panel)
     {
-        panelSaveShowCode.SetActive(false);
+        panel.SetActive(false);
     }
     private void ClearFileButtons()
     {

@@ -12,12 +12,13 @@ public class RailMusicManager : MonoBehaviour
     public GameObject gameController, menue3, UICanvas;
     //public GameObject[] musicSamples;
     private BoxCollider2D timeSlider;
-    bool draggingOnTimeline, draggingObject, editTimelineObject, releaseOnTimeline, playingMusic, isInstance, playingSample;
+    bool draggingOnTimeline, draggingObject, editTimelineObject, releaseOnTimeline, playingMusic, isInstance, playingSample, fading;
     public bool isTimelineOpen;
+    bool anyInstanceIsPlaying = false, firstTimeSecond = false, firstTimeThird = false;
     Vector2 releaseObjMousePos, diff;
     double minX, maxX;
     private float railWidth;
-    int maxTimeInSec, currentClip;
+    int maxTimeInSec, currentClip, instancePlaying;
     Vector2 sizeDeltaAsFactor;
     Vector2[] objectShelfPosition, objectShelfSize;
     GameObject[] objectShelfParent;
@@ -27,7 +28,7 @@ public class RailMusicManager : MonoBehaviour
     public GameObject objectLibrary, parentMenue; // mainMenue
     GameObject timeSettings;
     GameObject[] figCounterCircle, figureObjects;
-    int currentClickedObjectIndex, sampleButtonPressed;
+    int currentClickedObjectIndex, sampleButtonPressed, instancesCount = 1;
     int currentClickedInstanceObjectIndex;
     private float currentLossyScale;
     public List<GameObject> timelineObjects, timelineInstanceObjects;
@@ -360,11 +361,10 @@ public class RailMusicManager : MonoBehaviour
             //Debug.Log("new parent "+parentToSet);
             obj.transform.SetParent(parentToSet.transform);
         }
-        catch (NullReferenceException ex)
+        catch (NullReferenceException)
         {
 
         }
-
     }
     public void updateObjectPosition(GameObject obj, Vector2 mousePos)
     {
@@ -574,7 +574,9 @@ public class RailMusicManager : MonoBehaviour
         countName = countCopiesOfObject(figureObjects[musObjNr], timelineInstanceObjects);
         newCopyOfFigure.name = figureObjects[musObjNr].name + "_instance" + countName.ToString("000");
 
-        float tmpLength = ((float)maxX - (float)minX) * newCopyOfFigure.GetComponent<MusicLength>().musicLength / maxTimeInSec;//UtilitiesTm.FloatRemap(newCopyOfFigure.GetComponent<MusicLength>().musicLength, 0, 614, (float)minX, (float)maxX);
+        //float tmpLength = ((float)maxX - (float)minX) * newCopyOfFigure.GetComponent<MusicLength>().musicLength / maxTimeInSec;//UtilitiesTm.FloatRemap(newCopyOfFigure.GetComponent<MusicLength>().musicLength, 0, 614, (float)minX, (float)maxX);
+
+        float tmpLength = UtilitiesTm.FloatRemap(newCopyOfFigure.GetComponent<MusicLength>().musicLength, 0, AnimationTimer.GetMaxTime(), 0, (float)gameObject.GetComponent<RectTransform>().rect.width);
         createRectangle(newCopyOfFigure, gameObject.GetComponent<RectTransform>().rect.height * 0.96f, tmpLength);
 
         scaleObject(newCopyOfFigure, 100, gameObject.GetComponent<RectTransform>().rect.height * 0.96f, false);
@@ -601,8 +603,8 @@ public class RailMusicManager : MonoBehaviour
     }
     public void ResetScreenSize()
     {
-        //Debug.Log("lossyScale: " + gameObject.transform.lossyScale);
-        //Debug.Log("Screen changed! ScreenX: " + Screen.width);
+        // Debug.Log("lossyScale: " + gameObject.transform.lossyScale);
+        // Debug.Log("Screen changed! ScreenX: " + Screen.width);
 
         minX = 0.087f * Screen.width;// / gameObject.transform.lossyScale.x; //301.0f;  //timeline-minX
                                      //Debug.Log("minX: " + minX);
@@ -610,8 +612,8 @@ public class RailMusicManager : MonoBehaviour
         heightClosed = 0.018f * Screen.height;// / gameObject.transform.lossyScale.x;
         heightOpened = 0.074f * Screen.height;// / gameObject.transform.lossyScale.x;
         maxX = minX + railWidth;  //timeline-maxX
-                                  //Debug.Log("rail start: " + minX);
-                                  //Debug.Log("isTimelineopen: " + isTimelineOpen + "heightclosed: " + heightClosed);
+        // Debug.Log("rail start: " + minX);
+        //Debug.Log("isTimelineopen: " + isTimelineOpen + "heightclosed: " + heightClosed);
         if (isTimelineOpen)
         {
             timelineImage.GetComponent<RectTransform>().sizeDelta = gameObject.GetComponent<BoxCollider2D>().size = new Vector2(railWidth / gameObject.transform.lossyScale.x, heightOpened / gameObject.transform.lossyScale.x);
@@ -637,13 +639,67 @@ public class RailMusicManager : MonoBehaviour
             sampleButtonPressed = (i - 1);
         }
     }
+    public IEnumerator FadeOut(AudioSource audioSource, float FadeTime, GameObject obj, float time)
+    {
+        Debug.Log("Im working");
+        float startVolume = audioSource.volume;
 
+        while (audioSource.volume > 0)
+        {
+            audioSource.volume -= startVolume * Time.deltaTime / FadeTime;
+            yield return null;
+        }
+
+        audioSource.Stop();
+        audioSource.volume = startVolume;
+        currentClip = ((int)Char.GetNumericValue(obj.name[07]) - 1); // object index
+        audioSource.clip = clip[currentClip];
+
+        StartCoroutine(FadeIn(audioSource, 1, time));
+    }
+    public IEnumerator FadeIn(AudioSource audioSource, float FadeTime, float time)
+    {
+        audioSource.time = time;
+        float startVolume = 0.2f;
+
+        audioSource.volume = 0;
+        audioSource.Play();
+        fading = true;
+        while (audioSource.volume < 1.0f)
+        {
+            audioSource.volume += startVolume * Time.deltaTime / FadeTime;
+
+            yield return null;
+        }
+
+        audioSource.volume = 1f;
+    }
+    private int GetCurrentMusicCount(out int m, out int n, out int o)
+    {
+        m = n = o = 0;
+        int musicCount = 0;
+        for (int i = 0; i < timelineInstanceObjects.Count; i++)
+        {
+            double startSec = calculateFigureStartTimeInSec(timelineInstanceObjects[i], timelineInstanceObjects[i].GetComponent<MusicLength>().musicLength, maxTimeInSec);
+            double endSec = calculateMusicEndTimeInSec(timelineInstanceObjects[i], timelineInstanceObjects[i].GetComponent<MusicLength>().musicLength, maxTimeInSec);
+            float tmpTime = AnimationTimer.GetTime();
+
+            // wenn timer im bereich musikstuecks und musik ist nicht an
+            if (AnimationTimer.GetTime() >= startSec && AnimationTimer.GetTime() <= endSec)
+            {
+                musicCount++;
+                if (musicCount == 1) m = i;
+                else if (musicCount == 2) n = i;
+                else if (musicCount == 3) o = i;
+            }
+        }
+        return musicCount;
+    }
     void Update()
     {
         if (currentLossyScale != transform.lossyScale.x)
         {
             currentLossyScale = transform.lossyScale.x;
-            //Debug.Log("scale after: " + transform.lossyScale.x);
             ResetScreenSize();
         }
 
@@ -728,33 +784,30 @@ public class RailMusicManager : MonoBehaviour
         // if timeline is open and something is being dragged
         if (draggingOnTimeline && isTimelineOpen)
         {
-            //Debug.Log("+++++++++++++++++++++++++dragging on timeline......");
             if (currentClickedInstanceObjectIndex != (-1))  //is set in the identify-methods
             {
                 isInstance = true;
-                //if you click an object in timeline (for dragging)
-                //move object
-                updateObjectPosition(timelineInstanceObjects[currentClickedInstanceObjectIndex], getMousePos - diff); // hier muss die maus position minus pivot point genommen werden! oder so
-                                                                                                                      //snapping/lock y-axis
+                //if you click an object in timeline (for dragging) //move object
+                updateObjectPosition(timelineInstanceObjects[currentClickedInstanceObjectIndex], getMousePos - diff);
+                //snapping/lock y-axis
                 setObjectOnTimeline(timelineInstanceObjects[currentClickedInstanceObjectIndex], timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.position.x, this.transform.position.y);
 
                 //-------------------------------------------------limit front of rail------------------------------------------//
-                if (timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().position.x < (minX + 0.035f * Screen.width))
+                if (timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().anchoredPosition.x <= 0) // (0.03f * Screen.width))  // 50 is half the box Collider width (mouse pos is in the middle of the figure)
                 {
-                    timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().position = new Vector3((float)minX + 0.035f * Screen.width, GetComponent<RectTransform>().position.y, -1);    // tendenziell muesste das eher in buttonUp
+                    timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().anchoredPosition = new Vector3(0, timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().anchoredPosition.y, -1);    // tendenziell muesste das eher in buttonUp
                 }
+
                 //-------------------------------------------------limit back of rail------------------------------------------//
-                if ((timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().anchoredPosition.x + newCopyOfFigure.transform.GetComponent<BoxCollider2D>().size.x) > (GetComponent<RectTransform>().rect.width + 0.03f * Screen.width))
+                if ((timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().anchoredPosition.x + timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetComponent<BoxCollider2D>().size.x) > (GetComponent<RectTransform>().rect.width + 0.03f * Screen.width))
                 {
-                    timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().anchoredPosition = new Vector3((GetComponent<RectTransform>().rect.width + (0.03f * Screen.width) - newCopyOfFigure.transform.GetComponent<BoxCollider2D>().size.x), newCopyOfFigure.GetComponent<RectTransform>().anchoredPosition.y, -1);
-                    //Debug.LogWarning("JAAAAA! posx: " + (newCopyOfFigure.transform.position.x + newCopyOfFigure.transform.GetComponent<BoxCollider2D>().size.x) + ", anchored Pos: " + (newCopyOfFigure.GetComponent<RectTransform>().anchoredPosition.x + newCopyOfFigure.transform.GetComponent<BoxCollider2D>().size.x) + ", maxX: " + (GetComponent<RectTransform>().rect.width + 0.03f * Screen.width));
+                    timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().anchoredPosition = new Vector3((GetComponent<RectTransform>().rect.width + (0.03f * Screen.width) - timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetComponent<BoxCollider2D>().size.x), timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().anchoredPosition.y, -1);
                 }
 
                 if (Physics2D.OverlapPoint(getMousePos) == false)       // mouse outside
                 {
                     SceneManaging.objectsTimeline = ((int)Char.GetNumericValue(timelineImage.name[17]) - 1);  // save old timeline to remove instance of this timeline
                     draggingObject = true;
-                    //editTimelineObject = false;
                     draggingOnTimeline = false;
                 }
             }
@@ -840,8 +893,9 @@ public class RailMusicManager : MonoBehaviour
                     newCopyOfFigure.name = figureObjects[currentClickedObjectIndex].name + "_instance" + countName.ToString("000");
 
                     //float tmpLength = ((float)maxX - (float)minX) * newCopyOfFigure.GetComponent<MusicLength>().musicLength / AnimationTimer.GetMaxTime();
-                    float tmpLength = UtilitiesTm.FloatRemap(newCopyOfFigure.GetComponent<MusicLength>().musicLength, 0, AnimationTimer.GetMaxTime(), 0, (float)railWidth);
-                    Debug.Log("minx: " + minX + ", maxX: " + maxX);
+                    //Debug.Log((float)gameObject.GetComponent<RectTransform>().rect.width);
+                    float tmpLength = UtilitiesTm.FloatRemap(newCopyOfFigure.GetComponent<MusicLength>().musicLength, 0, AnimationTimer.GetMaxTime(), 0, (float)gameObject.GetComponent<RectTransform>().rect.width);
+                    //Debug.Log("minx: " + minX + ", maxX: " + maxX);
 
                     //Debug.Log("minX: " + minX + ", maxX: " + maxX + ", tmplengh: " + tmpLength);
                     createRectangle(newCopyOfFigure, gameObject.GetComponent<RectTransform>().rect.height * 0.96f, tmpLength);
@@ -945,44 +999,97 @@ public class RailMusicManager : MonoBehaviour
             isInstance = false;
         }
 
-        bool anyInstanceIsPlaying = false;
         // turning music on and off in playmode
         if (SceneManaging.playing)
         {
-            //Debug.Log("+++++++++++++++++updateMusic: " + SceneManaging.updateMusic);
-            //Debug.Log("+++++++++++++++++Music is playing");
-            for (int i = 0; i < timelineInstanceObjects.Count; i++)
+            if (GetCurrentMusicCount(out int m, out int n, out int o) == 1)
             {
-                //float tmpLength = ((float)maxX - (float)minX) * timelineInstanceObjects[i].GetComponent<MusicLength>().musicLength / 614;//UtilitiesTm.FloatRemap(newCopyOfFigure.GetComponent<MusicLength>().musicLength, 0, 614, (float)minX, (float)maxX);
-                double startSec = calculateFigureStartTimeInSec(timelineInstanceObjects[i], timelineInstanceObjects[i].GetComponent<MusicLength>().musicLength, maxTimeInSec);
-                double endSec = calculateMusicEndTimeInSec(timelineInstanceObjects[i], timelineInstanceObjects[i].GetComponent<MusicLength>().musicLength, maxTimeInSec);
+                Debug.Log("1!");
+
+                double startSec = calculateFigureStartTimeInSec(timelineInstanceObjects[m], timelineInstanceObjects[m].GetComponent<MusicLength>().musicLength, maxTimeInSec);
+                double endSec = calculateMusicEndTimeInSec(timelineInstanceObjects[m], timelineInstanceObjects[m].GetComponent<MusicLength>().musicLength, maxTimeInSec);
                 float tmpTime = AnimationTimer.GetTime();
 
-                // wenn timer im bereich musikstuecks und musik ist nicht an
-                if (AnimationTimer.GetTime() >= startSec && AnimationTimer.GetTime() <= endSec)
+                anyInstanceIsPlaying = true;
+
+                if (playingMusic == false)
                 {
-                    anyInstanceIsPlaying = true;
-                    SceneManaging.hitObject = i;
-                    SceneManaging.hittingSomething = true;
-                    //Debug.Log("hitobject: " + SceneManaging.hitObject);
-                    if (playingMusic == false)
-                    {
-                        playingMusic = true;
-                        audioSource.time = tmpTime - (float)startSec;
-                        currentClip = ((int)Char.GetNumericValue(timelineInstanceObjects[i].name[07]) - 1); // object index
-                        audioSource.clip = clip[currentClip];
-                        audioSource.Play();
-                        //Debug.Log("++++++++++MUSIC STARTS ++++++ tmpTime: " + audioSource.time + ", current clip: " + currentClip + ", startsec: " + startSec + ", tmpTime: " + tmpTime);
-                    }
-                    if (SceneManaging.updateMusic)
-                    {
-                        {
-                            playingMusic = false;
-                        }
-                    }
-
+                    playingMusic = true;
+                    audioSource.time = tmpTime - (float)startSec;
+                    currentClip = ((int)Char.GetNumericValue(timelineInstanceObjects[m].name[07]) - 1); // object index
+                    audioSource.clip = clip[currentClip];
+                    audioSource.Play();
                 }
+                if (SceneManaging.updateMusic)  // scrubbing
+                {
+                    playingMusic = false;
+                }
+                firstTimeSecond = firstTimeThird = false;
+            }
+            else if (GetCurrentMusicCount(out m, out n, out o) == 2)
+            {
 
+                Debug.Log("2! n: " + n);// : m: " + m + ", n: " + n);
+                double startSec = calculateFigureStartTimeInSec(timelineInstanceObjects[n], timelineInstanceObjects[n].GetComponent<MusicLength>().musicLength, maxTimeInSec);
+                //double endSec = calculateMusicEndTimeInSec(timelineInstanceObjects[n], timelineInstanceObjects[n].GetComponent<MusicLength>().musicLength, maxTimeInSec);
+                float tmpTime = AnimationTimer.GetTime();
+                if (!firstTimeSecond) // es switcht von 1 auf 2 musikstuecke gleichzeitig
+                {
+                    fading = false;
+                    firstTimeSecond = true;
+                }
+                if (!fading) StartCoroutine(FadeOut(audioSource, 1, timelineInstanceObjects[n], (tmpTime - (float)startSec)));
+
+                fading = true;
+                anyInstanceIsPlaying = true;
+
+                if (playingMusic == false)
+                {
+                    playingMusic = true;
+                    audioSource.time = tmpTime - (float)startSec;
+                    currentClip = ((int)Char.GetNumericValue(timelineInstanceObjects[n].name[07]) - 1); // object index
+                    audioSource.clip = clip[currentClip];
+                    audioSource.Play();
+                }
+                if (SceneManaging.updateMusic)
+                {
+                    playingMusic = false;
+                }
+                firstTimeThird = false;
+            }
+
+            else if (GetCurrentMusicCount(out m, out n, out o) == 3)
+            {
+                if (!firstTimeThird)
+                {
+                    fading = false;
+                    firstTimeThird = true;
+                }
+                Debug.Log("3! o: " + o);// : m: " + m + ", n: " + n);
+                double startSec = calculateFigureStartTimeInSec(timelineInstanceObjects[o], timelineInstanceObjects[o].GetComponent<MusicLength>().musicLength, maxTimeInSec);
+                //double endSec = calculateMusicEndTimeInSec(timelineInstanceObjects[n], timelineInstanceObjects[n].GetComponent<MusicLength>().musicLength, maxTimeInSec);
+                float tmpTime = AnimationTimer.GetTime();
+
+                if (!fading) StartCoroutine(FadeOut(audioSource, 1, timelineInstanceObjects[o], (tmpTime - (float)startSec)));
+                //instancePlaying = n;
+                //Debug.Log("instance: " + instancePlaying);
+                //Debug.Log("instances playing: 3");
+                // audioSource.time = tmpTime - (float)startSec;
+                fading = true;
+                anyInstanceIsPlaying = true;
+
+                if (playingMusic == false)
+                {
+                    playingMusic = true;
+                    audioSource.time = tmpTime - (float)startSec;
+                    currentClip = ((int)Char.GetNumericValue(timelineInstanceObjects[o].name[07]) - 1); // object index
+                    audioSource.clip = clip[currentClip];
+                    audioSource.Play();
+                }
+                if (SceneManaging.updateMusic)
+                {
+                    playingMusic = false;
+                }
             }
         }
 
@@ -1009,12 +1116,14 @@ public class RailMusicManager : MonoBehaviour
         {
             audioSource.Stop();
             playingMusic = false;
+            firstTimeSecond = firstTimeThird = false;
         }
 
         if (!anyInstanceIsPlaying && playingSample == false)
         {
             audioSource.Stop();
             playingMusic = false;
+            firstTimeSecond = firstTimeThird = false;
         }
     }
 }

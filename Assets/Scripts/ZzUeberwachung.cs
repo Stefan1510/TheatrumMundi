@@ -6,9 +6,9 @@ using UnityEngine.UI;
 public class ZzUeberwachung : MonoBehaviour
 {
     [SerializeField] private Text _ueberwachungspanelText;
-    public GameObject gameController;
-    public GameObject UICanvas;
+    public GameObject gameController, UICanvas, helpText;
     public float timer;
+    private bool pressed = false;
     void Start()
     {
         timer = 0f;
