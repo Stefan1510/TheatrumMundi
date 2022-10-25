@@ -3,11 +3,12 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using cakeslice;
 
 public class RailManager : MonoBehaviour
 {
     #region variables
-    public Image timelineImage;
+    [HideInInspector] public Image timelineImage;
     public GameObject gameController, rail3dObj, menue1;
     public Image timeSliderImage;
     private BoxCollider2D timeSlider;
@@ -29,7 +30,7 @@ public class RailManager : MonoBehaviour
     GameObject[] figCounterCircle, figureObjects, figureObjects3D;
     int currentClickedObjectIndex, currentClickedInstanceObjectIndex, hitTimeline, sizeLayering;
     public int layerOverlaps, count;
-    public List<GameObject> timelineInstanceObjects, timelineInstanceObjects3D, figuresLayer1, figuresLayer2, figuresLayer3, figuresLayer4;
+    [HideInInspector] public List<GameObject> timelineInstanceObjects, timelineInstanceObjects3D, figuresLayer1, figuresLayer2; //figuresLayer3, figuresLayer4;
     private FigureElement ThisFigureElement;    //element to set 3d object
     float heightOpened, heightClosed;
     Color colFigure, colFigureHighlighted;
@@ -101,29 +102,18 @@ public class RailManager : MonoBehaviour
         List<GameObject> timelineInstanceObjects = new List<GameObject>();
         List<GameObject> timelineObjects3D = new List<GameObject>();
         List<GameObject> timelineInstanceObjects3D = new List<GameObject>();
-        //maxTimeLength = "10:14";
         maxTimeInSec = (int)AnimationTimer.GetMaxTime();
 
-        for (int i = 0; i < figureObjects3D.Length - 1; i++) // ships dont have animation
+        for (int i = 0; i < 5; i++) // ships dont have animation
         {
-            //Debug.Log("++++++++figureObject: " + figureObjects3D[i]); // + ", isShip: " + figureObjects3D[i].GetComponent<FigureStats>().isShip);
             if (figureObjects3D[i].GetComponent<FigureStats>().isShip)
             {
-                //Debug.Log("figure: " + figureObjects3D[i] + " is a ship.");
-                for (int j = 0; j < figureObjects3D[i].GetComponent<MeshRenderer>().materials.Length; j++)
-                {
-                    figureObjects3D[i].GetComponent<MeshRenderer>().materials[j].DisableKeyword("_EMISSION");
-                }
+                //figureObjects3D[i].GetComponent<cakeslice.Outline>().enabled = false;
             }
             else
             {
-                //Debug.Log("figure: " + figureObjects3D[i] + " is not a ship.");
-                for (int j = 0; j < figureObjects3D[i].transform.GetChild(1).GetComponent<SkinnedMeshRenderer>().materials.Length; j++)
-                {
-                    figureObjects3D[i].transform.GetChild(1).GetComponent<SkinnedMeshRenderer>().materials[j].DisableKeyword("_EMISSION");
-                }
+                figureObjects3D[i].transform.GetChild(1).GetComponent<cakeslice.Outline>().enabled = false;
                 figureObjects3D[i].GetComponent<Animator>().enabled = false;
-
             }
         }
     }
@@ -145,13 +135,6 @@ public class RailManager : MonoBehaviour
                 //if you click an new object
                 if (oldClickedObject != currentClickedObjectIndex)
                 {
-                    //set objectSceneSize-Variables back to default
-                    //objectDefaultPosition=figureObjects[currentClickedObjectIndex].transform.position;
-                    //objectDefaultSize.x=figureObjects[currentClickedObjectIndex].GetComponent<RectTransform>().rect.width;
-                    //objectDefaultSize.y=figureObjects[currentClickedObjectIndex].GetComponent<RectTransform>().rect.height;
-                    //objectSceneSize.x=objectDefaultSize.x;
-                    //objectSceneSize.y=objectDefaultSize.y;
-                    //objectOnTimeline=false;
                 }
                 return figureObjects[i].GetComponent<BoxCollider2D>().name;
             }
@@ -160,7 +143,6 @@ public class RailManager : MonoBehaviour
                 objName = "no object clicked!";
             }
         }
-
         return objName;
     }
     public string identifyClickedObjectByList(List<GameObject> objectsOnTimeline)
@@ -173,7 +155,6 @@ public class RailManager : MonoBehaviour
         {
             //save last correct index
             int oldClickedObject = currentClickedInstanceObjectIndex;
-            //Debug.Log("+++++++++++++++++++++Object: "+objectsOnTimeline[i].GetComponent<BoxCollider2D>()+", Mouse position: "+Physics2D.OverlapPoint(Input.mousePosition));
             //which object in grid layout is clicked
             if (objectsOnTimeline[i].GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(Input.mousePosition))
             {
@@ -198,12 +179,10 @@ public class RailManager : MonoBehaviour
     {
         if (fromShelf == false && SceneManaging.mainMenuActive == 2 && SceneManaging.directorMenueActive != 1)
         {
-            //Debug.Log("from shelf = false");
             UICanvas.GetComponent<ObjectShelfAll>().ButtonShelf05(true);
         }
         if (isAnyTimelineOpen() == false)
         {
-            // Debug.Log("++++ es ist keine schiene geöffnet, deswegen wird geklickte Schiene geöffnet: " + tl);
             //set global flag
             SceneManaging.anyTimelineOpen = true;
 
@@ -216,10 +195,6 @@ public class RailManager : MonoBehaviour
             openCloseObjectInTimeline(true, timelineInstanceObjects, gameObject);
             ImageTimelineSelection.SetRailNumber((int)Char.GetNumericValue(tlImage.name[17]) - 1);
             ImageTimelineSelection.SetRailType(0);  // for rail-rails
-            // if (!menue1.activeSelf)
-            // {
-            //     parentMenue.GetComponent<ObjectShelf>().ButtonShelf01();
-            // }
         }
         else if (isAnyTimelineOpen())
         {
@@ -230,21 +205,9 @@ public class RailManager : MonoBehaviour
                 {
                     highlight(timelineInstanceObjects3D[i], timelineInstanceObjects[i], false);
                 }
-                /*// Debug.Log("++++ geklickte Schiene ist offen und wird geschlossen: " + tl);
-                //close timeline
-                isTimelineOpen = false;
-                //scale down timeline and collider
-                tl.rectTransform.sizeDelta = new Vector2(tl.rectTransform.rect.width, heightClosed / gameObject.transform.lossyScale.x);
-                tl.GetComponent<BoxCollider2D>().size = new Vector2(tl.GetComponent<BoxCollider2D>().size.x, heightClosed / gameObject.transform.lossyScale.x);
-                openCloseObjectInTimeline(false, timelineInstanceObjects, editTimelineObject);*/
             }
             else
             {
-                // if (!menue1.activeSelf)
-                // {
-                //     parentMenue.GetComponent<ObjectShelf>().ButtonShelf01();
-                // }
-                //Debug.Log("++++ geklickte Schiene ist zu, aber eine andere ist offen und wird geschlossen: " + tlImage);
                 // a different rail is open - close it
                 for (int i = 0; i < gameController.GetComponent<UIController>().Rails.Length; i++)
                 {
@@ -256,7 +219,6 @@ public class RailManager : MonoBehaviour
                     {
                         highlight(gameController.GetComponent<UIController>().Rails[i].GetComponent<RailManager>().timelineInstanceObjects3D[j], gameController.GetComponent<UIController>().Rails[i].timelineInstanceObjects[j], false);
                     }
-                    //Debug.Log("++++ Scaling down Rail: " + gameController.GetComponent<UIController>().Rails[i]);
                 }
                 for (int j = 0; j < 2; j++)
                 {
@@ -275,8 +237,6 @@ public class RailManager : MonoBehaviour
                 }
 
                 // open clicked rail
-                //Debug.Log("++++ geklickte Schiene wird geöffnet: " + tl);
-                //scale up timeline
                 tlImage.rectTransform.sizeDelta = new Vector2(tlImage.rectTransform.rect.width, heightOpened / gameObject.transform.lossyScale.x);
                 //scale up the collider
                 tlImage.GetComponent<BoxCollider2D>().size = new Vector2(tlImage.GetComponent<BoxCollider2D>().size.x, heightOpened / gameObject.transform.lossyScale.x);
@@ -289,7 +249,6 @@ public class RailManager : MonoBehaviour
             }
         }
         openCloseTimeSettings(isAnyTimelineOpen(), timeSettings);
-
     }
     public void openCloseObjectInTimeline(bool timelineOpen, List<GameObject> objects, GameObject timeline)
     {
@@ -574,13 +533,11 @@ public class RailManager : MonoBehaviour
         if (startEnd == "start")
         {
             //calculate start point of the rail
-            //point = new Vector3(0.0f, 0.0f, -2.2f);
             point = new Vector3(railStartPoint.x, railStartPoint.y, railStartPoint.z);
         }
         else //(startEnd="end")
         {
             //calculate end point of rail 
-            //point = new Vector3(0.0f, 0.0f, 2.6f);
             point = new Vector3(railEndPoint.x, railEndPoint.y, railEndPoint.z);
         }
         return point;
@@ -593,7 +550,6 @@ public class RailManager : MonoBehaviour
             //count object with the same name as fig
             foreach (GameObject gO in gameController.GetComponent<UIController>().Rails[i].timelineInstanceObjects)
             {
-                //if (gO.name==fig.name)
                 if (gO.name.Contains(fig.name))
                 {
                     c++;
@@ -688,11 +644,9 @@ public class RailManager : MonoBehaviour
             if (((mousePos.x <= (tlPos.x + (colSize.x / 2.0f))) && (mousePos.x > (tlPos.x - (colSize.x / 2.0f)))) &&
             ((mousePos.y <= (tlPos.y + (colSize.y / 2.0f))) && (mousePos.y > (tlPos.y - (colSize.y / 2.0f)))))
             {
-                //Debug.Log("object hits timeline!: " + tl[i]);
                 hit = i;
             }
         }
-        //Debug.Log("drag and hit " + hit);
         return hit;
     }
     public void highlight(GameObject obj3D, GameObject obj, bool highlightOn)
@@ -703,43 +657,18 @@ public class RailManager : MonoBehaviour
             obj.transform.GetChild(1).GetChild(0).gameObject.SetActive(true);   //show Delete-Button
             SceneManaging.highlighted = true;
 
-            if (obj3D.GetComponent<FigureStats>().isShip)
-            {
-                for (int i = 0; i < obj3D.GetComponent<MeshRenderer>().materials.Length; i++)
-                {
-                    obj3D.GetComponent<MeshRenderer>().materials[i].EnableKeyword("_EMISSION");
-                }
-            }
-            else
-            {
-                for (int i = 0; i < obj3D.transform.GetChild(1).GetComponent<SkinnedMeshRenderer>().materials.Length; i++)
-                {
-                    obj3D.transform.GetChild(1).GetComponent<SkinnedMeshRenderer>().materials[i].EnableKeyword("_EMISSION");
-                }
-            }
+            if (obj3D.GetComponent<FigureStats>().isShip) obj3D.GetComponent<cakeslice.Outline>().enabled = true;
+            else obj3D.transform.GetChild(1).GetComponent<cakeslice.Outline>().enabled = true;
         }
         else
         {
             obj.transform.GetChild(0).GetComponent<Image>().color = colFigure;
             obj.transform.GetChild(1).GetChild(0).gameObject.SetActive(false);  //hide Delete-Button
             SceneManaging.highlighted = false;
+            if (obj3D.GetComponent<FigureStats>().isShip) obj3D.GetComponent<cakeslice.Outline>().enabled = false;
+            else obj3D.transform.GetChild(1).GetComponent<cakeslice.Outline>().enabled = false;
 
-            if (obj3D.GetComponent<FigureStats>().isShip)
-            {
-                for (int i = 0; i < obj3D.GetComponent<MeshRenderer>().materials.Length; i++)
-                {
-                    obj3D.GetComponent<MeshRenderer>().materials[i].DisableKeyword("_EMISSION");
-                }
-            }
-            else
-            {
-                for (int i = 0; i < obj3D.transform.GetChild(1).GetComponent<SkinnedMeshRenderer>().materials.Length; i++)
-                {
-                    obj3D.transform.GetChild(1).GetComponent<SkinnedMeshRenderer>().materials[i].DisableKeyword("_EMISSION");
-                }
-            }
         }
-
     }
     public GameObject CreateNew2DInstance(int figureNr, float momentOrPosX, bool loadFromFile)
     {

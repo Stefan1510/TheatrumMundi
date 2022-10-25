@@ -201,7 +201,7 @@ public class SaveFileController : MonoBehaviour
             //Debug.LogWarning("Loaded --> grüüün");
             SceneManaging.isPreviewLoaded = true;
         }
-        fileButtonInstance.GetComponentInChildren<Text>().text = fileName;
+        fileButtonInstance.GetComponentInChildren<Text>().text = fileName.Substring(0, fileName.Length - 5);
         fileButtonInstance.gameObject.SetActive(true);
         fileButtonInstance.onClick.AddListener(() => LoadSceneFromFile(fileName, false));
         _buttonsFileList.Add(fileButtonInstance);

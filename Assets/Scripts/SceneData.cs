@@ -46,7 +46,7 @@ public class SceneryElement
     public bool active;
     public int zPos;//0=backgound, 1=mid-pos, 2=front
     public bool mirrored;
-    public bool emission;
+    public bool outline;
 }
 
 

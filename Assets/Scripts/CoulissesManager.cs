@@ -466,9 +466,6 @@ public class CoulissesManager : MonoBehaviour
             coulisses[i].GetComponent<Image>().color = colHighlightedGrey;
             scenerySettings.SetActive(false);
             showDeleteButton(deleteButton, coulisses[i], false);
-            //Debug.Log("Delete Button pos: " + deleteButton.GetComponent<RectTransform>().anchoredPosition);
-            //StaticSceneData.StaticData.sceneryElements[i].emission = true;
-            //isHighlighted[i] = true;
         }
         else if (color == 2)
         {
@@ -476,18 +473,17 @@ public class CoulissesManager : MonoBehaviour
             scenerySettings.SetActive(true);
             showDeleteButton(deleteButton, coulisses[i], true);
             sceneryName.text = coulisses[i].GetComponent<CoulisseStats>().description;
-            //Debug.Log("Delete Button pos: " + deleteButton.GetComponent<RectTransform>().anchoredPosition);
-            StaticSceneData.StaticData.sceneryElements[i].emission = true;
+            //StaticSceneData.StaticData.sceneryElements[i].emission = true;
+            StaticSceneData.StaticData.sceneryElements[i].outline = true;
             isHighlighted[i] = true;
         }
         else
         {
             coulisses[i].GetComponent<Image>().color = colCoulisse;
             showDeleteButton(deleteButton, coulisses[i], false);
-            StaticSceneData.StaticData.sceneryElements[i].emission = false;
+            StaticSceneData.StaticData.sceneryElements[i].outline = false;
             isHighlighted[i] = false;
             scenerySettings.SetActive(false);
-            //Debug.Log("unighlight Kulisse: " + i);
         }
     }
     public int identifyClickedObjectIndex()

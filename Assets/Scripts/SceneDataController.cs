@@ -7,6 +7,7 @@ using UnityEngine.UI;
 
 public class SceneDataController : MonoBehaviour
 {
+    #region variables
     public InputField inputFieldFileName;
     public InputField inputFieldFileAuthor;
     public InputField inputFieldFileComment;
@@ -35,8 +36,8 @@ public class SceneDataController : MonoBehaviour
 
     [HideInInspector] public SceneData recentSceneData;
     [HideInInspector] public SceneData tempSceneData;
+    #endregion
 
-    // Start is called before the first frame updates
     void Awake()
     {
         // Debug.Log("***************************** Puffpaff");
@@ -56,26 +57,13 @@ public class SceneDataController : MonoBehaviour
         SceneManaging.statusReiter = 1;
         foreach (GameObject objectSceneryElement in objectsSceneryElements)
         {
-            //Debug.Log("SceneDataController Name: " + objectSceneryElement.name);
             objectSceneryElement.transform.SetParent(GameObject.Find("Schiene1").transform);
             objectSceneryElement.SetActive(false);
-            for (int i = 0; i < objectSceneryElement.GetComponent<MeshRenderer>().materials.Length; i++)
-            {
-                objectSceneryElement.GetComponent<MeshRenderer>().materials[i].DisableKeyword("_EMISSION");
-            }
-        }
-        //Debug.Log("------- staticSceneDataJSON");
 
+            objectSceneryElement.GetComponent<cakeslice.Outline>().enabled = false;
+        }
         StaticSceneData.StaticData = CreateSceneData();
     }
-
-    //private void Start()
-    //{
-
-    //    // Debug.Log("------- staticSceneDataJSON" + StaticSceneData.StaticData.ToString());
-    //    // Debug.Log("------- staticSceneDataJSON" + CreateJsonFromSceneData(StaticSceneData.StaticData));
-
-    //}
 
     private void GetFileMetaDataFromScene()
     {
@@ -145,7 +133,7 @@ public class SceneDataController : MonoBehaviour
                 parent = objectSceneryElement.transform.parent.name,
                 zPos = 0,
                 mirrored = false,
-                emission = false
+                outline = false
             };
             sceneData.sceneryElements.Add(sceneSceneryElement);
         }
@@ -311,20 +299,17 @@ public class SceneDataController : MonoBehaviour
                     {
                         countActiveSceneryElements++;
                     }
-                    if (se.emission == false)
+                    if (se.outline == false)
                     {
-                        for (int i = 0; i < goSceneryElement.GetComponent<MeshRenderer>().materials.Length; i++)
-                        {
-                            goSceneryElement.GetComponent<MeshRenderer>().materials[i].DisableKeyword("_EMISSION");
-                        }
+                        goSceneryElement.GetComponent<cakeslice.Outline>().enabled = false;
+                        //goSceneryElement.GetComponent<MeshRenderer>().materials[i].DisableKeyword("_EMISSION");
+
                     }
                     else
                     {
-                        for (int i = 0; i < goSceneryElement.GetComponent<MeshRenderer>().materials.Length; i++)
-                        {
-                            goSceneryElement.GetComponent<MeshRenderer>().materials[i].EnableKeyword("_EMISSION");
-                        }
-
+                        goSceneryElement.GetComponent<cakeslice.Outline>().enabled = true;
+                        //goSceneryElement.GetComponent<Outline>().enabled = true;
+                        //goSceneryElement.GetComponent<MeshRenderer>().materials[i].EnableKeyword("_EMISSION");
                     }
                 }
             }
@@ -423,7 +408,7 @@ public class SceneDataController : MonoBehaviour
                     foreach (FigureInstanceElement feInstance in fe.figureInstanceElements)
                     {
                         countActiveFigureElements++;
-                        Debug.LogWarning("Create Instance here: " + feInstance.name);
+                        //Debug.LogWarning("Create Instance here: " + feInstance.name);
                         //Debug.Log("layer scene data: " + feInstance.layer);
                         //Debug.Log("i: " + i);
                         GameObject curr3DObject = imageTimelineRails[feInstance.railStart].GetComponent<RailManager>().CreateNew2DInstance(i, feInstance.moment, true);
