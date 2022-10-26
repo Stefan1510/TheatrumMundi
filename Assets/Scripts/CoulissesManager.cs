@@ -331,7 +331,6 @@ public class CoulissesManager : MonoBehaviour
                     coulisses[currentObjectIndex].transform.SetSiblingIndex(publicSibling);
                     //publicSibling = coulisses[currentObjectIndex].transform.GetSiblingIndex();
                     textPositionZCoulisses.GetComponent<Text>().text = (publicSibling + 1) + "/" + coulisses[currentObjectIndex].transform.parent.transform.childCount;
-                    Debug.Log("hier: " + publicSibling);
 
                     StaticSceneData.StaticData.sceneryElements[currentObjectIndex].active = true;
                     StaticSceneData.StaticData.sceneryElements[currentObjectIndex].parent = "Schiene" + (currentTabIndex + 1).ToString();
@@ -423,8 +422,6 @@ public class CoulissesManager : MonoBehaviour
 
         Vector2 pos2 = new Vector2(obj2.GetComponent<RectTransform>().anchoredPosition.x, obj2.GetComponent<RectTransform>().anchoredPosition.y);
         Vector2 collider2 = new Vector2(obj2.GetComponent<RectTransform>().rect.width, obj2.GetComponent<RectTransform>().rect.height);
-        // Debug.Log("pos1y: " + pos1.y + ", pos2y:" + pos2.y);
-        //Debug.Log("pos1: " + pos1.x + (rect.x / 2.0f) + ", obj2: " + (pos2.x - collider2.x / 2.0f));// + ", anchored: " + obj2.GetComponent<RectTransform>().anchoredPosition.x);
         if (pos2.x - collider2.x / 2.0f <= pos1.x + (rect.x / 2.0f) && pos2.y <= pos1.y + rect.y / 2
         && pos2.x + collider2.x / 2.0f >= pos1.x - rect.x / 2.0f && pos2.y + collider2.y >= pos1.y - rect.y / 2)
         {
@@ -551,7 +548,6 @@ public class CoulissesManager : MonoBehaviour
         {
             coulisses[currentObjectIndex].transform.SetSiblingIndex(coulisses[currentObjectIndex].transform.GetSiblingIndex() + 1);
             StaticSceneData.StaticData.sceneryElements[currentObjectIndex].zPos = coulisses[currentObjectIndex].transform.GetSiblingIndex();
-            //Debug.Log("zPos: "+StaticSceneData.StaticData.sceneryElements[currentObjectIndex].zPos);
             textPositionZCoulisses.GetComponent<Text>().text = (coulisses[currentObjectIndex].transform.GetSiblingIndex() + 1) + "/" + coulisses[currentObjectIndex].transform.parent.transform.childCount;
             StaticSceneData.Sceneries3D();
         }
@@ -563,7 +559,6 @@ public class CoulissesManager : MonoBehaviour
         {
             coulisses[currentObjectIndex].transform.SetSiblingIndex(coulisses[currentObjectIndex].transform.GetSiblingIndex() - 1);
             StaticSceneData.StaticData.sceneryElements[currentObjectIndex].zPos = coulisses[currentObjectIndex].transform.GetSiblingIndex();
-            //Debug.Log("zPos: "+StaticSceneData.StaticData.sceneryElements[currentObjectIndex].zPos);
             textPositionZCoulisses.GetComponent<Text>().text = (coulisses[currentObjectIndex].transform.GetSiblingIndex() + 1) + "/" + coulisses[currentObjectIndex].transform.parent.transform.childCount;
             StaticSceneData.Sceneries3D();
         }
@@ -573,14 +568,12 @@ public class CoulissesManager : MonoBehaviour
         coulisses[i].transform.SetParent(parentStart[i].transform);
         coulisses[i].GetComponent<RectTransform>().sizeDelta = new Vector2(shelfSizeWidth[i], shelfSizeHeight[i]);
         coulisses[i].GetComponent<RectTransform>().localPosition = new Vector2(0.0f, -(coulisses[i].GetComponent<RectTransform>().rect.height / 2));
-        //Debug.Log("position in shelf: " + coulisses[i].GetComponent<RectTransform>().localPosition);
         coulisses[i].GetComponent<BoxCollider2D>().offset = new Vector2(0, -coulisses[i].GetComponent<RectTransform>().localPosition.y);
         coulisses[i].GetComponent<BoxCollider2D>().size = new Vector2(shelfSizeWidth[i], shelfSizeHeight[i]);
         highlight(i, 0);
         if (coulissesOnRails.Contains(coulisses[i]))
         {
             coulissesOnRails.Remove(coulisses[i]);
-            // Debug.Log("removed: coulisse: " + coulisses[i] + ", listenlaenge: " + coulissesOnRails.Count);
         }
     }
     public void ResetScreenSize()
@@ -589,10 +582,6 @@ public class CoulissesManager : MonoBehaviour
         railMinX = (0.68f * Screen.width) - (railWidth / 2);
         railHeight = 0.093f * Screen.height;
         railMinY = 0.07f * Screen.height - (railHeight / 2);
-        // windowWidth = 0.63f * Screen.width;
-        // windowHeight = 0.331f * Screen.height;
-        // windowMinX = (0.74f * Screen.width);
-        // windowMinY = 0.164f * Screen.height;
         mainMenue.transform.position = colliderSettings.transform.position;
     }
     public void removeCoulisse()

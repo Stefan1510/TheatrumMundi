@@ -40,20 +40,6 @@ public class SceneDataController : MonoBehaviour
 
     void Awake()
     {
-        // Debug.Log("***************************** Puffpaff");
-        // sceneFileName = "-";
-        // sceneFileAuthor = "-";
-        // sceneFileDate = "-";
-        // sceneFileComment = "-";
-        //recentSceneData = new SceneData();
-        //recentSceneData.railElements = new List<RailElement>();
-        //recentSceneData.sceneryElements = new List<SceneryElement>();
-        //recentSceneData.figureElements = new List<FigureElement>();
-        //recentSceneData.lightElements = new List<LightElement>();
-        foreach (GameObject re in objectsRailElements)
-        {
-            //Debug.Log("-----+++++" + re.name);
-        }
         SceneManaging.statusReiter = 1;
         foreach (GameObject objectSceneryElement in objectsSceneryElements)
         {
@@ -88,10 +74,6 @@ public class SceneDataController : MonoBehaviour
         sceneData.fileAuthor = sceneFileAuthor;
         sceneData.fileComment = sceneFileComment;
         sceneData.fileDate = sceneFileDate;
-        //Debug.Log(CreateJsonFromSceneData(sceneData));
-        //sceneData.railElements.Clear();
-        //sceneData.sceneryElements.Clear();
-        //sceneData.lightElements.Clear();
         sceneData.railElements = new List<RailElement>();
         sceneData.sceneryElements = new List<SceneryElement>();
         sceneData.figureElements = new List<FigureElement>();
@@ -108,9 +90,6 @@ public class SceneDataController : MonoBehaviour
                 x = objectRailElement.transform.localPosition.x,
                 y = objectRailElement.transform.localPosition.y,
                 z = objectRailElement.transform.localPosition.z,
-                //width=objectRailElement.GetComponent<SceneryController>().bounds.Length,
-                //width=objectRailElement.GetComponent<Renderer>().bounds.size.x,
-                //height=objectRailElement.GetComponent<Renderer>().bounds.size.y,
                 velocity = 1.0f,
                 direction = "toRight",
                 railElementSpeeds = new List<RailElementSpeed>()
@@ -125,11 +104,9 @@ public class SceneDataController : MonoBehaviour
             SceneryElement sceneSceneryElement = new SceneryElement
             {
                 name = objectSceneryElement.name,
-                //description = objectSceneryElement.transform.parent.GetChild(0).GetComponent<Text>().text,
                 x = objectSceneryElement.transform.position.x,
                 y = objectSceneryElement.transform.position.y,
                 z = objectSceneryElement.transform.position.z,
-                //active = objectSceneryElement.GetComponent<SceneryController>().sceneryActive,
                 parent = objectSceneryElement.transform.parent.name,
                 zPos = 0,
                 mirrored = false,
@@ -147,11 +124,7 @@ public class SceneDataController : MonoBehaviour
                 x = objectFigureElement.transform.position.x,
                 y = objectFigureElement.transform.position.y,
                 z = objectFigureElement.transform.position.z,
-                //active = objectFigureElement.GetComponent<SceneryController>().sceneryActive,	//check, if this command can be set up on a better way ;)
-                //parent = objectFigureElement.transform.parent.name,
                 mirrored = false,
-                //width = objectFigureElement.GetComponent<Renderer>().bounds.size.x,
-                //height = objectFigureElement.GetComponent<Renderer>().bounds.size.y,
                 width = 0.27f,
                 height = 0.16f,
                 velocity = 0.0f,
@@ -203,6 +176,7 @@ public class SceneDataController : MonoBehaviour
 
         //lightAnimation
         sceneData.lightingSets.Add(new LightingSet());
+
         //bckgroundAnimation
         sceneData.backgroundPositions.Add(new BackgroundPosition());
 
@@ -217,7 +191,6 @@ public class SceneDataController : MonoBehaviour
             sceneData.musicClipElements.Add(sceneMusicClipElement);
         }
 
-        //Debug.LogWarning(JsonUtility.ToJson(sceneData, true));
         recentSceneData = sceneData;
         return sceneData;
     }
@@ -228,8 +201,6 @@ public class SceneDataController : MonoBehaviour
         sceneFileAuthor = sceneData.fileAuthor;
         sceneFileDate = sceneData.fileDate;
         sceneFileComment = sceneData.fileComment;
-        //SetFileMetaDataToScene();
-        //Debug.Log(sceneData.railElements[0]);
 
         //rail elements
         RailsApplyToScene(sceneData.railElements);
@@ -245,11 +216,6 @@ public class SceneDataController : MonoBehaviour
 
         //music title elements (Musik)
         MusicApplyToScene(sceneData.musicClipElements);
-
-        // for (int i = 0; i < imageTimelineRails.Length; i++)
-        // {
-        //     imageTimelineRails[i].GetComponent<RailManager>().PublicUpdate();
-        // }
     }
 
     public void RailsApplyToScene(List<RailElement> railElements)
@@ -278,7 +244,6 @@ public class SceneDataController : MonoBehaviour
                     se.railnumber = int.Parse(se.parent.Substring(7));
                     goSceneryElement.transform.parent = GameObject.Find(se.parent).transform;
                     goSceneryElement.transform.localPosition = new Vector3(se.x + (se.zPos * 0.01f), se.y, se.z);
-                    //goSceneryElement.GetComponent<SceneryController>().sceneryActive = se.active;
                     goSceneryElement.SetActive(se.active);
                     if (se.mirrored)
                     {
@@ -294,7 +259,6 @@ public class SceneDataController : MonoBehaviour
                             goSceneryElement.transform.localScale = new Vector3(-goSceneryElement.transform.localScale.x, goSceneryElement.transform.localScale.y, goSceneryElement.transform.localScale.z);
                         }
                     }
-                    //Debug.Log("Objekt: "+goSceneryElement+", Schiene: "+goSceneryElement.transform.parent+", Railnumber: "+se.railnumber+", active: "+goSceneryElement.active+", se.active: "+se.active);
                     if (se.active)
                     {
                         countActiveSceneryElements++;
@@ -302,14 +266,11 @@ public class SceneDataController : MonoBehaviour
                     if (se.outline == false)
                     {
                         goSceneryElement.GetComponent<cakeslice.Outline>().enabled = false;
-                        //goSceneryElement.GetComponent<MeshRenderer>().materials[i].DisableKeyword("_EMISSION");
 
                     }
                     else
                     {
                         goSceneryElement.GetComponent<cakeslice.Outline>().enabled = true;
-                        //goSceneryElement.GetComponent<Outline>().enabled = true;
-                        //goSceneryElement.GetComponent<MeshRenderer>().materials[i].EnableKeyword("_EMISSION");
                     }
                 }
             }
@@ -338,8 +299,6 @@ public class SceneDataController : MonoBehaviour
                         case 0:
                             break;
                         case 1:
-                            //Debug.Log("lights3D " + gameObjectLe.name);
-                            //gameObjectLe.GetComponent<LightController>().Sayhi();
                             gameObjectLe.GetComponent<LightController>().ChangeHorizontal(le.angle_h);
                             gameObjectLe.GetComponent<LightController>().ChangeVertical(le.angle_v);
                             gameObjectLe.GetComponent<LightController>().ChangePosition(le.z);
@@ -362,30 +321,16 @@ public class SceneDataController : MonoBehaviour
 
     public void FiguresApplyToScene(List<FigureElement> figureElements)
     {
-        //Debug.LogWarning("before clear: "+objects2dFigureInstances.Count);
         countActiveFigureElements = 0;
-        //foreach (GameObject figureInstance3d in objects3dFigureInstances)
-        //{
-        //    Destroy(figureInstance3d);
-        //}
-        //objects3dFigureInstances.Clear();
-        //foreach (GameObject figureInstance2d in objects2dFigureInstances)
-        //{
-        //    Destroy(figureInstance2d);
-        //}
-        //objects2dFigureInstances.Clear();
 
         foreach (GameObject imageTimeLineRail in imageTimelineRails)
         {
-            //Debug.LogWarning("Hi, my name is " + imageTimeLineRail.name);
             foreach (GameObject obj in imageTimeLineRail.GetComponent<RailManager>().timelineInstanceObjects)
             {
-                //Debug.LogWarning(obj);
                 Destroy(obj);
             }
             foreach (GameObject obj3d in imageTimeLineRail.GetComponent<RailManager>().timelineInstanceObjects3D)
             {
-                //Debug.LogWarning(obj3d);
                 Destroy(obj3d);
             }
             imageTimeLineRail.GetComponent<RailManager>().layerOverlaps = 0;
@@ -395,39 +340,18 @@ public class SceneDataController : MonoBehaviour
             imageTimeLineRail.GetComponent<RailManager>().timelineInstanceObjects3D.Clear();
         }
 
-        //Debug.LogWarning("after clear: " + objects2dFigureInstances.Count);
         foreach (FigureElement fe in figureElements)
-        {
             for (int i = 0; i < objectsFigureElements.Length; i++)
-            //foreach (GameObject goFigureElement in objectsFigureElements)
-            {
                 if (fe.name == objectsFigureElements[i].name)
-                //if (fe.name == goFigureElement.name)
                 {
-                    //Debug.LogWarning("find Figures Here: " + fe.name);
                     foreach (FigureInstanceElement feInstance in fe.figureInstanceElements)
                     {
                         countActiveFigureElements++;
-                        //Debug.LogWarning("Create Instance here: " + feInstance.name);
-                        //Debug.Log("layer scene data: " + feInstance.layer);
-                        //Debug.Log("i: " + i);
                         GameObject curr3DObject = imageTimelineRails[feInstance.railStart].GetComponent<RailManager>().CreateNew2DInstance(i, feInstance.moment, true);
-                        //Debug.Log("box collider enabled: " + imageTimelineRails[feInstance.railStart].GetComponent<RailManager>().timelineInstanceObjects[imageTimelineRails[feInstance.railStart].GetComponent<RailManager>().timelineInstanceObjects.Count - 1].GetComponent<BoxCollider2D>().enabled);
-                        // curr3DObject = Instantiate(objectsFigureElements[i]);
-                        // imageTimelineRails[feInstance.railStart].GetComponent<RailManager>().timelineInstanceObjects3D.Add(curr3DObject);
-                        //Debug.LogError("+++timeline3D: "+imageTimelineRails[feInstance.railStart].GetComponent<RailManager>().timelineInstanceObjects3D.Count);
-                        // curr3DObject.transform.SetParent(objectsRailElements[feInstance.railStart].transform.GetChild(0));
                         curr3DObject.transform.localPosition = new Vector3(curr3DObject.transform.localPosition.x, curr3DObject.transform.localPosition.y, (objectsRailElements[feInstance.railStart].transform.GetChild(0).GetComponent<RailSpeedController>().GetDistanceAtTime(feInstance.moment)));
                         objects3dFigureInstances.Add(curr3DObject);
-
                     }
-                    //            objectFigureElement.transform.position = new Vector3(figureElement.x, figureElement.y, figureElement.z);
-                    //            objectFigureElement.GetComponent<SceneryController>().sceneryActive = figureElement.active;
-                    //            objectFigureElement.SetActive(figureElement.active);
-                    //            objectFigureElement.transform.parent = GameObject.Find(figureElement.parent).transform;
                 }
-            }
-        }
     }
 
     public void MusicApplyToScene(List<MusicClipElement> musicClipElements)
@@ -458,7 +382,6 @@ public class SceneDataController : MonoBehaviour
     public string CreateJsonFromSceneData(SceneData sceneData)
     {
         String JsonData = JsonUtility.ToJson(sceneData, true);
-        //Debug.LogFormat("Data serialized to:\n{0}", JsonData);
         return JsonData;
     }
 
@@ -468,15 +391,9 @@ public class SceneDataController : MonoBehaviour
         return sceneData;
     }
 
-
     public void TestThisStuff()
     {
         //recentSceneData = CreateSceneData();
         CreateScene(recentSceneData);
     }
-    // Update is called once per frame
-    //void Update()
-    //{
-
-    //}
 }

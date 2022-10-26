@@ -13,13 +13,10 @@ public class TimeSliderController : MonoBehaviour, IPointerUpHandler, IDragHandl
     [SerializeField] private Text _textTime;
     [SerializeField] private Text _textMaxTime;
     [SerializeField] private Toggle _toggleKeyConfigControlls;
-    [SerializeField] private GameObject _panelControls;
-    [SerializeField] private GameObject _panelRailSpeedControls;
-    [SerializeField] private GameObject _panelLightControls;
-    [SerializeField] private GameObject _panelBackgroundPositionControls, imgTimelineSettingsArea;
+    [SerializeField] private GameObject _panelControls, _panelRailSpeedControls, _panelLightControls, _panelBackgroundPositionControls, imgTimelineSettingsArea;
+    [SerializeField] private GameObject[] _keyButtons;
 
     private Slider _thisSlider;
-    // Start is called before the first frame update
     void Start()
     {
         if (SceneManaging.isExpert) imgTimelineSettingsArea.SetActive(true);
@@ -79,6 +76,7 @@ public class TimeSliderController : MonoBehaviour, IPointerUpHandler, IDragHandl
             {
                 case 0:
                     _panelRailSpeedControls.SetActive(true);
+
                     break;
                 case 1:
                     _panelLightControls.SetActive(true);
@@ -96,6 +94,7 @@ public class TimeSliderController : MonoBehaviour, IPointerUpHandler, IDragHandl
             {
                 case 0:
                     imgTimelineSettingsArea.SetActive(false);
+                    foreach (GameObject key in _keyButtons) key.gameObject.SetActive(false);
                     break;
                 case 1:
                     _panelLightControls.SetActive(true);
@@ -103,9 +102,11 @@ public class TimeSliderController : MonoBehaviour, IPointerUpHandler, IDragHandl
                     break;
                 case 2:
                     imgTimelineSettingsArea.SetActive(false);
+                    foreach (GameObject key in _keyButtons) key.gameObject.SetActive(false);
                     break;
                 case 3:
                     imgTimelineSettingsArea.SetActive(false);
+                    foreach (GameObject key in _keyButtons) key.gameObject.SetActive(false);
                     break;
             }
         }
