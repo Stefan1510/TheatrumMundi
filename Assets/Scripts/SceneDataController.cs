@@ -230,6 +230,7 @@ public class SceneDataController : MonoBehaviour
                 }
             }
         }
+        // Debug.Log("fertig rails");
     }
 
     public void SceneriesApplyToScene(List<SceneryElement> sceneryElements)
@@ -237,7 +238,7 @@ public class SceneDataController : MonoBehaviour
         countActiveSceneryElements = 0;
         foreach (SceneryElement se in sceneryElements)
         {
-            foreach (GameObject goSceneryElement in objectsSceneryElements)
+            foreach (GameObject goSceneryElement in objectsSceneryElements) // 3D-Objekte
             {
                 if (se.name == goSceneryElement.name)
                 {
@@ -275,6 +276,7 @@ public class SceneDataController : MonoBehaviour
                 }
             }
         }
+        // Debug.Log("fertig kulissen");
     }
 
     public void LightsApplyToScene(List<LightElement> lightElements)
@@ -317,6 +319,7 @@ public class SceneDataController : MonoBehaviour
                 }
             }
         }
+        // Debug.Log("fertig lights");
     }
 
     public void FiguresApplyToScene(List<FigureElement> figureElements)
@@ -352,6 +355,7 @@ public class SceneDataController : MonoBehaviour
                         objects3dFigureInstances.Add(curr3DObject);
                     }
                 }
+        // Debug.Log("fertig figures");
     }
 
     public void MusicApplyToScene(List<MusicClipElement> musicClipElements)
@@ -377,6 +381,7 @@ public class SceneDataController : MonoBehaviour
                 }
             }
         }
+        // Debug.Log("fertig music");
     }
 
     public string CreateJsonFromSceneData(SceneData sceneData)

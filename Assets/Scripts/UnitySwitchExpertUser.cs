@@ -45,7 +45,7 @@ public class UnitySwitchExpertUser : MonoBehaviour
 
     [SerializeField] private GameObject _imageTimelineRailBg;
     [SerializeField] private GameObject _imageTimelineRailLight;
-    [SerializeField] private GameObject[] _aImageTimeSliderSettings;
+    //[SerializeField] private GameObject[] _aImageTimeSliderSettings;
 
 
     private bool _gameControllerStarted = false;

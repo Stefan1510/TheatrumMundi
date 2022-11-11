@@ -98,6 +98,7 @@ public class TimeSliderController : MonoBehaviour, IPointerUpHandler, IDragHandl
                     break;
                 case 1:
                     _panelLightControls.SetActive(true);
+                    foreach (GameObject key in _keyButtons) key.gameObject.SetActive(true);
                     imgTimelineSettingsArea.SetActive(true);
                     break;
                 case 2:

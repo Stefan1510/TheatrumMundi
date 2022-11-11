@@ -61,6 +61,8 @@ public class UIController : MonoBehaviour
                 goButtonSceneryElements[i].GetComponent<RectTransform>().sizeDelta = goButtonSceneryElements[i].GetComponent<BoxCollider2D>().size = new Vector2(goMenueKulissen.GetComponent<CoulissesManager>().railWidth / 410 * goButtonSceneryElements[i].GetComponent<CoulisseStats>().CoulisseWidth / goButtonSceneryElements[i].transform.lossyScale.x, goMenueKulissen.GetComponent<CoulissesManager>().railWidth / 410 * goButtonSceneryElements[i].GetComponent<CoulisseStats>().CoulisseHeight / goButtonSceneryElements[i].transform.lossyScale.y);
                 goButtonSceneryElements[i].GetComponent<BoxCollider2D>().offset = new Vector2(0, goButtonSceneryElements[i].GetComponent<RectTransform>().rect.height / 2);
 
+                // add active elements to "coulissesOnRails"
+                CoulissesMan.GetComponent<CoulissesManager>().coulissesOnRails.Add(goButtonSceneryElements[i]);
             }
             else
             {

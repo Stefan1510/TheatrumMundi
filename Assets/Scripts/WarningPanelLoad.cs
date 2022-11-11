@@ -23,8 +23,9 @@ public class WarningPanelLoad : MonoBehaviour
     {
         buttonClicked = null;
         gameObject.SetActive(true);
-        while (buttonClicked==null)
+        while (buttonClicked == null)
         {
+            Debug.Log("was ist das?");
             yield return null;
         }
         isButtonClicked = true;
@@ -84,6 +85,6 @@ public class WarningPanelLoad : MonoBehaviour
     // Update is called once per frame
     //void Update()
     //{
-        
+
     //}
 }

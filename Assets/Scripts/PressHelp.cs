@@ -46,8 +46,6 @@ public class PressHelp : MonoBehaviour
     {
         float x = _idleTimer - _helpAnimWaitTime;
         float y = -4 * Mathf.Pow(x - 0.5f, 2) + 1;
-        //Color32 buttonColor = Color32.Lerp(_buttonColorStart, _buttonColorAttention, y);
-        //transform.GetChild(0).GetComponent<Image>().color = buttonColor;
         Color32 buttonColor = Color32.Lerp(_buttonColorStart, _buttonColorAttention, y);
         transform.GetChild(1).GetComponent<Image>().color = buttonColor;
         transform.GetChild(0).localScale = new Vector3(1 + y / 4, 1 + y / 4, 1 + y / 4);
@@ -88,12 +86,12 @@ public class PressHelp : MonoBehaviour
         {
             StopHelpAnimation();
         }
-        if (Input.GetMouseButton(0))
-        {
-            StopHelpAnimation();
-        }
+        // if (Input.GetMouseButton(0))
+        // {
+        //     StopHelpAnimation();
+        // }
         _idleTimer += Time.deltaTime;
-        if (_idleTimer > _helpAnimWaitTime)
+        if (_idleTimer > _helpAnimWaitTime && !SceneManaging.playing)
         {
             HelpAnimation();
         }

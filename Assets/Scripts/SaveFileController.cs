@@ -181,6 +181,7 @@ public class SaveFileController : MonoBehaviour
             }
             AnimationTimer.SetTime(0);
             GetComponent<UIController>().Rails[0].GetComponent<RailManager>().PublicUpdate();
+            //GetComponent<UIController>().CoulissesMan.GetComponent<CoulissesManager>().PublicUpdate();
         }
     }
     public void DeleteFile()

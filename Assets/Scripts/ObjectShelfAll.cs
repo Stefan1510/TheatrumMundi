@@ -1,8 +1,5 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using System;
 
 public class ObjectShelfAll : MonoBehaviour
 {
@@ -31,21 +28,21 @@ public class ObjectShelfAll : MonoBehaviour
 
     public GameObject panelPreviewNotLoaded;
 
-    public GameObject gameController;
+    public GameObject gameController, overlayWaiting;
 
 
     private void Awake()
     {
-        MenueButton01.GetComponent<Button>().onClick.AddListener(() => ButtonShelf01());
-        MenueButton02.GetComponent<Button>().onClick.AddListener(() => ButtonShelf02());
-        MenueButton03.GetComponent<Button>().onClick.AddListener(() => ButtonShelf03());
-        MenueButton04.GetComponent<Button>().onClick.AddListener(() => ButtonShelf04());
-        MenueButton05.GetComponent<Button>().onClick.AddListener(() => ButtonShelf05(false));
-        MenueButton06.GetComponent<Button>().onClick.AddListener(() => ButtonShelf06());
-        MenueButton07.GetComponent<Button>().onClick.AddListener(() => ButtonShelf07(false));
-        MenueButton08.GetComponent<Button>().onClick.AddListener(() => ButtonShelf08());
-        ButtonMenueDirector.GetComponent<Button>().onClick.AddListener(() => SwitchToMenueDirector());
-        ButtonMenueConfig.GetComponent<Button>().onClick.AddListener(() => SwitchToMenueConfig());
+        // MenueButton01.GetComponent<Button>().onClick.AddListener(() => ButtonShelf01());
+        // MenueButton02.GetComponent<Button>().onClick.AddListener(() => ButtonShelf02());
+        // MenueButton03.GetComponent<Button>().onClick.AddListener(() => ButtonShelf03());
+        // MenueButton04.GetComponent<Button>().onClick.AddListener(() => ButtonShelf04());
+        // MenueButton05.GetComponent<Button>().onClick.AddListener(() => ButtonShelf05(false));
+        // MenueButton06.GetComponent<Button>().onClick.AddListener(() => ButtonShelf06());
+        // MenueButton07.GetComponent<Button>().onClick.AddListener(() => ButtonShelf07(false));
+        // MenueButton08.GetComponent<Button>().onClick.AddListener(() => ButtonShelf08());
+        // ButtonMenueDirector.GetComponent<Button>().onClick.AddListener(() => SwitchToMenueDirector());
+        // ButtonMenueConfig.GetComponent<Button>().onClick.AddListener(() => SwitchToMenueConfig());
     }
 
     void Start()
@@ -91,6 +88,7 @@ public class ObjectShelfAll : MonoBehaviour
     }
     public void ButtonShelf01()
     {
+        overlayWaiting.SetActive(true);
         if (SceneManaging.mainMenuActive == 1 && SceneManaging.configMenueActive == 4 && !SceneManaging.isPreviewLoaded)
         {
             StartCoroutine(panelPreviewNotLoaded.GetComponent<WarningPanelLoad>().WaitForButtonClick());
@@ -103,16 +101,20 @@ public class ObjectShelfAll : MonoBehaviour
     }
     public void ButtonShelf02()
     {
-        //show menue of kulissen or licht
         if (SceneManaging.mainMenuActive == 1 && SceneManaging.configMenueActive == 4 && !SceneManaging.isPreviewLoaded)
         {
             StartCoroutine(panelPreviewNotLoaded.GetComponent<WarningPanelLoad>().WaitForButtonClick());
             StartCoroutine(ButtonShelfI(2));
         }
         else StartCoroutine(ButtonShelfI(2));
+        // Debug.Log("button2");
+        // overlayWaiting.SetActive(true);
+        //show menue of kulissen or licht
+
     }
     public void ButtonShelf03()
     {
+        //overlayWaiting.SetActive(true);
         //show menue of lichtkonfiguration or musik
         if (SceneManaging.mainMenuActive == 1 && SceneManaging.configMenueActive == 4 && !SceneManaging.isPreviewLoaded)
         {
@@ -124,6 +126,7 @@ public class ObjectShelfAll : MonoBehaviour
 
     public void ButtonShelf04()
     {
+        // overlayWaiting.SetActive(true);
         //show menue of ladenspeichern
         if (SceneManaging.mainMenuActive == 1 && SceneManaging.configMenueActive == 4)
         {
@@ -136,6 +139,8 @@ public class ObjectShelfAll : MonoBehaviour
 
     public void ButtonShelf05(bool fromRail)
     {
+        // Debug.Log("button5");
+        // updating = true;
         //show menue of buehne or figuren
         if (SceneManaging.mainMenuActive == 1 && SceneManaging.configMenueActive == 4 && !SceneManaging.isPreviewLoaded)
         {
@@ -154,6 +159,7 @@ public class ObjectShelfAll : MonoBehaviour
     }
     public void ButtonShelf06()
     {
+        // overlayWaiting.SetActive(true);
         //show menue of kulissen or licht
         if (SceneManaging.mainMenuActive == 1 && SceneManaging.configMenueActive == 4 && !SceneManaging.isPreviewLoaded)
         {
@@ -167,6 +173,7 @@ public class ObjectShelfAll : MonoBehaviour
     }
     public void ButtonShelf07(bool fromRail)
     {
+        // overlayWaiting.SetActive(true);
         //show menue of lichtkonfiguration or musik
         if (SceneManaging.mainMenuActive == 1 && SceneManaging.configMenueActive == 4 && !SceneManaging.isPreviewLoaded)
         {
@@ -184,6 +191,7 @@ public class ObjectShelfAll : MonoBehaviour
     }
     public void ButtonShelf08()
     {
+        // overlayWaiting.SetActive(true);
         if (SceneManaging.mainMenuActive == 1 && SceneManaging.configMenueActive == 4 && !SceneManaging.isPreviewLoaded)
         {
             StartCoroutine(panelPreviewNotLoaded.GetComponent<WarningPanelLoad>().WaitForButtonClick());
@@ -193,6 +201,7 @@ public class ObjectShelfAll : MonoBehaviour
     }
     public void SwitchToMenueDirector()
     {
+        // overlayWaiting.SetActive(true);
         if (SceneManaging.mainMenuActive == 1 && SceneManaging.configMenueActive == 4 && !SceneManaging.isPreviewLoaded)
         {
             StartCoroutine(panelPreviewNotLoaded.GetComponent<WarningPanelLoad>().WaitForButtonClick());
@@ -205,6 +214,7 @@ public class ObjectShelfAll : MonoBehaviour
     }
     public void SwitchToMenueConfig()
     {
+
         if (SceneManaging.mainMenuActive == 1 && SceneManaging.configMenueActive == 4 && !SceneManaging.isPreviewLoaded)
         {
             StartCoroutine(panelPreviewNotLoaded.GetComponent<WarningPanelLoad>().WaitForButtonClick());
@@ -218,6 +228,8 @@ public class ObjectShelfAll : MonoBehaviour
 
     IEnumerator ButtonShelfI(int shelfNumber)
     {
+        //overlayWaiting.SetActive(true);
+        //yield return new WaitForEndOfFrame();
         while (panelPreviewNotLoaded.GetComponent<WarningPanelLoad>().buttonClicked == null)
         {
             yield return panelPreviewNotLoaded.GetComponent<WarningPanelLoad>().WaitForButtonClick();
@@ -348,5 +360,6 @@ public class ObjectShelfAll : MonoBehaviour
         StaticSceneData.Everything3D();
         gameController.GetComponent<UIController>().Rails[0].GetComponent<RailManager>().PublicUpdate();
         SceneManaging.isPreviewLoaded = true;
+        //overlayWaiting.SetActive(false);
     }
 }
