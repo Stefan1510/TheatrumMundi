@@ -19,6 +19,7 @@ public class CoulissesManager : MonoBehaviour
 
     #endregion
     #region private variables
+    [SerializeField] GameObject scrollViewScenery;
     int currentObjectIndex, clickInSettingsWindow;
     bool dragging;
     private bool sliding;
@@ -166,6 +167,7 @@ public class CoulissesManager : MonoBehaviour
             // if a coulisse is clicked
             if (currentObjectIndex != -1 && clickInSettingsWindow == -1)
             {
+                scrollViewScenery.GetComponent<ScrollRect>().enabled = false;
                 diff = new Vector2(getMousePos.x - coulisses[currentObjectIndex].transform.position.x, getMousePos.y - coulisses[currentObjectIndex].transform.position.y);
                 dragging = true;
                 if (isAnythingHighlighted())
@@ -265,7 +267,7 @@ public class CoulissesManager : MonoBehaviour
         if (Input.GetMouseButtonUp(0)) //left mouse button up
         {
             dragging = false;
-
+            scrollViewScenery.GetComponent<ScrollRect>().enabled = true;
 
             if (currentObjectIndex != -1)
             {
