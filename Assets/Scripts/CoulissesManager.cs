@@ -75,7 +75,7 @@ public class CoulissesManager : MonoBehaviour
     void Start()
     {
         colHighlightedGrey = new Color(.5f, .5f, 0.5f, .7f);    // falls doch rote farbe: 1f, .45f, 0.33f, 1f
-        colHighlightedGreen = new Color(0f, .8f, 0f, 1f);
+        colHighlightedGreen = new Color(0f, .8f, 0f, .7f);
         colCoulisse = new Color(1f, 1f, 1f, 1f);
         colSilhouette = new Color(0f, 0f, 0f, 0.4f);
         colSilhouetteActive = new Color(0.6f, 0f, 0f, 0.4f);
@@ -158,7 +158,6 @@ public class CoulissesManager : MonoBehaviour
             {
                 removeCoulisse();
             }
-            //
             else
             {
                 currentObjectIndex = identifyClickedObjectIndex();
@@ -279,8 +278,8 @@ public class CoulissesManager : MonoBehaviour
                     {
                         StaticSceneData.StaticData.sceneryElements[int.Parse(coulisses[currentObjectIndex].transform.parent.transform.GetChild(i).name.Substring(8, 2)) - 1].zPos = coulisses[currentObjectIndex].transform.parent.transform.GetChild(i).GetSiblingIndex();
                     }
-                    //write Text: layer of current coulisse
 
+                    //write Text: layer of current coulisse
                     textPositionZCoulisses.GetComponent<Text>().text = (coulisses[currentObjectIndex].transform.GetSiblingIndex() + 1) + "/" + coulisses[currentObjectIndex].transform.parent.transform.childCount;
                     StaticSceneData.StaticData.sceneryElements[currentObjectIndex].z = coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.x / 270;
                     StaticSceneData.StaticData.sceneryElements[currentObjectIndex].y = (coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.y) / 260 + .515f;
@@ -427,7 +426,34 @@ public class CoulissesManager : MonoBehaviour
         StaticSceneData.StaticData.sceneryElements[currentObjectIndex].y = sliderY.GetComponent<RectTransform>().GetComponent<Slider>().value;
         StaticSceneData.Sceneries3D();
     }
-    public bool checkHitting(Vector2 pos1, Vector2 rect, GameObject obj2)
+    public void InputValuePosition(bool height)
+    {
+        if (height)
+        {
+            Debug.Log("text hoehe eingegeben"+float.Parse(sliderPosY.GetComponent<InputField>().text));
+            //2D-Kulisse
+            sliderY.GetComponent<Slider>().value = float.Parse(sliderPosY.GetComponent<InputField>().text);
+            coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition = new Vector2(coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.x, (sliderY.GetComponent<Slider>().value - 0.515f) * 260);
+
+            //3D-Kulisse
+            StaticSceneData.StaticData.sceneryElements[currentObjectIndex].y = sliderY.GetComponent<RectTransform>().GetComponent<Slider>().value;
+            StaticSceneData.Sceneries3D();
+        }
+        else
+        {
+            Debug.Log("text links rechts eingegeben"+float.Parse(sliderPosX.GetComponent<InputField>().text));
+            //2D-Kulisse
+            sliderX.GetComponent<Slider>().value = float.Parse(sliderPosX.GetComponent<InputField>().text);
+            if (justChanging == false)
+            {
+                coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition = new Vector2(sliderX.GetComponent<Slider>().value * 270, coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.y);
+            }
+            //3D-Kulisse
+            StaticSceneData.StaticData.sceneryElements[currentObjectIndex].z = sliderX.GetComponent<RectTransform>().GetComponent<Slider>().value;
+            StaticSceneData.Sceneries3D();
+        }
+    }
+    private bool checkHitting(Vector2 pos1, Vector2 rect, GameObject obj2)
     {
         bool hit = false;
 
@@ -440,7 +466,7 @@ public class CoulissesManager : MonoBehaviour
         }
         return hit;
     }
-    public bool checkHittingSettings(GameObject obj2)
+    private bool checkHittingSettings(GameObject obj2)
     {
         bool hit = false;
         if (obj2.GetComponent<RectTransform>().anchoredPosition.x - (obj2.GetComponent<RectTransform>().sizeDelta.x / 2) <= mainMenue.GetComponent<RectTransform>().sizeDelta.x + (obj2.GetComponent<RectTransform>().sizeDelta.x / 2) / 2 && obj2.GetComponent<RectTransform>().anchoredPosition.x + (obj2.GetComponent<RectTransform>().sizeDelta.x / 2) >= -(mainMenue.GetComponent<RectTransform>().sizeDelta.x / 2)
@@ -450,7 +476,7 @@ public class CoulissesManager : MonoBehaviour
         }
         return hit;
     }
-    public int checkHittingIndexTab(GameObject[] tabs, Vector2 mousePos)
+    private int checkHittingIndexTab(GameObject[] tabs, Vector2 mousePos)
     {
         int hit = -1;
         //calculate bounding-box related to the indexTab-pos
@@ -467,7 +493,7 @@ public class CoulissesManager : MonoBehaviour
         }
         return hit;
     }
-    public void highlight(int i, int color) // color: 0 = unhighlight ; 1 = highlight grey ; 2 = highlight green
+    private void highlight(int i, int color) // color: 0 = unhighlight ; 1 = highlight grey ; 2 = highlight green
     {
         if (color == 1)
         {
@@ -494,7 +520,7 @@ public class CoulissesManager : MonoBehaviour
             scenerySettings.SetActive(false);
         }
     }
-    public int identifyClickedObjectIndex()
+    private int identifyClickedObjectIndex()
     {
         int index = -1;
         for (int j = 0; j < coulisses.Length; j++)
@@ -506,7 +532,7 @@ public class CoulissesManager : MonoBehaviour
         }
         return index;
     }
-    public bool isDeleteButtonClicked()
+    private bool isDeleteButtonClicked()
     {
         bool clicked = false;
         if (deleteButton.GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(Input.mousePosition))
@@ -515,7 +541,7 @@ public class CoulissesManager : MonoBehaviour
         }
         return clicked;
     }
-    public bool isAnythingHighlighted()
+    private bool isAnythingHighlighted()
     {
         bool val = false;
         for (int i = 0; i < coulissesOnRails.Count; i++)
@@ -528,7 +554,7 @@ public class CoulissesManager : MonoBehaviour
         }
         return val;
     }
-    public int isSettingsWindowClicked()
+    private int isSettingsWindowClicked()
     {
         int index = currentObjectIndex;
         if (scenerySettings.GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(Input.mousePosition))
@@ -537,7 +563,7 @@ public class CoulissesManager : MonoBehaviour
         else index = -1;
         return index;
     }
-    public void mirrorObject()
+    private void mirrorObject()
     {
         if (isMirrored[currentObjectIndex])
         {
@@ -553,7 +579,7 @@ public class CoulissesManager : MonoBehaviour
         }
         StaticSceneData.Sceneries3D();
     }
-    public void pressPlus()
+    private void pressPlus()
     {
         if (coulisses[currentObjectIndex].transform.GetSiblingIndex() < coulisses[currentObjectIndex].transform.parent.transform.childCount - 1)
         {
@@ -564,7 +590,7 @@ public class CoulissesManager : MonoBehaviour
         }
 
     }
-    public void pressMinus()
+    private void pressMinus()
     {
         if (coulisses[currentObjectIndex].transform.GetSiblingIndex() > 0)
         {
@@ -595,12 +621,12 @@ public class CoulissesManager : MonoBehaviour
         railMinY = 0.07f * Screen.height - (railHeight / 2);
         mainMenue.transform.position = colliderSettings.transform.position;
     }
-    public void removeCoulisse()
+    private void removeCoulisse()
     {
         int i = int.Parse(deleteButton.transform.parent.name.Substring(8, 2)) - 1;
         placeInShelf(i);
     }
-    public void showDeleteButton(GameObject deleteButton, GameObject parent, bool show)
+    private void showDeleteButton(GameObject deleteButton, GameObject parent, bool show)
     {
         if (show)
         {
@@ -613,7 +639,7 @@ public class CoulissesManager : MonoBehaviour
             deleteButton.SetActive(false);
         }
     }
-    public void setIndexTabActive(int currentIndex)
+    private void setIndexTabActive(int currentIndex)
     {
         for (int i = 0; i < indexTabs.Length; i++)
         {

@@ -10,7 +10,7 @@ public class SaveFileController : MonoBehaviour
     #region variables
     //private string[] _fileList;
     private string _jsonString, loadedFiles, tmpCode;
-    public GameObject contentFileSelect, panelCodeInput, panelSaveShowCode, panelWarningInput, panelOverwrite, menuKulissen;
+    public GameObject contentFileSelect, panelCodeInput, panelSaveShowCode, panelWarningInput, panelOverwrite, menuKulissen, contentRailsMenue;
     public InputField inputFieldShowCode;
     public Button fileSelectButton;
     private List<Button> _buttonsFileList = new List<Button>();
@@ -48,18 +48,15 @@ public class SaveFileController : MonoBehaviour
         }
         //Debug.LogError(Application.absoluteURL);
         SceneManaging.isPreviewLoaded = true;
-
-    }
-    void Start()
-    {
+        
         _directorySaves = "Saves";
         if (_isWebGl)
         {
-            StartCoroutine(LoadFilesFromServer(""));
+            StartCoroutine(LoadFilesFromServer("",true));
         }
         else
         {
-            StartCoroutine(LoadFilesFromServer(""));
+            StartCoroutine(LoadFilesFromServer("",true));
             //ShowFilesFromDirectory();
         }
         menuKulissen.SetActive(true);
@@ -164,7 +161,11 @@ public class SaveFileController : MonoBehaviour
     {
         if (tempSceneData != null)
         {
-            for (int i = 0; i < this.GetComponent<UIController>().goButtonSceneryElements.Length; i++) menuKulissen.GetComponent<CoulissesManager>().placeInShelf(i);   // alle kulissen zurueck ins shelf
+            for (int i = 0; i < this.GetComponent<UIController>().goButtonSceneryElements.Length; i++) 
+            {
+                menuKulissen.GetComponent<CoulissesManager>().placeInShelf(i);   // alle kulissen zurueck ins shelf
+                // Todo: alle counter zurueck
+            }
             StaticSceneData.StaticData = tempSceneData;
             GetComponent<UIController>().SceneriesApplyToUI();
             GetComponent<UIController>().LightsApplyToUI();
@@ -172,16 +173,17 @@ public class SaveFileController : MonoBehaviour
             GetComponent<SceneDataController>().SetFileMetaDataToScene();
             if (_isWebGl)
             {
-                StartCoroutine(LoadFilesFromServer(""));
+                StartCoroutine(LoadFilesFromServer("",false));
             }
             else
             {
-                StartCoroutine(LoadFilesFromServer(""));
+                StartCoroutine(LoadFilesFromServer("",false));
                 // ShowFilesFromDirectory();
             }
             AnimationTimer.SetTime(0);
-            GetComponent<UIController>().Rails[0].GetComponent<RailManager>().PublicUpdate();
+            contentRailsMenue.GetComponent<RailManager>().PublicUpdate();
             //GetComponent<UIController>().CoulissesMan.GetComponent<CoulissesManager>().PublicUpdate();
+            menuKulissen.SetActive(true);
         }
     }
     public void DeleteFile()
@@ -200,12 +202,12 @@ public class SaveFileController : MonoBehaviour
 
         if (_isWebGl)
         {
-            StartCoroutine(LoadFilesFromServer(""));
+            StartCoroutine(LoadFilesFromServer("",false));
         }
         else
         {
             // ShowFilesFromDirectory();
-            StartCoroutine(LoadFilesFromServer(""));
+            StartCoroutine(LoadFilesFromServer("",false));
         }
     }
     public void LoadSceneFromFile(string fileName, bool fromCode)
@@ -260,7 +262,7 @@ public class SaveFileController : MonoBehaviour
     public void LoadCodeNow()
     {
         panelCodeInput.SetActive(false);
-        StartCoroutine(LoadFilesFromServer(inputFieldShowCode.text));
+        StartCoroutine(LoadFilesFromServer(inputFieldShowCode.text,false));
     }
     public void ClosePanelShowCode(GameObject panel)
     {
@@ -284,7 +286,7 @@ public class SaveFileController : MonoBehaviour
     //        GenerateFileButton(fileEntry);
     //    }
     //}
-    private IEnumerator LoadFilesFromServer(string code)
+    private IEnumerator LoadFilesFromServer(string code, bool fromAwake)
     {
         ClearFileButtons();
         WWWForm form = new WWWForm();
@@ -294,7 +296,7 @@ public class SaveFileController : MonoBehaviour
         string line = www.text;
         string[] arr = line.Split('?');
 
-        if (!string.IsNullOrEmpty(code))
+        if (!string.IsNullOrEmpty(code))    // code eingegeben
         {
             foreach (string fileEntry in arr)
                 if (fileEntry.ToLower().Contains(code.ToLower()))
@@ -303,7 +305,7 @@ public class SaveFileController : MonoBehaviour
                     loadedFiles += fileEntry + ",";
                 }
         }
-        else
+        else    
         {
             string[] separators = new string[] { "," };
 
@@ -326,6 +328,10 @@ public class SaveFileController : MonoBehaviour
                 }
 
             }
+        }
+        if(fromAwake)
+        {
+            StartCoroutine(LoadFileFromWWW("*Musterszene_leer.json",true));
         }
     }
 
@@ -359,7 +365,7 @@ public class SaveFileController : MonoBehaviour
 
         WWW www = new WWW(_basepath + "WriteFile.php", form);
         yield return www;
-        yield return StartCoroutine(LoadFilesFromServer(""));
+        yield return StartCoroutine(LoadFilesFromServer("",false));
     }
     /* private void WriteFileToDirectory(string json, string filePath)
      {
@@ -373,6 +379,7 @@ public class SaveFileController : MonoBehaviour
      }*/
     private IEnumerator LoadFileFromWWW(string fileName, bool fromCode)
     {
+        Debug.Log("klappt?");
         WWW www = new WWW(_basepath + "Saves/" + fileName);
         yield return www;
         _jsonString = www.text;
@@ -447,6 +454,6 @@ public class SaveFileController : MonoBehaviour
         string path = _basepath + "\\" + FileName;
         File.Delete(path);
         // ShowFilesFromDirectory();
-        StartCoroutine(LoadFilesFromServer(""));
+        StartCoroutine(LoadFilesFromServer("",false));
     }
 }

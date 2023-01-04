@@ -15,7 +15,7 @@ public class FigureController : MonoBehaviour
         if (gameObject.transform.parent.parent.name[0] == 'F')
         {
             //Debug.Log("Object: "+gameObject.transform.parent.transform.parent.name + " soll geloescht werden. Von timeline: "+gameObject.transform.parent.transform.parent.transform.parent.name);
-            gameObject.transform.parent.transform.parent.transform.parent.GetComponent<RailManager>().removeObjectFromTimeline2D(gameObject.transform.parent.transform.parent.gameObject);
+            gameObject.transform.parent.parent.parent.parent.GetComponent<RailManager>().removeObjectFromTimeline2D(gameObject.transform.parent.transform.parent.gameObject);
         }
         else
         {

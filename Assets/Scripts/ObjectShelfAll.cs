@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ObjectShelfAll : MonoBehaviour
 {
@@ -23,6 +24,7 @@ public class ObjectShelfAll : MonoBehaviour
 
     public GameObject ObjectMenueDirectorMain;
     public GameObject ObjectMenueConfigMain;
+    public GameObject MenueContentRails;
     public GameObject ButtonMenueConfig;    // Der Button in ObjectMenueDirectorMain der zum ConfigMenu leitet
     public GameObject ButtonMenueDirector;  // Der Button in ObjectMenueConfigMain der zum DirectorMenu leitet
 
@@ -152,7 +154,7 @@ public class ObjectShelfAll : MonoBehaviour
             StartCoroutine(ButtonShelfI(5));
             if (fromRail == false)
             {
-                gameController.GetComponent<UIController>().Rails[0].openTimelineByClick(false, gameController.GetComponent<UIController>().Rails[0].timelineImage, true);
+                MenueContentRails.GetComponent<RailManager>().openTimelineByClick(false, 0, true);
             }
         }
 
@@ -358,7 +360,7 @@ public class ObjectShelfAll : MonoBehaviour
                 break;
         }
         StaticSceneData.Everything3D();
-        gameController.GetComponent<UIController>().Rails[0].GetComponent<RailManager>().PublicUpdate();
+        MenueContentRails.GetComponent<RailManager>().PublicUpdate();
         SceneManaging.isPreviewLoaded = true;
         //overlayWaiting.SetActive(false);
     }

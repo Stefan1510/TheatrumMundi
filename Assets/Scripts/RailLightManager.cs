@@ -7,8 +7,9 @@ using UnityEngine.UI;
 public class RailLightManager : MonoBehaviour
 {
     Image timelineImage;
-    public GameObject gameController, menue2, parentMenue;
+    public GameObject gameController;
     public Image timeSliderImage;
+    public GameObject contentRailsMenue;
     [HideInInspector] public bool isTimelineOpen;
 
     GameObject timeSettings;
@@ -34,7 +35,7 @@ public class RailLightManager : MonoBehaviour
     }
     public void openTimelineByClick(bool thisTimelineOpen)
     {
-        if (isAnyTimelineOpen() == false)
+        /*if (isAnyTimelineOpen() == false)
         {
             //set global flag
             SceneManaging.anyTimelineOpen = true;
@@ -56,22 +57,22 @@ public class RailLightManager : MonoBehaviour
             }
         }
         else
-        {
+        {*/
             if (thisTimelineOpen)
             {
             }
             else
             {
                 // a different rail is open - close it
-                for (int i = 0; i < gameController.GetComponent<UIController>().Rails.Length; i++)
+                for (int i = 0; i < contentRailsMenue.GetComponent<RailManager>().rails.Length; i++)
                 {
-                    gameController.GetComponent<UIController>().Rails[i].GetComponent<RectTransform>().sizeDelta = new Vector2(timelineImage.rectTransform.rect.width, heightClosed / gameObject.transform.lossyScale.x);
-                    gameController.GetComponent<UIController>().Rails[i].GetComponent<BoxCollider2D>().size = new Vector2(timelineImage.GetComponent<BoxCollider2D>().size.x, heightClosed / gameObject.transform.lossyScale.x);
-                    gameController.GetComponent<UIController>().Rails[i].isTimelineOpen = false;
-                    gameController.GetComponent<UIController>().Rails[i].GetComponent<RailManager>().openCloseObjectInTimeline(false, gameController.GetComponent<UIController>().Rails[i].timelineInstanceObjects, gameController.GetComponent<UIController>().Rails[i].GetComponent<RailManager>().gameObject);
-                    for (int j = 0; j < gameController.GetComponent<UIController>().Rails[i].GetComponent<RailManager>().timelineInstanceObjects3D.Count; j++)
+                    contentRailsMenue.GetComponent<RailManager>().rails[i].GetComponent<RectTransform>().sizeDelta = new Vector2(timelineImage.rectTransform.rect.width, heightClosed / gameObject.transform.lossyScale.x);
+                    contentRailsMenue.GetComponent<RailManager>().rails[i].GetComponent<BoxCollider2D>().size = new Vector2(timelineImage.GetComponent<BoxCollider2D>().size.x, heightClosed / gameObject.transform.lossyScale.x);
+                    contentRailsMenue.GetComponent<RailManager>().railList[i].isTimelineOpen = false;
+                    contentRailsMenue.GetComponent<RailManager>().openCloseObjectInTimeline(false, contentRailsMenue.GetComponent<RailManager>().railList[i].timelineInstanceObjects, i);
+                    for (int j = 0; j < contentRailsMenue.GetComponent<RailManager>().railList[i].timelineInstanceObjects3D.Count; j++)
                     {
-                        gameController.GetComponent<UIController>().Rails[i].GetComponent<RailManager>().highlight(gameController.GetComponent<UIController>().Rails[i].GetComponent<RailManager>().timelineInstanceObjects3D[j], gameController.GetComponent<UIController>().Rails[i].timelineInstanceObjects[j], false);
+                        contentRailsMenue.GetComponent<RailManager>().highlight(contentRailsMenue.GetComponent<RailManager>().railList[i].timelineInstanceObjects3D[j], contentRailsMenue.GetComponent<RailManager>().railList[i].timelineInstanceObjects[j], false);
                     }
                     //Debug.Log("++++ Scaling down Rail: " + gameController.GetComponent<UIController>().Rails[i]);
                 }
@@ -109,8 +110,8 @@ public class RailLightManager : MonoBehaviour
                     ImageTimelineSelection.SetRailType(3);  // for background-rail 
                 }
             }
-        }
-        openCloseTimeSettings(isAnyTimelineOpen(), timeSettings);
+        //}
+        openCloseTimeSettings(true, timeSettings);
     }
 
     public void ResetScreenSize()
@@ -137,12 +138,12 @@ public class RailLightManager : MonoBehaviour
             //Debug.Log("size: " + timelineImage.GetComponent<RectTransform>().sizeDelta.y);
         }
     }
-    public bool isAnyTimelineOpen()
+    /*public bool isAnyTimelineOpen()
     {
         bool val = false;
-        for (int i = 0; i < gameController.GetComponent<UIController>().Rails.Length; i++)
+        for (int i = 0; i < contentRailsMenue.GetComponent<RailManager>().railList.Length; i++)
         {
-            if (gameController.GetComponent<UIController>().Rails[i].isTimelineOpen == true)
+            if (contentRailsMenue.GetComponent<RailManager>().railList[i].isTimelineOpen == true)
             {
                 val = true;
             }
@@ -153,7 +154,7 @@ public class RailLightManager : MonoBehaviour
             if (gameController.GetComponent<UIController>().RailLightBG[j].GetComponent<RailLightManager>().isTimelineOpen == true) val = true;
         }
         return val;
-    }
+    }*/
 
     public void openCloseTimeSettings(bool tlOpen, GameObject ts)
     {

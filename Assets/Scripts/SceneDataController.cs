@@ -14,7 +14,7 @@ public class SceneDataController : MonoBehaviour
     public GameObject[] objectsRailElements;
     public GameObject[] objectsSceneryElements;
     public GameObject[] objectsFigureElements;
-    public GameObject[] imageTimelineRails;
+    public GameObject ContentRailMenue;
     public AudioClip[] objectsMusicClips;
     public GameObject imageTimelineRailMusic;
     //public GameObject[] objectsLightElements;
@@ -326,21 +326,20 @@ public class SceneDataController : MonoBehaviour
     {
         countActiveFigureElements = 0;
 
-        foreach (GameObject imageTimeLineRail in imageTimelineRails)
+        foreach (RailManager.Rail imageTimeLineRail in ContentRailMenue.GetComponent<RailManager>().railList)
         {
-            foreach (GameObject obj in imageTimeLineRail.GetComponent<RailManager>().timelineInstanceObjects)
+            foreach (GameObject obj in imageTimeLineRail.timelineInstanceObjects)
             {
                 Destroy(obj);
             }
-            foreach (GameObject obj3d in imageTimeLineRail.GetComponent<RailManager>().timelineInstanceObjects3D)
+            foreach (GameObject obj3d in imageTimeLineRail.timelineInstanceObjects3D)
             {
                 Destroy(obj3d);
             }
-            imageTimeLineRail.GetComponent<RailManager>().layerOverlaps = 0;
-            imageTimeLineRail.GetComponent<RailManager>().timelineInstanceObjects.Clear();
-            imageTimeLineRail.GetComponent<RailManager>().figuresLayer1.Clear();
-            imageTimeLineRail.GetComponent<RailManager>().figuresLayer2.Clear();
-            imageTimeLineRail.GetComponent<RailManager>().timelineInstanceObjects3D.Clear();
+            imageTimeLineRail.timelineInstanceObjects.Clear();
+            imageTimeLineRail.figuresLayer1.Clear();
+            imageTimeLineRail.figuresLayer2.Clear();
+            imageTimeLineRail.timelineInstanceObjects3D.Clear();
         }
 
         foreach (FigureElement fe in figureElements)
@@ -350,8 +349,10 @@ public class SceneDataController : MonoBehaviour
                     foreach (FigureInstanceElement feInstance in fe.figureInstanceElements)
                     {
                         countActiveFigureElements++;
-                        GameObject curr3DObject = imageTimelineRails[feInstance.railStart].GetComponent<RailManager>().CreateNew2DInstance(i, feInstance.moment, true);
+                        Debug.Log("rail moment: "+feInstance.moment);
+                        GameObject curr3DObject = ContentRailMenue.GetComponent<RailManager>().CreateNew2DInstance(i, feInstance.moment, feInstance.railStart);
                         curr3DObject.transform.localPosition = new Vector3(curr3DObject.transform.localPosition.x, curr3DObject.transform.localPosition.y, (objectsRailElements[feInstance.railStart].transform.GetChild(0).GetComponent<RailSpeedController>().GetDistanceAtTime(feInstance.moment)));
+                        //Debug.Log("pos: " + curr3DObject.transform.localPosition);
                         objects3dFigureInstances.Add(curr3DObject);
                     }
                 }
