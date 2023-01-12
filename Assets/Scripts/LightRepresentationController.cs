@@ -44,7 +44,6 @@ public class LightRepresentationController : MonoBehaviour
         //Debug.Log(UiSetting_LB.ToString() + " - " + _start_UiSetting_LB_Light_angle);
     }
 
-    // Start is called before the first frame update
     void Start()
     {
         UiSetting_LB.GetComponent<Image>().sprite = UiSetting_LB_off_Sprite;
@@ -52,12 +51,6 @@ public class LightRepresentationController : MonoBehaviour
         UiSetting_LB_side.GetComponent<Image>().sprite = UiSetting_LB_side_off_Sprite;
         UiSetting_LB_side_Light.GetComponent<Image>().sprite = UiSetting_LB_Light_off_Sprite;
     }
-
-    // Update is called once per frame
-    //void Update()
-    //{
-        
-    //}
 
     public void SetSelected(bool selected)
     {

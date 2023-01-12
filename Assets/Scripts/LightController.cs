@@ -33,9 +33,6 @@ public class LightController : MonoBehaviour
     [HideInInspector] public Image PanelLbImage;
 
     [HideInInspector] public LightElement thisLightElement;
-    //private void awake()
-    //{
-    //}
 
     private void Awake()
     {
@@ -65,29 +62,15 @@ public class LightController : MonoBehaviour
         PanelLbImage.color = new Color(171f / 255f, 171f / 255f, 171f / 255f, 160f / 255f);
     }
 
-    // Start is called before the first frame update
     void Start()
     {
         thisLightElement = StaticSceneData.StaticData.lightElements.Find(le => le.name == gameObject.name);
         //Debug.Log(PanelLbImage);
         LightActivation(false);
     }
-
-    //// Update is called once per frame
-    //void Update()
-    //{
-
-    //}
-
-    public void Sayhi()
-    {
-        Debug.Log(gameObject.name + " says 'Hi!'");
-    }
-
     public void LightActivation(bool onOffSwitch)
     {
-
-        //lightElements müssen erst noch mit der StaticData bekannt gemacht werden --> SceneDataController
+        //lightElements mï¿½ssen erst noch mit der StaticData bekannt gemacht werden --> SceneDataController
 
         thisLightElement.active = onOffSwitch;
         GetComponent<Light>().enabled = onOffSwitch;
@@ -108,7 +91,6 @@ public class LightController : MonoBehaviour
         thisLightElement.intensity = intensityValue;
         GetComponent<Light>().intensity = intensityValue;
         UiSetting_LB_Image.GetComponent<LightRepresentationController>().setBrightness_UiSetting_LB_Light_angle(intensityValue);
-        //StaticSceneData.Lights3D();
     }
 
     public void ChangePosition(float PositionValue)
@@ -119,7 +101,6 @@ public class LightController : MonoBehaviour
         transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, _startPosition + PositionValue);
         transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, _startYAngle - angleYValue, transform.localEulerAngles.z);
         UiSetting_LB_Image.GetComponent<LightRepresentationController>().setPosition_UiSetting_LB_Light(PositionValue);
-        //StaticSceneData.Lights3D();
     }
 
     public void ChangeHeight(float HeightValue)
@@ -129,7 +110,6 @@ public class LightController : MonoBehaviour
         transform.localPosition = new Vector3(transform.localPosition.x, _startHeight + HeightValue, transform.localPosition.z);
         transform.localEulerAngles = new Vector3(_startXAngle + angleXValue, transform.localEulerAngles.y, transform.localEulerAngles.z);
         UiSetting_LB_Image.GetComponent<LightRepresentationController>().setHeight_UiSetting_LB_side_Light(HeightValue);
-        //StaticSceneData.Lights3D();
     }
 
     public void ChangeHorizontalValue(float HorizontalValue)
@@ -142,7 +122,6 @@ public class LightController : MonoBehaviour
         else
             ChangeVerticalLeft(thisLightElement.angle_v);
         UiSetting_LB_Image.GetComponent<LightRepresentationController>().RotateVertical(HorizontalValue);
-        //StaticSceneData.Lights3D();
     }
 
     public void ChangeVerticalValue(float VerticalValue)
@@ -156,7 +135,6 @@ public class LightController : MonoBehaviour
             ChangeHorizontalLeft(thisLightElement.angle_h);
 
         //ChangeHorizontal(thisLightElement.angle_h);
-        //StaticSceneData.Lights3D();
         UiSetting_LB_Image.GetComponent<LightRepresentationController>().RotateHorizontal(VerticalValue);
     }
 

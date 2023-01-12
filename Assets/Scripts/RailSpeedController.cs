@@ -5,7 +5,7 @@ using UnityEngine;
 public class RailSpeedController : MonoBehaviour
 {
     public int railIndex;
-    public float speed;
+    public float speed=0;
     private float _speedAtTime;
     private float _durationFromTime;
 
@@ -52,12 +52,14 @@ public class RailSpeedController : MonoBehaviour
         int momentBefore = railElementSpeeds.FindLastIndex(speed => speed.moment <= tStart); //sucht von hinten aus und findet den ersten Moment, der vor t liegt
         int momentCount = railElementSpeeds.Count;
 
-        // Debug.LogWarning("Before: " + momentBefore + " - After: " + momentAfter);
+        //Debug.LogWarning("Before: " + momentBefore + " - After: " + momentAfter);
         if (momentAfter == -1) //ein momentBefore existiert immer, da der erste Wert von railElementSpeeds bei Programmstart gesetzt wird
         {
             v1 = v2 = railElementSpeeds[momentBefore].speed;
+            //Debug.Log("speed: "+railElementSpeeds[momentBefore].speed);
             //distance = GetDistanceBetweenTwoMoments(0, tStart, v1, v2);
-            deltaT = 2 * distance / v1;
+            deltaT =  distance / v1;
+            //Debug.Log("delta: "+deltaT);
         }
         else
         {

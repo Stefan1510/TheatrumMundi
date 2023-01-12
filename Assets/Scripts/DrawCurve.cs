@@ -44,8 +44,9 @@ public class DrawCurve : MonoBehaviour
     }
     void Start()
     {
-        StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds[0] = new RailElementSpeed { moment = 0, speed = _valueSlider.value };  // im SceneDataController MUSS ein erstes Element hinzugefügt werden, bevor es hier angesprochen werden kann
-        //StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds[0] = new RailElementSpeed { moment = 0, speed = 1 };  // im SceneDataController MUSS ein erstes Element hinzugefügt werden, bevor es hier angesprochen werden kann
+        //Debug.Log("start drawcurve");
+        StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds[0] = new RailElementSpeed { moment = 0, speed = _valueSlider.value };  // im SceneDataController MUSS ein erstes Element hinzugefï¿½gt werden, bevor es hier angesprochen werden kann
+        //StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds[0] = new RailElementSpeed { moment = 0, speed = 1 };  // im SceneDataController MUSS ein erstes Element hinzugefï¿½gt werden, bevor es hier angesprochen werden kann
         //Debug.LogWarning(_valueSlider.value);
         StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds.Sort((x, y) => x.moment.CompareTo(y.moment));   // sortiert die railElementSpeeds anhand der Eigenschaft moment
         ChangeCurve();
@@ -66,14 +67,14 @@ public class DrawCurve : MonoBehaviour
 
     //}
 
-    public void AddValue(PointerEventData data)      // Aufruf auf Slider, der etwas verändern soll, gelöst über EventTrigger, übergebene data unnötig
+    public void AddValue(PointerEventData data)      // Aufruf auf Slider, der etwas verï¿½ndern soll, gelï¿½st ï¿½ber EventTrigger, ï¿½bergebene data unnï¿½tig
     {
         if (_railIndex == ImageTimelineSelection.GetRailNumber())
         {
             //Debug.LogError(data);
             float valueSliderValue = _valueSlider.value;
             float valueMoment = AnimationTimer.GetTime();
-            int momentIndex = StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds.FindIndex(mom => mom.moment == valueMoment);     //hier spezifisches RailElement, das kann dann entsprechend geändert werden
+            int momentIndex = StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds.FindIndex(mom => mom.moment == valueMoment);     //hier spezifisches RailElement, das kann dann entsprechend geï¿½ndert werden
 
             RailElementSpeed thisRailElementSpeed = new RailElementSpeed();
             //Debug.Log(StaticSceneData.StaticData.railElements[_railIndex].name);
@@ -81,7 +82,7 @@ public class DrawCurve : MonoBehaviour
             if (momentIndex == -1)
             {
                 thisRailElementSpeed = new RailElementSpeed { moment = valueMoment, speed = valueSliderValue };
-                StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds.Add(thisRailElementSpeed);     //hier spezifisches RailElement, das kann dann entsprechend geändert werden
+                StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds.Add(thisRailElementSpeed);     //hier spezifisches RailElement, das kann dann entsprechend geï¿½ndert werden
             }
             else
             {
@@ -109,20 +110,20 @@ public class DrawCurve : MonoBehaviour
         int listLength = StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds.Count;
         for (int valueStates = 0; valueStates < listLength - 1; valueStates++)
         {
-            float momentStartF = (int)StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds[valueStates].moment; // holen des "früheren" Moments aus der Datenhaltung
-            momentStartF = UtilitiesTm.FloatRemap(momentStartF, 0, _maxTime, 0, _textureCurve.width-3);    // mappen des "früheren" Moments von zwischen TimeSlider auf zwischen PanelWeite
+            float momentStartF = (int)StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds[valueStates].moment; // holen des "frï¿½heren" Moments aus der Datenhaltung
+            momentStartF = UtilitiesTm.FloatRemap(momentStartF, 0, _maxTime, 0, _textureCurve.width-3);    // mappen des "frï¿½heren" Moments von zwischen TimeSlider auf zwischen PanelWeite
             momentStart = (int)momentStartF;
 
-            float momentEndF = (int)StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds[valueStates + 1].moment; // holen des "späteren" Moments aus der Datenhaltung
-            momentEndF = UtilitiesTm.FloatRemap(momentEndF, 0, _maxTime, 0, _textureCurve.width-3); // mappen des "späteren" Moments von zwischen TimeSlider auf zwischen PanelWeite
+            float momentEndF = (int)StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds[valueStates + 1].moment; // holen des "spï¿½teren" Moments aus der Datenhaltung
+            momentEndF = UtilitiesTm.FloatRemap(momentEndF, 0, _maxTime, 0, _textureCurve.width-3); // mappen des "spï¿½teren" Moments von zwischen TimeSlider auf zwischen PanelWeite
             momentEnd = (int)momentEndF;
 
-            float valueStartF = StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds[valueStates].speed;  // holen des "früheren" Werts aus der Datenhaltung
-            valueStartF = UtilitiesTm.FloatRemap(valueStartF, _minValue, _maxValue, 0, _textureCurve.height-3);   // mappen des "früheren" Werts von zwischen ValueSlider auf zwischen GraphicHoehe
+            float valueStartF = StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds[valueStates].speed;  // holen des "frï¿½heren" Werts aus der Datenhaltung
+            valueStartF = UtilitiesTm.FloatRemap(valueStartF, _minValue, _maxValue, 0, _textureCurve.height-3);   // mappen des "frï¿½heren" Werts von zwischen ValueSlider auf zwischen GraphicHoehe
             valueStart = (int)valueStartF;
 
-            float valueEndF = StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds[valueStates + 1].speed;    // holen des "späteren" Werts aus der Datenhaltung
-            valueEndF = UtilitiesTm.FloatRemap(valueEndF, _minValue, _maxValue, 0, _textureCurve.height-3);    // mappen des "früheren" Moments von zwischen TimeSlider auf zwischen PanelWeite
+            float valueEndF = StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds[valueStates + 1].speed;    // holen des "spï¿½teren" Werts aus der Datenhaltung
+            valueEndF = UtilitiesTm.FloatRemap(valueEndF, _minValue, _maxValue, 0, _textureCurve.height-3);    // mappen des "frï¿½heren" Moments von zwischen TimeSlider auf zwischen PanelWeite
             valueEnd = (int)valueEndF;
 
             _textureCurve = UtilitiesTm.Bresenham(_textureCurve, momentStart, valueStart, momentEnd, valueEnd, _curveColors);

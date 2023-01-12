@@ -349,7 +349,7 @@ public class SceneDataController : MonoBehaviour
                     foreach (FigureInstanceElement feInstance in fe.figureInstanceElements)
                     {
                         countActiveFigureElements++;
-                        Debug.Log("rail moment: "+feInstance.moment);
+                        //Debug.Log("rail moment: "+feInstance.moment);
                         GameObject curr3DObject = ContentRailMenue.GetComponent<RailManager>().CreateNew2DInstance(i, feInstance.moment, feInstance.railStart);
                         curr3DObject.transform.localPosition = new Vector3(curr3DObject.transform.localPosition.x, curr3DObject.transform.localPosition.y, (objectsRailElements[feInstance.railStart].transform.GetChild(0).GetComponent<RailSpeedController>().GetDistanceAtTime(feInstance.moment)));
                         //Debug.Log("pos: " + curr3DObject.transform.localPosition);

@@ -21,19 +21,14 @@ public class LightAnimationRepresentation : MonoBehaviour
     private void Awake()
     {
         _maxIntensity = _sliderIntensity.maxValue;
-        //_maxTime = (int)_sliderTime.maxValue;
-        //_maxTime = 10 * 60 + 10;
         _maxTime = AnimationTimer.GetMaxTime();
-        //Debug.Log(_maxTime);
         _textureLightRepresentation = new Texture2D((int)_maxTime * 10, (int)_maxTime * 1, TextureFormat.RGBA32, false); // wird durch Panel RectTransform stretch automatisch gescaled
-        //_textureLightRepresentation.filterMode = FilterMode.Trilinear;
         _lightColors = new Color32[_textureLightRepresentation.width * _textureLightRepresentation.height];
         _lightColorsColumn = new Color32[_textureLightRepresentation.height];
         _imagePositionKnob.gameObject.SetActive(false);
         _imagePositionKnobCollection = new List<Image>();
     }
 
-    // Start is called before the first frame update
     void Start()
     {
         _gameObjectStarted = true;
@@ -47,12 +42,6 @@ public class LightAnimationRepresentation : MonoBehaviour
             ChangeImage();
         }
     }
-
-    //// Update is called once per frame
-    //void Update()
-    //{
-
-    //}
 
     public void ChangeImage()
     {
@@ -96,11 +85,9 @@ public class LightAnimationRepresentation : MonoBehaviour
             }
         }
         colorEnd = new Color32(StaticSceneData.StaticData.lightingSets[listLength - 1].r, StaticSceneData.StaticData.lightingSets[listLength - 1].g, StaticSceneData.StaticData.lightingSets[listLength - 1].b, 255);
-        //Debug.Log(listLength + " - r  " + colorEnd.r + " - g  " + colorEnd.g + " - b  " + colorEnd.b + " - intensityGradient " + intensityGradient);
         Color32[] lastColorBlock = new Color32[(_textureLightRepresentation.width - momentEnd - 1) * (int)intensityGradient];
         lastColorBlock = ChangeColors(lastColorBlock, colorEnd);
         _textureLightRepresentation.SetPixels32(secondCount, 0, (_textureLightRepresentation.width - momentEnd - 1), (int)intensityGradient, lastColorBlock);
-        //Debug.Log("_________________________________________________________");
         _textureLightRepresentation.Apply();
         _representationPanel.GetComponent<Image>().sprite = Sprite.Create(_textureLightRepresentation, new Rect(0, 0, _textureLightRepresentation.width, _textureLightRepresentation.height), new Vector2(0.5f, 0.5f));
         UpdateKnobPositions();
