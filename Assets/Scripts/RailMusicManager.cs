@@ -707,7 +707,7 @@ public class RailMusicManager : MonoBehaviour
                     newCopyOfFigure.transform.GetComponent<BoxCollider2D>().offset = new Vector2(newCopyOfFigure.transform.GetComponent<BoxCollider2D>().size.x / 2 - 50, newCopyOfFigure.transform.GetComponent<BoxCollider2D>().offset.y);
 
                     newCopyOfFigure.transform.GetChild(1).GetComponent<RectTransform>().anchoredPosition = new Vector2(0, newCopyOfFigure.transform.GetChild(1).GetComponent<RectTransform>().anchoredPosition.y);
-                    newCopyOfFigure.transform.GetChild(1).GetComponent<RectTransform>().pivot = new Vector2(0, newCopyOfFigure.transform.GetChild(1).GetComponent<RectTransform>().pivot.y);
+                    
                     //add object to list which objects are on timeline, set placed figures to timelineInstanceObjects-list
                     updateObjectList(timelineInstanceObjects, newCopyOfFigure);
                     //set original image back to shelf
