@@ -45,6 +45,7 @@ public class LightAnimationRepresentation : MonoBehaviour
 
     public void ChangeImage()
     {
+        //Debug.Log("change");
         _maxTime = AnimationTimer.GetMaxTime();
         _lightColors = ChangeColors(_lightColors, new Color32(255, 255, 255, 255));
         _textureLightRepresentation.SetPixels32(_lightColors);

@@ -10,7 +10,7 @@ public class CoulissesManager : MonoBehaviour
     public GameObject scenerySettings, mainMenue, textPositionZCoulisses, colliderSettings, colliderRailImage;
     public GameObject deleteButton, sliderX, sliderY, sliderPosX, sliderPosY;
     public Text sceneryName;
-    public List<GameObject> coulissesOnRails;
+    [HideInInspector] public List<GameObject> coulissesOnRails;
     [HideInInspector] public GameObject[] coulisses;
     [HideInInspector] public float railWidth, railHeight;
     [HideInInspector] public GameObject[] parentStart;
@@ -20,6 +20,7 @@ public class CoulissesManager : MonoBehaviour
     #endregion
     #region private variables
     [SerializeField] GameObject scrollViewScenery;
+    [SerializeField] Text[] coulisseCounter;
     int currentObjectIndex, clickInSettingsWindow;
     bool dragging;
     private bool sliding;
@@ -83,7 +84,6 @@ public class CoulissesManager : MonoBehaviour
         ResetScreenSize();
 
         setIndexTabActive(0);
-        //mainMenue.GetComponent<RectTransform>().pivot = collections[0].GetComponent<RectTransform>().pivot;
         StaticSceneData.Sceneries3D(); //CreateScene der SceneryElements
     }
     void Update()
@@ -333,13 +333,14 @@ public class CoulissesManager : MonoBehaviour
                     if (clickCoulisseFromShelf)
                     {
                         int tmpCount = collections[currentTabIndex].transform.childCount;
-                        textPositionZCoulisses.GetComponent<Text>().text = tmpCount + "/" + coulisses[currentObjectIndex].transform.parent.transform.childCount;
+                        
+                        textPositionZCoulisses.GetComponent<Text>().text = tmpCount + "/" + coulisses[currentObjectIndex].transform.parent.childCount;
                         coulisses[currentObjectIndex].transform.SetSiblingIndex(tmpCount);
                     }
                     else
                     {
                         coulisses[currentObjectIndex].transform.SetSiblingIndex(publicSibling);
-                        textPositionZCoulisses.GetComponent<Text>().text = (publicSibling + 1) + "/" + coulisses[currentObjectIndex].transform.parent.transform.childCount;
+                        textPositionZCoulisses.GetComponent<Text>().text = (publicSibling + 1) + "/" + coulisses[currentObjectIndex].transform.parent.childCount;
                     }
                     StaticSceneData.StaticData.sceneryElements[currentObjectIndex].active = true;
                     StaticSceneData.StaticData.sceneryElements[currentObjectIndex].parent = "Schiene" + (currentTabIndex + 1).ToString();
@@ -394,6 +395,12 @@ public class CoulissesManager : MonoBehaviour
                     placeInShelf(currentObjectIndex);
                     StaticSceneData.StaticData.sceneryElements[currentObjectIndex].active = false;
                 }
+                
+                for(int i=0;i<collections.Length;i++)
+                {
+                    coulisseCounter[i].text = collections[i].transform.childCount.ToString();
+                }
+
                 // set default values since nothing is clicked anymore
                 objectInField = false;
                 SceneManaging.objectInIndexTab = -1;
@@ -407,7 +414,7 @@ public class CoulissesManager : MonoBehaviour
     public void ChangeElementPositionX()
     {
         //2D-Kulisse
-        sliderPosX.GetComponent<InputField>().text = sliderX.GetComponent<Slider>().value.ToString();
+        sliderPosX.GetComponent<InputField>().text = sliderX.GetComponent<Slider>().value.ToString("0.0");
         if (justChanging == false)
         {
             coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition = new Vector2(sliderX.GetComponent<Slider>().value * 270, coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.y);
@@ -419,7 +426,7 @@ public class CoulissesManager : MonoBehaviour
     public void ChangeElementPositionY()
     {
         //2D-Kulisse
-        sliderPosY.GetComponent<InputField>().text = sliderY.GetComponent<Slider>().value.ToString();
+        sliderPosY.GetComponent<InputField>().text = sliderY.GetComponent<Slider>().value.ToString("0.0");
         coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition = new Vector2(coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.x, (sliderY.GetComponent<Slider>().value - 0.515f) * 260);
 
         //3D-Kulisse
@@ -430,7 +437,6 @@ public class CoulissesManager : MonoBehaviour
     {
         if (height)
         {
-            Debug.Log("text hoehe eingegeben"+float.Parse(sliderPosY.GetComponent<InputField>().text));
             //2D-Kulisse
             sliderY.GetComponent<Slider>().value = float.Parse(sliderPosY.GetComponent<InputField>().text);
             coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition = new Vector2(coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.x, (sliderY.GetComponent<Slider>().value - 0.515f) * 260);
@@ -441,7 +447,6 @@ public class CoulissesManager : MonoBehaviour
         }
         else
         {
-            Debug.Log("text links rechts eingegeben"+float.Parse(sliderPosX.GetComponent<InputField>().text));
             //2D-Kulisse
             sliderX.GetComponent<Slider>().value = float.Parse(sliderPosX.GetComponent<InputField>().text);
             if (justChanging == false)
