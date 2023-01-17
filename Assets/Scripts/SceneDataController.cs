@@ -330,7 +330,7 @@ public class SceneDataController : MonoBehaviour
         {
             foreach (GameObject obj in imageTimeLineRail.timelineInstanceObjects)
             {
-                Debug.Log("destroy "+obj);
+                //Debug.Log("destroy "+obj);
                 Destroy(obj);
             }
             foreach (GameObject obj3d in imageTimeLineRail.timelineInstanceObjects3D)
@@ -345,7 +345,7 @@ public class SceneDataController : MonoBehaviour
 
         foreach (FigureElement fe in figureElements)
         {
-            Debug.Log("fiugre: "+fe.name);
+           // Debug.Log("fiugre: "+fe.name);
             for (int i = 0; i < objectsFigureElements.Length; i++)
                 if (fe.name == objectsFigureElements[i].name)
                 {
