@@ -69,6 +69,7 @@ public class PressHelp : MonoBehaviour
         {
             StopHelpAnimation();
             helpTextLiveView.SetActive(false);
+            pressedLiveView = false;
 
             if (pressed)
             {
@@ -107,11 +108,43 @@ public class PressHelp : MonoBehaviour
         {
             helpTextLiveView.SetActive(false);
             pressedLiveView = false;
+            Debug.Log("pressed: "+pressedLiveView);
         }
         else
         {
             helpTextLiveView.SetActive(true);
-            pressedLiveView = true;
+            if (SceneManaging.mainMenuActive == 1 && SceneManaging.configMenueActive == 1)  // Buehne
+                {
+                    helpTextLiveView.transform.GetChild(0).GetComponent<Text>().text = "Das ist der LiveView. Bitte wähle links eine Schiene aus und bearbeite ihre Höhe und Position.";
+                }
+                else if (SceneManaging.mainMenuActive == 2 && SceneManaging.directorMenueActive == 1)   // Figuren
+                {
+                    helpTextLiveView.transform.GetChild(0).GetComponent<Text>().text = "Das ist der LiveView. Bitte wähle links eine Figur aus und ziehe sie auf die Schiene unten rechts.";
+                }
+                else if (SceneManaging.mainMenuActive == 1 && SceneManaging.configMenueActive == 2)    // kulissen
+                {
+                    helpTextLiveView.transform.GetChild(0).GetComponent<Text>().text = "Das ist der LiveView. Bitte wähle links eine Kulisse aus und ziehe sie auf die Schiene unten rechts.";
+                }
+                /*else if (SceneManaging.mainMenuActive == 2 && SceneManaging.directorMenueActive == 2)    // (light director) verworfen
+                {
+                    helpOverlayMenue2.SetActive(true);
+                    Debug.Log("overlay 6");
+                }*/
+                else if (SceneManaging.mainMenuActive == 1 && SceneManaging.configMenueActive == 3)  // licht
+                {
+                    helpTextLiveView.transform.GetChild(0).GetComponent<Text>().text = "Das ist der LiveView. Im Shelf links kannst du Lichter erstellen bearbeiten. ";
+                }
+                else if (SceneManaging.directorMenueActive == 3 && SceneManaging.mainMenuActive == 2)  // musik
+                {
+                    helpTextLiveView.transform.GetChild(0).GetComponent<Text>().text = "Das ist der LiveView. Bitte wähle links ein Musikstück aus und ziehe es auf die Schiene unten rechts.";
+                }
+                else if (SceneManaging.configMenueActive == 4)  // speichern
+                {
+                    helpTextLiveView.transform.GetChild(0).GetComponent<Text>().text = "Das ist der LiveView. Links im Shelf hast du die Möglichkeit, Szenen zu laden oder zu speichern.";
+                }
+                //pressed = true;
+                pressedLiveView = true;
+                Debug.Log("pressed: "+pressedLiveView);
         }
     }
     public void OnClick(int i)

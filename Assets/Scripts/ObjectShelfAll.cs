@@ -4,6 +4,7 @@ using UnityEngine.UI;
 
 public class ObjectShelfAll : MonoBehaviour
 {
+    #region variables
     public GameObject MenueShelf01;
     public GameObject MenueShelf02;
     public GameObject MenueShelf03;
@@ -32,7 +33,7 @@ public class ObjectShelfAll : MonoBehaviour
 
     public GameObject gameController, overlayWaiting;
 
-
+    #endregion
     private void Awake()
     {
         // MenueButton01.GetComponent<Button>().onClick.AddListener(() => ButtonShelf01());
@@ -360,7 +361,7 @@ public class ObjectShelfAll : MonoBehaviour
                 break;
         }
         StaticSceneData.Everything3D();
-        MenueContentRails.GetComponent<RailManager>().PublicUpdate();
+        //MenueContentRails.GetComponent<RailManager>().PublicUpdate();
         SceneManaging.isPreviewLoaded = true;
         //overlayWaiting.SetActive(false);
     }

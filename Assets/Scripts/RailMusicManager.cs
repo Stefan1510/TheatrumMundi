@@ -40,7 +40,7 @@ public class RailMusicManager : MonoBehaviour
     {
         clip = gameController.GetComponent<SceneDataController>().objectsMusicClips;
         timelineImage = this.GetComponent<Image>();
-        SceneManaging.anyTimelineOpen = false;
+        //SceneManaging.anyTimelineOpen = false;
         draggingOnTimeline = false;
         draggingObject = false;
         editTimelineObject = false;
@@ -542,6 +542,7 @@ public class RailMusicManager : MonoBehaviour
             //first checking if you have an object clicked in shelf
             if (currentClickedObjectIndex != (-1))      //is set in the identify-methods
             {
+                if(!SceneManaging.sceneChanged) SceneManaging.sceneChanged = true;
                 if (figureObjects[currentClickedObjectIndex].GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(getMousePos))
                 {
                     //set up some flags
@@ -551,6 +552,7 @@ public class RailMusicManager : MonoBehaviour
             //or check if you click an object in timeline
             if ((currentClickedInstanceObjectIndex != (-1)) && (editTimelineObject == true))
             {
+                if(!SceneManaging.sceneChanged) SceneManaging.sceneChanged = true;
                 diff = new Vector2(getMousePos.x - timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.position.x, getMousePos.y - timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.position.y);
                 if (timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(getMousePos))
                 {
@@ -602,7 +604,7 @@ public class RailMusicManager : MonoBehaviour
 
                 if (Physics2D.OverlapPoint(getMousePos) == false)       // mouse outside
                 {
-                    SceneManaging.objectsTimeline = ((int)Char.GetNumericValue(timelineImage.name[17]) - 1);  // save old timeline to remove instance of this timeline
+                    //SceneManaging.objectsTimeline = ((int)Char.GetNumericValue(timelineImage.name[17]) - 1);  // save old timeline to remove instance of this timeline
                     draggingObject = true;
                     draggingOnTimeline = false;
                 }
@@ -773,7 +775,7 @@ public class RailMusicManager : MonoBehaviour
             if (GetCurrentMusicCount(out int m, out int n, out int o) == 1)
             {
                 double startSec = calculateFigureStartTimeInSec(timelineInstanceObjects[m], timelineInstanceObjects[m].GetComponent<MusicLength>().musicLength, maxTimeInSec);
-                Debug.Log("start: " + startSec);
+                //Debug.Log("start: " + startSec);
                 double endSec = calculateMusicEndTimeInSec(timelineInstanceObjects[m], timelineInstanceObjects[m].GetComponent<MusicLength>().musicLength, maxTimeInSec);
                 float tmpTime = AnimationTimer.GetTime();
 

@@ -151,6 +151,7 @@ public class CoulissesManager : MonoBehaviour
             // if settingswindow (feineinstellungen) is clicked
             if (clickInSettingsWindow != -1)
             {
+                if(!SceneManaging.sceneChanged) SceneManaging.sceneChanged = true;
                 sliding = true;
             }
             // if delete button is clicked
@@ -166,6 +167,7 @@ public class CoulissesManager : MonoBehaviour
             // if a coulisse is clicked
             if (currentObjectIndex != -1 && clickInSettingsWindow == -1)
             {
+                if(!SceneManaging.sceneChanged) SceneManaging.sceneChanged = true;
                 scrollViewScenery.GetComponent<ScrollRect>().enabled = false;
                 diff = new Vector2(getMousePos.x - coulisses[currentObjectIndex].transform.position.x, getMousePos.y - coulisses[currentObjectIndex].transform.position.y);
                 dragging = true;
@@ -334,8 +336,8 @@ public class CoulissesManager : MonoBehaviour
                     {
                         int tmpCount = collections[currentTabIndex].transform.childCount;
                         
-                        textPositionZCoulisses.GetComponent<Text>().text = tmpCount + "/" + coulisses[currentObjectIndex].transform.parent.childCount;
-                        coulisses[currentObjectIndex].transform.SetSiblingIndex(tmpCount);
+                        textPositionZCoulisses.GetComponent<Text>().text = "1/" + tmpCount;
+                        coulisses[currentObjectIndex].transform.SetSiblingIndex(0);
                     }
                     else
                     {
@@ -584,7 +586,7 @@ public class CoulissesManager : MonoBehaviour
         }
         StaticSceneData.Sceneries3D();
     }
-    private void pressPlus()
+    private void pressMinus()
     {
         if (coulisses[currentObjectIndex].transform.GetSiblingIndex() < coulisses[currentObjectIndex].transform.parent.transform.childCount - 1)
         {
@@ -595,7 +597,7 @@ public class CoulissesManager : MonoBehaviour
         }
 
     }
-    private void pressMinus()
+    private void pressPlus()
     {
         if (coulisses[currentObjectIndex].transform.GetSiblingIndex() > 0)
         {

@@ -17,7 +17,7 @@ public class SaveFileController : MonoBehaviour
     public Text textFileMetaData, textFileContentData, textShowCode;
     private SceneData tempSceneData;
     private string _selectedFile, _directorySaves, _basepath;
-    private bool _isWebGl, loadFromAwake;
+    private bool _isWebGl, loadFromAwake, _pressOk;
     private string characters = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ";
     #endregion
     private void Awake()
@@ -62,6 +62,22 @@ public class SaveFileController : MonoBehaviour
             //ShowFilesFromDirectory();
         }
         //menuKulissen.SetActive(true);
+    }
+    private void Update()
+    {
+        if (_pressOk)
+        {
+            if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
+            {
+                Debug.Log("hello");
+                LoadCodeNow();
+                _pressOk = false;
+            }
+        }
+        if (SceneManaging.sceneChanged)
+        {
+
+        }
     }
     public void SaveSceneToFile(int overwrite) // 0=save, 1=overwrite, 2=save with new code
     {
@@ -173,18 +189,31 @@ public class SaveFileController : MonoBehaviour
     }
     public void LoadSceneFromTempToStatic()
     {
+        for (int i = 0; i < contentRailsMenue.GetComponent<RailManager>().railList.Length; i++)
+        {
+            for (int j = 0; j < contentRailsMenue.GetComponent<RailManager>().railList[i].timelineInstanceObjects.Count; j++)
+            {
+                Debug.Log("before: element: " + contentRailsMenue.GetComponent<RailManager>().railList[i].timelineInstanceObjects[j] + ", size: " + contentRailsMenue.GetComponent<RailManager>().railList[i].timelineInstanceObjects[j].GetComponent<RectTransform>().sizeDelta);
+            }
+        }
+
         if (tempSceneData != null)
         {
             for (int i = 0; i < this.GetComponent<UIController>().goButtonSceneryElements.Length; i++)
             {
                 menuKulissen.GetComponent<CoulissesManager>().placeInShelf(i);   // alle kulissen zurueck ins shelf
-                // Todo: alle counter zurueck
             }
+            // Todo: alle counter zurueck
+            for (int j = 0; j < contentRailsMenue.GetComponent<RailManager>().figCounterCircle.Length; j++)
+            {
+                contentRailsMenue.GetComponent<RailManager>().figCounterCircle[j].transform.GetChild(0).GetComponent<Text>().text = "0";
+            }
+
             StaticSceneData.StaticData = tempSceneData;
             GetComponent<UIController>().SceneriesApplyToUI();
             GetComponent<UIController>().LightsApplyToUI();
             GetComponent<UIController>().RailsApplyToUI();
-            GetComponent<SceneDataController>().SetFileMetaDataToScene();
+            //GetComponent<SceneDataController>().SetFileMetaDataToScene();
             if (_isWebGl)
             {
                 StartCoroutine(LoadFilesFromServer("", false));
@@ -194,21 +223,33 @@ public class SaveFileController : MonoBehaviour
                 StartCoroutine(LoadFilesFromServer("", false));
                 // ShowFilesFromDirectory();
             }
-            AnimationTimer.SetTime(0);
-            contentRailsMenue.GetComponent<RailManager>().PublicUpdate();
+            //AnimationTimer.SetTime(0);
+            //contentRailsMenue.GetComponent<RailManager>().openCloseObjectInTimeline(false,contentRailsMenue.GetComponent<RailManager>().railList[0].timelineInstanceObjects,0);
+            //contentRailsMenue.GetComponent<RailManager>().openTimelineByClick(false,0,false);
 
-            // if loaded from Awake buttons shouldn't be green and coulisses-menue should be loaded
+            // when scene is truly loaded then buttons shouldnt be green anymore and dateiinforamtionen ist leer
+            for (int i = 0; i < contentFileSelect.transform.childCount; i++)
+            {
+                contentFileSelect.transform.GetChild(i).GetComponent<Button>().image.color = new Color32(255, 255, 255, 255);
+                //Debug.Log("child: " + contentFileSelect.transform.GetChild(i));
+            }
+            textFileContentData.text = "";
+            textFileMetaData.text = "";
+
+            // if loaded from Awake coulisses-menue should be loaded
             if (loadFromAwake)
             {
                 menuKulissen.SetActive(true);
-                // for (int i = 0; i < contentFileSelect.transform.childCount; i++)
-                // {
-                    
-                //     contentFileSelect.transform.GetChild(i).GetComponent<Button>().image.color = new Color32(255, 255, 255, 255);
-                //     Debug.Log("child: "+contentFileSelect.transform.GetChild(i).GetComponent<Button>().image.color);
-                // }
-
+                StaticSceneData.StaticData.fileName = "neu";
                 loadFromAwake = false;
+            }
+
+            for (int i = 0; i < contentRailsMenue.GetComponent<RailManager>().railList.Length; i++)
+            {
+                for (int j = 0; j < contentRailsMenue.GetComponent<RailManager>().railList[i].timelineInstanceObjects.Count; j++)
+                {
+                    Debug.Log("after: element: " + contentRailsMenue.GetComponent<RailManager>().railList[i].timelineInstanceObjects[j] + ", size: " + contentRailsMenue.GetComponent<RailManager>().railList[i].timelineInstanceObjects[j].GetComponent<RectTransform>().sizeDelta);
+                }
             }
         }
     }
@@ -248,6 +289,7 @@ public class SaveFileController : MonoBehaviour
             SceneManaging.isPreviewLoaded = true;
         }
         _selectedFile = fileName;
+
         if (_isWebGl)
         {
             if (fromCode) StartCoroutine(LoadFileFromWWW(fileName, true));
@@ -294,15 +336,15 @@ public class SaveFileController : MonoBehaviour
     public void ShowInputFieldForCode()
     {
         panelCodeInput.SetActive(true);
+        inputFieldShowCode.Select();
+        _pressOk = true;
     }
     public void LoadCodeNow()
     {
-
         panelCodeInput.SetActive(false);
         StartCoroutine(LoadFilesFromServer(inputFieldShowCode.text, false));
         inputFieldShowCode.text = "";
-
-
+        _pressOk = false;
     }
     public void ClosePanelShowCode(GameObject panel)
     {
@@ -328,7 +370,6 @@ public class SaveFileController : MonoBehaviour
     //}
     private IEnumerator LoadFilesFromServer(string code, bool fromAwake)
     {
-        ClearFileButtons();
         WWWForm form = new WWWForm();
         WWW www = new WWW(_basepath + "LoadFileNames.php", form);
         yield return www;
@@ -341,12 +382,31 @@ public class SaveFileController : MonoBehaviour
             foreach (string fileEntry in arr)
                 if (fileEntry.ToLower().Contains(code.ToLower()))
                 {
-                    LoadSceneFromFile(fileEntry, true);
-                    loadedFiles += fileEntry + ",";
+                    if (!string.IsNullOrEmpty(loadedFiles))
+                    {
+                        if (loadedFiles.ToLower().Contains(code.ToLower()))
+                        {
+                            panelWarningInput.SetActive(true);
+                            panelWarningInput.transform.GetChild(1).GetComponent<Text>().text = "Du hast diese Szene bereits geladen.";
+                        }
+                        else
+                        {
+                            ClearFileButtons();
+                            LoadSceneFromFile(fileEntry, true);
+                            loadedFiles += fileEntry + ",";
+                        }
+                    }
+                    else
+                    {
+                        ClearFileButtons();
+                        LoadSceneFromFile(fileEntry, true);
+                        loadedFiles += fileEntry + ",";
+                    }
                 }
         }
         else
         {
+            ClearFileButtons();
             string[] separators = new string[] { "," };
 
             foreach (string fileEntry in arr)
@@ -443,6 +503,7 @@ public class SaveFileController : MonoBehaviour
         {
             LoadSceneFromTempToStatic();
         }
+
     }
     // private void LoadFileFromDirectory(string fileName)
     // {

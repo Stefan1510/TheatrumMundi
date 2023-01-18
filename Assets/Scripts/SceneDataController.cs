@@ -40,7 +40,6 @@ public class SceneDataController : MonoBehaviour
 
     void Awake()
     {
-        SceneManaging.statusReiter = 1;
         foreach (GameObject objectSceneryElement in objectsSceneryElements)
         {
             objectSceneryElement.transform.SetParent(GameObject.Find("Schiene1").transform);
@@ -353,7 +352,7 @@ public class SceneDataController : MonoBehaviour
                     {
                         countActiveFigureElements++;
                         //Debug.Log("rail moment: "+feInstance.moment);
-                        GameObject curr3DObject = ContentRailMenue.GetComponent<RailManager>().CreateNew2DInstance(i, feInstance.moment, feInstance.railStart);
+                        GameObject curr3DObject = ContentRailMenue.GetComponent<RailManager>().CreateNew2DInstance(i, feInstance.moment, feInstance.railStart, feInstance.layer);
                         curr3DObject.transform.localPosition = new Vector3(curr3DObject.transform.localPosition.x, curr3DObject.transform.localPosition.y, (objectsRailElements[feInstance.railStart].transform.GetChild(0).GetComponent<RailSpeedController>().GetDistanceAtTime(feInstance.moment)));
                         //Debug.Log("pos: " + curr3DObject.transform.localPosition);
                         objects3dFigureInstances.Add(curr3DObject);

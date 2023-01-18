@@ -68,8 +68,6 @@ public class FigureElement
     public float x;
     public float y;
     public float z;
-    public string parent;
-    public bool active;
     public bool mirrored;
     public float width;
     public float height;
