@@ -8,15 +8,17 @@ public class PressHelp : MonoBehaviour
 {
     [SerializeField] GameObject helpButtonPressed, helpOverlayMenue2, helpOverlayMenue1, helpOverlayMenue3, helpOverlayMenue4, helpOverlayMenue5, helpOverlayMenue6, menueConfigMain, menuDirMain, aboutScreen;
 
-    private bool pressed = false, pressedLiveView = false, secondHighlight = false;
+    public bool pressed = false;
+    private bool pressedLiveView = false, secondHighlight = false;
     private float _idleTimer;
+    private float _timerOverlay;
     private float _helpAnimDuration;
     private float _helpAnimWaitTime;
     private Color32 _buttonColorStart;
     private Color32 _buttonColorAttention;
     public GameObject helpTextLiveView;
 
-    private void Awake()
+    private void Start()
     {
         _helpAnimDuration = 1;
         _helpAnimWaitTime = 10;
@@ -62,6 +64,11 @@ public class PressHelp : MonoBehaviour
         transform.localScale = Vector3.one;
         _idleTimer = 0;
     }
+    private void StopOverlay()
+    {
+        _timerOverlay = 0;
+        pressed = false;
+    }
 
     private void Update()
     {
@@ -86,12 +93,10 @@ public class PressHelp : MonoBehaviour
         if (Input.anyKeyDown)
         {
             StopHelpAnimation();
+            StopOverlay();
         }
-        // if (Input.GetMouseButton(0))
-        // {
-        //     StopHelpAnimation();
-        // }
         _idleTimer += Time.deltaTime;
+        _timerOverlay += Time.deltaTime;
         if (_idleTimer > _helpAnimWaitTime && !SceneManaging.playing)
         {
             HelpAnimation();
@@ -100,6 +105,11 @@ public class PressHelp : MonoBehaviour
         {
             StopHelpAnimation();
             secondHighlight = false;
+        }
+        if(_timerOverlay > 30&&!SceneManaging.playing)
+        {
+            pressed=false;
+            OnClick(0);
         }
     }
     public void ClickOnLiveView()
@@ -119,7 +129,7 @@ public class PressHelp : MonoBehaviour
                 }
                 else if (SceneManaging.mainMenuActive == 2 && SceneManaging.directorMenueActive == 1)   // Figuren
                 {
-                    helpTextLiveView.transform.GetChild(0).GetComponent<Text>().text = "Das ist der LiveView. Bitte wähle links eine Figur aus und ziehe sie auf die Schiene unten rechts.";
+                    helpTextLiveView.transform.GetChild(0).GetComponent<Text>().text = "Das ist der LiveView. Bitte wähle links eine Figur aus und ziehe sie auf die Schiene unten.";
                 }
                 else if (SceneManaging.mainMenuActive == 1 && SceneManaging.configMenueActive == 2)    // kulissen
                 {
@@ -136,7 +146,7 @@ public class PressHelp : MonoBehaviour
                 }
                 else if (SceneManaging.directorMenueActive == 3 && SceneManaging.mainMenuActive == 2)  // musik
                 {
-                    helpTextLiveView.transform.GetChild(0).GetComponent<Text>().text = "Das ist der LiveView. Bitte wähle links ein Musikstück aus und ziehe es auf die Schiene unten rechts.";
+                    helpTextLiveView.transform.GetChild(0).GetComponent<Text>().text = "Das ist der LiveView. Bitte wähle links ein Musikstück aus und ziehe es auf die Schiene unten.";
                 }
                 else if (SceneManaging.configMenueActive == 4)  // speichern
                 {
@@ -144,7 +154,6 @@ public class PressHelp : MonoBehaviour
                 }
                 //pressed = true;
                 pressedLiveView = true;
-                Debug.Log("pressed: "+pressedLiveView);
         }
     }
     public void OnClick(int i)

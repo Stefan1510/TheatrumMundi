@@ -19,7 +19,7 @@ public class CoulissesManager : MonoBehaviour
 
     #endregion
     #region private variables
-    [SerializeField] GameObject scrollViewScenery;
+    [SerializeField] GameObject scrollViewScenery, helpButton, liveView;
     [SerializeField] Text[] coulisseCounter;
     int currentObjectIndex, clickInSettingsWindow;
     bool dragging;
@@ -29,6 +29,7 @@ public class CoulissesManager : MonoBehaviour
     private int currentTabIndex, publicSibling;
     private bool objectInRail, clickOnDelete, clickCoulisseFromShelf;
     private float railMinX, windowWidth, windowHeight, windowMinX;
+    private float _timerCoulisse = 1;
     Vector2 diff;
     private float railMinY, windowMinY, currentLossyScale;
     #endregion
@@ -151,7 +152,7 @@ public class CoulissesManager : MonoBehaviour
             // if settingswindow (feineinstellungen) is clicked
             if (clickInSettingsWindow != -1)
             {
-                if(!SceneManaging.sceneChanged) SceneManaging.sceneChanged = true;
+                if (!SceneManaging.sceneChanged) SceneManaging.sceneChanged = true;
                 sliding = true;
             }
             // if delete button is clicked
@@ -167,7 +168,9 @@ public class CoulissesManager : MonoBehaviour
             // if a coulisse is clicked
             if (currentObjectIndex != -1 && clickInSettingsWindow == -1)
             {
-                if(!SceneManaging.sceneChanged) SceneManaging.sceneChanged = true;
+                _timerCoulisse = 0.0f;
+
+                if (!SceneManaging.sceneChanged) SceneManaging.sceneChanged = true;
                 scrollViewScenery.GetComponent<ScrollRect>().enabled = false;
                 diff = new Vector2(getMousePos.x - coulisses[currentObjectIndex].transform.position.x, getMousePos.y - coulisses[currentObjectIndex].transform.position.y);
                 dragging = true;
@@ -211,6 +214,8 @@ public class CoulissesManager : MonoBehaviour
 
         if (dragging)
         {
+            if (_timerCoulisse <= 0.5f)
+                _timerCoulisse += Time.deltaTime;
             if (coulisses[currentObjectIndex].GetComponent<RectTransform>().rect.width == shelfSizeWidth[currentObjectIndex])
             {
                 coulisses[currentObjectIndex].GetComponent<RectTransform>().sizeDelta = new Vector2(railWidth / 410 * coulisses[currentObjectIndex].GetComponent<CoulisseStats>().CoulisseWidth / coulisses[currentObjectIndex].transform.lossyScale.x, railWidth / 410 * coulisses[currentObjectIndex].GetComponent<CoulisseStats>().CoulisseHeight / coulisses[currentObjectIndex].transform.lossyScale.y);
@@ -335,7 +340,7 @@ public class CoulissesManager : MonoBehaviour
                     if (clickCoulisseFromShelf)
                     {
                         int tmpCount = collections[currentTabIndex].transform.childCount;
-                        
+
                         textPositionZCoulisses.GetComponent<Text>().text = "1/" + tmpCount;
                         coulisses[currentObjectIndex].transform.SetSiblingIndex(0);
                     }
@@ -394,11 +399,27 @@ public class CoulissesManager : MonoBehaviour
                 // if object is outside the window (back to shelf)
                 else
                 {
+                    // wenn in live view gedroppt
+                    if (coulisses[currentObjectIndex].transform.position.x > liveView.transform.position.x - liveView.GetComponent<RectTransform>().sizeDelta.x / 2
+                    && coulisses[currentObjectIndex].transform.position.x < liveView.transform.position.x + liveView.GetComponent<RectTransform>().sizeDelta.x / 2
+                    && coulisses[currentObjectIndex].transform.position.y > liveView.transform.position.y - liveView.GetComponent<RectTransform>().sizeDelta.y / 2
+                    && coulisses[currentObjectIndex].transform.position.y < liveView.transform.position.y + liveView.GetComponent<RectTransform>().sizeDelta.y / 2)
+                    {
+                        //Debug.Log("hi");
+                        helpButton.GetComponent<PressHelp>().helpTextLiveView.SetActive(true);
+                    }
+                    // wenn figur nur angetoucht wurde
+                    else if (_timerCoulisse < 0.5f)
+                    {
+                        helpButton.GetComponent<PressHelp>().pressed = false;
+                        helpButton.GetComponent<PressHelp>().OnClick(0);
+                    }
+                    
                     placeInShelf(currentObjectIndex);
                     StaticSceneData.StaticData.sceneryElements[currentObjectIndex].active = false;
                 }
-                
-                for(int i=0;i<collections.Length;i++)
+
+                for (int i = 0; i < collections.Length; i++)
                 {
                     coulisseCounter[i].text = collections[i].transform.childCount.ToString();
                 }
