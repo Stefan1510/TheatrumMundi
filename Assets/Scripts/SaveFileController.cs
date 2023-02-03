@@ -89,7 +89,7 @@ public class SaveFileController : MonoBehaviour
         SceneData sceneDataSave = this.GetComponent<SceneDataController>().CreateSceneData();
 
         Debug.Log(sceneDataSave.fileName);
-        if (sceneDataSave.fileName.Contains("*"))
+        if (sceneDataSave.fileName.Contains("*")||sceneDataSave.fileName.Contains("/"))
         {
             panelWarningInput.SetActive(true);
             panelWarningInput.transform.GetChild(1).GetComponent<Text>().text = "Bitte verwende keine Sonderzeichen im Namen.";
@@ -122,7 +122,6 @@ public class SaveFileController : MonoBehaviour
                     }
                 }
 
-                //var path = EditorUtility.SaveFilePanel("Save Settings as JSON", "", ".json", "json");
                 if (!foundName)
                 {
                     if (string.IsNullOrEmpty(sceneDataSave.fileName.ToString())) // Warnung, dass ein name eingegeben werden muss
@@ -189,13 +188,13 @@ public class SaveFileController : MonoBehaviour
     }
     public void LoadSceneFromTempToStatic()
     {
-        for (int i = 0; i < contentRailsMenue.GetComponent<RailManager>().railList.Length; i++)
-        {
-            for (int j = 0; j < contentRailsMenue.GetComponent<RailManager>().railList[i].timelineInstanceObjects.Count; j++)
-            {
-                Debug.Log("before: element: " + contentRailsMenue.GetComponent<RailManager>().railList[i].timelineInstanceObjects[j] + ", size: " + contentRailsMenue.GetComponent<RailManager>().railList[i].timelineInstanceObjects[j].GetComponent<RectTransform>().sizeDelta);
-            }
-        }
+        // for (int i = 0; i < contentRailsMenue.GetComponent<RailManager>().railList.Length; i++)
+        // {
+        //     for (int j = 0; j < contentRailsMenue.GetComponent<RailManager>().railList[i].timelineInstanceObjects.Count; j++)
+        //     {
+        //         Debug.Log("before: element: " + contentRailsMenue.GetComponent<RailManager>().railList[i].timelineInstanceObjects[j] + ", size: " + contentRailsMenue.GetComponent<RailManager>().railList[i].timelineInstanceObjects[j].GetComponent<RectTransform>().sizeDelta);
+        //     }
+        // }
 
         if (tempSceneData != null)
         {
@@ -380,7 +379,7 @@ public class SaveFileController : MonoBehaviour
         if (!string.IsNullOrEmpty(code))    // code eingegeben
         {
             foreach (string fileEntry in arr)
-                if (fileEntry.ToLower().Contains(code.ToLower()))
+                if (fileEntry.ToLower().Substring(0,6) == code.ToLower())
                 {
                     if (!string.IsNullOrEmpty(loadedFiles))
                     {

@@ -107,12 +107,12 @@ public class PressHelp : MonoBehaviour
             StopHelpAnimation();
             secondHighlight = false;
         }
-        if (_timerOverlay > 2000 && _timerOverlay < 2000.5f && !SceneManaging.playing && !SceneManaging.dragging)
+        if (_timerOverlay > 30 && _timerOverlay < 30.5f && !SceneManaging.playing && !SceneManaging.dragging)
         {
             OnClick(0);
             pressed = false;
         }
-        else if (_timerOverlay > 2000.5f)
+        else if (_timerOverlay > 30.5f)
             pressed = true;
     }
     public void ClickOnLiveView()
