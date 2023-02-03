@@ -32,6 +32,7 @@ public class CoulissesManager : MonoBehaviour
     private float _timerCoulisse = 1;
     Vector2 diff;
     private float railMinY, windowMinY, currentLossyScale;
+    private int _counterTouched;
     #endregion
     void Awake()
     {
@@ -168,7 +169,10 @@ public class CoulissesManager : MonoBehaviour
             // if a coulisse is clicked
             if (currentObjectIndex != -1 && clickInSettingsWindow == -1)
             {
-                _timerCoulisse = 0.0f;
+                if (_counterTouched < 2)
+                    _counterTouched++;
+                else if (_counterTouched == 2)
+                    _timerCoulisse = 0.0f;
 
                 if (!SceneManaging.sceneChanged) SceneManaging.sceneChanged = true;
                 scrollViewScenery.GetComponent<ScrollRect>().enabled = false;
@@ -414,7 +418,7 @@ public class CoulissesManager : MonoBehaviour
                         helpButton.GetComponent<PressHelp>().pressed = false;
                         helpButton.GetComponent<PressHelp>().OnClick(0);
                     }
-                    
+
                     placeInShelf(currentObjectIndex);
                     StaticSceneData.StaticData.sceneryElements[currentObjectIndex].active = false;
                 }

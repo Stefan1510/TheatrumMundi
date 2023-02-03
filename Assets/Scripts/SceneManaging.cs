@@ -6,6 +6,7 @@ public static class SceneManaging
 {
     public static int objectInIndexTab;
     public static bool playing;
+    public static bool dragging;
     public static bool updateMusic;
     public static bool highlighted;                 //global variable since only one object can be highlighted - everything else is unhighlighted
     //public static int objectsTimeline;

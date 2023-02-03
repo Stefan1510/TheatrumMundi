@@ -67,14 +67,14 @@ public class PressHelp : MonoBehaviour
     private void StopOverlay()
     {
         _timerOverlay = 0;
-        pressed = false;
+        //pressed = false;
     }
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonUp(0))
         {
-            StopHelpAnimation();
+            //StopHelpAnimation();
             helpTextLiveView.SetActive(false);
             pressedLiveView = false;
 
@@ -89,6 +89,7 @@ public class PressHelp : MonoBehaviour
                 helpButtonPressed.SetActive(false);
                 pressed = false;
             }
+            //StopOverlay();
         }
         if (Input.anyKeyDown)
         {
@@ -106,11 +107,13 @@ public class PressHelp : MonoBehaviour
             StopHelpAnimation();
             secondHighlight = false;
         }
-        if(_timerOverlay > 30&&!SceneManaging.playing)
+        if (_timerOverlay > 2000 && _timerOverlay < 2000.5f && !SceneManaging.playing && !SceneManaging.dragging)
         {
-            pressed=false;
             OnClick(0);
+            pressed = false;
         }
+        else if (_timerOverlay > 2000.5f)
+            pressed = true;
     }
     public void ClickOnLiveView()
     {
@@ -118,42 +121,42 @@ public class PressHelp : MonoBehaviour
         {
             helpTextLiveView.SetActive(false);
             pressedLiveView = false;
-            Debug.Log("pressed: "+pressedLiveView);
+            Debug.Log("pressed: " + pressedLiveView);
         }
         else
         {
             helpTextLiveView.SetActive(true);
             if (SceneManaging.mainMenuActive == 1 && SceneManaging.configMenueActive == 1)  // Buehne
-                {
-                    helpTextLiveView.transform.GetChild(0).GetComponent<Text>().text = "Das ist der LiveView. Bitte wähle links eine Schiene aus und bearbeite ihre Höhe und Position.";
-                }
-                else if (SceneManaging.mainMenuActive == 2 && SceneManaging.directorMenueActive == 1)   // Figuren
-                {
-                    helpTextLiveView.transform.GetChild(0).GetComponent<Text>().text = "Das ist der LiveView. Bitte wähle links eine Figur aus und ziehe sie auf die Schiene unten.";
-                }
-                else if (SceneManaging.mainMenuActive == 1 && SceneManaging.configMenueActive == 2)    // kulissen
-                {
-                    helpTextLiveView.transform.GetChild(0).GetComponent<Text>().text = "Das ist der LiveView. Bitte wähle links eine Kulisse aus und ziehe sie auf die Schiene unten rechts.";
-                }
-                /*else if (SceneManaging.mainMenuActive == 2 && SceneManaging.directorMenueActive == 2)    // (light director) verworfen
-                {
-                    helpOverlayMenue2.SetActive(true);
-                    Debug.Log("overlay 6");
-                }*/
-                else if (SceneManaging.mainMenuActive == 1 && SceneManaging.configMenueActive == 3)  // licht
-                {
-                    helpTextLiveView.transform.GetChild(0).GetComponent<Text>().text = "Das ist der LiveView. Im Shelf links kannst du Lichter erstellen bearbeiten. ";
-                }
-                else if (SceneManaging.directorMenueActive == 3 && SceneManaging.mainMenuActive == 2)  // musik
-                {
-                    helpTextLiveView.transform.GetChild(0).GetComponent<Text>().text = "Das ist der LiveView. Bitte wähle links ein Musikstück aus und ziehe es auf die Schiene unten.";
-                }
-                else if (SceneManaging.configMenueActive == 4)  // speichern
-                {
-                    helpTextLiveView.transform.GetChild(0).GetComponent<Text>().text = "Das ist der LiveView. Links im Shelf hast du die Möglichkeit, Szenen zu laden oder zu speichern.";
-                }
-                //pressed = true;
-                pressedLiveView = true;
+            {
+                helpTextLiveView.transform.GetChild(0).GetComponent<Text>().text = "Das ist der LiveView. Bitte wähle links eine Schiene aus und bearbeite ihre Höhe und Position.";
+            }
+            else if (SceneManaging.mainMenuActive == 2 && SceneManaging.directorMenueActive == 1)   // Figuren
+            {
+                helpTextLiveView.transform.GetChild(0).GetComponent<Text>().text = "Das ist der LiveView. Bitte wähle links eine Figur aus und ziehe sie auf die Schiene unten.";
+            }
+            else if (SceneManaging.mainMenuActive == 1 && SceneManaging.configMenueActive == 2)    // kulissen
+            {
+                helpTextLiveView.transform.GetChild(0).GetComponent<Text>().text = "Das ist der LiveView. Bitte wähle links eine Kulisse aus und ziehe sie auf die Schiene unten rechts.";
+            }
+            /*else if (SceneManaging.mainMenuActive == 2 && SceneManaging.directorMenueActive == 2)    // (light director) verworfen
+            {
+                helpOverlayMenue2.SetActive(true);
+                Debug.Log("overlay 6");
+            }*/
+            else if (SceneManaging.mainMenuActive == 1 && SceneManaging.configMenueActive == 3)  // licht
+            {
+                helpTextLiveView.transform.GetChild(0).GetComponent<Text>().text = "Das ist der LiveView. Im Shelf links kannst du Lichter erstellen bearbeiten. ";
+            }
+            else if (SceneManaging.directorMenueActive == 3 && SceneManaging.mainMenuActive == 2)  // musik
+            {
+                helpTextLiveView.transform.GetChild(0).GetComponent<Text>().text = "Das ist der LiveView. Bitte wähle links ein Musikstück aus und ziehe es auf die Schiene unten.";
+            }
+            else if (SceneManaging.configMenueActive == 4)  // speichern
+            {
+                helpTextLiveView.transform.GetChild(0).GetComponent<Text>().text = "Das ist der LiveView. Links im Shelf hast du die Möglichkeit, Szenen zu laden oder zu speichern.";
+            }
+            //pressed = true;
+            pressedLiveView = true;
         }
     }
     public void OnClick(int i)
@@ -215,6 +218,7 @@ public class PressHelp : MonoBehaviour
                     helpOverlayMenue4.SetActive(true);
                 }
                 pressed = true;
+                //Debug.Log("true");
             }
 
         }
