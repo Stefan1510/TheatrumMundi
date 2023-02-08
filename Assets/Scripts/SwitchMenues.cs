@@ -6,6 +6,7 @@ public class SwitchMenues : MonoBehaviour
 {
     public GameObject ObjectMenueConfigMain;
     public GameObject ObjectMenueDirectorMain;
+    public GameObject _canvas;
 
     // Start is called before the first frame update
     void Start()
@@ -18,12 +19,12 @@ public class SwitchMenues : MonoBehaviour
         ObjectMenueConfigMain.SetActive(false);
         ObjectMenueDirectorMain.SetActive(true);
         StaticSceneData.Everything3D();
-        GetComponent<UIController>().Rails[0].GetComponent<RailManager>().PublicUpdate();
+        GetComponent<UIController>().menueFiguresContent.GetComponent<RailManager>().PublicUpdate();
 
         /////////////////////////////////// for VISITOR-Tool
         SceneManaging.directorMenueActive = 1;
         SceneManaging.mainMenuActive = 2;
-        ObjectMenueDirectorMain.GetComponent<ObjectShelf>().ButtonShelf01();
+        _canvas.GetComponent<ObjectShelfAll>().ButtonShelf05(false);
         //////////////////////////////////
     }
     public void SwitchToMenueConfig()
@@ -35,7 +36,8 @@ public class SwitchMenues : MonoBehaviour
 
         ObjectMenueDirectorMain.SetActive(false);
         ObjectMenueConfigMain.SetActive(true);
+        _canvas.GetComponent<ObjectShelfAll>().ButtonShelf01();
         StaticSceneData.Everything3D();
-        GetComponent<UnitySwitchExpertUser>().DeactivateExpertTools();
+        //GetComponent<UnitySwitchExpertUser>().DeactivateExpertTools();
     }
 }

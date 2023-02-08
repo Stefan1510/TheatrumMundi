@@ -434,6 +434,11 @@ public class SaveFileController : MonoBehaviour
         }
     }
 
+    public void SaveVisitorVersion()
+    {
+        Debug.Log("dialog oeffne dich!");
+    }
+
     // private void ShowFilesFromDirectory()
     // {
     //     ClearFileButtons();

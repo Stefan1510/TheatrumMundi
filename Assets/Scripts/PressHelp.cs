@@ -107,12 +107,12 @@ public class PressHelp : MonoBehaviour
             StopHelpAnimation();
             secondHighlight = false;
         }
-        if (_timerOverlay > 30 && _timerOverlay < 30.5f && !SceneManaging.playing && !SceneManaging.dragging)
+        if (_timerOverlay > 200 && _timerOverlay < 200.5f && !SceneManaging.playing && !SceneManaging.dragging)
         {
             OnClick(0);
             pressed = false;
         }
-        else if (_timerOverlay > 30.5f)
+        else if (_timerOverlay > 200.5f)
             pressed = true;
     }
     public void ClickOnLiveView()
@@ -121,7 +121,7 @@ public class PressHelp : MonoBehaviour
         {
             helpTextLiveView.SetActive(false);
             pressedLiveView = false;
-            Debug.Log("pressed: " + pressedLiveView);
+            //Debug.Log("pressed: " + pressedLiveView);
         }
         else
         {
@@ -163,6 +163,7 @@ public class PressHelp : MonoBehaviour
     {
         if (i == 0) // help
         {
+            Debug.Log("pressed: "+pressed);
             if (pressed)
             {
                 helpOverlayMenue1.SetActive(false);
@@ -190,10 +191,12 @@ public class PressHelp : MonoBehaviour
                 helpButtonPressed.SetActive(true);
                 if (SceneManaging.mainMenuActive == 1 && SceneManaging.configMenueActive == 1)  // Buehne
                 {
+                    
                     helpOverlayMenue1.SetActive(true);
                 }
                 else if (SceneManaging.mainMenuActive == 2 && SceneManaging.directorMenueActive == 1)   // Figuren
                 {
+                    Debug.Log("hier");
                     helpOverlayMenue5.SetActive(true);
                 }
                 else if (SceneManaging.mainMenuActive == 1 && SceneManaging.configMenueActive == 2)    // kulissen

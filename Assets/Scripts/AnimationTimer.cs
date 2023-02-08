@@ -16,7 +16,6 @@ public class AnimationTimer : MonoBehaviour
         ResetTime();
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (_runTimer)

@@ -16,7 +16,7 @@ public class UIController : MonoBehaviour
     private objectsLightElement[] objectsLightElements;
     private FigureInstanceElement[] figureInstanceElements;
     public RailManager[] Rails;
-
+public GameObject menueFiguresContent;
     public RailLightManager[] RailLightBG;
     public RailMusicManager RailMusic;
     public CoulissesManager CoulissesMan;

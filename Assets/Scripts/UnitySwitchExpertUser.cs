@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class UnitySwitchExpertUser : MonoBehaviour
 {
-    [SerializeField] private bool _isExpert = true;
+    [SerializeField] public bool _isExpert = true;
     ////////////////////////////////////////////////////
     /// Config Men�
     ////////////////////////////////////////////////////
@@ -46,7 +46,8 @@ public class UnitySwitchExpertUser : MonoBehaviour
     [SerializeField] private GameObject _imageTimelineRailBg;
     [SerializeField] private GameObject _imageTimelineRailLight;
     //[SerializeField] private GameObject[] _aImageTimeSliderSettings;
-
+    [SerializeField] private GameObject[] counter;
+    [SerializeField] private GameObject[] _timesLettersBig;
 
     private bool _gameControllerStarted = false;
 
@@ -68,9 +69,10 @@ public class UnitySwitchExpertUser : MonoBehaviour
             _buttonMusic.GetComponent<RectTransform>().anchoredPosition = new Vector2(_buttonKulissen.GetComponent<RectTransform>().anchoredPosition.x, 165);
             _buttonMusic.transform.SetSiblingIndex(5);
 
-            _buttonLadenSpeichern.transform.SetParent(_buttonLadenSpeichern.transform.parent.parent);
-            _buttonLadenSpeichern.GetComponent<RectTransform>().anchoredPosition = new Vector2(_buttonKulissen.GetComponent<RectTransform>().anchoredPosition.x, 15);
-            _buttonLadenSpeichern.transform.SetSiblingIndex(5);
+            _buttonLadenSpeichern.SetActive(false);
+            // _buttonLadenSpeichern.transform.SetParent(_buttonLadenSpeichern.transform.parent.parent);
+            // _buttonLadenSpeichern.GetComponent<RectTransform>().anchoredPosition = new Vector2(_buttonKulissen.GetComponent<RectTransform>().anchoredPosition.x, 15);
+            // _buttonLadenSpeichern.transform.SetSiblingIndex(5);
 
             _buttonMenueDirector.transform.GetChild(0).GetComponent<Image>().enabled = false; // switch button ausgrauen
             _buttonMenueDirector.GetComponent<Button>().enabled = false;
@@ -81,10 +83,11 @@ public class UnitySwitchExpertUser : MonoBehaviour
             _buttonHelpPressed.GetComponent<RectTransform>().anchoredPosition = _buttonHelp.GetComponent<RectTransform>().anchoredPosition;
             _buttonAboutWebGL.gameObject.SetActive(true);
             _buttonAboutWebGL.GetComponent<RectTransform>().anchoredPosition = new Vector2(_buttonAboutWebGL.GetComponent<RectTransform>().anchoredPosition.x, 315);
-            _buttonMenueDirector.GetComponent<RectTransform>().anchoredPosition = new Vector2(_buttonMenueDirector.GetComponent<RectTransform>().anchoredPosition.x, 165);
+            //_buttonMenueDirector.GetComponent<RectTransform>().anchoredPosition = new Vector2(_buttonMenueDirector.GetComponent<RectTransform>().anchoredPosition.x, 165);
+            _buttonMenueDirector.SetActive(false);
             _buttonSend.GetComponent<RectTransform>().anchoredPosition = new Vector2(_buttonSend.GetComponent<RectTransform>().anchoredPosition.x, 15);
             _buttonSend.transform.GetChild(0).gameObject.SetActive(false);
-            _buttonMovie.transform.GetChild(0).gameObject.SetActive(false);
+            //_buttonMovie.transform.GetChild(0).gameObject.SetActive(false);
             //_panelLightAmbient.SetActive(false);
             //_buttonDelete.SetActive(false);
             //_buttonSave.SetActive(false);
@@ -98,32 +101,41 @@ public class UnitySwitchExpertUser : MonoBehaviour
 
             // RectTransform rectScrollView = _scrollViewFileSelect.GetComponent<RectTransform>();
             // rectScrollView.sizeDelta = new Vector2(rectScrollView.sizeDelta.x, rectScrollView.sizeDelta.y + 300);
-            foreach (GameObject panelControl in _aTimeSliderPanelControls)
-            {
-                panelControl.SetActive(false);
-            }
+            // foreach (GameObject panelControl in _aTimeSliderPanelControls)
+            // {
+            //     panelControl.SetActive(false);
+            // }
             //_imageTimelineRailBg.SetActive(false);
             _imageTimelineRailBg.GetComponent<Image>().color = Color.gray;
             //_imageTimelineRailBg.GetComponent<RailLightManager>().enabled = false;
             _imageTimelineRailBg.GetComponent<BoxCollider2D>().enabled = false;
-            // _imageTimelineRailLight.SetActive(false);
+            _imageTimelineRailLight.SetActive(false);
             // foreach (GameObject imageTimeSliderSetting in _aImageTimeSliderSettings)
             // {
-            //     imageTimeSliderSetting.SetActive(false);
+            // imageTimeSliderSetting.SetActive(false);
             // }
 
+            // counter ausblenden (figures + music)
+            for (int i = 0; i < counter.Length; i++)
+            {
+                counter[i].SetActive(false);
+            }
+            // start und endzeit auf timeline ausblenden
+            for (int i = 0; i < _timesLettersBig.Length; i++)
+            {
+                _timesLettersBig[i].SetActive(false);
+            }
         }
     }
 
 
-    // Start is called before the first frame update
     void Start()
     {
         _gameControllerStarted = true;
         if (!_isExpert)
         {
             //this.GetComponent<SaveFileController>().LoadSceneFromFile("*Musterszene_leer.json", true);
-            _menueKulissen.SetActive(true);
+            //_menueKulissen.SetActive(true);
             _buttonKulissen.transform.GetChild(1).gameObject.SetActive(false);
             // for (int j = 0; j < this.GetComponent<SceneDataController>().objectsLightElements.Length; j++)
             // {

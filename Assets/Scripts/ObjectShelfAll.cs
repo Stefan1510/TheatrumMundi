@@ -31,7 +31,7 @@ public class ObjectShelfAll : MonoBehaviour
 
     public GameObject panelPreviewNotLoaded;
 
-    public GameObject gameController, overlayWaiting;
+    public GameObject gameController;//, overlayWaiting;
 
     #endregion
     private void Awake()
@@ -91,7 +91,7 @@ public class ObjectShelfAll : MonoBehaviour
     }
     public void ButtonShelf01()
     {
-        overlayWaiting.SetActive(true);
+        //overlayWaiting.SetActive(true);
         if (SceneManaging.mainMenuActive == 1 && SceneManaging.configMenueActive == 4 && !SceneManaging.isPreviewLoaded)
         {
             StartCoroutine(panelPreviewNotLoaded.GetComponent<WarningPanelLoad>().WaitForButtonClick());
