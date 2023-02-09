@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class SceneDataController : MonoBehaviour
 {
     #region variables
-    public InputField inputFieldFileName;
+    public InputField inputFieldFileNameExpert, inputFieldFileNameVisitor;
     public InputField inputFieldFileAuthor;
     public InputField inputFieldFileComment;
     public GameObject[] objectsRailElements;
@@ -52,15 +52,23 @@ public class SceneDataController : MonoBehaviour
 
     private void GetFileMetaDataFromScene()
     {
-        sceneFileName = inputFieldFileName.text;
-        sceneFileAuthor = inputFieldFileAuthor.text;
-        sceneFileComment = inputFieldFileComment.text;
+        if (GetComponent<UnitySwitchExpertUser>()._isExpert)
+        {
+            sceneFileName = inputFieldFileNameExpert.text;
+            sceneFileAuthor = inputFieldFileAuthor.text;
+            sceneFileComment = inputFieldFileComment.text;
+        }
+        else
+        {
+            sceneFileName = inputFieldFileNameVisitor.text;
+        }
+
         sceneFileDate = DateTime.Now.ToString();
     }
 
     public void SetFileMetaDataToScene()
     {
-        inputFieldFileName.text = sceneFileName;
+        inputFieldFileNameExpert.text = sceneFileName;
         inputFieldFileAuthor.text = sceneFileAuthor;
         inputFieldFileComment.text = sceneFileComment;
     }
@@ -325,27 +333,33 @@ public class SceneDataController : MonoBehaviour
     {
         countActiveFigureElements = 0;
 
-        foreach (RailManager.Rail imageTimeLineRail in ContentRailMenue.GetComponent<RailManager>().railList)
+        foreach (RailManager.Rail rail in ContentRailMenue.GetComponent<RailManager>().railList)
         {
-            foreach (GameObject obj in imageTimeLineRail.timelineInstanceObjects)
+            foreach (GameObject obj in rail.timelineInstanceObjects)
             {
                 //Debug.Log("destroy "+obj);
                 Destroy(obj);
             }
-            foreach (GameObject obj3d in imageTimeLineRail.timelineInstanceObjects3D)
+            foreach (GameObject obj3d in rail.timelineInstanceObjects3D)
             {
                 Destroy(obj3d);
             }
-            imageTimeLineRail.timelineInstanceObjects.Clear();
-            imageTimeLineRail.figuresLayer1.Clear();
-            imageTimeLineRail.figuresLayer2.Clear();
-            imageTimeLineRail.timelineInstanceObjects3D.Clear();
+            rail.timelineInstanceObjects.Clear();
+            rail.figuresLayer1.Clear();
+            rail.figuresLayer2.Clear();
+            rail.timelineInstanceObjects3D.Clear();
+
+            rail.myObjectsPositionListLayer1.Clear();
+            rail.myObjectsPositionListLayer2.Clear();
+            rail.sizeLayering = 1;
+            //Debug.Log("rail : "+rail.myObjectsPositionListLayer2.Count);
         }
 
         foreach (FigureElement fe in figureElements)
         {
-           // Debug.Log("fiugre: "+fe.name);
+            // Debug.Log("fiugre: "+fe.name);
             for (int i = 0; i < objectsFigureElements.Length; i++)
+            {                
                 if (fe.name == objectsFigureElements[i].name)
                 {
                     foreach (FigureInstanceElement feInstance in fe.figureInstanceElements)
@@ -358,7 +372,8 @@ public class SceneDataController : MonoBehaviour
                         objects3dFigureInstances.Add(curr3DObject);
                     }
                 }
-        // Debug.Log("fertig figures");
+            }
+            // Debug.Log("fertig figures");
         }
     }
 

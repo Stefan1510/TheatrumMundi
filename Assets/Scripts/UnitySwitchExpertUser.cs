@@ -35,6 +35,7 @@ public class UnitySwitchExpertUser : MonoBehaviour
     [SerializeField] private GameObject _scrollViewFileSelect;
 
 
+
     ////////////////////////////////////////////////////
     /// Director Men�
     ////////////////////////////////////////////////////
@@ -42,9 +43,10 @@ public class UnitySwitchExpertUser : MonoBehaviour
     [SerializeField] private GameObject _buttonLights;
 
     [SerializeField] private GameObject[] _aTimeSliderPanelControls;
-
+    [SerializeField] private GameObject[] _railImages;
     [SerializeField] private GameObject _imageTimelineRailBg;
     [SerializeField] private GameObject _imageTimelineRailLight;
+    [SerializeField] private GameObject _imageTimelineRailMusic;
     //[SerializeField] private GameObject[] _aImageTimeSliderSettings;
     [SerializeField] private GameObject[] counter;
     [SerializeField] private GameObject[] _timesLettersBig;
@@ -106,10 +108,11 @@ public class UnitySwitchExpertUser : MonoBehaviour
             //     panelControl.SetActive(false);
             // }
             //_imageTimelineRailBg.SetActive(false);
-            _imageTimelineRailBg.GetComponent<Image>().color = Color.gray;
+            //_imageTimelineRailBg.GetComponent<Image>().color = Color.gray;
             //_imageTimelineRailBg.GetComponent<RailLightManager>().enabled = false;
-            _imageTimelineRailBg.GetComponent<BoxCollider2D>().enabled = false;
+            //_imageTimelineRailBg.GetComponent<BoxCollider2D>().enabled = false;
             _imageTimelineRailLight.SetActive(false);
+            _imageTimelineRailMusic.transform.SetSiblingIndex(6);
             // foreach (GameObject imageTimeSliderSetting in _aImageTimeSliderSettings)
             // {
             // imageTimeSliderSetting.SetActive(false);

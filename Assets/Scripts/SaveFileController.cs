@@ -10,8 +10,12 @@ public class SaveFileController : MonoBehaviour
     #region variables
     //private string[] _fileList;
     private string _jsonString, loadedFiles, tmpCode;
-    public GameObject contentFileSelect, panelCodeInput, panelSaveShowCode, panelWarningInput, panelOverwrite, menuKulissen, contentRailsMenue;
-    public InputField inputFieldShowCode;
+    public GameObject contentFileSelect, panelCodeInput, panelSaveShowCode, panelWarningInput, panelWarningInputVisitor, panelOverwrite, menuKulissen, contentRailsMenue;
+    [SerializeField] GameObject _borderWarning;
+    [SerializeField] Text _placeholderTextWarning;
+    [SerializeField] private GameObject _canvas;
+    [SerializeField] private GameObject _visitorPanelSave;
+    public InputField inputFieldShowCode, inputFieldShowCodeVisitor;
     public Button fileSelectButton;
     private List<Button> _buttonsFileList = new List<Button>();
     public Text textFileMetaData, textFileContentData, textShowCode;
@@ -54,14 +58,18 @@ public class SaveFileController : MonoBehaviour
         if (_isWebGl)
         {
 
-            StartCoroutine(LoadFilesFromServer("", true));
+            StartCoroutine(LoadFilesFromServer(false, "", true));
         }
         else
         {
-            StartCoroutine(LoadFilesFromServer("", true));
+            StartCoroutine(LoadFilesFromServer(false, "", true));
             //ShowFilesFromDirectory();
         }
         //menuKulissen.SetActive(true);
+        if (!this.GetComponent<UnitySwitchExpertUser>()._isExpert)
+        {
+            panelWarningInput = panelWarningInputVisitor;
+        }
     }
     private void Update()
     {
@@ -81,15 +89,14 @@ public class SaveFileController : MonoBehaviour
     }
     public void SaveSceneToFile(int overwrite) // 0=save, 1=overwrite, 2=save with new code
     {
-
-        Debug.Log("hier");
+        //Debug.Log("hier");
         bool foundName = false;
         string code = "";
         string filePath = "";
         SceneData sceneDataSave = this.GetComponent<SceneDataController>().CreateSceneData();
 
-        Debug.Log(sceneDataSave.fileName);
-        if (sceneDataSave.fileName.Contains("*")||sceneDataSave.fileName.Contains("/"))
+        //Debug.Log(sceneDataSave.fileName);
+        if (sceneDataSave.fileName.Contains("*") || sceneDataSave.fileName.Contains("/"))
         {
             panelWarningInput.SetActive(true);
             panelWarningInput.transform.GetChild(1).GetComponent<Text>().text = "Bitte verwende keine Sonderzeichen im Namen.";
@@ -126,8 +133,10 @@ public class SaveFileController : MonoBehaviour
                 {
                     if (string.IsNullOrEmpty(sceneDataSave.fileName.ToString())) // Warnung, dass ein name eingegeben werden muss
                     {
-                        panelWarningInput.SetActive(true);
-                        panelWarningInput.transform.GetChild(1).GetComponent<Text>().text = "Bitte gib erst einen Namen ein!";
+                        // panelWarningInput.SetActive(true);
+                        // panelWarningInput.transform.GetChild(1).GetComponent<Text>().text = "Bitte gib erst einen Namen ein!";
+                        _borderWarning.SetActive(true);
+                        _placeholderTextWarning.color = new Color(1, 0, 0, 0.27f);
                     }
                     else
                     {
@@ -143,13 +152,11 @@ public class SaveFileController : MonoBehaviour
                             panelSaveShowCode.SetActive(true);
                             textShowCode.text = code;
                             loadedFiles += filePath + ",";
-                            Debug.Log("files: " + loadedFiles);
                         }
 
                         else
                         {
                             filePath = sceneDataSave.fileName + ".json";
-                            Debug.Log("filepath: " + filePath);
                         }
 
                         if (sceneDataSaveString.Length != 0)
@@ -166,6 +173,7 @@ public class SaveFileController : MonoBehaviour
                             GenerateFileButton(filePath, true);
                         }
                         panelOverwrite.SetActive(false);
+                        ClosePanelShowCode(_visitorPanelSave);
                     }
                 }
             }
@@ -185,6 +193,7 @@ public class SaveFileController : MonoBehaviour
                 GenerateFileButton(filePath, true);
             }
         }
+
     }
     public void LoadSceneFromTempToStatic()
     {
@@ -215,11 +224,11 @@ public class SaveFileController : MonoBehaviour
             //GetComponent<SceneDataController>().SetFileMetaDataToScene();
             if (_isWebGl)
             {
-                StartCoroutine(LoadFilesFromServer("", false));
+                StartCoroutine(LoadFilesFromServer(false, "", false));
             }
             else
             {
-                StartCoroutine(LoadFilesFromServer("", false));
+                StartCoroutine(LoadFilesFromServer(false, "", false));
                 // ShowFilesFromDirectory();
             }
             //AnimationTimer.SetTime(0);
@@ -243,13 +252,13 @@ public class SaveFileController : MonoBehaviour
                 loadFromAwake = false;
             }
 
-            for (int i = 0; i < contentRailsMenue.GetComponent<RailManager>().railList.Length; i++)
-            {
-                for (int j = 0; j < contentRailsMenue.GetComponent<RailManager>().railList[i].timelineInstanceObjects.Count; j++)
-                {
-                    Debug.Log("after: element: " + contentRailsMenue.GetComponent<RailManager>().railList[i].timelineInstanceObjects[j] + ", size: " + contentRailsMenue.GetComponent<RailManager>().railList[i].timelineInstanceObjects[j].GetComponent<RectTransform>().sizeDelta);
-                }
-            }
+            // for (int i = 0; i < contentRailsMenue.GetComponent<RailManager>().railList.Length; i++)
+            // {
+            //     for (int j = 0; j < contentRailsMenue.GetComponent<RailManager>().railList[i].timelineInstanceObjects.Count; j++)
+            //     {
+            //         Debug.Log("after: element: " + contentRailsMenue.GetComponent<RailManager>().railList[i].timelineInstanceObjects[j] + ", size: " + contentRailsMenue.GetComponent<RailManager>().railList[i].timelineInstanceObjects[j].GetComponent<RectTransform>().sizeDelta);
+            //     }
+            // }
         }
     }
     public void DeleteFile()
@@ -268,12 +277,12 @@ public class SaveFileController : MonoBehaviour
 
         if (_isWebGl)
         {
-            StartCoroutine(LoadFilesFromServer("", false));
+            StartCoroutine(LoadFilesFromServer(false, "", false));
         }
         else
         {
             // ShowFilesFromDirectory();
-            StartCoroutine(LoadFilesFromServer("", false));
+            StartCoroutine(LoadFilesFromServer(false, "", false));
         }
     }
     public void LoadSceneFromFile(string fileName, bool fromCode)
@@ -304,12 +313,10 @@ public class SaveFileController : MonoBehaviour
     private void GenerateFileButton(string fileName, bool isPermamentScene)
     {
         Button fileButtonInstance = Instantiate(fileSelectButton, contentFileSelect.transform);
-        //Debug.Log(fileName);
         fileButtonInstance.name = fileName;
         if (fileName.Substring(0, fileName.Length - 5) == StaticSceneData.StaticData.fileName)
         {
             fileButtonInstance.GetComponent<Button>().image.color = new Color32(64, 192, 16, 192);
-            //Debug.Log("color");
             SceneManaging.isPreviewLoaded = true;
         }
         else if (fileName.Length > 11)
@@ -317,7 +324,6 @@ public class SaveFileController : MonoBehaviour
             if (fileName.Substring(6, fileName.Length - 11) == StaticSceneData.StaticData.fileName)
             {
                 fileButtonInstance.GetComponent<Button>().image.color = new Color32(64, 192, 16, 192);
-                //Debug.Log("color");
                 SceneManaging.isPreviewLoaded = true;
             }
         }
@@ -341,13 +347,25 @@ public class SaveFileController : MonoBehaviour
     public void LoadCodeNow()
     {
         panelCodeInput.SetActive(false);
-        StartCoroutine(LoadFilesFromServer(inputFieldShowCode.text, false));
-        inputFieldShowCode.text = "";
+        if (GetComponent<UnitySwitchExpertUser>()._isExpert)
+        {
+            StartCoroutine(LoadFilesFromServer(true, inputFieldShowCode.text, false));
+            inputFieldShowCode.text = "";
+        }
+        else
+        {
+            StartCoroutine(LoadFilesFromServer(true, inputFieldShowCodeVisitor.text, false));
+            inputFieldShowCodeVisitor.text = "";
+        }
+
         _pressOk = false;
     }
     public void ClosePanelShowCode(GameObject panel)
     {
         panel.SetActive(false);
+        _borderWarning.SetActive(false);
+        _placeholderTextWarning.color = new Color(.2f, .2f, .2f, 0.27f);
+        panelWarningInput.SetActive(false);
     }
     private void ClearFileButtons()
     {
@@ -367,7 +385,7 @@ public class SaveFileController : MonoBehaviour
     //        GenerateFileButton(fileEntry);
     //    }
     //}
-    private IEnumerator LoadFilesFromServer(string code, bool fromAwake)
+    private IEnumerator LoadFilesFromServer(bool loadFromCode, string code, bool fromAwake)
     {
         WWWForm form = new WWWForm();
         WWW www = new WWW(_basepath + "LoadFileNames.php", form);
@@ -375,33 +393,75 @@ public class SaveFileController : MonoBehaviour
 
         string line = www.text;
         string[] arr = line.Split('?');
+        bool found = false;
 
-        if (!string.IsNullOrEmpty(code))    // code eingegeben
+        // code laden
+        if (loadFromCode)
         {
-            foreach (string fileEntry in arr)
-                if (fileEntry.ToLower().Substring(0,6) == code.ToLower())
+            // string ist leer
+            if (string.IsNullOrEmpty(code))
+            {
+                panelWarningInput.SetActive(true);
+                panelWarningInput.GetComponent<Text>().text = "Bitte gib einen Code ein.";
+            }
+            // string eingegeben
+            else
+            {
+                Debug.Log("arr: " + arr);
+                foreach (string fileEntry in arr)
                 {
-                    if (!string.IsNullOrEmpty(loadedFiles))
+                    if (fileEntry.Length > 6)
                     {
-                        if (loadedFiles.ToLower().Contains(code.ToLower()))
+                        // wenn die ersten 6 zeichen mit denen des eingegebenen codes uebereinstimmen
+                        if (fileEntry.ToLower().Substring(0, 6) == code.ToLower())
                         {
-                            panelWarningInput.SetActive(true);
-                            panelWarningInput.transform.GetChild(1).GetComponent<Text>().text = "Du hast diese Szene bereits geladen.";
+                            if (this.GetComponent<UnitySwitchExpertUser>()._isExpert)
+                            {
+                                // wenn schon szenen geladen wurden
+                                if (!string.IsNullOrEmpty(loadedFiles))
+                                {
+                                    if (loadedFiles.ToLower().Contains(code.ToLower()))
+                                    {
+                                        panelWarningInput.SetActive(true);
+                                        panelWarningInput.transform.GetChild(1).GetComponent<Text>().text = "Du hast diese Szene bereits geladen.";
+                                    }
+                                    // szene wurde noch nicht geladen
+                                    else
+                                    {
+                                        ClearFileButtons();
+                                        LoadSceneFromFile(fileEntry, true);
+                                        loadedFiles += fileEntry + ",";
+                                    }
+                                    found = true;
+                                    ClosePanelShowCode(_visitorPanelSave);
+                                }
+                                // wenn noch keine szenen geladen wurden
+                                else
+                                {
+                                    ClearFileButtons();
+                                    LoadSceneFromFile(fileEntry, true);
+                                    loadedFiles += fileEntry + ",";
+                                    found = true;
+                                    ClosePanelShowCode(_visitorPanelSave);
+                                }
+                            }
+                            else
+                            {
+                                ClearFileButtons();
+                                LoadSceneFromFile(fileEntry, true);
+                                found = true;
+                                ClosePanelShowCode(_visitorPanelSave);
+                            }
                         }
-                        else
-                        {
-                            ClearFileButtons();
-                            LoadSceneFromFile(fileEntry, true);
-                            loadedFiles += fileEntry + ",";
-                        }
-                    }
-                    else
-                    {
-                        ClearFileButtons();
-                        LoadSceneFromFile(fileEntry, true);
-                        loadedFiles += fileEntry + ",";
                     }
                 }
+                if (!found)
+                {
+                    panelWarningInput.SetActive(true);
+                    //panelWarningInput.transform.GetChild(1).GetComponent<Text>().text = "Die Szene wurde nicht gefunden.";
+                    panelWarningInput.GetComponent<Text>().text = "Die Szene wurde nicht gefunden.";
+                }
+            }
         }
         else
         {
@@ -432,13 +492,8 @@ public class SaveFileController : MonoBehaviour
         {
             StartCoroutine(LoadFileFromWWW("*Musterszene_leer.json", true));
         }
-    }
 
-    public void SaveVisitorVersion()
-    {
-        Debug.Log("dialog oeffne dich!");
     }
-
     // private void ShowFilesFromDirectory()
     // {
     //     ClearFileButtons();
@@ -460,7 +515,6 @@ public class SaveFileController : MonoBehaviour
     //     }
     //     fileSelectButton.gameObject.SetActive(false);
     // }
-
     private IEnumerator WriteToServer(string json, string filePath, bool save)
     {
         WWWForm form = new WWWForm();
@@ -469,7 +523,7 @@ public class SaveFileController : MonoBehaviour
 
         WWW www = new WWW(_basepath + "WriteFile.php", form);
         yield return www;
-        yield return StartCoroutine(LoadFilesFromServer("", false));
+        yield return StartCoroutine(LoadFilesFromServer(false, "", false));
     }
     /* private void WriteFileToDirectory(string json, string filePath)
      {
@@ -506,8 +560,9 @@ public class SaveFileController : MonoBehaviour
         if (fromCode)
         {
             LoadSceneFromTempToStatic();
+            _canvas.GetComponent<ObjectShelfAll>().ButtonShelf02();
         }
-
+        //contentRailsMenue.GetComponent<RailManager>().updateDataWhenOpeningNewScene();
     }
     // private void LoadFileFromDirectory(string fileName)
     // {
@@ -559,6 +614,16 @@ public class SaveFileController : MonoBehaviour
         string path = _basepath + "\\" + FileName;
         File.Delete(path);
         // ShowFilesFromDirectory();
-        StartCoroutine(LoadFilesFromServer("", false));
+        StartCoroutine(LoadFilesFromServer(false, "", false));
+    }
+    public void SaveVisitorVersion()
+    {
+        _visitorPanelSave.SetActive(true);
+    }
+    public void OnClickNewScene()
+    {
+        StartCoroutine(LoadFileFromWWW("*Musterszene_leer.json", true));
+        ClosePanelShowCode(_visitorPanelSave);
+
     }
 }

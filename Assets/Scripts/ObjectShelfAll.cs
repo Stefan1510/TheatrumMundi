@@ -361,7 +361,7 @@ public class ObjectShelfAll : MonoBehaviour
                 break;
         }
         StaticSceneData.Everything3D();
-        //MenueContentRails.GetComponent<RailManager>().PublicUpdate();
+        MenueContentRails.GetComponent<RailManager>().PublicUpdate();
         SceneManaging.isPreviewLoaded = true;
         //overlayWaiting.SetActive(false);
     }
