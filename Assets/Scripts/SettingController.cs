@@ -1,10 +1,8 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.IO;
-using System;
 using System.Collections;
-using System.Collections.Generic;
-//using UnityEditor;
+using UnityEngine.Networking;
 
 public class SettingController : MonoBehaviour {
     public Slider SliderRail1x;
@@ -49,10 +47,10 @@ public class SettingController : MonoBehaviour {
     private IEnumerator LoadFilesFromServer()
     {
         WWWForm form = new WWWForm();
-        WWW www = new WWW("https://lightframefx.de/extras/theatrum-mundi/LoadFileNames.php", form);
+        UnityWebRequest www = UnityWebRequest.Post("https://lightframefx.de/extras/theatrum-mundi/LoadFileNames.php", form);
         yield return www;
 
-        string line = www.text;
+        string line = www.downloadHandler.text;
         string[] arr = line.Split('?');
         DropdownFileSelection.options.Clear();
 
@@ -66,9 +64,9 @@ public class SettingController : MonoBehaviour {
     private IEnumerator LoadFileFromWWW()
     {
         string selectedFilename = DropdownFileSelection.options[DropdownFileSelection.value].text;
-        WWW www = new WWW("https://lightframefx.de/extras/theatrum-mundi/Saves/" + _fileName);
+        UnityWebRequest www = UnityWebRequest.Get("https://lightframefx.de/extras/theatrum-mundi/Saves/" + _fileName);
         yield return www;
-        string jsonString = www.text;
+        string jsonString = www.downloadHandler.text;
 
         myStageElements = JsonUtility.FromJson<StageElementList>(jsonString);
 
@@ -169,9 +167,9 @@ public class SettingController : MonoBehaviour {
 
     private IEnumerator GetJsonString()
     {
-        WWW www = new WWW("https://lightframefx.de/extras/theatrum-mundi/Saves/InitScene.json");
+        UnityWebRequest www = UnityWebRequest.Get("https://lightframefx.de/extras/theatrum-mundi/Saves/InitScene.json");
         yield return www;
-        _jsonString = www.text;
+        _jsonString = www.downloadHandler.text;
     }
 
     public void SaveFile() {
@@ -252,10 +250,10 @@ public class SettingController : MonoBehaviour {
         form.AddField("pathFile", filePath);
         form.AddField("text", json);
 
-        WWW www = new WWW("https://lightframefx.de/extras/theatrum-mundi/WriteFile.php", form);
+        UnityWebRequest www = UnityWebRequest.Post("https://lightframefx.de/extras/theatrum-mundi/WriteFile.php", form);
         yield return www;
 
-        Debug.Log("www: " +www.text);
+        Debug.Log("www: " +www.downloadHandler.text);
 
         yield return StartCoroutine(LoadFilesFromServer());
     }

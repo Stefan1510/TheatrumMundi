@@ -1,13 +1,14 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
 
 public class PressHelp : MonoBehaviour
 {
-    [SerializeField] GameObject helpButtonPressed, helpOverlayMenue2, helpOverlayMenue1, helpOverlayMenue3, helpOverlayMenue4, helpOverlayMenue5, helpOverlayMenue6, menueConfigMain, menuDirMain, aboutScreen;
-
+    [SerializeField] GameObject helpButtonPressed, helpOverlayMenue2, helpOverlayMenue1, helpOverlayMenue3, helpOverlayMenue4, helpOverlayMenue5, helpOverlayMenue6, aboutScreen;
+    [SerializeField] GameObject timeSliderBubble;
+    [SerializeField] GameObject maskTimeSlider, _timeSliderPlayButton;
+    [SerializeField] GameObject _arrowHelp;
+    GameObject _publicHelpMenue;
     public bool pressed = false;
     private bool pressedLiveView = false, secondHighlight = false;
     private float _idleTimer;
@@ -17,9 +18,11 @@ public class PressHelp : MonoBehaviour
     private Color32 _buttonColorStart;
     private Color32 _buttonColorAttention;
     public GameObject helpTextLiveView;
+    private int _tutorialCounter;
 
     private void Start()
     {
+        _tutorialCounter = -1;
         _helpAnimDuration = 1;
         _helpAnimWaitTime = 10;
         helpOverlayMenue1.SetActive(false);
@@ -67,17 +70,14 @@ public class PressHelp : MonoBehaviour
     private void StopOverlay()
     {
         _timerOverlay = 0;
-        //pressed = false;
+        _arrowHelp.SetActive(false);
+
     }
-
-    private void Update()
+    public void OnClick(int i)
     {
-        if (Input.GetMouseButtonUp(0))
+        if (i == 0) // help
         {
-            //StopHelpAnimation();
-            helpTextLiveView.SetActive(false);
-            pressedLiveView = false;
-
+            Debug.Log("pressed: " + pressed);
             if (pressed)
             {
                 helpOverlayMenue1.SetActive(false);
@@ -88,16 +88,142 @@ public class PressHelp : MonoBehaviour
                 helpOverlayMenue6.SetActive(false);
                 helpButtonPressed.SetActive(false);
                 pressed = false;
+
+                maskTimeSlider.SetActive(false);
+                _tutorialCounter = -1;
             }
-            //StopOverlay();
+
+            else
+            {
+                helpButtonPressed.SetActive(true);
+                if (SceneManaging.mainMenuActive == 1 && SceneManaging.configMenueActive == 1)  // Buehne
+                {
+
+                    helpOverlayMenue1.SetActive(true);
+                }
+                else if (SceneManaging.mainMenuActive == 2 && SceneManaging.directorMenueActive == 1)   // Figuren
+                {
+                    // Debug.Log("hier");
+                    helpOverlayMenue5.SetActive(true);
+                    _tutorialCounter = 1;
+                    helpOverlayMenue5.transform.GetChild(0).gameObject.SetActive(true);
+                    _publicHelpMenue = helpOverlayMenue5;
+                }
+                else if (SceneManaging.mainMenuActive == 1 && SceneManaging.configMenueActive == 2)    // kulissen
+                {
+                    helpOverlayMenue2.SetActive(true);
+                    _publicHelpMenue = helpOverlayMenue2;
+                    _tutorialCounter = 1;
+                    helpOverlayMenue2.transform.GetChild(0).gameObject.SetActive(true);
+                }
+                /*else if (SceneManaging.mainMenuActive == 2 && SceneManaging.directorMenueActive == 2)    // (light director) verworfen
+                {
+                    helpOverlayMenue2.SetActive(true);
+                    Debug.Log("overlay 6");
+                }*/
+                else if (SceneManaging.mainMenuActive == 1 && SceneManaging.configMenueActive == 3)  // licht
+                {
+                    helpOverlayMenue3.SetActive(true);
+                }
+                else if (SceneManaging.directorMenueActive == 3 && SceneManaging.mainMenuActive == 2)  // musik
+                {
+                    helpOverlayMenue6.SetActive(true);
+                }
+                else if (SceneManaging.configMenueActive == 4)  // speichern
+                {
+                    helpOverlayMenue4.SetActive(true);
+                }
+                pressed = true;
+                //Debug.Log("true");
+            }
+
+        }
+        else if (i == 1) // open about
+        {
+            aboutScreen.SetActive(true);
+        }
+        else // close about
+        {
+            aboutScreen.SetActive(false);
+        }
+    }
+    private void LateUpdate()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            if (_tutorialCounter != -1 && _tutorialCounter < _publicHelpMenue.transform.childCount)
+            {
+                Debug.Log("counter: " + _tutorialCounter);
+                for (int i = 0; i < _publicHelpMenue.transform.childCount; i++)
+                {
+                    _publicHelpMenue.transform.GetChild(i).gameObject.SetActive(false);
+                }
+                _publicHelpMenue.transform.GetChild(_tutorialCounter).gameObject.SetActive(true);
+
+                if (_publicHelpMenue == helpOverlayMenue5)
+                {
+                    if (_tutorialCounter == 2) // timeslider
+                    {
+                        timeSliderBubble.transform.position = _timeSliderPlayButton.transform.position;
+                        maskTimeSlider.SetActive(true);
+                        timeSliderBubble.GetComponent<RectTransform>().anchoredPosition = new Vector2(timeSliderBubble.GetComponent<RectTransform>().anchoredPosition.x, 13);
+                    }
+                    else if (_tutorialCounter == 3) // nach timeslider
+                    {
+                        maskTimeSlider.SetActive(false);
+                    }
+                }
+                _tutorialCounter++;
+
+            }
+            else
+            {
+                try
+                {
+                    _publicHelpMenue.SetActive(false);
+                    _tutorialCounter = -1;
+                    helpButtonPressed.SetActive(false);
+                    pressed = false;
+                    for (int i = 0; i < _publicHelpMenue.transform.childCount; i++)
+                    {
+                        _publicHelpMenue.transform.GetChild(i).gameObject.SetActive(false);
+                    }
+                }
+                catch (NullReferenceException) { }
+
+            }
+            // else
+            // {
+            //     if (pressed)
+            //     {
+            //         Debug.Log("hier");
+            //         helpOverlayMenue1.SetActive(false);
+            //         helpOverlayMenue2.SetActive(false);
+            //         helpOverlayMenue3.SetActive(false);
+            //         helpOverlayMenue4.SetActive(false);
+            //         helpOverlayMenue5.SetActive(false);
+            //         helpOverlayMenue6.SetActive(false);
+            //         helpButtonPressed.SetActive(false);
+            //         pressed = false;
+            //     }
+            //     //StopOverlay();
+            // }
+            //StopHelpAnimation();
+            helpTextLiveView.SetActive(false);
+            pressedLiveView = false;
         }
         if (Input.anyKeyDown)
         {
             StopHelpAnimation();
             StopOverlay();
+            // if (_tutorialCounter != -1)
+            //     pressed = false;
         }
-        _idleTimer += Time.deltaTime;
-        _timerOverlay += Time.deltaTime;
+        if (_tutorialCounter == -1)
+        {
+            _idleTimer += Time.deltaTime;
+            _timerOverlay += Time.deltaTime;
+        }
         if (_idleTimer > _helpAnimWaitTime && !SceneManaging.playing)
         {
             HelpAnimation();
@@ -107,12 +233,13 @@ public class PressHelp : MonoBehaviour
             StopHelpAnimation();
             secondHighlight = false;
         }
-        if (_timerOverlay > 200 && _timerOverlay < 200.5f && !SceneManaging.playing && !SceneManaging.dragging)
+        if (_timerOverlay > 30 && _timerOverlay < 30.5f && !SceneManaging.playing && !SceneManaging.dragging)
         {
-            OnClick(0);
-            pressed = false;
+            _arrowHelp.SetActive(true);
+            // OnClick(0);
+            // pressed = false;
         }
-        else if (_timerOverlay > 200.5f)
+        else if (_timerOverlay > 30.5f)
             pressed = true;
     }
     public void ClickOnLiveView()
@@ -159,79 +286,5 @@ public class PressHelp : MonoBehaviour
             pressedLiveView = true;
         }
     }
-    public void OnClick(int i)
-    {
-        if (i == 0) // help
-        {
-            Debug.Log("pressed: "+pressed);
-            if (pressed)
-            {
-                helpOverlayMenue1.SetActive(false);
-                helpOverlayMenue2.SetActive(false);
-                helpOverlayMenue3.SetActive(false);
-                helpButtonPressed.SetActive(false);
-                pressed = false;
 
-                try
-                {
-                    helpOverlayMenue4.SetActive(false);
-                }
-                catch (Exception ex)
-                {
-                    if (ex is NullReferenceException || ex is UnassignedReferenceException)
-                    {
-                        return;
-                    }
-                    throw;
-                }
-            }
-
-            else
-            {
-                helpButtonPressed.SetActive(true);
-                if (SceneManaging.mainMenuActive == 1 && SceneManaging.configMenueActive == 1)  // Buehne
-                {
-                    
-                    helpOverlayMenue1.SetActive(true);
-                }
-                else if (SceneManaging.mainMenuActive == 2 && SceneManaging.directorMenueActive == 1)   // Figuren
-                {
-                    Debug.Log("hier");
-                    helpOverlayMenue5.SetActive(true);
-                }
-                else if (SceneManaging.mainMenuActive == 1 && SceneManaging.configMenueActive == 2)    // kulissen
-                {
-                    helpOverlayMenue2.SetActive(true);
-                }
-                /*else if (SceneManaging.mainMenuActive == 2 && SceneManaging.directorMenueActive == 2)    // (light director) verworfen
-                {
-                    helpOverlayMenue2.SetActive(true);
-                    Debug.Log("overlay 6");
-                }*/
-                else if (SceneManaging.mainMenuActive == 1 && SceneManaging.configMenueActive == 3)  // licht
-                {
-                    helpOverlayMenue3.SetActive(true);
-                }
-                else if (SceneManaging.directorMenueActive == 3 && SceneManaging.mainMenuActive == 2)  // musik
-                {
-                    helpOverlayMenue6.SetActive(true);
-                }
-                else if (SceneManaging.configMenueActive == 4)  // speichern
-                {
-                    helpOverlayMenue4.SetActive(true);
-                }
-                pressed = true;
-                //Debug.Log("true");
-            }
-
-        }
-        else if (i == 1) // open about
-        {
-            aboutScreen.SetActive(true);
-        }
-        else // close about
-        {
-            aboutScreen.SetActive(false);
-        }
-    }
 }

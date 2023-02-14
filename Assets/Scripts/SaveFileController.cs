@@ -11,17 +11,21 @@ public class SaveFileController : MonoBehaviour
     //private string[] _fileList;
     private string _jsonString, loadedFiles, tmpCode;
     public GameObject contentFileSelect, panelCodeInput, panelSaveShowCode, panelWarningInput, panelWarningInputVisitor, panelOverwrite, menuKulissen, contentRailsMenue;
-    [SerializeField] GameObject _borderWarning;
-    [SerializeField] Text _placeholderTextWarning;
+    [SerializeField] private GameObject _dialogSave, _dialogNewScene, _dialogLoadCode;
+    [SerializeField] GameObject _borderWarning, _borderLoad;
+    [SerializeField] Text _placeholderTextWarning, _placeholderTextLoadWarning, _textSaveInputName;
     [SerializeField] private GameObject _canvas;
     [SerializeField] private GameObject _visitorPanelSave;
-    public InputField inputFieldShowCode, inputFieldShowCodeVisitor;
+    public InputField inputFieldShowCode, inputFieldShowCodeVisitor, _inputFieldSaveName;
     public Button fileSelectButton;
     private List<Button> _buttonsFileList = new List<Button>();
     public Text textFileMetaData, textFileContentData, textShowCode;
     private SceneData tempSceneData;
     private string _selectedFile, _directorySaves, _basepath;
     private bool _isWebGl, loadFromAwake, _pressOk;
+    private int _loadSaveNew;   // 0 = new, 1 = save, 2 = load
+    private Color col_grey = new Color(.4f, .4f, .4f, 1);
+    private Color col_white = new Color(0.843f,0.843f,0.843f,1);
     private string characters = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ";
     #endregion
     private void Awake()
@@ -69,6 +73,8 @@ public class SaveFileController : MonoBehaviour
         if (!this.GetComponent<UnitySwitchExpertUser>()._isExpert)
         {
             panelWarningInput = panelWarningInputVisitor;
+            _loadSaveNew = 0;
+            //textShowCode = text
         }
     }
     private void Update()
@@ -131,6 +137,7 @@ public class SaveFileController : MonoBehaviour
 
                 if (!foundName)
                 {
+                    // wenn kein Name eingegeben wurde
                     if (string.IsNullOrEmpty(sceneDataSave.fileName.ToString())) // Warnung, dass ein name eingegeben werden muss
                     {
                         // panelWarningInput.SetActive(true);
@@ -151,29 +158,31 @@ public class SaveFileController : MonoBehaviour
                             filePath = code + sceneDataSave.fileName + ".json";
                             panelSaveShowCode.SetActive(true);
                             textShowCode.text = code;
-                            loadedFiles += filePath + ",";
-                        }
+                            //loadedFiles += filePath + ",";
 
+                            _borderWarning.SetActive(false);
+                        }
                         else
                         {
                             filePath = sceneDataSave.fileName + ".json";
+                            ClosePanelShowCode(_visitorPanelSave);
                         }
 
                         if (sceneDataSaveString.Length != 0)
                         {
                             if (_isWebGl)
                             {
-                                StartCoroutine(WriteToServer(sceneDataSaveString, filePath, true));
+                                StartCoroutine(WriteToServer(sceneDataSaveString, filePath, true, false));
                             }
                             else
                             {
-                                StartCoroutine(WriteToServer(sceneDataSaveString, filePath, true));
+                                StartCoroutine(WriteToServer(sceneDataSaveString, filePath, true, this.GetComponent<UnitySwitchExpertUser>()._isExpert));
                                 // WriteFileToDirectory(sceneDataSaveString, filePath);
                             }
                             GenerateFileButton(filePath, true);
                         }
                         panelOverwrite.SetActive(false);
-                        ClosePanelShowCode(_visitorPanelSave);
+
                     }
                 }
             }
@@ -182,12 +191,12 @@ public class SaveFileController : MonoBehaviour
                 if (_isWebGl)
                 {
                     filePath = tmpCode + sceneDataSave.fileName + ".json";
-                    StartCoroutine(WriteToServer(sceneDataSaveString, filePath, true));
+                    StartCoroutine(WriteToServer(sceneDataSaveString, filePath, true, true));
                     panelOverwrite.SetActive(false);
                 }
                 else
                 {
-                    StartCoroutine(WriteToServer(sceneDataSaveString, filePath, true));
+                    StartCoroutine(WriteToServer(sceneDataSaveString, filePath, true, true));
                     // WriteFileToDirectory(sceneDataSaveString, filePath);
                 }
                 GenerateFileButton(filePath, true);
@@ -363,9 +372,7 @@ public class SaveFileController : MonoBehaviour
     public void ClosePanelShowCode(GameObject panel)
     {
         panel.SetActive(false);
-        _borderWarning.SetActive(false);
-        _placeholderTextWarning.color = new Color(.2f, .2f, .2f, 0.27f);
-        panelWarningInput.SetActive(false);
+        ResetTabs(0);
     }
     private void ClearFileButtons()
     {
@@ -387,7 +394,10 @@ public class SaveFileController : MonoBehaviour
     //}
     private IEnumerator LoadFilesFromServer(bool loadFromCode, string code, bool fromAwake)
     {
+
         WWWForm form = new WWWForm();
+        // UnityWebRequest uwr = UnityWebRequest.Post(_basepath + "LoadFileNames.php", form);
+        // yield return uwr;
         WWW www = new WWW(_basepath + "LoadFileNames.php", form);
         yield return www;
 
@@ -403,6 +413,8 @@ public class SaveFileController : MonoBehaviour
             {
                 panelWarningInput.SetActive(true);
                 panelWarningInput.GetComponent<Text>().text = "Bitte gib einen Code ein.";
+                _placeholderTextLoadWarning.color = new Color(1, 0, 0, 0.27f);
+                _borderLoad.SetActive(true);
             }
             // string eingegeben
             else
@@ -515,15 +527,27 @@ public class SaveFileController : MonoBehaviour
     //     }
     //     fileSelectButton.gameObject.SetActive(false);
     // }
-    private IEnumerator WriteToServer(string json, string filePath, bool save)
+    private IEnumerator WriteToServer(string json, string filePath, bool save, bool isExpert)
     {
         WWWForm form = new WWWForm();
         form.AddField("pathFile", filePath);
         form.AddField("text", json);
 
+        // UnityWebRequest uwr = UnityWebRequest.Post(_basepath + "WriteFile.php", form);
+        // yield return uwr;
+
         WWW www = new WWW(_basepath + "WriteFile.php", form);
         yield return www;
         yield return StartCoroutine(LoadFilesFromServer(false, "", false));
+        if (!isExpert)
+        {
+            _textSaveInputName.text = "Bitte schreibe dir deinen Code auf: ";
+            _inputFieldSaveName.GetComponent<InputField>().enabled = false;
+            _inputFieldSaveName.GetComponent<Image>().color = col_grey;
+            _inputFieldSaveName.transform.GetChild(2).GetComponent<Text>().text = filePath.Substring(0, 6);
+            _placeholderTextWarning.text = "";
+            _loadSaveNew = 3;
+        }
     }
     /* private void WriteFileToDirectory(string json, string filePath)
      {
@@ -538,10 +562,14 @@ public class SaveFileController : MonoBehaviour
     private IEnumerator LoadFileFromWWW(string fileName, bool fromCode)
     {
         //Debug.Log("klappt?");
+        // UnityWebRequest uwr = UnityWebRequest.Get(_basepath + "Saves/" + fileName);
+        // yield return uwr;
+        // _jsonString = uwr.downloadHandler.text;
         WWW www = new WWW(_basepath + "Saves/" + fileName);
         yield return www;
         _jsonString = www.text;
         tempSceneData = this.GetComponent<SceneDataController>().CreateSceneDataFromJSON(_jsonString);
+        Debug.Log("uwr: " + tempSceneData);
         this.GetComponent<SceneDataController>().CreateScene(tempSceneData);
         string sceneMetaData = "";
         sceneMetaData += tempSceneData.fileName + "\n\n";
@@ -619,11 +647,76 @@ public class SaveFileController : MonoBehaviour
     public void SaveVisitorVersion()
     {
         _visitorPanelSave.SetActive(true);
+        _loadSaveNew = 0;
     }
     public void OnClickNewScene()
     {
         StartCoroutine(LoadFileFromWWW("*Musterszene_leer.json", true));
         ClosePanelShowCode(_visitorPanelSave);
+    }
+    public void OnClickSaveTabs(int loadSaveNew)
+    {
+        switch (loadSaveNew)
+        {
+            case 0: // New Scene
+                _loadSaveNew = 0;
+                break;
+            case 1: // Load via Code
+                _loadSaveNew = 1;
+                break;
+            case 2: // Save Scene
+                _loadSaveNew = 2;
+                break;
+        }
+        ResetTabs(_loadSaveNew);
+    }
+    public void OnClickOKAYOnTabs()
+    {
+        switch (_loadSaveNew)
+        {
+            case 0:
+                OnClickNewScene();
+                break;
+            case 1:
+                LoadCodeNow();
+                break;
+            case 2:
+                SaveSceneToFile(0);
+                break;
+            case 3:
+                ClosePanelShowCode(_visitorPanelSave);
+                break;
+        }
+    }
+    private void ResetTabs(int tab)
+    {
+        _borderWarning.SetActive(false);
+        _borderLoad.SetActive(false);
+        panelWarningInput.SetActive(false);
+        _placeholderTextWarning.color = new Color(.2f, .2f, .2f, 0.27f);
+        _placeholderTextLoadWarning.color = new Color(.2f, .2f, .2f, 0.27f);
 
+        _textSaveInputName.text = "Bitte Speicher-Namen eingeben.";
+        _inputFieldSaveName.GetComponent<InputField>().enabled = true;
+        _inputFieldSaveName.GetComponent<Image>().color = col_white; 
+        _inputFieldSaveName.transform.GetChild(2).GetComponent<Text>().text = "";
+        _placeholderTextWarning.text = "Szenen-Name";
+
+        _dialogNewScene.SetActive(false);
+        _dialogLoadCode.SetActive(false);
+        _dialogSave.SetActive(false);
+
+        if (tab == 0)
+        {
+            _dialogNewScene.SetActive(true);
+        }
+        else if (tab == 1)
+        {
+            _dialogLoadCode.SetActive(true);
+        }
+        else
+        {
+            _dialogSave.SetActive(true);
+        }
     }
 }

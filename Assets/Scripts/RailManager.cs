@@ -48,8 +48,8 @@ public class RailManager : MonoBehaviour
     private Vector2 diff;
     private FigureElement ThisFigureElement;    //element to set 3d object
     private float heightOpened, heightClosed, _spaceMax, _spaceMax3D;
-    bool draggingOnTimeline, draggingObject, editTimelineObject, releaseOnTimeline, isInstance, changedRail;
-    private bool figureOnLiveView;
+    bool draggingOnTimeline, draggingObject, editTimelineObject, releaseOnTimeline, isInstance, changedRail, _toBeRemoved;
+    //private bool figureOnLiveView;
     int hitTimelineOld;
     private int _counterTouched = 0;
     #endregion
@@ -449,7 +449,7 @@ public class RailManager : MonoBehaviour
     {
         btn.transform.GetChild(1).GetChild(0).GetComponent<RectTransform>().anchoredPosition = new Vector3(30, posY, -1);
         btn.transform.GetChild(1).GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(size, size);
-        btn.transform.GetChild(1).GetChild(0).GetComponent<BoxCollider2D>().size = new Vector2(colSize, colSize);
+        //btn.transform.GetChild(1).GetChild(0).GetComponent<BoxCollider2D>().size = new Vector2(colSize, colSize);
     }
     public void scaleObject(GameObject fig, float x, float y, bool boxCollZero)
     {
@@ -1407,6 +1407,7 @@ public class RailManager : MonoBehaviour
             for (int i = 0; i < rails.Length; i++)
                 if (rails[i].GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(getMousePos))
                 {
+                    Debug.Log("hier");
                     //open or close timeline
                     openTimelineByClick(railList[i].isTimelineOpen, i, false);
                     currentRailIndex = i;
@@ -1439,10 +1440,25 @@ public class RailManager : MonoBehaviour
                     SceneManaging.dragging = true;
                 }
             }
+
+            if (currentClickedInstanceObjectIndex != -1)
+            {
+                Debug.Log("hier");
+                if (getMousePos.x >= railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).position.x - railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).GetComponent<RectTransform>().sizeDelta.x / 2 && getMousePos.x <= railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).position.x + railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).GetComponent<RectTransform>().sizeDelta.x / 2
+                && getMousePos.y >= railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).position.y - railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).GetComponent<RectTransform>().sizeDelta.y / 2 && getMousePos.y <= railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).position.y + railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).GetComponent<RectTransform>().sizeDelta.y / 2)
+                {
+                    _toBeRemoved = true;
+
+                }
+            }
+
             //or check if you click an object in timeline
             if (currentClickedInstanceObjectIndex != -1 && editTimelineObject && railList[currentRailIndex].isTimelineOpen)
             {
+                Debug.Log("object in timeline: " + railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).name);
                 if (!SceneManaging.sceneChanged) SceneManaging.sceneChanged = true;
+
+
                 if (railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(getMousePos))
                 {
                     diff = new Vector2(getMousePos.x - railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.position.x, getMousePos.y - railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.position.y);
@@ -1717,8 +1733,12 @@ public class RailManager : MonoBehaviour
             editTimelineObject = false;
             hitTimelineOld = -1;
 
+            if (_toBeRemoved)
+            {
+                removeObjectFromTimeline(railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex], railList[currentRailIndex].timelineInstanceObjects3D[currentClickedInstanceObjectIndex]);
+            }
             // if dropped on a timeline
-            if (releaseOnTimeline == true)
+            else if (releaseOnTimeline == true)
             {
                 if (releaseObjMousePos == getMousePos)
                 {
@@ -1978,6 +1998,7 @@ public class RailManager : MonoBehaviour
             else if (releaseOnTimeline == false && currentClickedInstanceObjectIndex != -1 && isInstance)
                 removeObjectFromTimeline(railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex], railList[currentRailIndex].timelineInstanceObjects3D[currentClickedInstanceObjectIndex]);
 
+
             for (int k = 0; k < railList.Length; k++)
             {
                 for (int i = 0; i < railList[k].timelineInstanceObjects.Count; i++)
@@ -2030,11 +2051,12 @@ public class RailManager : MonoBehaviour
             releaseObjMousePos.y = 0.0f;
             draggingOnTimeline = false;
             isInstance = false;
-            figureOnLiveView = false;
+            //figureOnLiveView = false;
             currentClickedObjectIndex = -1;
             currentClickedInstanceObjectIndex = -1;
             hitTimelineOld = -1;
             SceneManaging.dragging = false;
+            _toBeRemoved = false;
         }
         // enable binnenanimation when playing
         for (int k = 0; k < railList.Length; k++)

@@ -46,7 +46,7 @@ public class sliderValueToInputValue : MonoBehaviour
 			v3.y=rail3D.transform.localPosition.y;
 			v3.z=rail3D.transform.localPosition.z;
 		}
-		catch (NullReferenceException ex)
+		catch (NullReferenceException)
 		{
 			Debug.Log("there are scene objects with some inputs which are not completly set");
 		}
@@ -59,7 +59,7 @@ public class sliderValueToInputValue : MonoBehaviour
 			//Debug.Log("+++++++START: " +attachedInputValue.text);
 			
 		}
-		catch (NullReferenceException ex)
+		catch (NullReferenceException)
 		{
 			Debug.Log("attachedInputValue was not set in the inspector");
 		}
@@ -148,7 +148,7 @@ public class sliderValueToInputValue : MonoBehaviour
 		{
 			attachedRailSide.transform.localPosition=v;
 		}
-		catch (NullReferenceException ex)
+		catch (NullReferenceException)
 		{
 			Debug.Log("attachedRailSide was not set in the inspector");
 		}
@@ -156,7 +156,7 @@ public class sliderValueToInputValue : MonoBehaviour
 		{
 			attachedRailTop.transform.localPosition=v2;
 		}
-		catch (NullReferenceException ex)
+		catch (NullReferenceException)
 		{
 			Debug.Log("attachedRailTop was not set in the inspector");
 		}
@@ -169,7 +169,7 @@ public class sliderValueToInputValue : MonoBehaviour
 			thisRailElement.z = v3.z;
 			StaticSceneData.Rails3D();
         }
-		catch (NullReferenceException ex)
+		catch (NullReferenceException)
 		{
 			Debug.Log("rail3D was not set in the inspector");
 		}
@@ -186,7 +186,7 @@ public class sliderValueToInputValue : MonoBehaviour
 		{
 			//attachedRailTop.transform.localPosition=v2;
 		}
-		catch (NullReferenceException ex)
+		catch (NullReferenceException)
 		{
 			
 		}
