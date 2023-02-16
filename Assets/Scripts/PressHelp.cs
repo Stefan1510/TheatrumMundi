@@ -4,12 +4,15 @@ using System;
 
 public class PressHelp : MonoBehaviour
 {
+    #region variables
     [SerializeField] GameObject helpButtonPressed, helpOverlayMenue2, helpOverlayMenue1, helpOverlayMenue3, helpOverlayMenue4, helpOverlayMenue5, helpOverlayMenue6, aboutScreen;
-    [SerializeField] GameObject timeSliderBubble;
+    [SerializeField] GameObject timeSliderBubble, gameController;
     [SerializeField] GameObject maskTimeSlider, _timeSliderPlayButton;
     [SerializeField] GameObject _arrowHelp;
+    [SerializeField] GameObject _countdown;
     GameObject _publicHelpMenue;
-    public bool pressed = false;
+    [HideInInspector] public bool pressed = false;
+    private bool arrowPressed = false, _newScene = true;
     private bool pressedLiveView = false, secondHighlight = false;
     private float _idleTimer;
     private float _timerOverlay;
@@ -19,7 +22,8 @@ public class PressHelp : MonoBehaviour
     private Color32 _buttonColorAttention;
     public GameObject helpTextLiveView;
     private int _tutorialCounter;
-
+    private int _maxTimeArrow, _maxTimeCountdown;
+    #endregion
     private void Start()
     {
         _tutorialCounter = -1;
@@ -32,6 +36,8 @@ public class PressHelp : MonoBehaviour
         aboutScreen.SetActive(false);
         _buttonColorStart = new Color(255, 255, 255, 0);
         _buttonColorAttention = new Color32(255, 255, 255, 70);
+        _maxTimeArrow = 5;
+        _maxTimeCountdown = 10;
 
         try
         {
@@ -46,7 +52,6 @@ public class PressHelp : MonoBehaviour
             throw;
         }
     }
-
     private void HelpAnimation()
     {
         float x = _idleTimer - _helpAnimWaitTime;
@@ -71,7 +76,7 @@ public class PressHelp : MonoBehaviour
     {
         _timerOverlay = 0;
         _arrowHelp.SetActive(false);
-
+        arrowPressed = false;
     }
     public void OnClick(int i)
     {
@@ -151,6 +156,7 @@ public class PressHelp : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
+            // tutorial
             if (_tutorialCounter != -1 && _tutorialCounter < _publicHelpMenue.transform.childCount)
             {
                 Debug.Log("counter: " + _tutorialCounter);
@@ -192,23 +198,6 @@ public class PressHelp : MonoBehaviour
                 catch (NullReferenceException) { }
 
             }
-            // else
-            // {
-            //     if (pressed)
-            //     {
-            //         Debug.Log("hier");
-            //         helpOverlayMenue1.SetActive(false);
-            //         helpOverlayMenue2.SetActive(false);
-            //         helpOverlayMenue3.SetActive(false);
-            //         helpOverlayMenue4.SetActive(false);
-            //         helpOverlayMenue5.SetActive(false);
-            //         helpOverlayMenue6.SetActive(false);
-            //         helpButtonPressed.SetActive(false);
-            //         pressed = false;
-            //     }
-            //     //StopOverlay();
-            // }
-            //StopHelpAnimation();
             helpTextLiveView.SetActive(false);
             pressedLiveView = false;
         }
@@ -216,13 +205,13 @@ public class PressHelp : MonoBehaviour
         {
             StopHelpAnimation();
             StopOverlay();
-            // if (_tutorialCounter != -1)
-            //     pressed = false;
+            _newScene = false;
         }
         if (_tutorialCounter == -1)
         {
             _idleTimer += Time.deltaTime;
-            _timerOverlay += Time.deltaTime;
+            if (!_newScene)
+                _timerOverlay += Time.deltaTime;
         }
         if (_idleTimer > _helpAnimWaitTime && !SceneManaging.playing)
         {
@@ -233,14 +222,34 @@ public class PressHelp : MonoBehaviour
             StopHelpAnimation();
             secondHighlight = false;
         }
-        if (_timerOverlay > 30 && _timerOverlay < 30.5f && !SceneManaging.playing && !SceneManaging.dragging)
+        if (_timerOverlay > _maxTimeArrow && _timerOverlay < _maxTimeCountdown && !SceneManaging.playing && !SceneManaging.dragging && !arrowPressed)
         {
             _arrowHelp.SetActive(true);
-            // OnClick(0);
-            // pressed = false;
+            arrowPressed = true;
         }
-        else if (_timerOverlay > 30.5f)
-            pressed = true;
+        else if (_timerOverlay >= _maxTimeCountdown && arrowPressed)
+        {
+            _arrowHelp.SetActive(false);
+            arrowPressed = false;
+            _countdown.SetActive(true);
+        }
+        else if (_timerOverlay > _maxTimeCountdown)
+        {
+            for (int i = 0; i < 11; i++)
+            {
+                if (_timerOverlay > _maxTimeCountdown + i)
+                    _countdown.transform.GetChild(0).GetChild(0).GetComponent<Text>().text = "Achtung! Die Szene wird in " + (10 - i) + " Sekunden gelöscht.\nZum Abbrechen bitte klicken.";
+            }
+            if (_timerOverlay > _maxTimeCountdown + 10)
+            {
+                _countdown.SetActive(false);
+                _timerOverlay = 0;
+                StartCoroutine(gameController.GetComponent<SaveFileController>().LoadFileFromWWW("*Musterszene_leer.json", true));
+                _newScene = true;
+            }
+        }
+        // else if (_timerOverlay > 10.5f && !pressed)
+        //     pressed = true;
     }
     public void ClickOnLiveView()
     {
@@ -265,14 +274,9 @@ public class PressHelp : MonoBehaviour
             {
                 helpTextLiveView.transform.GetChild(0).GetComponent<Text>().text = "Das ist der LiveView. Bitte wähle links eine Kulisse aus und ziehe sie auf die Schiene unten rechts.";
             }
-            /*else if (SceneManaging.mainMenuActive == 2 && SceneManaging.directorMenueActive == 2)    // (light director) verworfen
-            {
-                helpOverlayMenue2.SetActive(true);
-                Debug.Log("overlay 6");
-            }*/
             else if (SceneManaging.mainMenuActive == 1 && SceneManaging.configMenueActive == 3)  // licht
             {
-                helpTextLiveView.transform.GetChild(0).GetComponent<Text>().text = "Das ist der LiveView. Im Shelf links kannst du Lichter erstellen bearbeiten. ";
+                helpTextLiveView.transform.GetChild(0).GetComponent<Text>().text = "Das ist der LiveView. Im Shelf links kannst du Lichter erstellen und bearbeiten. ";
             }
             else if (SceneManaging.directorMenueActive == 3 && SceneManaging.mainMenuActive == 2)  // musik
             {

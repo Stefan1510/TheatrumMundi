@@ -559,7 +559,7 @@ public class SaveFileController : MonoBehaviour
          // ShowFilesFromDirectory();
          StartCoroutine(LoadFilesFromServer(false));
      }*/
-    private IEnumerator LoadFileFromWWW(string fileName, bool fromCode)
+    public IEnumerator LoadFileFromWWW(string fileName, bool fromCode)
     {
         //Debug.Log("klappt?");
         // UnityWebRequest uwr = UnityWebRequest.Get(_basepath + "Saves/" + fileName);
@@ -569,7 +569,7 @@ public class SaveFileController : MonoBehaviour
         yield return www;
         _jsonString = www.text;
         tempSceneData = this.GetComponent<SceneDataController>().CreateSceneDataFromJSON(_jsonString);
-        Debug.Log("uwr: " + tempSceneData);
+//        Debug.Log("uwr: " + tempSceneData);
         this.GetComponent<SceneDataController>().CreateScene(tempSceneData);
         string sceneMetaData = "";
         sceneMetaData += tempSceneData.fileName + "\n\n";
