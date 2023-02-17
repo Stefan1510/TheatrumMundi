@@ -29,10 +29,10 @@ public class CoulissesManager : MonoBehaviour
     private int currentTabIndex, publicSibling;
     private bool objectInRail, clickOnDelete, clickCoulisseFromShelf;
     private float railMinX, windowWidth, windowHeight, windowMinX;
-    private float _timerCoulisse = 1;
+    //private float _timerCoulisse = 1;
     Vector2 diff;
     private float railMinY, windowMinY, currentLossyScale;
-    private int _counterTouched;
+    //private int _counterTouched;
     #endregion
     void Awake()
     {
@@ -171,10 +171,10 @@ public class CoulissesManager : MonoBehaviour
             // if a coulisse is clicked
             if (currentObjectIndex != -1 && clickInSettingsWindow == -1)
             {
-                if (_counterTouched < 2)
-                    _counterTouched++;
-                else if (_counterTouched == 2)
-                    _timerCoulisse = 0.0f;
+                // if (_counterTouched < 2)
+                //     _counterTouched++;
+                // else if (_counterTouched == 2)
+                //     _timerCoulisse = 0.0f;
 
                 if (!SceneManaging.sceneChanged) SceneManaging.sceneChanged = true;
                 scrollViewScenery.GetComponent<ScrollRect>().enabled = false;
@@ -203,7 +203,7 @@ public class CoulissesManager : MonoBehaviour
                     clickCoulisseFromShelf = true;
                 }
                 publicSibling = coulisses[currentObjectIndex].transform.GetSiblingIndex();
-                Debug.Log(publicSibling);
+                //Debug.Log(publicSibling);
                 textPositionZCoulisses.GetComponent<Text>().text = (coulisses[currentObjectIndex].transform.parent.transform.childCount - publicSibling) + "/" + coulisses[currentObjectIndex].transform.parent.transform.childCount;
                 coulisses[currentObjectIndex].transform.SetParent(mainMenue.transform);
             }
@@ -221,10 +221,10 @@ public class CoulissesManager : MonoBehaviour
 
         if (dragging)
         {
-            if (_timerCoulisse <= 0.5f)
-            {
-                _timerCoulisse += Time.deltaTime;
-            }
+            // if (_timerCoulisse <= 0.5f)
+            // {
+            //     _timerCoulisse += Time.deltaTime;
+            // }
             if (coulisses[currentObjectIndex].GetComponent<RectTransform>().rect.width == shelfSizeWidth[currentObjectIndex])
             {
                 coulisses[currentObjectIndex].GetComponent<RectTransform>().sizeDelta = new Vector2(railWidth / 410 * coulisses[currentObjectIndex].GetComponent<CoulisseStats>().CoulisseWidth / coulisses[currentObjectIndex].transform.lossyScale.x, railWidth / 410 * coulisses[currentObjectIndex].GetComponent<CoulisseStats>().CoulisseHeight / coulisses[currentObjectIndex].transform.lossyScale.y);
@@ -443,11 +443,11 @@ public class CoulissesManager : MonoBehaviour
                         helpButton.GetComponent<PressHelp>().helpTextLiveView.SetActive(true);
                     }
                     // wenn figur nur angetoucht wurde
-                    else if (_timerCoulisse < 0.5f)
-                    {
-                        helpButton.GetComponent<PressHelp>().pressed = false;
-                        helpButton.GetComponent<PressHelp>().OnClick(0);
-                    }
+                    // else if (_timerCoulisse < 0.5f)
+                    // {
+                    //     helpButton.GetComponent<PressHelp>().pressed = false;
+                    //     helpButton.GetComponent<PressHelp>().OnClick(0);
+                    // }
 
                     placeInShelf(currentObjectIndex);
                     StaticSceneData.StaticData.sceneryElements[currentObjectIndex].active = false;

@@ -8,11 +8,11 @@ public class PressHelp : MonoBehaviour
     [SerializeField] GameObject helpButtonPressed, helpOverlayMenue2, helpOverlayMenue1, helpOverlayMenue3, helpOverlayMenue4, helpOverlayMenue5, helpOverlayMenue6, aboutScreen;
     [SerializeField] GameObject timeSliderBubble, gameController;
     [SerializeField] GameObject maskTimeSlider, _timeSliderPlayButton;
-    [SerializeField] GameObject _arrowHelp;
+    public GameObject _arrowHelp;
     [SerializeField] GameObject _countdown;
     GameObject _publicHelpMenue;
-    [HideInInspector] public bool pressed = false;
-    private bool arrowPressed = false, _newScene = true;
+    [HideInInspector] public bool pressed = false, arrowPressed = false;
+    private bool _newScene = true, _isClicked = false;
     private bool pressedLiveView = false, secondHighlight = false;
     private float _idleTimer;
     private float _timerOverlay;
@@ -36,8 +36,8 @@ public class PressHelp : MonoBehaviour
         aboutScreen.SetActive(false);
         _buttonColorStart = new Color(255, 255, 255, 0);
         _buttonColorAttention = new Color32(255, 255, 255, 70);
-        _maxTimeArrow = 5;
-        _maxTimeCountdown = 10;
+        _maxTimeArrow = 20;
+        _maxTimeCountdown = 40;
 
         try
         {
@@ -82,7 +82,7 @@ public class PressHelp : MonoBehaviour
     {
         if (i == 0) // help
         {
-            Debug.Log("pressed: " + pressed);
+            //Debug.Log("pressed: " + pressed);
             if (pressed)
             {
                 helpOverlayMenue1.SetActive(false);
@@ -156,10 +156,11 @@ public class PressHelp : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
+            _isClicked = true;
             // tutorial
             if (_tutorialCounter != -1 && _tutorialCounter < _publicHelpMenue.transform.childCount)
             {
-                Debug.Log("counter: " + _tutorialCounter);
+                //Debug.Log("counter: " + _tutorialCounter);
                 for (int i = 0; i < _publicHelpMenue.transform.childCount; i++)
                 {
                     _publicHelpMenue.transform.GetChild(i).gameObject.SetActive(false);
@@ -180,7 +181,6 @@ public class PressHelp : MonoBehaviour
                     }
                 }
                 _tutorialCounter++;
-
             }
             else
             {
@@ -206,8 +206,17 @@ public class PressHelp : MonoBehaviour
             StopHelpAnimation();
             StopOverlay();
             _newScene = false;
+
+            if (_countdown.activeSelf)
+                _countdown.SetActive(false);
         }
-        if (_tutorialCounter == -1)
+        if (Input.GetMouseButtonUp(0))
+        {
+            _isClicked = false;
+            _timerOverlay = 0;
+            _idleTimer = 0;
+        }
+        if (_tutorialCounter == -1 && !_isClicked)
         {
             _idleTimer += Time.deltaTime;
             if (!_newScene)
