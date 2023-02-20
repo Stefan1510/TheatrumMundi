@@ -139,11 +139,11 @@ public class RailManager : MonoBehaviour
         currentLossyScale = 0.0f;   // lossyScale is global Scale that I use to get the moment when ScreenSize is being changed (doesn't happen exactly when Screen Size is changed, but somehow shortly after, so I use this parameter instead)
 
         ResetScreenSize();
-        for (int i = 0; i < 6; i++)
-        {
-            rails[i].GetComponent<RectTransform>().sizeDelta = new Vector2(railwidthAbsolute, heightClosed / rails[currentRailIndex].transform.lossyScale.x);
-            rails[i].GetComponent<BoxCollider2D>().size = new Vector2(railwidthAbsolute, heightClosed / rails[currentRailIndex].transform.lossyScale.x * 1.2f);
-        }
+        // for (int i = 0; i < 6; i++)
+        // {
+        //     rails[i].GetComponent<RectTransform>().sizeDelta = new Vector2(railwidthAbsolute, heightClosed / rails[currentRailIndex].transform.lossyScale.x);
+        //     rails[i].GetComponent<BoxCollider2D>().size = new Vector2(railwidthAbsolute, heightClosed / rails[currentRailIndex].transform.lossyScale.x * 1.2f);
+        // }
 
         List<GameObject> timelineInstanceObjects = new List<GameObject>();
         List<GameObject> timelineInstanceObjects3D = new List<GameObject>();
@@ -262,8 +262,8 @@ public class RailManager : MonoBehaviour
             // a different rail is open - close it
             for (int i = 0; i < rails.Length; i++)
             {
-                rails[i].GetComponent<RectTransform>().sizeDelta = new Vector2(rails[index].GetComponent<RectTransform>().rect.width, heightClosed / rails[i].transform.lossyScale.x);
-                rails[i].GetComponent<BoxCollider2D>().size = new Vector2(rails[index].GetComponent<BoxCollider2D>().size.x, heightClosed * 1.2f / rails[i].transform.lossyScale.x);
+                rails[i].GetComponent<RectTransform>().sizeDelta = new Vector2(rails[index].GetComponent<RectTransform>().rect.width, 20);
+                rails[i].GetComponent<BoxCollider2D>().size = new Vector2(rails[index].GetComponent<BoxCollider2D>().size.x, 20);
                 railList[i].isTimelineOpen = false;
                 openCloseObjectInTimeline(false, railList[i].timelineInstanceObjects, i);
                 for (int j = 0; j < railList[i].timelineInstanceObjects3D.Count; j++)
@@ -273,12 +273,12 @@ public class RailManager : MonoBehaviour
             }
             for (int j = 0; j < 2; j++)
             {
-                gameController.GetComponent<UIController>().RailLightBG[j].GetComponent<RectTransform>().sizeDelta = new Vector2(rails[index].GetComponent<RectTransform>().rect.width, heightClosed / rails[currentRailIndex].transform.lossyScale.x);
-                gameController.GetComponent<UIController>().RailLightBG[j].GetComponent<BoxCollider2D>().size = new Vector2(rails[index].GetComponent<BoxCollider2D>().size.x, heightClosed * 1.2f / rails[currentRailIndex].transform.lossyScale.x);
+                gameController.GetComponent<UIController>().RailLightBG[j].GetComponent<RectTransform>().sizeDelta = new Vector2(rails[index].GetComponent<RectTransform>().rect.width, 20);
+                gameController.GetComponent<UIController>().RailLightBG[j].GetComponent<BoxCollider2D>().size = new Vector2(rails[index].GetComponent<BoxCollider2D>().size.x, 20);
                 gameController.GetComponent<UIController>().RailLightBG[j].GetComponent<RailLightManager>().isTimelineOpen = false;
             }
-            gameController.GetComponent<UIController>().RailMusic.GetComponent<RectTransform>().sizeDelta = new Vector2(rails[index].GetComponent<RectTransform>().rect.width, heightClosed / rails[currentRailIndex].transform.lossyScale.x);
-            gameController.GetComponent<UIController>().RailMusic.GetComponent<BoxCollider2D>().size = new Vector2(rails[index].GetComponent<BoxCollider2D>().size.x, heightClosed * 1.2f / rails[currentRailIndex].transform.lossyScale.x);
+            gameController.GetComponent<UIController>().RailMusic.GetComponent<RectTransform>().sizeDelta = new Vector2(rails[index].GetComponent<RectTransform>().rect.width, 20);
+            gameController.GetComponent<UIController>().RailMusic.GetComponent<BoxCollider2D>().size = new Vector2(rails[index].GetComponent<BoxCollider2D>().size.x, 20);
             gameController.GetComponent<UIController>().RailMusic.GetComponent<RailMusicManager>().isTimelineOpen = false;
             gameController.GetComponent<UIController>().RailMusic.GetComponent<RailMusicManager>().openCloseObjectInTimeline(false, gameController.GetComponent<UIController>().RailMusic.GetComponent<RailMusicManager>().timelineInstanceObjects);
 
@@ -288,8 +288,8 @@ public class RailManager : MonoBehaviour
             }
 
             // open clicked rail and collider
-            rails[index].GetComponent<RectTransform>().sizeDelta = new Vector2(rails[index].GetComponent<RectTransform>().rect.width, heightOpened / rails[currentRailIndex].transform.lossyScale.x);
-            rails[index].GetComponent<BoxCollider2D>().size = new Vector2(rails[index].GetComponent<BoxCollider2D>().size.x, heightOpened / rails[currentRailIndex].transform.lossyScale.x);
+            rails[index].GetComponent<RectTransform>().sizeDelta = new Vector2(rails[index].GetComponent<RectTransform>().rect.width, 80);
+            rails[index].GetComponent<BoxCollider2D>().size = new Vector2(rails[index].GetComponent<BoxCollider2D>().size.x, 80);
             openCloseObjectInTimeline(true, railList[index].timelineInstanceObjects, index);
             //Debug.Log(railList[index].timelineInstanceObjects[0].GetComponent<RectTransform>().sizeDelta);
             railList[index].isTimelineOpen = true;
@@ -348,20 +348,20 @@ public class RailManager : MonoBehaviour
         {
             if (gameController.GetComponent<UIController>().RailLightBG[0].isTimelineOpen)
             {
-                gameController.GetComponent<UIController>().RailLightBG[0].GetComponent<RectTransform>().sizeDelta = new Vector2(rails[index].GetComponent<RectTransform>().rect.width, heightClosed / rails[currentRailIndex].transform.lossyScale.x);
-                gameController.GetComponent<UIController>().RailLightBG[0].GetComponent<BoxCollider2D>().size = new Vector2(rails[index].GetComponent<BoxCollider2D>().size.x, heightClosed * 1.2f / rails[currentRailIndex].transform.lossyScale.x);
+                gameController.GetComponent<UIController>().RailLightBG[0].GetComponent<RectTransform>().sizeDelta = new Vector2(rails[index].GetComponent<RectTransform>().rect.width, 20);
+                gameController.GetComponent<UIController>().RailLightBG[0].GetComponent<BoxCollider2D>().size = new Vector2(rails[index].GetComponent<BoxCollider2D>().size.x, 20);
                 gameController.GetComponent<UIController>().RailLightBG[0].GetComponent<RailLightManager>().isTimelineOpen = false;
             }
             if (gameController.GetComponent<UIController>().RailLightBG[1].isTimelineOpen)
             {
-                gameController.GetComponent<UIController>().RailLightBG[1].GetComponent<RectTransform>().sizeDelta = new Vector2(rails[index].GetComponent<RectTransform>().rect.width, heightClosed / rails[currentRailIndex].transform.lossyScale.x);
-                gameController.GetComponent<UIController>().RailLightBG[1].GetComponent<BoxCollider2D>().size = new Vector2(rails[index].GetComponent<BoxCollider2D>().size.x, heightClosed * 1.2f / rails[currentRailIndex].transform.lossyScale.x);
+                gameController.GetComponent<UIController>().RailLightBG[1].GetComponent<RectTransform>().sizeDelta = new Vector2(rails[index].GetComponent<RectTransform>().rect.width, 20);
+                gameController.GetComponent<UIController>().RailLightBG[1].GetComponent<BoxCollider2D>().size = new Vector2(rails[index].GetComponent<BoxCollider2D>().size.x, 20);
                 gameController.GetComponent<UIController>().RailLightBG[1].GetComponent<RailLightManager>().isTimelineOpen = false;
             }
             if (gameController.GetComponent<UIController>().RailMusic.isTimelineOpen)
             {
-                gameController.GetComponent<UIController>().RailMusic.GetComponent<RectTransform>().sizeDelta = new Vector2(rails[index].GetComponent<RectTransform>().rect.width, heightClosed / rails[currentRailIndex].transform.lossyScale.x);
-                gameController.GetComponent<UIController>().RailMusic.GetComponent<BoxCollider2D>().size = new Vector2(rails[index].GetComponent<BoxCollider2D>().size.x, heightClosed * 1.2f / rails[currentRailIndex].transform.lossyScale.x);
+                gameController.GetComponent<UIController>().RailMusic.GetComponent<RectTransform>().sizeDelta = new Vector2(rails[index].GetComponent<RectTransform>().rect.width, 20);
+                gameController.GetComponent<UIController>().RailMusic.GetComponent<BoxCollider2D>().size = new Vector2(rails[index].GetComponent<BoxCollider2D>().size.x, 20);
                 gameController.GetComponent<UIController>().RailMusic.GetComponent<RailMusicManager>().isTimelineOpen = false;
                 gameController.GetComponent<UIController>().RailMusic.GetComponent<RailMusicManager>().openCloseObjectInTimeline(false, gameController.GetComponent<UIController>().RailMusic.GetComponent<RailMusicManager>().timelineInstanceObjects);
             }
@@ -369,8 +369,8 @@ public class RailManager : MonoBehaviour
             {
                 if (railList[i].isTimelineOpen)
                 {
-                    rails[i].GetComponent<RectTransform>().sizeDelta = new Vector2(rails[index].GetComponent<RectTransform>().rect.width, heightClosed / rails[currentRailIndex].transform.lossyScale.x);
-                    rails[i].GetComponent<BoxCollider2D>().size = new Vector2(rails[currentRailIndex].GetComponent<BoxCollider2D>().size.x, heightClosed * 1.2f / rails[currentRailIndex].transform.lossyScale.x);
+                    rails[i].GetComponent<RectTransform>().sizeDelta = new Vector2(rails[index].GetComponent<RectTransform>().rect.width, 20);
+                    rails[i].GetComponent<BoxCollider2D>().size = new Vector2(rails[currentRailIndex].GetComponent<BoxCollider2D>().size.x, 20);
                     railList[i].isTimelineOpen = false;
                     openCloseObjectInTimeline(false, railList[i].timelineInstanceObjects, i);
                     for (int j = 0; j < railList[i].timelineInstanceObjects3D.Count; j++)
@@ -381,11 +381,11 @@ public class RailManager : MonoBehaviour
             }
             railList[currentRailIndex].isTimelineOpen = false;
             //scale down timeline, collider, scale up objects on timeline
-            rails[currentRailIndex].GetComponent<RectTransform>().sizeDelta = new Vector2(rails[currentRailIndex].GetComponent<RectTransform>().rect.width, heightClosed / rails[currentRailIndex].transform.lossyScale.x);
-            rails[currentRailIndex].GetComponent<BoxCollider2D>().size = new Vector2(rails[currentRailIndex].GetComponent<BoxCollider2D>().size.x, heightClosed * 1.2f / rails[currentRailIndex].transform.lossyScale.x);
+            rails[currentRailIndex].GetComponent<RectTransform>().sizeDelta = new Vector2(rails[currentRailIndex].GetComponent<RectTransform>().rect.width, 20);
+            rails[currentRailIndex].GetComponent<BoxCollider2D>().size = new Vector2(rails[currentRailIndex].GetComponent<BoxCollider2D>().size.x, 20);
             //scale up hovered timeline
-            rails[index].GetComponent<RectTransform>().sizeDelta = new Vector2(rails[index].GetComponent<RectTransform>().rect.width, heightOpened / rails[index].transform.lossyScale.x);
-            rails[index].GetComponent<BoxCollider2D>().size = new Vector2(rails[index].GetComponent<BoxCollider2D>().size.x, heightOpened * 1.2f / rails[index].transform.lossyScale.x);
+            rails[index].GetComponent<RectTransform>().sizeDelta = new Vector2(rails[index].GetComponent<RectTransform>().rect.width, 80);
+            rails[index].GetComponent<BoxCollider2D>().size = new Vector2(rails[index].GetComponent<BoxCollider2D>().size.x, 80);
             railList[index].isTimelineOpen = true;
 
             openCloseObjectInTimeline(true, railList[index].timelineInstanceObjects, index);
@@ -397,14 +397,47 @@ public class RailManager : MonoBehaviour
     }
     public int checkHittingTimeline(Vector2 mousePos)
     {
-        int hit = -1;
-        for (int i = 0; i < rails.Length; i++)
+        Ray ray = Camera.main.ScreenPointToRay(mousePos);
+        RaycastHit2D hit = Physics2D.GetRayIntersection(ray, Mathf.Infinity);
+
+        if (hit.collider != null)
         {
-            Vector2 colSize = new Vector2(rails[i].GetComponent<BoxCollider2D>().size.x * rails[i].transform.lossyScale.x, rails[i].GetComponent<BoxCollider2D>().size.y * rails[i].transform.lossyScale.x);
-            if (mousePos.x <= maxX && mousePos.x > minX && mousePos.y <= rails[i].transform.position.y + (colSize.y / 2.0f) && mousePos.y > rails[i].transform.position.y - (colSize.y / 2.0f))
-                hit = i;
+            Debug.Log("hit: " + hit.collider.gameObject.name);
+            if (hit.collider.gameObject.name.Contains("1"))
+            {
+                return 1;
+            }
+            else if (hit.collider.gameObject.name.Contains("2"))
+            {
+                return 2;
+            }
+            else if (hit.collider.gameObject.name.Contains("3"))
+            {
+                return 3;
+            }
+            else if (hit.collider.gameObject.name.Contains("4"))
+            {
+                return 4;
+            }
+            else if (hit.collider.gameObject.name.Contains("5"))
+            {
+                return 5;
+            }
+            else if (hit.collider.gameObject.name.Contains("6"))
+            {
+                return 6;
+            }
+
         }
-        return hit;
+
+        // int hit = -1;
+        // for (int i = 0; i < rails.Length; i++)
+        // {
+        //     Vector2 colSize = new Vector2(rails[i].GetComponent<BoxCollider2D>().size.x, rails[i].GetComponent<BoxCollider2D>().size.y);
+        //     if (mousePos.x <= maxX && mousePos.x > minX && mousePos.y <= rails[i].transform.position.y + (colSize.y / 2.0f) && mousePos.y > rails[i].transform.position.y - (colSize.y / 2.0f))
+        //         hit = i;
+        // }
+        return -1;
     }
     private bool isRailAreaHit(Vector2 mousePos)
     {
@@ -941,26 +974,27 @@ public class RailManager : MonoBehaviour
     }
     public void ResetScreenSize()       // this probably has to be called globally, so that every Menue resizes (probably in the UIController). At the moment it is only scaled properly when rail tab is open e.g.
     {
-        // I used the values that were put in FullHD (global: position.x) and calculated the percentage so that it works for all resolutions
-        minX = 0.087f * Screen.width;               //timeline-rail-minX
-        railWidth = 0.87f * Screen.width;           //railwidth=1670.4px
-        heightClosed = heightRailPercent * Screen.height;
-        heightOpened = 0.074f * Screen.height;
-        maxX = minX + railWidth;
-        //timeline-rail-maxX
-        screenDifference = new Vector2(1920.0f / (float)Screen.width, 1080.0f / (float)Screen.height);
-        //liveView.GetComponent<BoxCollider2D>().size = liveView.GetComponent<RectTransform>().sizeDelta;
+        // // I used the values that were put in FullHD (global: position.x) and calculated the percentage so that it works for all resolutions
+        // minX = 0.087f * Screen.width;               //timeline-rail-minX
+        // railWidth = 0.87f * Screen.width;           //railwidth=1670.4px
+        // heightClosed = heightRailPercent * Screen.height;
+        // heightOpened = 0.074f * Screen.height;
+        // maxX = minX + railWidth;
+        // //timeline-rail-maxX
+        // screenDifference = new Vector2(1920.0f / (float)Screen.width, 1080.0f / (float)Screen.height);
+        // 1920/1080
+        // //liveView.GetComponent<BoxCollider2D>().size = liveView.GetComponent<RectTransform>().sizeDelta;
 
         for (int i = 0; i < railList.Length; i++)
         {
             if (railList[i].isTimelineOpen)
             {
-                rails[i].GetComponent<Image>().GetComponent<RectTransform>().sizeDelta = rails[i].GetComponent<BoxCollider2D>().size = new Vector2(1670.4f, heightOpened / rails[i].transform.lossyScale.x);
+                rails[i].GetComponent<Image>().GetComponent<RectTransform>().sizeDelta = rails[i].GetComponent<BoxCollider2D>().size = new Vector2(1670.4f, 80);
             }
             else
             {
-                rails[i].GetComponent<Image>().GetComponent<RectTransform>().sizeDelta = new Vector2(1670.4f, heightClosed / rails[i].transform.lossyScale.x);
-                rails[i].GetComponent<BoxCollider2D>().size = new Vector2(1670.4f, heightClosed / rails[i].transform.lossyScale.x * 1.2f);
+                rails[i].GetComponent<Image>().GetComponent<RectTransform>().sizeDelta = new Vector2(1670.4f, 20);
+                rails[i].GetComponent<BoxCollider2D>().size = new Vector2(1670.4f, 20);
             }
         }
     }
@@ -1009,10 +1043,11 @@ public class RailManager : MonoBehaviour
         if (layer2Full != -1 && layer1Full != -1)
         {
             Debug.Log("1: " + railList[railIndex].myObjectsPositionListLayer1[layer1Full].position + ", 2: " + railList[railIndex].myObjectsPositionListLayer2[layer2Full].position);
+            Debug.Log("length: " + railIndex + ", layer1: " + layer1Full + ", layer2: " + layer2Full);
             // obj auf layer 1 ist weiter links
             if (railList[railIndex].myObjectsPositionListLayer2[layer2Full].position.x > railList[railIndex].myObjectsPositionListLayer1[layer1Full].position.x)
             {
-                Debug.Log("obj auf layer 1 ist weiter links: mouse: "+Input.mousePosition.x+", obj: "+railList[railIndex].figuresLayer1[layer1Full].transform.position.x);
+                Debug.Log("obj auf layer 1 ist weiter links: mouse: " + Input.mousePosition.x + ", obj: " + railList[railIndex].figuresLayer1[layer1Full].transform.position.x);
                 // obj ist links von collision
                 if (Input.mousePosition.x < railList[railIndex].figuresLayer1[layer1Full].transform.position.x)
                 {
@@ -1029,9 +1064,9 @@ public class RailManager : MonoBehaviour
             // obj auf layer 1 ist weiter rechts
             else
             {
-                Debug.Log("obj auf layer 1 ist weiter rechts: mouse: "+Input.mousePosition.x+", obj: "+railList[railIndex].figuresLayer2[layer2Full].transform.position.x);
+                Debug.Log("springst du hier hin? ");
                 // obj ist links von collision
-                if (Input.mousePosition.x < railList[railIndex].figuresLayer2[layer2Full].transform.position.x)
+                if (Input.mousePosition.x < railList[railIndex].myObjectsPositionListLayer2[layer2Full].position.x)
                 {
                     Debug.Log("else left");
                     FindNextFreeSpot(obj, railList[railIndex].myObjectsPositionListLayer1[layer1Full].position.x, railList[railIndex].myObjectsPositionListLayer2[layer2Full].position.x, railIndex, create, "left");
@@ -1644,6 +1679,7 @@ public class RailManager : MonoBehaviour
             {
                 if (hitTimelineOld != hitTimeline)
                 {
+                    Debug.Log("hier");
                     hitTimelineOld = hitTimeline;
                     openTimelineByDrag(hitTimeline);
 
