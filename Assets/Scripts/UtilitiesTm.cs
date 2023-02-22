@@ -33,7 +33,7 @@ public static class UtilitiesTm
 
     public static Texture2D Bresenham(Texture2D texture2D, int xstart, int ystart, int xend, int yend, Color32[] colors)
     /*--------------------------------------------------------------
-     * Bresenham-Algorithmus: Linien auf Rastergeräten zeichnen
+     * Bresenham-Algorithmus: Linien auf Rastergerï¿½ten zeichnen
      *
      * Eingabeparameter:
      *    int xstart, ystart        = Koordinaten des Startpunkts
@@ -60,7 +60,7 @@ public static class UtilitiesTm
         if (dx < 0) dx = -dx;
         if (dy < 0) dy = -dy;
 
-        /* feststellen, welche Entfernung größer ist */
+        /* feststellen, welche Entfernung grï¿½ï¿½er ist */
         if (dx > dy)
         {
             /* x ist schnelle Richtung */
@@ -84,6 +84,7 @@ public static class UtilitiesTm
         texture2D.SetPixels32(x, y, 3, 3, colors);
         //texture2D.SetPixel(x, y, Color.black);
 
+Debug.Log("delta: "+deltafastdirection+", textur: "+texture2D.width+", hoehe: "+texture2D.height);
         /* Pixel berechnen */
         for (t = 0; t < deltafastdirection; ++t) /* t zaehlt die Pixel, deltafastdirection ist Anzahl der Schritte */
         {

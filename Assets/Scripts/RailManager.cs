@@ -66,6 +66,14 @@ public class RailManager : MonoBehaviour
     #endregion
     void Awake()
     {
+        float format = (float)Screen.width / (float)Screen.height;
+        if(format >1.78f)
+        {
+            //Debug.Log("format: "+format);
+            float widthNew = Screen.height * 1.77f;
+            // Screen.SetResolution((int)widthNew, (int)Screen.height, true);
+        }
+
         if (gameController.GetComponent<UnitySwitchExpertUser>()._isExpert)
         {
             heightRailPercent = 0.018f;
@@ -306,6 +314,7 @@ public class RailManager : MonoBehaviour
         for (int i = 0; i < objects.Count; i++)
         {
             objects[i].GetComponent<RectTransform>().anchoredPosition = new Vector3(objects[i].GetComponent<RectTransform>().anchoredPosition.x, -rails[railIndex].GetComponent<RectTransform>().rect.height / 2, -1);
+            Debug.Log("height: "+rails[railIndex].GetComponent<RectTransform>().rect.height);
 
             if (timelineOpen)
             {
@@ -331,13 +340,13 @@ public class RailManager : MonoBehaviour
             {
                 if (railList[railIndex].sizeLayering == 1)
                 {
-                    scaleObject(objects[i], length, heightClosed / rails[railIndex].transform.lossyScale.x, true);
+                    scaleObject(objects[i], length, 10, true);
                 }
                 else if (railList[railIndex].sizeLayering == 2)
                 {
                     objects[i].GetComponent<RectTransform>().anchoredPosition = new Vector3(objects[i].GetComponent<RectTransform>().anchoredPosition.x, -(heightClosed / rails[railIndex].transform.lossyScale.x / 2), -1);
 
-                    scaleObject(objects[i], length, heightClosed / rails[railIndex].transform.lossyScale.x / 2, true);
+                    scaleObject(objects[i], length, 10, true);
                 }
             }
         }
@@ -352,13 +361,13 @@ public class RailManager : MonoBehaviour
                 gameController.GetComponent<UIController>().RailLightBG[0].GetComponent<BoxCollider2D>().size = new Vector2(rails[index].GetComponent<BoxCollider2D>().size.x, 20);
                 gameController.GetComponent<UIController>().RailLightBG[0].GetComponent<RailLightManager>().isTimelineOpen = false;
             }
-            if (gameController.GetComponent<UIController>().RailLightBG[1].isTimelineOpen)
+            else if (gameController.GetComponent<UIController>().RailLightBG[1].isTimelineOpen)
             {
                 gameController.GetComponent<UIController>().RailLightBG[1].GetComponent<RectTransform>().sizeDelta = new Vector2(rails[index].GetComponent<RectTransform>().rect.width, 20);
                 gameController.GetComponent<UIController>().RailLightBG[1].GetComponent<BoxCollider2D>().size = new Vector2(rails[index].GetComponent<BoxCollider2D>().size.x, 20);
                 gameController.GetComponent<UIController>().RailLightBG[1].GetComponent<RailLightManager>().isTimelineOpen = false;
             }
-            if (gameController.GetComponent<UIController>().RailMusic.isTimelineOpen)
+            else if (gameController.GetComponent<UIController>().RailMusic.isTimelineOpen)
             {
                 gameController.GetComponent<UIController>().RailMusic.GetComponent<RectTransform>().sizeDelta = new Vector2(rails[index].GetComponent<RectTransform>().rect.width, 20);
                 gameController.GetComponent<UIController>().RailMusic.GetComponent<BoxCollider2D>().size = new Vector2(rails[index].GetComponent<BoxCollider2D>().size.x, 20);
@@ -397,47 +406,15 @@ public class RailManager : MonoBehaviour
     }
     public int checkHittingTimeline(Vector2 mousePos)
     {
-        Ray ray = Camera.main.ScreenPointToRay(mousePos);
-        RaycastHit2D hit = Physics2D.GetRayIntersection(ray, Mathf.Infinity);
-
-        if (hit.collider != null)
+        int hit = -1;
+        for (int i = 0; i < rails.Length; i++)
         {
-            Debug.Log("hit: " + hit.collider.gameObject.name);
-            if (hit.collider.gameObject.name.Contains("1"))
-            {
-                return 1;
-            }
-            else if (hit.collider.gameObject.name.Contains("2"))
-            {
-                return 2;
-            }
-            else if (hit.collider.gameObject.name.Contains("3"))
-            {
-                return 3;
-            }
-            else if (hit.collider.gameObject.name.Contains("4"))
-            {
-                return 4;
-            }
-            else if (hit.collider.gameObject.name.Contains("5"))
-            {
-                return 5;
-            }
-            else if (hit.collider.gameObject.name.Contains("6"))
-            {
-                return 6;
-            }
-
+            Vector2 colSize = new Vector2(rails[i].GetComponent<BoxCollider2D>().size.x, rails[i].GetComponent<BoxCollider2D>().size.y);
+            //Debug.Log("colsize: "+colSize+", mousePos: "+mousePos);
+            if (mousePos.x <= maxX && mousePos.x > minX && mousePos.y <= rails[i].transform.position.y + (colSize.y / 2.0f) && mousePos.y > rails[i].transform.position.y - (colSize.y / 2.0f))
+                hit = i;
         }
-
-        // int hit = -1;
-        // for (int i = 0; i < rails.Length; i++)
-        // {
-        //     Vector2 colSize = new Vector2(rails[i].GetComponent<BoxCollider2D>().size.x, rails[i].GetComponent<BoxCollider2D>().size.y);
-        //     if (mousePos.x <= maxX && mousePos.x > minX && mousePos.y <= rails[i].transform.position.y + (colSize.y / 2.0f) && mousePos.y > rails[i].transform.position.y - (colSize.y / 2.0f))
-        //         hit = i;
-        // }
-        return -1;
+        return hit;
     }
     private bool isRailAreaHit(Vector2 mousePos)
     {
@@ -975,15 +952,15 @@ public class RailManager : MonoBehaviour
     public void ResetScreenSize()       // this probably has to be called globally, so that every Menue resizes (probably in the UIController). At the moment it is only scaled properly when rail tab is open e.g.
     {
         // // I used the values that were put in FullHD (global: position.x) and calculated the percentage so that it works for all resolutions
-        // minX = 0.087f * Screen.width;               //timeline-rail-minX
-        // railWidth = 0.87f * Screen.width;           //railwidth=1670.4px
-        // heightClosed = heightRailPercent * Screen.height;
-        // heightOpened = 0.074f * Screen.height;
-        // maxX = minX + railWidth;
-        // //timeline-rail-maxX
-        // screenDifference = new Vector2(1920.0f / (float)Screen.width, 1080.0f / (float)Screen.height);
-        // 1920/1080
-        // //liveView.GetComponent<BoxCollider2D>().size = liveView.GetComponent<RectTransform>().sizeDelta;
+        minX = 0.087f * Screen.width;               //timeline-rail-minX
+        railWidth = 0.87f * Screen.width;           //railwidth=1670.4px
+        heightClosed = heightRailPercent * Screen.height;
+        heightOpened = 0.074f * Screen.height;
+        maxX = minX + railWidth;
+        //timeline-rail-maxX
+        screenDifference = new Vector2(1920.0f / (float)Screen.width, 1080.0f / (float)Screen.height);
+
+        //liveView.GetComponent<BoxCollider2D>().size = liveView.GetComponent<RectTransform>().sizeDelta;
 
         for (int i = 0; i < railList.Length; i++)
         {
@@ -1380,6 +1357,7 @@ public class RailManager : MonoBehaviour
             // todo: resize all figures on timeline
         }
         Vector2 getMousePos = Input.mousePosition;
+
         if (Input.GetMouseButtonDown(0)) //left mouse button down
         {
             //identify which gameobject you clicked
@@ -1570,15 +1548,15 @@ public class RailManager : MonoBehaviour
 
                 #region limits front and back of rail
                 // -------------------------------------------------limit front of rail-------------------------------------------------------------------------//
-                if (currentPos - (currentSize / 2) <= 0)
+                if (currentPos  <= 50)
                 {
-                    currentObj.GetComponent<RectTransform>().anchoredPosition = new Vector2((currentSize / 2), currentObj.GetComponent<RectTransform>().anchoredPosition.y);
+                    currentObj.GetComponent<RectTransform>().anchoredPosition = new Vector2(50, currentObj.GetComponent<RectTransform>().anchoredPosition.y);
                 }
 
                 //-------------------------------------------------limit back of rail------------------------------------------------------------------------------//
-                if ((currentPos + currentSize / 2) > (rails[currentRailIndex].GetComponent<RectTransform>().rect.width))
+                if ((currentPos + currentSize-50 ) > (rails[currentRailIndex].GetComponent<RectTransform>().rect.width))
                 {
-                    currentObj.GetComponent<RectTransform>().anchoredPosition = new Vector2((rails[currentRailIndex].GetComponent<RectTransform>().rect.width - currentSize / 2), currentObj.GetComponent<RectTransform>().anchoredPosition.y);
+                    currentObj.GetComponent<RectTransform>().anchoredPosition = new Vector2(rails[currentRailIndex].GetComponent<RectTransform>().rect.width-currentSize+50, currentObj.GetComponent<RectTransform>().anchoredPosition.y);
                 }
                 #endregion
 

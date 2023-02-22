@@ -23,6 +23,8 @@ public class TimeSliderController : MonoBehaviour, IPointerUpHandler, IDragHandl
         _thisSlider = GetComponent<Slider>();
         _textTime.text = UtilitiesTm.FloaTTimeToString(_thisSlider.value);
         _textMaxTime.text = UtilitiesTm.FloaTTimeToString(AnimationTimer.GetMaxTime());
+        GetComponent<Slider>().maxValue = AnimationTimer.GetMaxTime();
+
         //_thisSlider.onValueChanged.AddListener(delegate { UpdateTimeSLider(); });
         _thisSlider.onValueChanged.AddListener((float value) => UpdateTimeSlider(value));
         _toggleKeyConfigControlls.onValueChanged.AddListener((bool value) => SwitchKeyConfigControls(value));
@@ -37,6 +39,7 @@ public class TimeSliderController : MonoBehaviour, IPointerUpHandler, IDragHandl
         _thisSlider.value = AnimationTimer.GetTime();
         _textTime.text = UtilitiesTm.FloaTTimeToString(_thisSlider.value);
         _textMaxTime.text = UtilitiesTm.FloaTTimeToString(AnimationTimer.GetMaxTime());
+        //Debug.Log("maxtime: "+AnimationTimer.GetMaxTime()+", slider: "+_thisSlider.value);
         if (ImageTimelineSelection.UpdateNecessary())
         {
             ChangeControlsFromTimelineSelection();
@@ -57,6 +60,7 @@ public class TimeSliderController : MonoBehaviour, IPointerUpHandler, IDragHandl
     {
         //AnimationTimer.SetTime(_thisSlider.value);
         AnimationTimer.SetTime(value);
+        Debug.Log("value: "+value);
     }
 
     void SwitchKeyConfigControls(bool value)

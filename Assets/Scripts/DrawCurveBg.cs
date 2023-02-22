@@ -38,6 +38,7 @@ public class DrawCurveBg : MonoBehaviour
         _curveColors = new Color32[3 * 3];
         _curveColors = UtilitiesTm.ChangeColors(_curveColors, Color.black);
         _maxTime = AnimationTimer.GetMaxTime();
+        Debug.Log("maxtime: " + _maxTime);
         _minValue = _valueSlider.minValue;
         _maxValue = _valueSlider.maxValue;
         _imagePositionKnob.gameObject.SetActive(false);
@@ -99,6 +100,7 @@ public class DrawCurveBg : MonoBehaviour
 
         int momentStart = (int)StaticSceneData.StaticData.backgroundPositions[0].moment;
         int momentEnd = (int)StaticSceneData.StaticData.backgroundPositions[0].moment;
+        Debug.Log("bg: " + momentEnd);
 
         int valueStart = (int)StaticSceneData.StaticData.backgroundPositions[0].yPosition;
         int valueEnd = (int)StaticSceneData.StaticData.backgroundPositions[0].yPosition;
@@ -106,12 +108,21 @@ public class DrawCurveBg : MonoBehaviour
         int listLength = StaticSceneData.StaticData.backgroundPositions.Count;
         for (int valueStates = 0; valueStates < listLength - 1; valueStates++)
         {
-            float momentStartF = (int)StaticSceneData.StaticData.backgroundPositions[valueStates].moment; // holen des "fr�heren" Moments aus der Datenhaltung
-            momentStartF = UtilitiesTm.FloatRemap(momentStartF, 0, _maxTime, 0, _textureCurve.width - 3);    // mappen des "fr�heren" Moments von zwischen TimeSlider auf zwischen PanelWeite
+            float momentStartF = (int)StaticSceneData.StaticData.backgroundPositions[valueStates].moment; // holen des "frueheren" Moments aus der Datenhaltung
+            momentStartF = UtilitiesTm.FloatRemap(momentStartF, 0, _maxTime, 0, _textureCurve.width - 3);    // mappen des "frueheren" Moments von zwischen TimeSlider auf zwischen PanelWeite
             momentStart = (int)momentStartF;
 
-            float momentEndF = (int)StaticSceneData.StaticData.backgroundPositions[valueStates + 1].moment; // holen des "sp�teren" Moments aus der Datenhaltung
-            momentEndF = UtilitiesTm.FloatRemap(momentEndF, 0, _maxTime, 0, _textureCurve.width - 3); // mappen des "sp�teren" Moments von zwischen TimeSlider auf zwischen PanelWeite
+            float momentEndF = (int)StaticSceneData.StaticData.backgroundPositions[valueStates + 1].moment; // holen des "spaeteren" Moments aus der Datenhaltung
+            Debug.Log("momentEndF: " + momentEndF + ", _maxtime: " + _maxTime + ", texturecurve: " + _textureCurve.width);
+
+            if (listLength == 2)
+            {
+                momentEndF = UtilitiesTm.FloatRemap(_maxTime, 0, _maxTime, 0, _textureCurve.width - 3); // mappen des "spaeteren" Moments von zwischen TimeSlider auf zwischen PanelWeite
+            }
+            else
+            {
+                momentEndF = UtilitiesTm.FloatRemap(momentEndF, 0, _maxTime, 0, _textureCurve.width - 3); // mappen des "spaeteren" Moments von zwischen TimeSlider auf zwischen PanelWeite
+            }
             momentEnd = (int)momentEndF;
 
             float valueStartF = StaticSceneData.StaticData.backgroundPositions[valueStates].yPosition;  // holen des "fr�heren" Werts aus der Datenhaltung

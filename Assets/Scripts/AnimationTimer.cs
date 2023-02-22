@@ -1,19 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class AnimationTimer : MonoBehaviour
 {
     private static bool _runTimer = false;
     private static float _timer = 0.0f;
     private static float _minTime = 0.0f;
-    private static float _maxTime = 10 * 60 + 14;
+    private static float _maxTime = 3 * 60;
+    
     public enum TimerState { stopped, playing, paused };
     private static TimerState _timerState = TimerState.stopped;
     // Start is called before the first frame update
     void Start()
     {
         ResetTime();
+        
     }
 
     void Update()
