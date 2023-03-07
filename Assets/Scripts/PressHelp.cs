@@ -9,6 +9,7 @@ public class PressHelp : MonoBehaviour
     [SerializeField] GameObject timeSliderBubble, gameController;
     [SerializeField] GameObject maskTimeSlider, _timeSliderPlayButton;
     public GameObject _arrowHelp;
+    [SerializeField] Image imgTheaterzettel;
     [SerializeField] GameObject _countdown;
     GameObject _publicHelpMenue;
     [HideInInspector] public bool pressed = false, arrowPressed = false;
@@ -146,6 +147,10 @@ public class PressHelp : MonoBehaviour
         else if (i == 1) // open about
         {
             aboutScreen.SetActive(true);
+        }
+        else if (i == 2)   // theaterzettel
+        {
+            imgTheaterzettel.enabled = true;
         }
         else // close about
         {

@@ -60,7 +60,7 @@ public class TimeSliderController : MonoBehaviour, IPointerUpHandler, IDragHandl
     {
         //AnimationTimer.SetTime(_thisSlider.value);
         AnimationTimer.SetTime(value);
-        Debug.Log("value: "+value);
+        //Debug.Log("value: "+value);
     }
 
     void SwitchKeyConfigControls(bool value)
