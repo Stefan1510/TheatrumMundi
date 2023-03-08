@@ -567,23 +567,6 @@ public class RailManager : MonoBehaviour
         sec = (int)(((double)maxTimeLengthInSec) * percentageOfRail);   //seconds of percentage
         return sec;
     }*/
-    /*public Vector3 getRailStartEndpoint(GameObject r3DObj, string startEnd)
-    {
-        //this returns the coordinate (not pixel!) values of a rail
-        //railStartPoint & railEndPoint = global variables
-        Vector3 point = new Vector3(0.0f, 0.0f, 0.0f);
-        if (startEnd == "start")
-        {
-            //calculate start point of the rail
-            point = new Vector3(railStartPoint.x, railStartPoint.y, railStartPoint.z);
-        }
-        else //(startEnd="end")
-        {
-            //calculate end point of rail
-            point = new Vector3(railEndPoint.x, railEndPoint.y, railEndPoint.z);
-        }
-        return point;
-    }*/
     public int countCopiesOfObject(GameObject fig)
     {
         int c = 0;
@@ -1411,8 +1394,11 @@ public class RailManager : MonoBehaviour
                 else
                     _timerFigure = 1;
 
-                if (!SceneManaging.sceneChanged) SceneManaging.sceneChanged = true;
+                if (!SceneManaging.sceneChanged)
+                    SceneManaging.sceneChanged = true;
+
                 diff = new Vector2(getMousePos.x - figureObjects[currentClickedObjectIndex].transform.position.x, getMousePos.y - figureObjects[currentClickedObjectIndex].transform.position.y);
+                
                 if (figureObjects[currentClickedObjectIndex].GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(getMousePos))
                 {
                     draggingObject = true;
@@ -1940,8 +1926,6 @@ public class RailManager : MonoBehaviour
                 // if figure has been moved in rail
                 else
                 {
-
-
                     // change position of vector in each case
                     for (int i = 0; i < railList[currentRailIndex].myObjectsPositionListLayer1.Count; i++)
                     {
@@ -1950,7 +1934,7 @@ public class RailManager : MonoBehaviour
                             railList[currentRailIndex].myObjectsPositionListLayer1[i].position = new Vector2(railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().anchoredPosition.x, railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().sizeDelta.x);
 
                         }
-                        Debug.Log("obj 1: " + railList[currentRailIndex].myObjectsPositionListLayer1[i].position);
+                        // Debug.Log("obj 1: " + railList[currentRailIndex].myObjectsPositionListLayer1[i].position);
 
                     }
                     for (int i = 0; i < railList[currentRailIndex].myObjectsPositionListLayer2.Count; i++)
@@ -1960,7 +1944,7 @@ public class RailManager : MonoBehaviour
                         {
                             railList[currentRailIndex].myObjectsPositionListLayer2[i].position = new Vector2(railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().anchoredPosition.x, railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().sizeDelta.x);
                         }
-                        Debug.Log("obj 2: " + railList[currentRailIndex].myObjectsPositionListLayer2[i].position);
+                        //Debug.Log("obj 2: " + railList[currentRailIndex].myObjectsPositionListLayer2[i].position);
                     }
 
                     railList[currentRailIndex].myObjectsPositionListLayer1 = railList[currentRailIndex].myObjectsPositionListLayer1.OrderBy(w => w.position.x).ToList();
@@ -1981,11 +1965,6 @@ public class RailManager : MonoBehaviour
                     //Debug.Log("hi");
                     helpButton.GetComponent<PressHelp>().helpTextLiveView.SetActive(true);
                 }
-                // wenn im schienenbereich, aber nicht auf schiene gedroppt
-                // if (areaFiguresPut.GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(getMousePos))
-                // {
-                //     Debug.Log("hier");
-                // }
                 // wenn figur nur angetoucht wurde
                 else if (_timerFigure < 0.5f)
                 {

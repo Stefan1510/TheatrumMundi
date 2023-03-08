@@ -224,7 +224,7 @@ public class PressHelp : MonoBehaviour
         if (_tutorialCounter == -1 && !_isClicked)
         {
             _idleTimer += Time.deltaTime;
-            if (!_newScene)
+            if (!_newScene && !SceneManaging.playing)
                 _timerOverlay += Time.deltaTime;
         }
         if (_idleTimer > _helpAnimWaitTime && !SceneManaging.playing)
