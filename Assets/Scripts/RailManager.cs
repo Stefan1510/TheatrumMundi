@@ -355,24 +355,25 @@ public class RailManager : MonoBehaviour
     {
         if (!railList[index].isTimelineOpen)
         {
-            if (gameController.GetComponent<UIController>().RailLightBG[0].isTimelineOpen)
+            UIController tmpUIController = gameController.GetComponent<UIController>();
+            if (tmpUIController.RailLightBG[0].isTimelineOpen)
             {
-                gameController.GetComponent<UIController>().RailLightBG[0].GetComponent<RectTransform>().sizeDelta = new Vector2(rails[index].GetComponent<RectTransform>().rect.width, 20);
-                gameController.GetComponent<UIController>().RailLightBG[0].GetComponent<BoxCollider2D>().size = new Vector2(rails[index].GetComponent<BoxCollider2D>().size.x, 20);
-                gameController.GetComponent<UIController>().RailLightBG[0].GetComponent<RailLightManager>().isTimelineOpen = false;
+                tmpUIController.RailLightBG[0].GetComponent<RectTransform>().sizeDelta = new Vector2(rails[index].GetComponent<RectTransform>().rect.width, 20);
+                tmpUIController.RailLightBG[0].GetComponent<BoxCollider2D>().size = new Vector2(rails[index].GetComponent<BoxCollider2D>().size.x, 20);
+                tmpUIController.RailLightBG[0].GetComponent<RailLightManager>().isTimelineOpen = false;
             }
-            else if (gameController.GetComponent<UIController>().RailLightBG[1].isTimelineOpen)
+            else if (tmpUIController.RailLightBG[1].isTimelineOpen)
             {
-                gameController.GetComponent<UIController>().RailLightBG[1].GetComponent<RectTransform>().sizeDelta = new Vector2(rails[index].GetComponent<RectTransform>().rect.width, 20);
-                gameController.GetComponent<UIController>().RailLightBG[1].GetComponent<BoxCollider2D>().size = new Vector2(rails[index].GetComponent<BoxCollider2D>().size.x, 20);
-                gameController.GetComponent<UIController>().RailLightBG[1].GetComponent<RailLightManager>().isTimelineOpen = false;
+                tmpUIController.RailLightBG[1].GetComponent<RectTransform>().sizeDelta = new Vector2(rails[index].GetComponent<RectTransform>().rect.width, 20);
+                tmpUIController.RailLightBG[1].GetComponent<BoxCollider2D>().size = new Vector2(rails[index].GetComponent<BoxCollider2D>().size.x, 20);
+                tmpUIController.RailLightBG[1].GetComponent<RailLightManager>().isTimelineOpen = false;
             }
-            else if (gameController.GetComponent<UIController>().RailMusic.isTimelineOpen)
+            else if (tmpUIController.RailMusic.isTimelineOpen)
             {
-                gameController.GetComponent<UIController>().RailMusic.GetComponent<RectTransform>().sizeDelta = new Vector2(rails[index].GetComponent<RectTransform>().rect.width, 20);
-                gameController.GetComponent<UIController>().RailMusic.GetComponent<BoxCollider2D>().size = new Vector2(rails[index].GetComponent<BoxCollider2D>().size.x, 20);
-                gameController.GetComponent<UIController>().RailMusic.GetComponent<RailMusicManager>().isTimelineOpen = false;
-                gameController.GetComponent<UIController>().RailMusic.GetComponent<RailMusicManager>().openCloseObjectInTimeline(false, gameController.GetComponent<UIController>().RailMusic.GetComponent<RailMusicManager>().timelineInstanceObjects);
+                tmpUIController.RailMusic.GetComponent<RectTransform>().sizeDelta = new Vector2(rails[index].GetComponent<RectTransform>().rect.width, 20);
+                tmpUIController.RailMusic.GetComponent<BoxCollider2D>().size = new Vector2(rails[index].GetComponent<BoxCollider2D>().size.x, 20);
+                tmpUIController.RailMusic.GetComponent<RailMusicManager>().isTimelineOpen = false;
+                tmpUIController.RailMusic.GetComponent<RailMusicManager>().openCloseObjectInTimeline(false, tmpUIController.RailMusic.GetComponent<RailMusicManager>().timelineInstanceObjects);
             }
             for (int i = 0; i < rails.Length; i++)  // alle schienen schliessen
             {
@@ -785,6 +786,7 @@ public class RailManager : MonoBehaviour
 
         newCopyOfFigure = Instantiate(figureObjects[figureNr]);
         newCopyOfFigure.name = figureObjects[figureNr].name + "instance" + countName.ToString("000");
+        RectTransform tmpRectTransform = newCopyOfFigure.GetComponent<RectTransform>();
 
         //add object to list which objects are on timeline, set placed figures to timelineInstanceObjects-list
         updateObjectList(railList[currentRailIndex].timelineInstanceObjects, newCopyOfFigure);
@@ -795,7 +797,7 @@ public class RailManager : MonoBehaviour
 
         ObjectsPoint oP = new ObjectsPoint();
         oP.objName = newCopyOfFigure.name;
-        oP.position = new Vector2(newCopyOfFigure.GetComponent<RectTransform>().anchoredPosition.x, newCopyOfFigure.GetComponent<RectTransform>().sizeDelta.x);
+        oP.position = new Vector2(tmpRectTransform.anchoredPosition.x, tmpRectTransform.sizeDelta.x);
 
         // from scenedataController
         if (loadFromFile != -1)
@@ -809,8 +811,8 @@ public class RailManager : MonoBehaviour
 
             if (savedLayer != -1)
             {
-                newCopyOfFigure.GetComponent<RectTransform>().anchoredPosition = new Vector3(posX, rails[currentRailIndex].GetComponent<RectTransform>().rect.height / 2, -1);
-                oP.position = new Vector2(newCopyOfFigure.GetComponent<RectTransform>().anchoredPosition.x, rectSize);
+                tmpRectTransform.anchoredPosition = new Vector3(posX, rails[currentRailIndex].GetComponent<RectTransform>().rect.height / 2, -1);
+                oP.position = new Vector2(tmpRectTransform.anchoredPosition.x, rectSize);
 
                 //Debug.Log("neue figur: pos: " + oP.position.x);
                 //Debug.Log("saved layer: " + savedLayer);
@@ -842,19 +844,19 @@ public class RailManager : MonoBehaviour
         else
         {
             #region limit front and end of rail
-            if (newCopyOfFigure.GetComponent<RectTransform>().anchoredPosition.x < 0)        //newCopyOfFigure.transform.position.x - 50 < 0.03f * Screen.width)  // 50 is half the box Collider width (mouse pos is in the middle of the figure) erstmal standard 50, dann wird erst calkuliert, welche groesse am zeitpunkt korrekt ist 
+            if (tmpRectTransform.anchoredPosition.x < 0)        //newCopyOfFigure.transform.position.x - 50 < 0.03f * Screen.width)  // 50 is half the box Collider width (mouse pos is in the middle of the figure) erstmal standard 50, dann wird erst calkuliert, welche groesse am zeitpunkt korrekt ist 
             {
                 Debug.Log("hi");
-                newCopyOfFigure.GetComponent<RectTransform>().anchoredPosition = new Vector3((50), newCopyOfFigure.GetComponent<RectTransform>().anchoredPosition.y, -1);
+                tmpRectTransform.anchoredPosition = new Vector3((50), tmpRectTransform.anchoredPosition.y, -1);
                 newCopyOfFigure.transform.position = new Vector3(newCopyOfFigure.transform.position.x, figureObjects[figureNr].transform.position.y, -1);
             }
             // back of rail
-            else if (newCopyOfFigure.GetComponent<RectTransform>().anchoredPosition.x + 100 > railwidthAbsolute)
+            else if (tmpRectTransform.anchoredPosition.x + 100 > railwidthAbsolute)
             {
                 newCopyOfFigure.transform.position = new Vector3(newCopyOfFigure.transform.position.x, figureObjects[figureNr].transform.position.y, -1);
                 //Debug.Log("railwidth: "+railwidthAbsolute+", rail 0: "+rails[0].GetComponent<RectTransform>().rect.width);
 
-                newCopyOfFigure.GetComponent<RectTransform>().anchoredPosition = new Vector2(rails[0].GetComponent<RectTransform>().rect.width - 50, newCopyOfFigure.GetComponent<RectTransform>().anchoredPosition.y);
+                tmpRectTransform.anchoredPosition = new Vector2(rails[0].GetComponent<RectTransform>().rect.width - 50, tmpRectTransform.anchoredPosition.y);
                 //Debug.Log("rect width: " + rails[0].GetComponent<RectTransform>().rect.width + ", sizedelta: " + 50);
             }
             else
@@ -863,7 +865,7 @@ public class RailManager : MonoBehaviour
             }
             #endregion
 
-            float moment = UtilitiesTm.FloatRemap((newCopyOfFigure.GetComponent<RectTransform>().anchoredPosition.x - 50), 0, railwidthAbsolute, 0, AnimationTimer.GetMaxTime());
+            float moment = UtilitiesTm.FloatRemap((tmpRectTransform.anchoredPosition.x - 50), 0, railwidthAbsolute, 0, AnimationTimer.GetMaxTime());
             objectAnimationLength = rails3D[currentRailIndex].transform.GetChild(0).GetComponent<RailSpeedController>().GetEndTimeFromStartTime(moment);
             rectSize = railwidthAbsolute / (AnimationTimer.GetMaxTime() / objectAnimationLength);
             if (float.IsInfinity(objectAnimationLength))
@@ -875,7 +877,7 @@ public class RailManager : MonoBehaviour
 
             #region calculating Layer Overlap
             scaleToLayerSize(newCopyOfFigure, 0, rails[currentRailIndex]);
-            oP.position = new Vector2(newCopyOfFigure.GetComponent<RectTransform>().anchoredPosition.x, newCopyOfFigure.GetComponent<RectTransform>().sizeDelta.x);
+            oP.position = new Vector2(tmpRectTransform.anchoredPosition.x, tmpRectTransform.sizeDelta.x);
 
 
             if (railList[currentRailIndex].sizeLayering == 1)
@@ -911,7 +913,7 @@ public class RailManager : MonoBehaviour
             {
                 Debug.Log("figure: " + newCopyOfFigure + ", railIndex: " + currentRailIndex);
                 LookForFreeSpot(newCopyOfFigure, currentRailIndex, true);
-                oP.position = new Vector2(newCopyOfFigure.GetComponent<RectTransform>().anchoredPosition.x, newCopyOfFigure.GetComponent<RectTransform>().sizeDelta.x);
+                oP.position = new Vector2(tmpRectTransform.anchoredPosition.x, tmpRectTransform.sizeDelta.x);
                 if (railList[currentRailIndex].figuresLayer1.Contains(newCopyOfFigure))
                 {
                     railList[currentRailIndex].myObjectsPositionListLayer1.Add(oP);
@@ -981,10 +983,11 @@ public class RailManager : MonoBehaviour
         {
             for (int j = 0; j < railList[index].timelineInstanceObjects.Count; j++)
             {
-                if (railList[index].timelineInstanceObjects[j] != railList[index].timelineInstanceObjects[i] && (railList[index].timelineInstanceObjects[j].GetComponent<RectTransform>().anchoredPosition.x >= railList[index].timelineInstanceObjects[i].GetComponent<RectTransform>().anchoredPosition.x
-                && (railList[index].timelineInstanceObjects[j].GetComponent<RectTransform>().anchoredPosition.x <= (railList[index].timelineInstanceObjects[i].GetComponent<RectTransform>().anchoredPosition.x + railList[index].timelineInstanceObjects[i].GetComponent<BoxCollider2D>().size.x))
-                || ((railList[index].timelineInstanceObjects[j].GetComponent<RectTransform>().anchoredPosition.x + railList[index].timelineInstanceObjects[j].GetComponent<BoxCollider2D>().size.x) >= railList[index].timelineInstanceObjects[i].GetComponent<RectTransform>().anchoredPosition.x)
-                && railList[index].timelineInstanceObjects[j].GetComponent<RectTransform>().anchoredPosition.x <= railList[index].timelineInstanceObjects[i].GetComponent<RectTransform>().anchoredPosition.x))
+                RectTransform tmpRectTransform = railList[index].timelineInstanceObjects[j].GetComponent<RectTransform>();
+                if (railList[index].timelineInstanceObjects[j] != railList[index].timelineInstanceObjects[i] && (tmpRectTransform.anchoredPosition.x >= railList[index].timelineInstanceObjects[i].GetComponent<RectTransform>().anchoredPosition.x
+                && (tmpRectTransform.anchoredPosition.x <= (railList[index].timelineInstanceObjects[i].GetComponent<RectTransform>().anchoredPosition.x + railList[index].timelineInstanceObjects[i].GetComponent<BoxCollider2D>().size.x))
+                || ((tmpRectTransform.anchoredPosition.x + railList[index].timelineInstanceObjects[j].GetComponent<BoxCollider2D>().size.x) >= railList[index].timelineInstanceObjects[i].GetComponent<RectTransform>().anchoredPosition.x)
+                && tmpRectTransform.anchoredPosition.x <= railList[index].timelineInstanceObjects[i].GetComponent<RectTransform>().anchoredPosition.x))
                 {
                     val = true;
                 }
@@ -1134,6 +1137,7 @@ public class RailManager : MonoBehaviour
     {
         float foundIndexLayer1;
         float foundIndexLayer2;
+        RectTransform tmpRectTransform = obj.GetComponent<RectTransform>();
 
         // mouse ist links von collision
         if (direction == "left")
@@ -1147,7 +1151,7 @@ public class RailManager : MonoBehaviour
             {
                 //Debug.Log("name: " + railList[railIndex].myObjectsPositionListLayer1[i].objName + ", pos: " + (railList[railIndex].myObjectsPositionListLayer1[i].position.x + railList[railIndex].myObjectsPositionListLayer1[i].position.y) + ", foundindex: " + foundIndexLayer1);// - obj.GetComponent<RectTransform>().sizeDelta.x));
                 // wenn der Beginn des naechsten objekts so liegt, dass aktuelles objekt NICHT dazwischen passt -> dann wird die Stelle davor als gefunden genommen
-                if (railList[railIndex].myObjectsPositionListLayer1[i].position.x + railList[railIndex].myObjectsPositionListLayer1[i].position.y >= foundIndexLayer1 - obj.GetComponent<RectTransform>().sizeDelta.x
+                if (railList[railIndex].myObjectsPositionListLayer1[i].position.x + railList[railIndex].myObjectsPositionListLayer1[i].position.y >= foundIndexLayer1 - tmpRectTransform.sizeDelta.x
                 && railList[railIndex].myObjectsPositionListLayer1[i].position.x <= foundIndexLayer1
                 && railList[railIndex].myObjectsPositionListLayer1[i].objName != obj.name)
                 {
@@ -1160,7 +1164,7 @@ public class RailManager : MonoBehaviour
             {
                 //Debug.Log("name: " + railList[railIndex].myObjectsPositionListLayer2[j].objName + ", pos: " + (railList[railIndex].myObjectsPositionListLayer2[j].position.x + railList[railIndex].myObjectsPositionListLayer2[j].position.y) + ", foundindex: " + foundIndexLayer2);// - obj.GetComponent<RectTransform>().sizeDelta.x));
                 // wenn der Beginn des naechsten objekts so liegt, dass aktuelles objekt NICHT dazwischen passt -> dann wird die Stelle davor als gefunden genommen
-                if (railList[railIndex].myObjectsPositionListLayer2[j].position.x + railList[railIndex].myObjectsPositionListLayer2[j].position.y >= foundIndexLayer2 - obj.GetComponent<RectTransform>().sizeDelta.x
+                if (railList[railIndex].myObjectsPositionListLayer2[j].position.x + railList[railIndex].myObjectsPositionListLayer2[j].position.y >= foundIndexLayer2 - tmpRectTransform.sizeDelta.x
                 && railList[railIndex].myObjectsPositionListLayer2[j].position.x <= foundIndexLayer2
                 && railList[railIndex].myObjectsPositionListLayer2[j].objName != obj.name)
                 {
@@ -1172,7 +1176,7 @@ public class RailManager : MonoBehaviour
             if (foundIndexLayer1 > foundIndexLayer2)
             {
                 // wenn der rand im weg ist
-                if (foundIndexLayer1 - obj.GetComponent<RectTransform>().sizeDelta.x - obj.GetComponent<RectTransform>().sizeDelta.x / 2 < 0)
+                if (foundIndexLayer1 - tmpRectTransform.sizeDelta.x - tmpRectTransform.sizeDelta.x / 2 < 0)
                 {
                     if (create)
                     {
@@ -1182,7 +1186,7 @@ public class RailManager : MonoBehaviour
                     }
                 }
 
-                obj.GetComponent<RectTransform>().anchoredPosition = new Vector2(foundIndexLayer1 - obj.GetComponent<RectTransform>().sizeDelta.x, obj.GetComponent<RectTransform>().anchoredPosition.y);
+                tmpRectTransform.anchoredPosition = new Vector2(foundIndexLayer1 - tmpRectTransform.sizeDelta.x, tmpRectTransform.anchoredPosition.y);
                 if (!railList[railIndex].figuresLayer1.Contains(obj))
                 {
                     scaleToLayerSize(obj, 1, rails[railIndex]);
@@ -1203,13 +1207,13 @@ public class RailManager : MonoBehaviour
             else
             {
                 // abfrage, wenn der naechste freie platz ausserhalb der schiene waere
-                if (foundIndexLayer2 - obj.GetComponent<RectTransform>().sizeDelta.x - obj.GetComponent<RectTransform>().sizeDelta.x / 2 < 0)
+                if (foundIndexLayer2 - tmpRectTransform.sizeDelta.x - tmpRectTransform.sizeDelta.x / 2 < 0)
                 {
                     Debug.Log("deleeeete: " + currentClickedObjectIndex);
                     //removeObjectFromTimeline2D(obj, true);
                     _toBeRemoved = true;
                 }
-                obj.GetComponent<RectTransform>().anchoredPosition = new Vector2(foundIndexLayer2 - obj.GetComponent<RectTransform>().sizeDelta.x, obj.GetComponent<RectTransform>().anchoredPosition.y);
+                tmpRectTransform.anchoredPosition = new Vector2(foundIndexLayer2 - tmpRectTransform.sizeDelta.x, tmpRectTransform.anchoredPosition.y);
                 if (!railList[railIndex].figuresLayer2.Contains(obj))
                 {
                     scaleToLayerSize(obj, 2, rails[railIndex]);
@@ -1236,7 +1240,7 @@ public class RailManager : MonoBehaviour
             for (int i = 0; i < railList[railIndex].myObjectsPositionListLayer1.Count; i++)
             {
                 // wenn der Beginn des naechsten objekts so liegt, dass aktuelles objekt NICHT dazwischen passt
-                if (railList[railIndex].myObjectsPositionListLayer1[i].position.x <= foundIndexLayer1 + obj.GetComponent<RectTransform>().sizeDelta.x + obj.GetComponent<RectTransform>().sizeDelta.x
+                if (railList[railIndex].myObjectsPositionListLayer1[i].position.x <= foundIndexLayer1 + tmpRectTransform.sizeDelta.x + tmpRectTransform.sizeDelta.x
                 && railList[railIndex].myObjectsPositionListLayer1[i].position.x >= foundIndexLayer1
                 && railList[railIndex].myObjectsPositionListLayer1[i].objName != obj.name)
                 {
@@ -1247,7 +1251,7 @@ public class RailManager : MonoBehaviour
             for (int j = 0; j < railList[railIndex].myObjectsPositionListLayer2.Count; j++)
             {
                 // wenn der Beginn des naechsten objekts so liegt, DASS aktuelles objekt dazwischen passt
-                if (railList[railIndex].myObjectsPositionListLayer2[j].position.x <= foundIndexLayer2 + obj.GetComponent<RectTransform>().sizeDelta.x + obj.GetComponent<RectTransform>().sizeDelta.x
+                if (railList[railIndex].myObjectsPositionListLayer2[j].position.x <= foundIndexLayer2 + tmpRectTransform.sizeDelta.x + tmpRectTransform.sizeDelta.x
                 && railList[railIndex].myObjectsPositionListLayer2[j].position.x >= foundIndexLayer2
                 && railList[railIndex].myObjectsPositionListLayer2[j].objName != obj.name)
                 {
@@ -1258,7 +1262,7 @@ public class RailManager : MonoBehaviour
             // liegt platz auf layer1 naeher dran
             if (foundIndexLayer1 > foundIndexLayer2)
             {
-                obj.GetComponent<RectTransform>().anchoredPosition = new Vector2(foundIndexLayer2 + obj.GetComponent<RectTransform>().sizeDelta.x, obj.GetComponent<RectTransform>().anchoredPosition.y);
+                tmpRectTransform.anchoredPosition = new Vector2(foundIndexLayer2 + tmpRectTransform.sizeDelta.x, tmpRectTransform.anchoredPosition.y);
                 if (!railList[railIndex].figuresLayer2.Contains(obj))
                 {
                     scaleToLayerSize(obj, 2, rails[railIndex]);
@@ -1275,7 +1279,7 @@ public class RailManager : MonoBehaviour
             }
             else
             {
-                obj.GetComponent<RectTransform>().anchoredPosition = new Vector2(foundIndexLayer1 + obj.GetComponent<RectTransform>().sizeDelta.x, obj.GetComponent<RectTransform>().anchoredPosition.y);
+                tmpRectTransform.anchoredPosition = new Vector2(foundIndexLayer1 + tmpRectTransform.sizeDelta.x, tmpRectTransform.anchoredPosition.y);
                 if (!railList[railIndex].figuresLayer1.Contains(obj))
                 {
                     scaleToLayerSize(obj, 1, rails[railIndex]);
@@ -1305,19 +1309,20 @@ public class RailManager : MonoBehaviour
     }
     void holdMinimumDistance(GameObject currentObj, float minimumDistance)
     {
+        RectTransform tmpRectTransform = currentObj.GetComponent<RectTransform>();
         for (int j = 0; j < railList[currentRailIndex].timelineInstanceObjects.Count; j++)
         {
             if (currentObj != railList[currentRailIndex].timelineInstanceObjects[j]
-            && currentObj.GetComponent<RectTransform>().anchoredPosition.x < railList[currentRailIndex].timelineInstanceObjects[j].GetComponent<RectTransform>().anchoredPosition.x + minimumDistance
-            && currentObj.GetComponent<RectTransform>().anchoredPosition.x >= railList[currentRailIndex].timelineInstanceObjects[j].GetComponent<RectTransform>().anchoredPosition.x)
+            && tmpRectTransform.anchoredPosition.x < railList[currentRailIndex].timelineInstanceObjects[j].GetComponent<RectTransform>().anchoredPosition.x + minimumDistance
+            && tmpRectTransform.anchoredPosition.x >= railList[currentRailIndex].timelineInstanceObjects[j].GetComponent<RectTransform>().anchoredPosition.x)
             {
-                currentObj.GetComponent<RectTransform>().anchoredPosition = new Vector2(railList[currentRailIndex].timelineInstanceObjects[j].GetComponent<RectTransform>().anchoredPosition.x + minimumDistance, railList[currentRailIndex].timelineInstanceObjects[j].GetComponent<RectTransform>().anchoredPosition.y);
+                tmpRectTransform.anchoredPosition = new Vector2(railList[currentRailIndex].timelineInstanceObjects[j].GetComponent<RectTransform>().anchoredPosition.x + minimumDistance, railList[currentRailIndex].timelineInstanceObjects[j].GetComponent<RectTransform>().anchoredPosition.y);
             }
             else if (currentObj != railList[currentRailIndex].timelineInstanceObjects[j]
-            && currentObj.GetComponent<RectTransform>().anchoredPosition.x < railList[currentRailIndex].timelineInstanceObjects[j].GetComponent<RectTransform>().anchoredPosition.x
-            && currentObj.GetComponent<RectTransform>().anchoredPosition.x >= railList[currentRailIndex].timelineInstanceObjects[j].GetComponent<RectTransform>().anchoredPosition.x - minimumDistance)
+            && tmpRectTransform.anchoredPosition.x < railList[currentRailIndex].timelineInstanceObjects[j].GetComponent<RectTransform>().anchoredPosition.x
+            && tmpRectTransform.anchoredPosition.x >= railList[currentRailIndex].timelineInstanceObjects[j].GetComponent<RectTransform>().anchoredPosition.x - minimumDistance)
             {
-                currentObj.GetComponent<RectTransform>().anchoredPosition = new Vector2(railList[currentRailIndex].timelineInstanceObjects[j].GetComponent<RectTransform>().anchoredPosition.x - minimumDistance, railList[currentRailIndex].timelineInstanceObjects[j].GetComponent<RectTransform>().anchoredPosition.y);
+                tmpRectTransform.anchoredPosition = new Vector2(railList[currentRailIndex].timelineInstanceObjects[j].GetComponent<RectTransform>().anchoredPosition.x - minimumDistance, railList[currentRailIndex].timelineInstanceObjects[j].GetComponent<RectTransform>().anchoredPosition.y);
             }
         }
     }
@@ -1658,7 +1663,7 @@ public class RailManager : MonoBehaviour
             {
                 if (hitTimelineOld != hitTimeline)
                 {
-                    Debug.Log("hier");
+                    //Debug.Log("hier");
                     hitTimelineOld = hitTimeline;
                     openTimelineByDrag(hitTimeline);
 
@@ -1742,10 +1747,10 @@ public class RailManager : MonoBehaviour
                                     UpdatePositionVectorInformation(railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex], railList[currentRailIndex].myObjectsPositionListLayer1, railList[hitTimeline].myObjectsPositionListLayer2);
                                     // sortVectorValues(railList[hitTimeline].myObjectsPositionListLayer2, railList[hitTimeline].myObjectsPositionListLayer2.Count - 1);
                                     railList[hitTimeline].myObjectsPositionListLayer2 = railList[hitTimeline].myObjectsPositionListLayer2.OrderBy(w => w.position.x).ToList();
-                                    for (int k = 0; k < railList[hitTimeline].myObjectsPositionListLayer2.Count; k++)
-                                    {
-                                        Debug.Log("vector " + k + ": " + railList[hitTimeline].myObjectsPositionListLayer2[k].position);
-                                    }
+                                    // for (int k = 0; k < railList[hitTimeline].myObjectsPositionListLayer2.Count; k++)
+                                    // {
+                                    //     Debug.Log("vector " + k + ": " + railList[hitTimeline].myObjectsPositionListLayer2[k].position);
+                                    // }
                                 }
                                 // wenn die figur vorher zu layer 2 gehoert hat
                                 else
@@ -1753,10 +1758,10 @@ public class RailManager : MonoBehaviour
                                     UpdatePositionVectorInformation(railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex], railList[currentRailIndex].myObjectsPositionListLayer2, railList[hitTimeline].myObjectsPositionListLayer2);
                                     // sortVectorValues(railList[hitTimeline].myObjectsPositionListLayer2, railList[hitTimeline].myObjectsPositionListLayer2.Count - 1);
                                     railList[hitTimeline].myObjectsPositionListLayer2 = railList[hitTimeline].myObjectsPositionListLayer2.OrderBy(w => w.position.x).ToList();
-                                    for (int k = 0; k < railList[hitTimeline].myObjectsPositionListLayer2.Count; k++)
-                                    {
-                                        Debug.Log("vector " + k + ": " + railList[hitTimeline].myObjectsPositionListLayer2[k].position);
-                                    }
+                                    // for (int k = 0; k < railList[hitTimeline].myObjectsPositionListLayer2.Count; k++)
+                                    // {
+                                    //     Debug.Log("vector " + k + ": " + railList[hitTimeline].myObjectsPositionListLayer2[k].position);
+                                    // }
                                 }
                                 // others to 1
                                 for (int i = 0; i < railList[hitTimeline].figuresLayer1.Count; i++)
@@ -1777,10 +1782,10 @@ public class RailManager : MonoBehaviour
                                     UpdatePositionVectorInformation(railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex], railList[currentRailIndex].myObjectsPositionListLayer1, railList[hitTimeline].myObjectsPositionListLayer1);
                                     // sortVectorValues(railList[hitTimeline].myObjectsPositionListLayer1, railList[hitTimeline].myObjectsPositionListLayer1.Count - 1);
                                     railList[hitTimeline].myObjectsPositionListLayer1 = railList[hitTimeline].myObjectsPositionListLayer1.OrderBy(w => w.position.x).ToList();
-                                    for (int k = 0; k < railList[hitTimeline].myObjectsPositionListLayer1.Count; k++)
-                                    {
-                                        Debug.Log("vector " + k + ": " + railList[hitTimeline].myObjectsPositionListLayer1[k].position);
-                                    }
+                                    // for (int k = 0; k < railList[hitTimeline].myObjectsPositionListLayer1.Count; k++)
+                                    // {
+                                    //     Debug.Log("vector " + k + ": " + railList[hitTimeline].myObjectsPositionListLayer1[k].position);
+                                    // }
                                 }
                                 // wenn die figur vorher zu layer 2 gehoert hat
                                 else
@@ -1788,10 +1793,10 @@ public class RailManager : MonoBehaviour
                                     UpdatePositionVectorInformation(railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex], railList[currentRailIndex].myObjectsPositionListLayer2, railList[hitTimeline].myObjectsPositionListLayer1);
                                     // sortVectorValues(railList[hitTimeline].myObjectsPositionListLayer1, railList[hitTimeline].myObjectsPositionListLayer1.Count - 1);
                                     railList[hitTimeline].myObjectsPositionListLayer1 = railList[hitTimeline].myObjectsPositionListLayer1.OrderBy(w => w.position.x).ToList();
-                                    for (int k = 0; k < railList[hitTimeline].myObjectsPositionListLayer1.Count; k++)
-                                    {
-                                        Debug.Log("vector " + k + ": " + railList[hitTimeline].myObjectsPositionListLayer1[k].position);
-                                    }
+                                    // for (int k = 0; k < railList[hitTimeline].myObjectsPositionListLayer1.Count; k++)
+                                    // {
+                                    //     Debug.Log("vector " + k + ": " + railList[hitTimeline].myObjectsPositionListLayer1[k].position);
+                                    // }
                                 }
                             }
                         }
@@ -1892,7 +1897,7 @@ public class RailManager : MonoBehaviour
                         {
                             if (railList[currentRailIndex].figuresLayer1.Contains(railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex]) && railList[currentRailIndex].figuresLayer2.Contains(railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex]))
                             {
-                                Debug.Log("beide beinhalten figur");
+                                //Debug.Log("beide beinhalten figur");
                                 railList[currentRailIndex].figuresLayer1.Remove(railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex]);
                             }
                         }

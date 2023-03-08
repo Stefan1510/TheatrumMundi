@@ -84,7 +84,7 @@ public static class UtilitiesTm
         texture2D.SetPixels32(x, y, 3, 3, colors);
         //texture2D.SetPixel(x, y, Color.black);
 
-Debug.Log("delta: "+deltafastdirection+", textur: "+texture2D.width+", hoehe: "+texture2D.height);
+        //Debug.Log("delta: "+deltafastdirection+", textur: "+texture2D.width+", hoehe: "+texture2D.height);
         /* Pixel berechnen */
         for (t = 0; t < deltafastdirection; ++t) /* t zaehlt die Pixel, deltafastdirection ist Anzahl der Schritte */
         {

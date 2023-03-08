@@ -38,7 +38,7 @@ public class DrawCurveBg : MonoBehaviour
         _curveColors = new Color32[3 * 3];
         _curveColors = UtilitiesTm.ChangeColors(_curveColors, Color.black);
         _maxTime = AnimationTimer.GetMaxTime();
-        Debug.Log("maxtime: " + _maxTime);
+        //        Debug.Log("maxtime: " + _maxTime);
         _minValue = _valueSlider.minValue;
         _maxValue = _valueSlider.maxValue;
         _imagePositionKnob.gameObject.SetActive(false);
@@ -100,7 +100,7 @@ public class DrawCurveBg : MonoBehaviour
 
         int momentStart = (int)StaticSceneData.StaticData.backgroundPositions[0].moment;
         int momentEnd = (int)StaticSceneData.StaticData.backgroundPositions[0].moment;
-        Debug.Log("bg: " + momentEnd);
+        //Debug.Log("bg: " + momentEnd);
 
         int valueStart = (int)StaticSceneData.StaticData.backgroundPositions[0].yPosition;
         int valueEnd = (int)StaticSceneData.StaticData.backgroundPositions[0].yPosition;
@@ -113,7 +113,7 @@ public class DrawCurveBg : MonoBehaviour
             momentStart = (int)momentStartF;
 
             float momentEndF = (int)StaticSceneData.StaticData.backgroundPositions[valueStates + 1].moment; // holen des "spaeteren" Moments aus der Datenhaltung
-            Debug.Log("momentEndF: " + momentEndF + ", _maxtime: " + _maxTime + ", texturecurve: " + _textureCurve.width);
+            //Debug.Log("momentEndF: " + momentEndF + ", _maxtime: " + _maxTime + ", texturecurve: " + _textureCurve.width);
 
             if (listLength == 2)
             {
