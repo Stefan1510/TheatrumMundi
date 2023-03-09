@@ -121,6 +121,7 @@ public class MusicClipElementInstance
     public string name;
     public int instanceNr;
     public float moment;
+    public float layer;
 }
 
 [System.Serializable]

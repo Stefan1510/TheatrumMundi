@@ -365,10 +365,8 @@ public class SceneDataController : MonoBehaviour
                     foreach (FigureInstanceElement feInstance in fe.figureInstanceElements)
                     {
                         countActiveFigureElements++;
-                        //Debug.Log("rail moment: "+feInstance.moment);
                         GameObject curr3DObject = ContentRailMenue.GetComponent<RailManager>().CreateNew2DInstance(i, feInstance.moment, feInstance.railStart, feInstance.layer);
                         curr3DObject.transform.localPosition = new Vector3(curr3DObject.transform.localPosition.x, curr3DObject.transform.localPosition.y, (objectsRailElements[feInstance.railStart].transform.GetChild(0).GetComponent<RailSpeedController>().GetDistanceAtTime(feInstance.moment)));
-                        //Debug.Log("pos: " + curr3DObject.transform.localPosition);
                         objects3dFigureInstances.Add(curr3DObject);
                     }
                 }
@@ -385,6 +383,11 @@ public class SceneDataController : MonoBehaviour
             Destroy(obj);
         }
         imageTimelineRailMusic.GetComponent<RailMusicManager>().timelineInstanceObjects.Clear();
+        imageTimelineRailMusic.GetComponent<RailMusicManager>().figuresLayer1.Clear();
+        imageTimelineRailMusic.GetComponent<RailMusicManager>().figuresLayer2.Clear();
+        imageTimelineRailMusic.GetComponent<RailMusicManager>().sizeLayering = 1;
+        imageTimelineRailMusic.GetComponent<RailMusicManager>().myObjectsPositionListLayer1.Clear();
+        imageTimelineRailMusic.GetComponent<RailMusicManager>().myObjectsPositionListLayer2.Clear();
 
         foreach (MusicClipElement mce in musicClipElements)
         {
@@ -395,12 +398,11 @@ public class SceneDataController : MonoBehaviour
                     foreach (MusicClipElementInstance mceInstance in mce.musicClipElementInstances)
                     {
                         countActiveMusicClips++;
-                        imageTimelineRailMusic.GetComponent<RailMusicManager>().CreateNew2DInstance(i, mceInstance.moment);
+                        imageTimelineRailMusic.GetComponent<RailMusicManager>().CreateNew2DInstance(i, mceInstance.moment, mceInstance.layer);
                     }
                 }
             }
         }
-        // Debug.Log("fertig music");
     }
 
     public string CreateJsonFromSceneData(SceneData sceneData)

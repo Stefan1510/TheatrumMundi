@@ -253,6 +253,7 @@ public class RailManager : MonoBehaviour
     }
     public void openTimelineByClick(bool thisTimelineOpen, int index, bool fromShelf)
     {
+        //Debug.Log("erst");
         if (fromShelf == false && SceneManaging.mainMenuActive == 2 && SceneManaging.directorMenueActive != 1)
         {
             UICanvas.GetComponent<ObjectShelfAll>().ButtonShelf05(true);
@@ -267,41 +268,54 @@ public class RailManager : MonoBehaviour
         }
         else
         {
+            UIController tmpUIController = gameController.GetComponent<UIController>();
             // a different rail is open - close it
             for (int i = 0; i < rails.Length; i++)
             {
-                rails[i].GetComponent<RectTransform>().sizeDelta = new Vector2(rails[index].GetComponent<RectTransform>().rect.width, 20);
-                rails[i].GetComponent<BoxCollider2D>().size = new Vector2(rails[index].GetComponent<BoxCollider2D>().size.x, 20);
-                railList[i].isTimelineOpen = false;
-                openCloseObjectInTimeline(false, railList[i].timelineInstanceObjects, i);
-                for (int j = 0; j < railList[i].timelineInstanceObjects3D.Count; j++)
+                // wenn diese schiene offen ist
+                if (railList[i].isTimelineOpen)
                 {
-                    highlight(railList[i].timelineInstanceObjects3D[j], railList[i].timelineInstanceObjects[j], false);
+                    rails[i].GetComponent<RectTransform>().sizeDelta = new Vector2(rails[index].GetComponent<RectTransform>().rect.width, 20);
+                    rails[i].GetComponent<BoxCollider2D>().size = new Vector2(rails[index].GetComponent<BoxCollider2D>().size.x, 20);
+                    railList[i].isTimelineOpen = false;
+                    openCloseObjectInTimeline(false, railList[i].timelineInstanceObjects, i);
+                    for (int j = 0; j < railList[i].timelineInstanceObjects3D.Count; j++)
+                    {
+                        highlight(railList[i].timelineInstanceObjects3D[j], railList[i].timelineInstanceObjects[j], false);
+                    }
                 }
             }
+            // wenn bg oder licht schiene offen sind
             for (int j = 0; j < 2; j++)
             {
-                gameController.GetComponent<UIController>().RailLightBG[j].GetComponent<RectTransform>().sizeDelta = new Vector2(rails[index].GetComponent<RectTransform>().rect.width, 20);
-                gameController.GetComponent<UIController>().RailLightBG[j].GetComponent<BoxCollider2D>().size = new Vector2(rails[index].GetComponent<BoxCollider2D>().size.x, 20);
-                gameController.GetComponent<UIController>().RailLightBG[j].GetComponent<RailLightManager>().isTimelineOpen = false;
+                if (tmpUIController.RailLightBG[j].GetComponent<RailLightManager>().isTimelineOpen)
+                {
+                    tmpUIController.RailLightBG[j].GetComponent<RectTransform>().sizeDelta = new Vector2(rails[index].GetComponent<RectTransform>().rect.width, 20);
+                    tmpUIController.RailLightBG[j].GetComponent<BoxCollider2D>().size = new Vector2(rails[index].GetComponent<BoxCollider2D>().size.x, 20);
+                    tmpUIController.RailLightBG[j].GetComponent<RailLightManager>().isTimelineOpen = false;
+                }
             }
-            gameController.GetComponent<UIController>().RailMusic.GetComponent<RectTransform>().sizeDelta = new Vector2(rails[index].GetComponent<RectTransform>().rect.width, 20);
-            gameController.GetComponent<UIController>().RailMusic.GetComponent<BoxCollider2D>().size = new Vector2(rails[index].GetComponent<BoxCollider2D>().size.x, 20);
-            gameController.GetComponent<UIController>().RailMusic.GetComponent<RailMusicManager>().isTimelineOpen = false;
-            gameController.GetComponent<UIController>().RailMusic.GetComponent<RailMusicManager>().openCloseObjectInTimeline(false, gameController.GetComponent<UIController>().RailMusic.GetComponent<RailMusicManager>().timelineInstanceObjects);
-
-            for (int j = 0; j < gameController.GetComponent<UIController>().RailMusic.GetComponent<RailMusicManager>().timelineInstanceObjects.Count; j++)
+            // wenn music-rail offen ist
+            if (tmpUIController.RailMusic.GetComponent<RailMusicManager>().isTimelineOpen)
             {
-                gameController.GetComponent<UIController>().RailMusic.GetComponent<RailMusicManager>().highlight(gameController.GetComponent<UIController>().RailMusic.GetComponent<RailMusicManager>().timelineInstanceObjects[j], false);
+
+                tmpUIController.RailMusic.GetComponent<RectTransform>().sizeDelta = new Vector2(rails[index].GetComponent<RectTransform>().rect.width, 20);
+                tmpUIController.RailMusic.GetComponent<BoxCollider2D>().size = new Vector2(rails[index].GetComponent<BoxCollider2D>().size.x, 20);
+
+                tmpUIController.RailMusic.GetComponent<RailMusicManager>().isTimelineOpen = false;
+                tmpUIController.RailMusic.GetComponent<RailMusicManager>().openCloseObjectInTimeline(false, tmpUIController.RailMusic.GetComponent<RailMusicManager>().timelineInstanceObjects);
+
+                for (int j = 0; j < tmpUIController.RailMusic.GetComponent<RailMusicManager>().timelineInstanceObjects.Count; j++)
+                {
+                    tmpUIController.RailMusic.GetComponent<RailMusicManager>().highlight(tmpUIController.RailMusic.GetComponent<RailMusicManager>().timelineInstanceObjects[j], false);
+                }
             }
 
             // open clicked rail and collider
             rails[index].GetComponent<RectTransform>().sizeDelta = new Vector2(rails[index].GetComponent<RectTransform>().rect.width, 80);
             rails[index].GetComponent<BoxCollider2D>().size = new Vector2(rails[index].GetComponent<BoxCollider2D>().size.x, 80);
             openCloseObjectInTimeline(true, railList[index].timelineInstanceObjects, index);
-            //Debug.Log(railList[index].timelineInstanceObjects[0].GetComponent<RectTransform>().sizeDelta);
             railList[index].isTimelineOpen = true;
-            // Debug.Log("open: " + index + ", obj: " + railList[index].timelineInstanceObjects.Count + ", layering: " + railList[index].sizeLayering);
 
             ImageTimelineSelection.SetRailNumber((int)Char.GetNumericValue(rails[index].name[17]) - 1);
             ImageTimelineSelection.SetRailType(0);  // for rail-rails
@@ -314,7 +328,7 @@ public class RailManager : MonoBehaviour
         for (int i = 0; i < objects.Count; i++)
         {
             objects[i].GetComponent<RectTransform>().anchoredPosition = new Vector3(objects[i].GetComponent<RectTransform>().anchoredPosition.x, -rails[railIndex].GetComponent<RectTransform>().rect.height / 2, -1);
-            Debug.Log("height: " + rails[railIndex].GetComponent<RectTransform>().rect.height);
+            //Debug.Log("height: " + rails[railIndex].GetComponent<RectTransform>().rect.height);
 
             if (timelineOpen)
             {
@@ -591,26 +605,19 @@ public class RailManager : MonoBehaviour
         // erase from layer list
         if (railList[currentRailIndex].figuresLayer1.Contains(obj))
         {
-            Debug.Log("wanted: " + obj.name);
             for (int i = 0; i < railList[currentRailIndex].myObjectsPositionListLayer1.Count; i++)
             {
-                Debug.Log("obj: " + railList[currentRailIndex].myObjectsPositionListLayer1[i].objName);
                 if (railList[currentRailIndex].myObjectsPositionListLayer1[i].objName == obj.name)
                 {
-
                     railList[currentRailIndex].myObjectsPositionListLayer1.Remove(railList[currentRailIndex].myObjectsPositionListLayer1[i]);
                 }
             }
             railList[currentRailIndex].figuresLayer1.Remove(obj);
-
-            //railList[currentRailIndex].myObjectsPositionListLayer1 = railList[currentRailIndex].myObjectsPositionListLayer1.OrderBy(x => x.position.x).ToList();
         }
         else if (railList[currentRailIndex].figuresLayer2.Contains(obj))
         {
-            Debug.Log("wanted: " + obj.name);
             for (int i = 0; i < railList[currentRailIndex].myObjectsPositionListLayer2.Count; i++)
             {
-                Debug.Log("obj: " + railList[currentRailIndex].myObjectsPositionListLayer2[i].objName);
                 if (railList[currentRailIndex].myObjectsPositionListLayer2[i].objName == obj.name)
                 {
                     railList[currentRailIndex].myObjectsPositionListLayer2.Remove(railList[currentRailIndex].myObjectsPositionListLayer2[i]);
@@ -618,8 +625,6 @@ public class RailManager : MonoBehaviour
                 }
             }
             railList[currentRailIndex].figuresLayer2.Remove(obj);
-
-            //railList[currentRailIndex].myObjectsPositionListLayer2 = railList[currentRailIndex].myObjectsPositionListLayer2.OrderBy(x => x.position.x).ToList();
         }
 
         railList[currentRailIndex].timelineInstanceObjects.Remove(obj);
@@ -1364,6 +1369,7 @@ public class RailManager : MonoBehaviour
                 editTimelineObject = true;
             else
                 editTimelineObject = false;
+
             //if you click the timeline with the mouse
             for (int i = 0; i < rails.Length; i++)
                 if (rails[i].GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(getMousePos))
@@ -1398,7 +1404,7 @@ public class RailManager : MonoBehaviour
                     SceneManaging.sceneChanged = true;
 
                 diff = new Vector2(getMousePos.x - figureObjects[currentClickedObjectIndex].transform.position.x, getMousePos.y - figureObjects[currentClickedObjectIndex].transform.position.y);
-                
+
                 if (figureObjects[currentClickedObjectIndex].GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(getMousePos))
                 {
                     draggingObject = true;
@@ -1406,18 +1412,8 @@ public class RailManager : MonoBehaviour
                 }
             }
 
-            if (currentClickedInstanceObjectIndex != -1)
-            {
-                if (railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).gameObject.activeSelf
-                    && getMousePos.x >= railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).position.x - railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).GetComponent<RectTransform>().sizeDelta.x / 2.5f && getMousePos.x <= railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).position.x + railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).GetComponent<RectTransform>().sizeDelta.x / 2.5f
-                    && getMousePos.y >= railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).position.y - railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).GetComponent<RectTransform>().sizeDelta.y / 2.5f && getMousePos.y <= railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).position.y + railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).GetComponent<RectTransform>().sizeDelta.y / 2.5f)
-                {
-                    _toBeRemoved = true;
-                }
-            }
-
             //or check if you click an object in timeline
-            if (currentClickedInstanceObjectIndex != -1 && editTimelineObject && railList[currentRailIndex].isTimelineOpen)
+            else if (currentClickedInstanceObjectIndex != -1 && editTimelineObject && railList[currentRailIndex].isTimelineOpen)
             {
                 if (!SceneManaging.sceneChanged) SceneManaging.sceneChanged = true;
 
@@ -1445,10 +1441,17 @@ public class RailManager : MonoBehaviour
                         highlight(railList[currentRailIndex].timelineInstanceObjects3D[currentClickedInstanceObjectIndex], railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex], true);
                     }
                 }
+            // click on delete-Button
+                if (railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).gameObject.activeSelf
+                    && getMousePos.x >= railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).position.x - railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).GetComponent<RectTransform>().sizeDelta.x / 2.5f && getMousePos.x <= railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).position.x + railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).GetComponent<RectTransform>().sizeDelta.x / 2.5f
+                    && getMousePos.y >= railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).position.y - railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).GetComponent<RectTransform>().sizeDelta.y / 2.5f && getMousePos.y <= railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).position.y + railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).GetComponent<RectTransform>().sizeDelta.y / 2.5f)
+                {
+                    _toBeRemoved = true;
+                }
             }
 
             //if you hit/clicked nothing with mouse
-            if (Physics2D.OverlapPoint(getMousePos) == false)
+            else if (Physics2D.OverlapPoint(getMousePos) == false)
             {
                 // delete highlight of everything if nothing is clicked
                 for (int i = 0; i < railList[currentRailIndex].timelineInstanceObjects3D.Count; i++)
@@ -1895,7 +1898,6 @@ public class RailManager : MonoBehaviour
                     {
                         try
                         {
-
                             GameObject curr3DObject = CreateNew2DInstance(currentClickedObjectIndex, getMousePos.x, -1, -1);
                             ///////////////////////////////////////////////////////////////////////////////////////////////////////
                             // Save to SceneData:
@@ -1913,11 +1915,11 @@ public class RailManager : MonoBehaviour
                             Debug.Log("sorry, hat ni geklappt.");
                         }
                         ///////////////////////////////////////////////////////////////////////////////////////////////////////
-                        if (_toBeRemoved)
-                        {
-                            //Debug.Log("delete : " + railList[currentRailIndex].timelineInstanceObjects3D[railList[currentRailIndex].timelineInstanceObjects3D.Count - 1]);
-                            removeObjectFromTimeline(railList[currentRailIndex].timelineInstanceObjects[railList[currentRailIndex].timelineInstanceObjects3D.Count - 1], railList[currentRailIndex].timelineInstanceObjects3D[railList[currentRailIndex].timelineInstanceObjects3D.Count - 1]);
-                        }
+                        // if (_toBeRemoved)
+                        // {
+                        //     //Debug.Log("delete : " + railList[currentRailIndex].timelineInstanceObjects3D[railList[currentRailIndex].timelineInstanceObjects3D.Count - 1]);
+                        //     removeObjectFromTimeline(railList[currentRailIndex].timelineInstanceObjects[railList[currentRailIndex].timelineInstanceObjects3D.Count - 1], railList[currentRailIndex].timelineInstanceObjects3D[railList[currentRailIndex].timelineInstanceObjects3D.Count - 1]);
+                        // }
                     }
 
                     currentClickedObjectIndex = -1; // set index back to -1 because nothing is being clicked anymore
@@ -1983,7 +1985,9 @@ public class RailManager : MonoBehaviour
 
             // if instance is dropped somewhere else than on timeline: delete instance
             else if (releaseOnTimeline == false && currentClickedInstanceObjectIndex != -1 && isInstance)
+            {
                 removeObjectFromTimeline(railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex], railList[currentRailIndex].timelineInstanceObjects3D[currentClickedInstanceObjectIndex]);
+            }
 
 
             for (int k = 0; k < railList.Length; k++)
