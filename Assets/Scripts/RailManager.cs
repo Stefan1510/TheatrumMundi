@@ -18,6 +18,7 @@ public class RailManager : MonoBehaviour
     public GameObject[] rails = new GameObject[6];
     public Rail[] railList = new Rail[6];
     public GameObject[] rails3D = new GameObject[6];
+    [SerializeField] private GameObject[] flyerSpaces = new GameObject[9];
     [HideInInspector] public GameObject[] figCounterCircle;
     public GameObject gameController;
     public GameObject liveView;
@@ -34,13 +35,12 @@ public class RailManager : MonoBehaviour
     float heightRailPercent;
     Vector2 releaseObjMousePos, screenDifference;
     double minX, maxX;
-    float railWidth, publicPosX, railwidthAbsolute;
-    Vector3 railStartPoint, railEndPoint;
+    float railWidth, railwidthAbsolute;
     Color colFigureAlpha = new Color(0.06f, 0.66f, .74f, 0.38f);
     Color colFigure = new Color(0.06f, 0.66f, .74f, 0.5f);
     Color colFigureHighlighted = new Color(0f, 0.87f, 1.0f, 0.5f);
     private GameObject[] figureObjects, figureObjects3D;
-    private int currentClickedObjectIndex, currentClickedInstanceObjectIndex, currentRailIndex, hitTimeline;
+    private int currentClickedObjectIndex, currentClickedInstanceObjectIndex, currentRailIndex, hitTimeline = -1, flyerHit = -1;
     private int count, maxTimeInSec;
     private float currentLossyScale;
     private float _timerFigure = 1;
@@ -104,18 +104,12 @@ public class RailManager : MonoBehaviour
         }
         currentRailIndex = 0;
 
-        railStartPoint = new Vector3(0.0f, 0.0f, -2.2f);
-        railEndPoint = new Vector3(0.0f, 0.0f, 2.6f);
-
         //load all objects given in the figuresShelf
         figureObjects = new GameObject[objectLibrary.transform.childCount];
         figureObjects3D = new GameObject[figureObjects.Length];
-        //objectShelfPosition = new Vector2[figureObjects.Length];
 
         objectShelfParent = new GameObject[figureObjects.Length];
         figCounterCircle = new GameObject[figureObjects.Length];
-
-        //liveView.GetComponent<BoxCollider2D>().size = liveView.GetComponent<RectTransform>().sizeDelta;
 
         for (int i = 0; i < objectLibrary.transform.childCount; i++)
         {
@@ -147,11 +141,6 @@ public class RailManager : MonoBehaviour
         currentLossyScale = 0.0f;   // lossyScale is global Scale that I use to get the moment when ScreenSize is being changed (doesn't happen exactly when Screen Size is changed, but somehow shortly after, so I use this parameter instead)
 
         ResetScreenSize();
-        // for (int i = 0; i < 6; i++)
-        // {
-        //     rails[i].GetComponent<RectTransform>().sizeDelta = new Vector2(railwidthAbsolute, heightClosed / rails[currentRailIndex].transform.lossyScale.x);
-        //     rails[i].GetComponent<BoxCollider2D>().size = new Vector2(railwidthAbsolute, heightClosed / rails[currentRailIndex].transform.lossyScale.x * 1.2f);
-        // }
 
         List<GameObject> timelineInstanceObjects = new List<GameObject>();
         List<GameObject> timelineInstanceObjects3D = new List<GameObject>();
@@ -427,6 +416,18 @@ public class RailManager : MonoBehaviour
             Vector2 colSize = new Vector2(rails[i].GetComponent<BoxCollider2D>().size.x, rails[i].GetComponent<BoxCollider2D>().size.y);
             //Debug.Log("colsize: "+colSize+", mousePos: "+mousePos);
             if (mousePos.x <= maxX && mousePos.x > minX && mousePos.y <= rails[i].transform.position.y + (colSize.y / 2.0f) && mousePos.y > rails[i].transform.position.y - (colSize.y / 2.0f))
+                hit = i;
+        }
+        return hit;
+    }
+    private int checkHittingFlyerSpace(Vector2 mousePos)
+    {
+        int hit = -1;
+        for (int i = 0; i < flyerSpaces.Length; i++)
+        {
+            Vector2 colSize = new Vector2(flyerSpaces[i].GetComponent<BoxCollider2D>().size.x, flyerSpaces[i].GetComponent<BoxCollider2D>().size.y);
+            //Debug.Log("colsize: "+colSize+", mousePos: "+mousePos);
+            if (mousePos.x <= flyerSpaces[i].transform.position.x + (colSize.x / 2.0f) && mousePos.x > flyerSpaces[i].transform.position.x - (colSize.x / 2.0f) && mousePos.y <= flyerSpaces[i].transform.position.y + (colSize.y / 2.0f) && mousePos.y > flyerSpaces[i].transform.position.y - (colSize.y / 2.0f))
                 hit = i;
         }
         return hit;
@@ -873,7 +874,6 @@ public class RailManager : MonoBehaviour
                 if (isSomethingOverlapping(currentRailIndex))
                 {
                     railList[currentRailIndex].sizeLayering = 2;
-                    //Debug.Log("something overlapping");
                     railList[currentRailIndex].figuresLayer2.Add(newCopyOfFigure);
                     scaleToLayerSize(newCopyOfFigure, 2, rails[currentRailIndex]);
                     railList[currentRailIndex].myObjectsPositionListLayer2.Add(oP);
@@ -889,7 +889,6 @@ public class RailManager : MonoBehaviour
                 {
                     railList[currentRailIndex].figuresLayer1.Add(newCopyOfFigure);
                     railList[currentRailIndex].myObjectsPositionListLayer1.Add(oP);
-                    //sortVectorValues(railList[currentRailIndex].myObjectsPositionListLayer1, railList[currentRailIndex].myObjectsPositionListLayer1.Count - 1);
                     railList[currentRailIndex].myObjectsPositionListLayer1 = railList[currentRailIndex].myObjectsPositionListLayer1.OrderBy(w => w.position.x).ToList();
                     // for (int i = 0; i < railList[currentRailIndex].myObjectsPositionListLayer1.Count; i++)
                     // {
@@ -937,6 +936,26 @@ public class RailManager : MonoBehaviour
         figureObjects[figureNr].transform.SetSiblingIndex(1);
         figureObjects[figureNr].transform.GetChild(1).gameObject.SetActive(false);
         return curr3DObject;
+    }
+    private void CreateNewInstanceFlyer(int figureNr, int spaceNr)
+    {
+        int countName = 0;
+        countName = countCopiesOfObject(figureObjects[figureNr]);
+        if (gameController.GetComponent<UnitySwitchExpertUser>()._isExpert)
+        {
+            figCounterCircle[figureNr].transform.GetChild(0).GetComponent<Text>().text = (countName + 1).ToString();
+        }
+
+        newCopyOfFigure = Instantiate(figureObjects[figureNr]);
+        newCopyOfFigure.name = figureObjects[figureNr].name + "instance" + countName.ToString("000");
+        RectTransform tmpRectTransform = newCopyOfFigure.GetComponent<RectTransform>();
+        newCopyOfFigure.transform.SetParent(flyerSpaces[spaceNr].transform);
+        tmpRectTransform.pivot = new Vector2(.5f, .5f);
+        tmpRectTransform.anchorMin = new Vector2(.5f, .5f);
+        tmpRectTransform.anchorMax = new Vector2(.5f, .5f);
+        tmpRectTransform.sizeDelta = new Vector3(39, 39, 1);
+        tmpRectTransform.anchoredPosition = Vector2.zero;
+        newCopyOfFigure.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(39, 39);
     }
     public void ResetScreenSize()       // this probably has to be called globally, so that every Menue resizes (probably in the UIController). At the moment it is only scaled properly when rail tab is open e.g.
     {
@@ -1441,7 +1460,7 @@ public class RailManager : MonoBehaviour
                         highlight(railList[currentRailIndex].timelineInstanceObjects3D[currentClickedInstanceObjectIndex], railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex], true);
                     }
                 }
-            // click on delete-Button
+                // click on delete-Button
                 if (railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).gameObject.activeSelf
                     && getMousePos.x >= railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).position.x - railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).GetComponent<RectTransform>().sizeDelta.x / 2.5f && getMousePos.x <= railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).position.x + railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).GetComponent<RectTransform>().sizeDelta.x / 2.5f
                     && getMousePos.y >= railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).position.y - railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).GetComponent<RectTransform>().sizeDelta.y / 2.5f && getMousePos.y <= railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).position.y + railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).GetComponent<RectTransform>().sizeDelta.y / 2.5f)
@@ -1522,7 +1541,7 @@ public class RailManager : MonoBehaviour
                         {
                             railList[currentRailIndex].myObjectsPositionListLayer1.Add(railList[currentRailIndex].myObjectsPositionListLayer2[i]);
                             railList[currentRailIndex].myObjectsPositionListLayer2.Remove(railList[currentRailIndex].myObjectsPositionListLayer2[i]);
-                            Debug.Log("current obj: " + currentObj + ", pos: " + currentObj.GetComponent<RectTransform>().anchoredPosition.x);
+                            //Debug.Log("current obj: " + currentObj + ", pos: " + currentObj.GetComponent<RectTransform>().anchoredPosition.x);
                         }
                         railList[currentRailIndex].myObjectsPositionListLayer1 = railList[currentRailIndex].myObjectsPositionListLayer1.OrderBy(w => w.position.x).ToList();
 
@@ -1646,7 +1665,16 @@ public class RailManager : MonoBehaviour
 
             //if you hit the timeline > object snap to timeline and is locked in y-movement-direction
 
-            hitTimeline = checkHittingTimeline(getMousePos);
+            if (!SceneManaging.flyerActive)
+            {
+                hitTimeline = checkHittingTimeline(getMousePos);
+                //Debug.Log("hitimeline: " + hitTimeline);
+            }
+            else
+            {
+                flyerHit = checkHittingFlyerSpace(getMousePos);
+                //Debug.Log("hit: "+flyerHit);
+            }
 
             if (hitTimeline != -1)
             {
@@ -1671,7 +1699,7 @@ public class RailManager : MonoBehaviour
                 releaseObjMousePos = new Vector2(getMousePos.x, getMousePos.y);
             }
             // wenn zwischenraum zwischen schienen getroffen wird
-            else if (isRailAreaHit(getMousePos))
+            else if (isRailAreaHit(getMousePos) && !SceneManaging.flyerActive)
             {
                 //snapping/lock y-axis
                 setObjectOnTimeline(figureObjects[currentClickedObjectIndex], rails[currentRailIndex].transform.position.y);
@@ -1681,6 +1709,34 @@ public class RailManager : MonoBehaviour
                 figureObjects[currentClickedObjectIndex].transform.GetChild(1).gameObject.SetActive(true);
                 releaseOnTimeline = true;
                 releaseObjMousePos = new Vector2(getMousePos.x, getMousePos.y);
+            }
+            // flyeractive
+            else if (SceneManaging.flyerActive)
+            {
+                RectTransform tmpRectTransform = figureObjects[currentClickedObjectIndex].GetComponent<RectTransform>();
+
+                // einen der spaces getroffen
+                if (flyerHit != -1)
+                {
+                    figureObjects[currentClickedObjectIndex].transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(39, 39);
+                    figureObjects[currentClickedObjectIndex].transform.SetParent(flyerSpaces[flyerHit].transform);
+                    
+                    tmpRectTransform.pivot = new Vector2(.5f, .5f);
+                    tmpRectTransform.anchorMin = new Vector2(.5f, .5f);
+                    tmpRectTransform.anchorMax = new Vector2(.5f, .5f);
+                    tmpRectTransform.sizeDelta = new Vector3(39, 39, 1);
+                    tmpRectTransform.anchoredPosition = Vector2.zero;
+                    //figureObjects[currentClickedObjectIndex].transform.GetChild(1).gameObject.SetActive(true);
+                }
+                // ausserhalb des spaces
+                else
+                {
+                    tmpRectTransform.pivot = new Vector2(0f, .5f);
+                    tmpRectTransform.anchorMin = new Vector2(0, 1);
+                    tmpRectTransform.anchorMax = new Vector2(0, 1);
+                    tmpRectTransform.sizeDelta = new Vector2(150, 150);
+                    figureObjects[currentClickedObjectIndex].transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = objectShelfSize;
+                }
             }
 
             else
@@ -1703,6 +1759,29 @@ public class RailManager : MonoBehaviour
             if (_toBeRemoved)
             {
                 removeObjectFromTimeline(railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex], railList[currentRailIndex].timelineInstanceObjects3D[currentClickedInstanceObjectIndex]);
+            }
+
+            // flyer mode
+            else if (SceneManaging.flyerActive && currentClickedObjectIndex != -1)
+            {
+                if (flyerHit != -1)
+                {
+                    //Debug.Log("reinsetzen in: " + flyerHit);
+                    CreateNewInstanceFlyer(currentClickedObjectIndex, flyerHit);
+                }
+
+                //set original image back to shelf, position 2 to make it visible
+                figureObjects[currentClickedObjectIndex].transform.SetParent(objectShelfParent[currentClickedObjectIndex].transform);
+                //figureObjects[currentClickedObjectIndex].transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = objectShelfSize;
+                figureObjects[currentClickedObjectIndex].GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -75);
+                figureObjects[currentClickedObjectIndex].transform.SetSiblingIndex(1);
+                figureObjects[currentClickedObjectIndex].transform.GetChild(1).gameObject.SetActive(false);
+
+                RectTransform tmpRectTransform = figureObjects[currentClickedObjectIndex].GetComponent<RectTransform>();
+                tmpRectTransform.pivot = new Vector2(0f, .5f);
+                tmpRectTransform.anchorMin = new Vector2(0, 1);
+                tmpRectTransform.anchorMax = new Vector2(0, 1);
+                tmpRectTransform.sizeDelta = new Vector2(150, 150);
             }
             // if dropped on a timeline
             else if (releaseOnTimeline == true)
