@@ -44,7 +44,7 @@ public class RailManager : MonoBehaviour
     private int count, maxTimeInSec;
     private float currentLossyScale;
     private float _timerFigure = 1;
-    int newHitTimeline;
+    int newHitTimeline, currentSpaceActive = -1;
     private Vector2 diff;
     private FigureElement ThisFigureElement;    //element to set 3d object
     private float heightOpened, heightClosed, _spaceMax, _spaceMax3D;
@@ -718,27 +718,6 @@ public class RailManager : MonoBehaviour
             railList[currentRailIndex].myObjectsPositionListLayer1 = railList[currentRailIndex].myObjectsPositionListLayer1.OrderBy(x => x.position.x).ToList();
         }
     }
-    /*public int checkHittingAnyTimeline(GameObject obj, Vector2 mousePos)
-    {
-        int hit = -1;
-        Image[] tl = new Image[rails.Length];
-        for (int i = 0; i < rails.Length; i++)
-        {
-            tl[i] = rails[i].GetComponent<Image>();
-            Vector2 colSize;
-            if (railList[i].isTimelineOpen) colSize = new Vector2(railWidth, heightOpened);
-            else colSize = new Vector2(railWidth, heightClosed);
-            Vector2 tlPos = new Vector2(tl[i].transform.position.x + (colSize.x / 2), tl[i].transform.position.y);
-            //if mouse hits the timeline while dragging an object
-            //my implementation of object-boundingbox
-            if (((mousePos.x <= (tlPos.x + (colSize.x / 2.0f))) && (mousePos.x > (tlPos.x - (colSize.x / 2.0f)))) &&
-            ((mousePos.y <= (tlPos.y + (colSize.y / 2.0f))) && (mousePos.y > (tlPos.y - (colSize.y / 2.0f)))))
-            {
-                hit = i;
-            }
-        }
-        return hit;
-    }*/
     public void highlight(GameObject obj3D, GameObject obj, bool highlightOn)
     {
         if (highlightOn)
@@ -941,13 +920,24 @@ public class RailManager : MonoBehaviour
     {
         int countName = 0;
         countName = countCopiesOfObject(figureObjects[figureNr]);
+
         if (gameController.GetComponent<UnitySwitchExpertUser>()._isExpert)
         {
             figCounterCircle[figureNr].transform.GetChild(0).GetComponent<Text>().text = (countName + 1).ToString();
         }
 
+        // wenn schon eine figur drin ist, muss die raus
+        if (SceneManaging.flyerSpace[spaceNr] != -1)
+        {
+            Destroy(flyerSpaces[spaceNr].transform.GetChild(0).gameObject);
+        }
+
+        // save figure nr 
+        SceneManaging.flyerSpace[spaceNr] = figureNr;
+
         newCopyOfFigure = Instantiate(figureObjects[figureNr]);
         newCopyOfFigure.name = figureObjects[figureNr].name + "instance" + countName.ToString("000");
+
         RectTransform tmpRectTransform = newCopyOfFigure.GetComponent<RectTransform>();
         newCopyOfFigure.transform.SetParent(flyerSpaces[spaceNr].transform);
         tmpRectTransform.pivot = new Vector2(.5f, .5f);
@@ -956,6 +946,9 @@ public class RailManager : MonoBehaviour
         tmpRectTransform.sizeDelta = new Vector3(39, 39, 1);
         tmpRectTransform.anchoredPosition = Vector2.zero;
         newCopyOfFigure.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(39, 39);
+
+        // color field
+        flyerSpaces[spaceNr].GetComponent<Image>().color = new Color(.63f, .25f, .1f);
     }
     public void ResetScreenSize()       // this probably has to be called globally, so that every Menue resizes (probably in the UIController). At the moment it is only scaled properly when rail tab is open e.g.
     {
@@ -1397,6 +1390,20 @@ public class RailManager : MonoBehaviour
                     openTimelineByClick(railList[i].isTimelineOpen, i, false);
                     currentRailIndex = i;
                 }
+
+            // wenn theaterzettel aktiv ist    
+            if (SceneManaging.flyerActive)
+            {
+                int tmpHit = checkHittingFlyerSpace(getMousePos);
+                // wenn eine figur im kaestchen ist und diese geklickt wird
+                if (tmpHit != -1 && SceneManaging.flyerSpace[tmpHit] != -1)
+                {
+                    // delete button
+                    flyerSpaces[tmpHit].transform.GetChild(0).GetChild(0).GetChild(0).gameObject.SetActive(true);
+                    currentSpaceActive = tmpHit;
+                }
+            }
+
             //if you click on an object in shelf
             if (currentClickedObjectIndex != (-1))      //is set in the identify-methods
             {
@@ -1472,6 +1479,14 @@ public class RailManager : MonoBehaviour
             //if you hit/clicked nothing with mouse
             else if (Physics2D.OverlapPoint(getMousePos) == false)
             {
+                if (SceneManaging.flyerActive)
+                {
+                    if (currentSpaceActive != -1)
+                    {
+                        flyerSpaces[currentSpaceActive].transform.GetChild(0).GetChild(0).GetChild(0).gameObject.SetActive(false);
+                        currentSpaceActive = -1;
+                    }
+                }
                 // delete highlight of everything if nothing is clicked
                 for (int i = 0; i < railList[currentRailIndex].timelineInstanceObjects3D.Count; i++)
                 {
@@ -1648,7 +1663,7 @@ public class RailManager : MonoBehaviour
                 newHitTimeline = -1;
             }
         }
-        // dragging an object from shelf to timeline
+        // dragging an object from shelf to timeline / flyer
         if (draggingObject && editTimelineObject == false && isInstance == false)
         {
             //temporarily change parent, so that object appears in front of the shelf
@@ -1720,7 +1735,7 @@ public class RailManager : MonoBehaviour
                 {
                     figureObjects[currentClickedObjectIndex].transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(39, 39);
                     figureObjects[currentClickedObjectIndex].transform.SetParent(flyerSpaces[flyerHit].transform);
-                    
+
                     tmpRectTransform.pivot = new Vector2(.5f, .5f);
                     tmpRectTransform.anchorMin = new Vector2(.5f, .5f);
                     tmpRectTransform.anchorMax = new Vector2(.5f, .5f);
@@ -1772,16 +1787,16 @@ public class RailManager : MonoBehaviour
 
                 //set original image back to shelf, position 2 to make it visible
                 figureObjects[currentClickedObjectIndex].transform.SetParent(objectShelfParent[currentClickedObjectIndex].transform);
-                //figureObjects[currentClickedObjectIndex].transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = objectShelfSize;
                 figureObjects[currentClickedObjectIndex].GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -75);
                 figureObjects[currentClickedObjectIndex].transform.SetSiblingIndex(1);
                 figureObjects[currentClickedObjectIndex].transform.GetChild(1).gameObject.SetActive(false);
+                figureObjects[currentClickedObjectIndex].transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = objectShelfSize;
 
                 RectTransform tmpRectTransform = figureObjects[currentClickedObjectIndex].GetComponent<RectTransform>();
                 tmpRectTransform.pivot = new Vector2(0f, .5f);
                 tmpRectTransform.anchorMin = new Vector2(0, 1);
                 tmpRectTransform.anchorMax = new Vector2(0, 1);
-                tmpRectTransform.sizeDelta = new Vector2(150, 150);
+                tmpRectTransform.sizeDelta = objectShelfSize;
             }
             // if dropped on a timeline
             else if (releaseOnTimeline == true)
