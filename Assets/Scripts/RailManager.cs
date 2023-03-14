@@ -739,7 +739,7 @@ public class RailManager : MonoBehaviour
 
         }
     }
-    public GameObject CreateNew2DInstance(int figureNr, float momentOrPosX, int loadFromFile, int savedLayer)   // if layer = -1, then new instance, else layer has been saved
+    public GameObject CreateNew2DInstance(int figureNr, float momentOrPosX, int loadFromFile, int savedLayer, bool saveToSceneData)   // if layer = -1, then new instance, else layer has been saved
     {
         GameObject curr3DObject;
         if (loadFromFile != -1) currentRailIndex = loadFromFile;
@@ -755,7 +755,6 @@ public class RailManager : MonoBehaviour
         newCopyOfFigure = Instantiate(figureObjects[figureNr]);
         newCopyOfFigure.name = figureObjects[figureNr].name + "instance" + countName.ToString("000");
         RectTransform tmpRectTransform = newCopyOfFigure.GetComponent<RectTransform>();
-
         //add object to list which objects are on timeline, set placed figures to timelineInstanceObjects-list
         updateObjectList(railList[currentRailIndex].timelineInstanceObjects, newCopyOfFigure);
         //parent and position
@@ -808,13 +807,13 @@ public class RailManager : MonoBehaviour
                     railList[currentRailIndex].myObjectsPositionListLayer2 = railList[currentRailIndex].myObjectsPositionListLayer2.OrderBy(w => w.position.x).ToList();
                 }
             }
+
         }
         else
         {
             #region limit front and end of rail
             if (tmpRectTransform.anchoredPosition.x < 0)        //newCopyOfFigure.transform.position.x - 50 < 0.03f * Screen.width)  // 50 is half the box Collider width (mouse pos is in the middle of the figure) erstmal standard 50, dann wird erst calkuliert, welche groesse am zeitpunkt korrekt ist 
             {
-                Debug.Log("hi");
                 tmpRectTransform.anchoredPosition = new Vector3((50), tmpRectTransform.anchoredPosition.y, -1);
                 newCopyOfFigure.transform.position = new Vector3(newCopyOfFigure.transform.position.x, figureObjects[figureNr].transform.position.y, -1);
             }
@@ -877,7 +876,6 @@ public class RailManager : MonoBehaviour
             }
             else
             {
-                Debug.Log("figure: " + newCopyOfFigure + ", railIndex: " + currentRailIndex);
                 LookForFreeSpot(newCopyOfFigure, currentRailIndex, true);
                 oP.position = new Vector2(tmpRectTransform.anchoredPosition.x, tmpRectTransform.sizeDelta.x);
                 if (railList[currentRailIndex].figuresLayer1.Contains(newCopyOfFigure))
@@ -904,6 +902,7 @@ public class RailManager : MonoBehaviour
             #endregion
         }
         //set 3d object to default position
+
         curr3DObject = Instantiate(figureObjects3D[figureNr]);
         railList[currentRailIndex].timelineInstanceObjects3D.Add(curr3DObject);
         railList[currentRailIndex].timelineInstanceObjects3D[railList[currentRailIndex].timelineInstanceObjects3D.Count - 1].transform.SetParent(rails3D[currentRailIndex].transform.GetChild(0));
@@ -914,6 +913,20 @@ public class RailManager : MonoBehaviour
         figureObjects[figureNr].GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -75);
         figureObjects[figureNr].transform.SetSiblingIndex(1);
         figureObjects[figureNr].transform.GetChild(1).gameObject.SetActive(false);
+
+        if (saveToSceneData)
+        {
+            scaleToLayerSize(newCopyOfFigure,0,rails[currentRailIndex]);
+            // Save to SceneData:
+            FigureInstanceElement thisFigureInstanceElement = new FigureInstanceElement();
+            thisFigureInstanceElement.instanceNr = countCopiesOfObject(figureObjects[figureNr]); //index
+            thisFigureInstanceElement.name = curr3DObject.name + "_" + countCopiesOfObject(figureObjects[figureNr]).ToString("000");
+            thisFigureInstanceElement.railStart = (int)Char.GetNumericValue(rails[currentRailIndex].name[17]) - 1; //railIndex
+
+            StaticSceneData.StaticData.figureElements[figureNr].figureInstanceElements.Add(thisFigureInstanceElement);
+            gameController.GetComponent<SceneDataController>().objects3dFigureInstances.Add(curr3DObject);
+        }
+
         return curr3DObject;
     }
     private void CreateNewInstanceFlyer(int figureNr, int spaceNr)
@@ -1144,32 +1157,27 @@ public class RailManager : MonoBehaviour
         {
             foundIndexLayer1 = posXIn1;//- obj.GetComponent<RectTransform>().sizeDelta.x;
             foundIndexLayer2 = posXIn2;//- obj.GetComponent<RectTransform>().sizeDelta.x;
-            //Debug.Log("ind 1: " + foundIndexLayer1 + ", ind 2: " + foundIndexLayer2);
 
             //erstmal layer 1
             for (int i = railList[railIndex].myObjectsPositionListLayer1.Count - 1; i >= 0; i--)
             {
-                //Debug.Log("name: " + railList[railIndex].myObjectsPositionListLayer1[i].objName + ", pos: " + (railList[railIndex].myObjectsPositionListLayer1[i].position.x + railList[railIndex].myObjectsPositionListLayer1[i].position.y) + ", foundindex: " + foundIndexLayer1);// - obj.GetComponent<RectTransform>().sizeDelta.x));
                 // wenn der Beginn des naechsten objekts so liegt, dass aktuelles objekt NICHT dazwischen passt -> dann wird die Stelle davor als gefunden genommen
                 if (railList[railIndex].myObjectsPositionListLayer1[i].position.x + railList[railIndex].myObjectsPositionListLayer1[i].position.y >= foundIndexLayer1 - tmpRectTransform.sizeDelta.x
                 && railList[railIndex].myObjectsPositionListLayer1[i].position.x <= foundIndexLayer1
                 && railList[railIndex].myObjectsPositionListLayer1[i].objName != obj.name)
                 {
                     foundIndexLayer1 = railList[railIndex].myObjectsPositionListLayer1[i].position.x;//- obj.GetComponent<RectTransform>().sizeDelta.x;
-                    //Debug.Log("name 1: " + railList[railIndex].myObjectsPositionListLayer1[i].objName);
                 }
             }
             // dann layer 2
             for (int j = railList[railIndex].myObjectsPositionListLayer2.Count - 1; j >= 0; j--)
             {
-                //Debug.Log("name: " + railList[railIndex].myObjectsPositionListLayer2[j].objName + ", pos: " + (railList[railIndex].myObjectsPositionListLayer2[j].position.x + railList[railIndex].myObjectsPositionListLayer2[j].position.y) + ", foundindex: " + foundIndexLayer2);// - obj.GetComponent<RectTransform>().sizeDelta.x));
                 // wenn der Beginn des naechsten objekts so liegt, dass aktuelles objekt NICHT dazwischen passt -> dann wird die Stelle davor als gefunden genommen
                 if (railList[railIndex].myObjectsPositionListLayer2[j].position.x + railList[railIndex].myObjectsPositionListLayer2[j].position.y >= foundIndexLayer2 - tmpRectTransform.sizeDelta.x
                 && railList[railIndex].myObjectsPositionListLayer2[j].position.x <= foundIndexLayer2
                 && railList[railIndex].myObjectsPositionListLayer2[j].objName != obj.name)
                 {
                     foundIndexLayer2 = railList[railIndex].myObjectsPositionListLayer2[j].position.x;//- obj.GetComponent<RectTransform>().sizeDelta.x;
-                    //Debug.Log("name 2: " + railList[railIndex].myObjectsPositionListLayer2[j].objName);
                 }
             }
             // liegt platz auf layer1 naeher dran
@@ -1180,8 +1188,7 @@ public class RailManager : MonoBehaviour
                 {
                     if (create)
                     {
-                        Debug.Log("deleeeete: " + currentClickedObjectIndex);
-                        //removeObjectFromTimeline2D(obj, true);
+                        Debug.Log("delete: " + currentClickedInstanceObjectIndex);
                         _toBeRemoved = true;
                     }
                 }
@@ -1196,12 +1203,6 @@ public class RailManager : MonoBehaviour
                 }
 
                 railList[railIndex].myObjectsPositionListLayer1 = railList[railIndex].myObjectsPositionListLayer1.OrderBy(w => w.position.x).ToList();
-
-                // for (int i = 0; i < railList[railIndex].myObjectsPositionListLayer1.Count; i++)
-                // {
-                //     //Debug.Log("1 vector " + i + ": " + railList[railIndex].myObjectsPositionListLayer1[i].position.x);
-                // }
-
             }
             // liegt platz auf layer2 naeher dran
             else
@@ -1209,8 +1210,7 @@ public class RailManager : MonoBehaviour
                 // abfrage, wenn der naechste freie platz ausserhalb der schiene waere
                 if (foundIndexLayer2 - tmpRectTransform.sizeDelta.x - tmpRectTransform.sizeDelta.x / 2 < 0)
                 {
-                    Debug.Log("deleeeete: " + currentClickedObjectIndex);
-                    //removeObjectFromTimeline2D(obj, true);
+                    Debug.Log("deleeeete: " + currentClickedInstanceObjectIndex);
                     _toBeRemoved = true;
                 }
                 tmpRectTransform.anchoredPosition = new Vector2(foundIndexLayer2 - tmpRectTransform.sizeDelta.x, tmpRectTransform.anchoredPosition.y);
@@ -1222,12 +1222,6 @@ public class RailManager : MonoBehaviour
                     UpdatePositionVectorInformation(obj, railList[railIndex].myObjectsPositionListLayer1, railList[railIndex].myObjectsPositionListLayer2);
                 }
                 railList[railIndex].myObjectsPositionListLayer2 = railList[railIndex].myObjectsPositionListLayer2.OrderBy(w => w.position.x).ToList();
-
-                // for (int k = 0; k < railList[railIndex].myObjectsPositionListLayer2.Count; k++)
-                // {
-                //     Debug.Log("2 vector " + k + ": " + railList[railIndex].myObjectsPositionListLayer2[k].position);
-                // }
-
             }
         }
         // mouse ist rechts von collision
@@ -1368,7 +1362,7 @@ public class RailManager : MonoBehaviour
             identifyClickedObject();         //method fills up the current clicked index
             identifyClickedObjectByList(railList[currentRailIndex].timelineInstanceObjects);
             editTimelineObject = false;                             //flag to prevent closing the timeline if you click an object in timeline
-            releaseOnTimeline = false;                              //because you have not set on timeline anything
+            releaseOnTimeline = false;                              //because you have not set anything on timeline 
             releaseObjMousePos = new Vector2(0.0f, 0.0f);
 
             int tmpI = -1;
@@ -1383,13 +1377,16 @@ public class RailManager : MonoBehaviour
                 editTimelineObject = false;
 
             //if you click the timeline with the mouse
-            for (int i = 0; i < rails.Length; i++)
-                if (rails[i].GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(getMousePos))
-                {
-                    //open or close timeline
-                    openTimelineByClick(railList[i].isTimelineOpen, i, false);
-                    currentRailIndex = i;
-                }
+            if (!SceneManaging.flyerActive)
+            {
+                for (int i = 0; i < rails.Length; i++)
+                    if (rails[i].GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(getMousePos))
+                    {
+                        //open or close timeline
+                        openTimelineByClick(railList[i].isTimelineOpen, i, false);
+                        currentRailIndex = i;
+                    }
+            }
 
             // wenn theaterzettel aktiv ist    
             if (SceneManaging.flyerActive)
@@ -1401,6 +1398,14 @@ public class RailManager : MonoBehaviour
                     // delete button
                     flyerSpaces[tmpHit].transform.GetChild(0).GetChild(0).GetChild(0).gameObject.SetActive(true);
                     currentSpaceActive = tmpHit;
+                }
+                else
+                {
+                    if (currentSpaceActive != -1)
+                    {
+                        flyerSpaces[currentSpaceActive].transform.GetChild(0).GetChild(0).GetChild(0).gameObject.SetActive(false);
+                        currentSpaceActive = -1;
+                    }
                 }
             }
 
@@ -1445,6 +1450,15 @@ public class RailManager : MonoBehaviour
 
                 if (railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(getMousePos))
                 {
+                    // click on delete-Button
+                    if (railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).gameObject.activeSelf
+                        && getMousePos.x >= railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).position.x - railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).GetComponent<RectTransform>().sizeDelta.x / 2.5f && getMousePos.x <= railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).position.x + railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).GetComponent<RectTransform>().sizeDelta.x / 2.5f
+                        && getMousePos.y >= railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).position.y - railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).GetComponent<RectTransform>().sizeDelta.y / 2.5f && getMousePos.y <= railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).position.y + railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).GetComponent<RectTransform>().sizeDelta.y / 2.5f)
+                    {
+                        Debug.Log("delete");
+                        _toBeRemoved = true;
+                    }
+
                     diff = new Vector2(getMousePos.x - railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.position.x, getMousePos.y - railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.position.y);
                     draggingOnTimeline = true;
                     SceneManaging.dragging = true;
@@ -1467,26 +1481,12 @@ public class RailManager : MonoBehaviour
                         highlight(railList[currentRailIndex].timelineInstanceObjects3D[currentClickedInstanceObjectIndex], railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex], true);
                     }
                 }
-                // click on delete-Button
-                if (railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).gameObject.activeSelf
-                    && getMousePos.x >= railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).position.x - railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).GetComponent<RectTransform>().sizeDelta.x / 2.5f && getMousePos.x <= railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).position.x + railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).GetComponent<RectTransform>().sizeDelta.x / 2.5f
-                    && getMousePos.y >= railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).position.y - railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).GetComponent<RectTransform>().sizeDelta.y / 2.5f && getMousePos.y <= railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).position.y + railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).GetComponent<RectTransform>().sizeDelta.y / 2.5f)
-                {
-                    _toBeRemoved = true;
-                }
+
             }
 
             //if you hit/clicked nothing with mouse
             else if (Physics2D.OverlapPoint(getMousePos) == false)
             {
-                if (SceneManaging.flyerActive)
-                {
-                    if (currentSpaceActive != -1)
-                    {
-                        flyerSpaces[currentSpaceActive].transform.GetChild(0).GetChild(0).GetChild(0).gameObject.SetActive(false);
-                        currentSpaceActive = -1;
-                    }
-                }
                 // delete highlight of everything if nothing is clicked
                 for (int i = 0; i < railList[currentRailIndex].timelineInstanceObjects3D.Count; i++)
                 {
@@ -1672,7 +1672,6 @@ public class RailManager : MonoBehaviour
             if (_timerFigure <= 0.5f)
             {
                 _timerFigure += Time.deltaTime;
-                //Debug.Log("timer: " + _timerFigure);
             }
             scrollRect.GetComponent<ScrollRect>().enabled = false;
             //move object
@@ -1695,7 +1694,6 @@ public class RailManager : MonoBehaviour
             {
                 if (hitTimelineOld != hitTimeline)
                 {
-                    //Debug.Log("hier");
                     hitTimelineOld = hitTimeline;
                     openTimelineByDrag(hitTimeline);
 
@@ -1771,13 +1769,13 @@ public class RailManager : MonoBehaviour
             editTimelineObject = false;
             hitTimelineOld = -1;
 
-            if (_toBeRemoved)
-            {
-                removeObjectFromTimeline(railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex], railList[currentRailIndex].timelineInstanceObjects3D[currentClickedInstanceObjectIndex]);
-            }
+            // if (_toBeRemoved && currentClickedInstanceObjectIndex !=-1)
+            // {
+            //     removeObjectFromTimeline(railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex], railList[currentRailIndex].timelineInstanceObjects3D[currentClickedInstanceObjectIndex]);
+            // }
 
             // flyer mode
-            else if (SceneManaging.flyerActive && currentClickedObjectIndex != -1)
+            if (SceneManaging.flyerActive && currentClickedObjectIndex != -1)
             {
                 if (flyerHit != -1)
                 {
@@ -1828,23 +1826,13 @@ public class RailManager : MonoBehaviour
                                 if (railList[currentRailIndex].figuresLayer1.Contains(railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex]))
                                 {
                                     UpdatePositionVectorInformation(railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex], railList[currentRailIndex].myObjectsPositionListLayer1, railList[hitTimeline].myObjectsPositionListLayer2);
-                                    // sortVectorValues(railList[hitTimeline].myObjectsPositionListLayer2, railList[hitTimeline].myObjectsPositionListLayer2.Count - 1);
                                     railList[hitTimeline].myObjectsPositionListLayer2 = railList[hitTimeline].myObjectsPositionListLayer2.OrderBy(w => w.position.x).ToList();
-                                    // for (int k = 0; k < railList[hitTimeline].myObjectsPositionListLayer2.Count; k++)
-                                    // {
-                                    //     Debug.Log("vector " + k + ": " + railList[hitTimeline].myObjectsPositionListLayer2[k].position);
-                                    // }
                                 }
                                 // wenn die figur vorher zu layer 2 gehoert hat
                                 else
                                 {
                                     UpdatePositionVectorInformation(railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex], railList[currentRailIndex].myObjectsPositionListLayer2, railList[hitTimeline].myObjectsPositionListLayer2);
-                                    // sortVectorValues(railList[hitTimeline].myObjectsPositionListLayer2, railList[hitTimeline].myObjectsPositionListLayer2.Count - 1);
                                     railList[hitTimeline].myObjectsPositionListLayer2 = railList[hitTimeline].myObjectsPositionListLayer2.OrderBy(w => w.position.x).ToList();
-                                    // for (int k = 0; k < railList[hitTimeline].myObjectsPositionListLayer2.Count; k++)
-                                    // {
-                                    //     Debug.Log("vector " + k + ": " + railList[hitTimeline].myObjectsPositionListLayer2[k].position);
-                                    // }
                                 }
                                 // others to 1
                                 for (int i = 0; i < railList[hitTimeline].figuresLayer1.Count; i++)
@@ -1863,23 +1851,13 @@ public class RailManager : MonoBehaviour
                                 if (railList[currentRailIndex].figuresLayer1.Contains(railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex]))
                                 {
                                     UpdatePositionVectorInformation(railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex], railList[currentRailIndex].myObjectsPositionListLayer1, railList[hitTimeline].myObjectsPositionListLayer1);
-                                    // sortVectorValues(railList[hitTimeline].myObjectsPositionListLayer1, railList[hitTimeline].myObjectsPositionListLayer1.Count - 1);
                                     railList[hitTimeline].myObjectsPositionListLayer1 = railList[hitTimeline].myObjectsPositionListLayer1.OrderBy(w => w.position.x).ToList();
-                                    // for (int k = 0; k < railList[hitTimeline].myObjectsPositionListLayer1.Count; k++)
-                                    // {
-                                    //     Debug.Log("vector " + k + ": " + railList[hitTimeline].myObjectsPositionListLayer1[k].position);
-                                    // }
                                 }
                                 // wenn die figur vorher zu layer 2 gehoert hat
                                 else
                                 {
                                     UpdatePositionVectorInformation(railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex], railList[currentRailIndex].myObjectsPositionListLayer2, railList[hitTimeline].myObjectsPositionListLayer1);
-                                    // sortVectorValues(railList[hitTimeline].myObjectsPositionListLayer1, railList[hitTimeline].myObjectsPositionListLayer1.Count - 1);
                                     railList[hitTimeline].myObjectsPositionListLayer1 = railList[hitTimeline].myObjectsPositionListLayer1.OrderBy(w => w.position.x).ToList();
-                                    // for (int k = 0; k < railList[hitTimeline].myObjectsPositionListLayer1.Count; k++)
-                                    // {
-                                    //     Debug.Log("vector " + k + ": " + railList[hitTimeline].myObjectsPositionListLayer1[k].position);
-                                    // }
                                 }
                             }
                         }
@@ -1895,7 +1873,6 @@ public class RailManager : MonoBehaviour
                                 if (railList[currentRailIndex].figuresLayer1.Contains(railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex]))
                                 {
                                     UpdatePositionVectorInformation(railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex], railList[currentRailIndex].myObjectsPositionListLayer1, railList[hitTimeline].myObjectsPositionListLayer1);
-                                    // sortVectorValues(railList[hitTimeline].myObjectsPositionListLayer1, railList[hitTimeline].myObjectsPositionListLayer1.Count - 1);
                                     railList[hitTimeline].myObjectsPositionListLayer1 = railList[hitTimeline].myObjectsPositionListLayer1.OrderBy(w => w.position.x).ToList();
                                 }
                                 // wenn obj vorher in layer 2 war (currentRailIndex)
@@ -1916,14 +1893,12 @@ public class RailManager : MonoBehaviour
                                 if (railList[currentRailIndex].figuresLayer1.Contains(railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex]))
                                 {
                                     UpdatePositionVectorInformation(railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex], railList[currentRailIndex].myObjectsPositionListLayer1, railList[hitTimeline].myObjectsPositionListLayer2);
-                                    // sortVectorValues(railList[hitTimeline].myObjectsPositionListLayer2, railList[hitTimeline].myObjectsPositionListLayer2.Count - 1);
                                     railList[hitTimeline].myObjectsPositionListLayer2 = railList[hitTimeline].myObjectsPositionListLayer2.OrderBy(w => w.position.x).ToList();
                                 }
                                 // wenn obj vorher in layer 2 war (currentRailIndex)
                                 else
                                 {
                                     UpdatePositionVectorInformation(railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex], railList[currentRailIndex].myObjectsPositionListLayer2, railList[hitTimeline].myObjectsPositionListLayer2);
-                                    // sortVectorValues(railList[hitTimeline].myObjectsPositionListLayer2, railList[hitTimeline].myObjectsPositionListLayer2.Count - 1);
                                     railList[hitTimeline].myObjectsPositionListLayer2 = railList[hitTimeline].myObjectsPositionListLayer2.OrderBy(w => w.position.x).ToList();
                                 }
                             }
@@ -1980,7 +1955,6 @@ public class RailManager : MonoBehaviour
                         {
                             if (railList[currentRailIndex].figuresLayer1.Contains(railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex]) && railList[currentRailIndex].figuresLayer2.Contains(railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex]))
                             {
-                                //Debug.Log("beide beinhalten figur");
                                 railList[currentRailIndex].figuresLayer1.Remove(railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex]);
                             }
                         }
@@ -1992,7 +1966,7 @@ public class RailManager : MonoBehaviour
                     {
                         try
                         {
-                            GameObject curr3DObject = CreateNew2DInstance(currentClickedObjectIndex, getMousePos.x, -1, -1);
+                            GameObject curr3DObject = CreateNew2DInstance(currentClickedObjectIndex, getMousePos.x, -1, -1, false);
                             ///////////////////////////////////////////////////////////////////////////////////////////////////////
                             // Save to SceneData:
                             FigureInstanceElement thisFigureInstanceElement = new FigureInstanceElement();
@@ -2006,14 +1980,14 @@ public class RailManager : MonoBehaviour
                         }
                         catch (ArgumentOutOfRangeException)
                         {
-                            Debug.Log("sorry, hat ni geklappt.");
+                            Debug.Log("Exception");
                         }
                         ///////////////////////////////////////////////////////////////////////////////////////////////////////
-                        // if (_toBeRemoved)
-                        // {
-                        //     //Debug.Log("delete : " + railList[currentRailIndex].timelineInstanceObjects3D[railList[currentRailIndex].timelineInstanceObjects3D.Count - 1]);
-                        //     removeObjectFromTimeline(railList[currentRailIndex].timelineInstanceObjects[railList[currentRailIndex].timelineInstanceObjects3D.Count - 1], railList[currentRailIndex].timelineInstanceObjects3D[railList[currentRailIndex].timelineInstanceObjects3D.Count - 1]);
-                        // }
+                        if (_toBeRemoved)
+                        {
+                            //Debug.Log("delete : " + railList[currentRailIndex].timelineInstanceObjects3D[railList[currentRailIndex].timelineInstanceObjects3D.Count - 1]);
+                            removeObjectFromTimeline(railList[currentRailIndex].timelineInstanceObjects[railList[currentRailIndex].timelineInstanceObjects3D.Count - 1], railList[currentRailIndex].timelineInstanceObjects3D[railList[currentRailIndex].timelineInstanceObjects3D.Count - 1]);
+                        }
                     }
 
                     currentClickedObjectIndex = -1; // set index back to -1 because nothing is being clicked anymore
@@ -2030,7 +2004,6 @@ public class RailManager : MonoBehaviour
                             railList[currentRailIndex].myObjectsPositionListLayer1[i].position = new Vector2(railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().anchoredPosition.x, railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().sizeDelta.x);
 
                         }
-                        // Debug.Log("obj 1: " + railList[currentRailIndex].myObjectsPositionListLayer1[i].position);
 
                     }
                     for (int i = 0; i < railList[currentRailIndex].myObjectsPositionListLayer2.Count; i++)
@@ -2040,7 +2013,6 @@ public class RailManager : MonoBehaviour
                         {
                             railList[currentRailIndex].myObjectsPositionListLayer2[i].position = new Vector2(railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().anchoredPosition.x, railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<RectTransform>().sizeDelta.x);
                         }
-                        //Debug.Log("obj 2: " + railList[currentRailIndex].myObjectsPositionListLayer2[i].position);
                     }
 
                     railList[currentRailIndex].myObjectsPositionListLayer1 = railList[currentRailIndex].myObjectsPositionListLayer1.OrderBy(w => w.position.x).ToList();
@@ -2058,14 +2030,12 @@ public class RailManager : MonoBehaviour
                 && figureObjects[currentClickedObjectIndex].transform.position.y > liveView.transform.position.y - liveView.GetComponent<RectTransform>().sizeDelta.y / 2
                 && figureObjects[currentClickedObjectIndex].transform.position.y < liveView.transform.position.y + liveView.GetComponent<RectTransform>().sizeDelta.y / 2)
                 {
-                    //Debug.Log("hi");
                     helpButton.GetComponent<PressHelp>().helpTextLiveView.SetActive(true);
                 }
                 // wenn figur nur angetoucht wurde
                 else if (_timerFigure < 0.5f)
                 {
                     helpButton.GetComponent<PressHelp>().arrowPressed = true;
-                    //helpButton.GetComponent<PressHelp>().OnClick(0);
                     helpButton.GetComponent<PressHelp>()._arrowHelp.SetActive(true);
                     _counterTouched = 0;
                 }
@@ -2089,34 +2059,33 @@ public class RailManager : MonoBehaviour
                 for (int i = 0; i < railList[k].timelineInstanceObjects.Count; i++)
                 {
                     float moment = UtilitiesTm.FloatRemap(railList[k].timelineInstanceObjects[i].GetComponent<RectTransform>().anchoredPosition.x - 50, 0, railwidthAbsolute, 0, AnimationTimer.GetMaxTime());
-                    //Debug.Log("moment: " + moment);
                     float zPosFigure = (rails3D[k].transform.GetChild(0).GetComponent<RailSpeedController>().GetDistanceAtTime(moment));
 
                     if (zPosFigure < 0) // wenn die Figur auf eine Position noch vor dem empty gesetzt werden würde, würde sie erscheinen bevor sie auf den rails da ist
                     {
                         zPosFigure = 500f;      // deshalb wird die Figur komplett außerhalb der Szene abgesetzt.
                     }
+
                     if (rails3D[k].name.Substring(7) == "1" || rails3D[k].name.Substring(7) == "3" || rails3D[k].name.Substring(7) == "5")
                     {
                         railList[k].timelineInstanceObjects3D[i].transform.localPosition = new Vector3(-rails3D[k].transform.GetChild(0).transform.localPosition.x, (-rails3D[k].transform.GetChild(0).transform.localPosition.y - 0.01f), zPosFigure);
                     }
+
                     else
                     {
                         railList[k].timelineInstanceObjects3D[i].transform.localPosition = new Vector3(rails3D[k].transform.GetChild(0).transform.localPosition.x, (-rails3D[k].transform.GetChild(0).transform.localPosition.y - 0.01f), zPosFigure);
                     }
 
-                    //this is for: (kris) damit die Figuren auch in die Richtung schauen, in die sie laufen
                     if (rails3D[k].transform.GetChild(0).GetComponent<RailSpeedController>().railIndex % 2 == 1)
                     {
                         railList[k].timelineInstanceObjects3D[i].transform.localEulerAngles = new Vector3(railList[k].timelineInstanceObjects3D[i].transform.localEulerAngles.x, 270, railList[k].timelineInstanceObjects3D[i].transform.localEulerAngles.z);
-                        //Debug.Log("hello");
                     }
                     else
                     {
                         railList[k].timelineInstanceObjects3D[i].transform.localEulerAngles = new Vector3(railList[k].timelineInstanceObjects3D[i].transform.localEulerAngles.x, 270, railList[k].timelineInstanceObjects3D[i].transform.localEulerAngles.z);
-                        //Debug.Log("hello");
                     }
                     StaticSceneData.StaticData.figureElements[Int32.Parse(railList[k].timelineInstanceObjects[i].name.Substring(6, 2)) - 1].figureInstanceElements[Int32.Parse(railList[k].timelineInstanceObjects[i].name.Substring(17))].moment = moment;
+
                     if (railList[k].figuresLayer1.Contains(railList[k].timelineInstanceObjects[i]))
                     {
                         if (railList[k].sizeLayering == 1)
@@ -2130,18 +2099,18 @@ public class RailManager : MonoBehaviour
                     }
                 }
             }
-
             releaseOnTimeline = false;
             releaseObjMousePos.x = 0.0f;
             releaseObjMousePos.y = 0.0f;
             draggingOnTimeline = false;
             isInstance = false;
-            //figureOnLiveView = false;
             currentClickedObjectIndex = -1;
             currentClickedInstanceObjectIndex = -1;
             hitTimelineOld = -1;
             SceneManaging.dragging = false;
             _toBeRemoved = false;
+            hitTimeline = -1;
+
         }
         // enable binnenanimation when playing
         for (int k = 0; k < railList.Length; k++)
@@ -2162,6 +2131,7 @@ public class RailManager : MonoBehaviour
                 }
             }
         }
+
     }
     public void PublicUpdate()
     {

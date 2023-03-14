@@ -61,7 +61,6 @@ public class SaveFileController : MonoBehaviour
         _directorySaves = "Saves";
         if (_isWebGl)
         {
-
             StartCoroutine(LoadFilesFromServer(false, "", true));
         }
         else
