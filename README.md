@@ -1,10 +1,5 @@
 # Theatrum Mundi
 
-
-
-
-# Theatrum Mundi
-
 ## Inhaltsverzeichnis
 
 * [Kurzbeschreibung](#Kurzbeschreibung)
