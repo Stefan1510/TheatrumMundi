@@ -21,4 +21,6 @@ public static class SceneManaging
     // flyer
     public static bool flyerActive;
     public static int[] flyerSpace = new int[9];
+    //timeslider
+    public static bool fullscreenOn = false;
 }

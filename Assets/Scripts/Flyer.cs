@@ -6,7 +6,7 @@ public class Flyer : MonoBehaviour
     [SerializeField] ObjectShelfAll objShelfAll;
     [SerializeField] GameObject warningPanel;
     [SerializeField] SaveFileController tmpFileController;
-    [SerializeField] RailManager railManager;
+    [SerializeField] GameObject[] _flyerSpaces;
 
     void Start()
     {
@@ -29,58 +29,7 @@ public class Flyer : MonoBehaviour
     }
     public void OnClickFillScene()
     {
-        StartCoroutine(tmpFileController.LoadFileFromWWW("Musterszene_Kulissen.json", false));
-        if (SceneManaging.flyerSpace[0] != -1)
-        {
-            Debug.Log("1");
-            railManager.CreateNew2DInstance(SceneManaging.flyerSpace[0], 0, 0, 0, true);
-        }
-        if (SceneManaging.flyerSpace[1] != -1)
-        {
-            Debug.Log("2");
-            railManager.CreateNew2DInstance(SceneManaging.flyerSpace[1], 30, 1, 0, true);
-        }
-        if (SceneManaging.flyerSpace[2] != -1)
-        {
-            Debug.Log("3");
-            railManager.CreateNew2DInstance(SceneManaging.flyerSpace[2], 40, 3, 0, true);
-        }
-        if (SceneManaging.flyerSpace[3] != -1)
-        {
-            Debug.Log("4");
-            railManager.CreateNew2DInstance(SceneManaging.flyerSpace[3], 70, 2, 0, true);
-        }
-        if (SceneManaging.flyerSpace[4] != -1)
-        {
-            Debug.Log("5");
-            railManager.CreateNew2DInstance(SceneManaging.flyerSpace[4], 85, 1, 0, true);
-        }
-        if (SceneManaging.flyerSpace[5] != -1)
-        {
-            Debug.Log("6");
-            railManager.CreateNew2DInstance(SceneManaging.flyerSpace[5], 90, 3, 0, true);
-        }
-        if (SceneManaging.flyerSpace[6] != -1)
-        {
-            Debug.Log("7");
-            railManager.CreateNew2DInstance(SceneManaging.flyerSpace[6], 100, 3, 0, true);
-        }
-        if (SceneManaging.flyerSpace[7] != -1)
-        {
-            Debug.Log("8");
-            railManager.CreateNew2DInstance(SceneManaging.flyerSpace[7], 120, 4, 0, true);
-        }
-        if (SceneManaging.flyerSpace[8] != -1)
-        {
-            Debug.Log("9");
-            railManager.CreateNew2DInstance(SceneManaging.flyerSpace[8], 130, 5, 0, true);
-        }
-        //         if (SceneManaging.flyerSpace[9] != -1)
-        // {
-        //     railManager.CreateNew2DInstance(SceneManaging.flyerSpace[9], 170, 0, 5, true);
-        // }
-        gameObject.SetActive(false);
-        SceneManaging.flyerActive = false;
+        StartCoroutine(tmpFileController.LoadFileFromWWW("Musterszene_Kulissen.json", false, true));
     }
     public void OnClickWarning(bool cancel)
     {
@@ -101,7 +50,19 @@ public class Flyer : MonoBehaviour
             objShelfAll.ButtonShelf05(false);
             warningPanel.SetActive(false);
 
-            StartCoroutine(tmpFileController.LoadFileFromWWW("*Musterszene_leer.json", false));
+            StartCoroutine(tmpFileController.LoadFileFromWWW("*Musterszene_leer.json", false, false));
+
+            // destroy children
+            for (int i = 0; i < _flyerSpaces.Length; i++)
+            {
+                if (_flyerSpaces[i].transform.childCount > 0)
+                {
+                    Destroy(_flyerSpaces[i].transform.GetChild(0).gameObject);
+                    // color field
+                    _flyerSpaces[i].GetComponent<Image>().color = new Color(.78f, .54f, .44f);
+                }
+
+            }
         }
     }
 }

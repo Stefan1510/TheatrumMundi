@@ -1155,38 +1155,37 @@ public class RailMusicManager : MonoBehaviour
                 }
             }
             //or check if you click an object in timeline
-            else if (currentClickedInstanceObjectIndex != -1)
+            else if (currentClickedInstanceObjectIndex != -1 && editTimelineObject)
             {
-                if (editTimelineObject)
-                {
-                    if (!SceneManaging.sceneChanged)
-                        SceneManaging.sceneChanged = true;
+                if (!SceneManaging.sceneChanged)
+                    SceneManaging.sceneChanged = true;
 
+                if (timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(getMousePos))
+                {
                     // click on delete-Button
+                    Vector2 pos = timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).position;
+                    RectTransform rect = timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).GetComponent<RectTransform>();
+
                     if (timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).gameObject.activeSelf
-                        && getMousePos.x >= timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).position.x - timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).GetComponent<RectTransform>().sizeDelta.x / 2.5f && getMousePos.x <= timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).position.x + timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).GetComponent<RectTransform>().sizeDelta.x / 2.5f
-                        && getMousePos.y >= timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).position.y - timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).GetComponent<RectTransform>().sizeDelta.y / 2.5f && getMousePos.y <= timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).position.y + timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.GetChild(1).GetChild(0).GetComponent<RectTransform>().sizeDelta.y / 2.5f)
+                        && getMousePos.x >= pos.x - rect.sizeDelta.x / 2.5f && getMousePos.x <= pos.x + rect.sizeDelta.x / 2.5f
+                        && getMousePos.y >= pos.y - rect.sizeDelta.y / 2.5f && getMousePos.y <= pos.y + rect.sizeDelta.y / 2.5f)
                     {
                         _toBeRemoved = true;
                     }
-
                     diff = new Vector2(getMousePos.x - timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.position.x, getMousePos.y - timelineInstanceObjects[currentClickedInstanceObjectIndex].transform.position.y);
 
-                    if (timelineInstanceObjects[currentClickedInstanceObjectIndex].GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(getMousePos))
+                    //set up some flags
+                    draggingObject = true;
+                    draggingOnTimeline = true;
+
+                    //highlighting objects and showing delete button when clicked
+                    for (int i = 0; i < timelineInstanceObjects.Count; i++)
                     {
-                        //set up some flags
-                        draggingObject = true;
-                        draggingOnTimeline = true;
-
-                        //highlighting objects and showing delete button when clicked
-                        for (int i = 0; i < timelineInstanceObjects.Count; i++)
-                        {
-                            highlight(timelineInstanceObjects[i], false);
-                        }
-                        highlight(timelineInstanceObjects[currentClickedInstanceObjectIndex], true);
+                        highlight(timelineInstanceObjects[i], false);
                     }
-
+                    highlight(timelineInstanceObjects[currentClickedInstanceObjectIndex], true);
                 }
+
             }
 
             //if you hit/clicked nothing with mouse
@@ -1495,6 +1494,11 @@ public class RailMusicManager : MonoBehaviour
                     musicClipElementInstance.instanceNr = countCopiesOfObject(figureObjects[currentClickedObjectIndex], timelineInstanceObjects);
                     musicClipElementInstance.name = figureObjects[currentClickedObjectIndex].name + "_instance" + countName.ToString("000");
                     StaticSceneData.StaticData.musicClipElements[currentClickedObjectIndex].musicClipElementInstances.Add(musicClipElementInstance);
+
+                    for(int i = 0;i<timelineInstanceObjects.Count;i++)
+                    {
+                        highlight(timelineInstanceObjects[i],false);
+                    }
                     highlight(timelineInstanceObjects[timelineInstanceObjects.Count - 1], true);
 
                     ///////////////////////////////////////////////////////////////////////////////////////////////////////

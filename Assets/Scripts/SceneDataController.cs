@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class SceneDataController : MonoBehaviour
 {
     #region variables
-    public InputField inputFieldFileNameExpert, inputFieldFileNameVisitor;
+    public InputField inputFieldFileNameExpert;//, inputFieldFileNameVisitor;
     public InputField inputFieldFileAuthor;
     public InputField inputFieldFileComment;
     public GameObject[] objectsRailElements;
@@ -58,10 +58,10 @@ public class SceneDataController : MonoBehaviour
             sceneFileAuthor = inputFieldFileAuthor.text;
             sceneFileComment = inputFieldFileComment.text;
         }
-        else
-        {
-            sceneFileName = inputFieldFileNameVisitor.text;
-        }
+        // else
+        // {
+        //     sceneFileName = inputFieldFileNameVisitor.text;
+        // }
 
         sceneFileDate = DateTime.Now.ToString();
     }

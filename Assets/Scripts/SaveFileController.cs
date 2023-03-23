@@ -10,13 +10,17 @@ public class SaveFileController : MonoBehaviour
     #region variables
     //private string[] _fileList;
     private string _jsonString, loadedFiles, tmpCode;
-    public GameObject contentFileSelect, panelCodeInput, panelSaveShowCode, panelWarningInput, panelWarningInputVisitor, panelOverwrite, menuKulissen, contentRailsMenue;
+    public GameObject contentFileSelect, panelCodeInput, panelSaveShowCode, panelWarningInput, panelWarningInputVisitor, panelOverwrite, menuKulissen, flyer, contentMenueRails;
+    //[SerializeField] RailManager railManager;
     [SerializeField] private GameObject _dialogSave, _dialogNewScene, _dialogLoadCode;
     [SerializeField] GameObject _borderWarning, _borderLoad;
-    [SerializeField] Text _placeholderTextWarning, _placeholderTextLoadWarning, _textSaveInputName;
+    [SerializeField] Text _placeholderTextWarning, _textSaveInputName;
+    [SerializeField] GameObject warningPanel;
+    //[SerializeField] Text _placeholderTextLoadWarning;
     [SerializeField] private GameObject _canvas;
     [SerializeField] private GameObject _visitorPanelSave;
-    public InputField inputFieldShowCode, inputFieldShowCodeVisitor, _inputFieldSaveName;
+    public InputField inputFieldShowCode, inputFieldShowCodeVisitor;
+    [SerializeField] GameObject _showSavedCode;
     public Button fileSelectButton;
     private List<Button> _buttonsFileList = new List<Button>();
     public Text textFileMetaData, textFileContentData, textShowCode;
@@ -24,8 +28,9 @@ public class SaveFileController : MonoBehaviour
     private string _selectedFile, _directorySaves, _basepath;
     private bool _isWebGl, loadFromAwake, _pressOk;
     private int _loadSaveNew;   // 0 = new, 1 = save, 2 = load
+
     private Color col_grey = new Color(.4f, .4f, .4f, 1);
-    private Color col_white = new Color(0.843f,0.843f,0.843f,1);
+    private Color col_white = new Color(0.843f, 0.843f, 0.843f, 1);
     private string characters = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ";
     #endregion
     private void Awake()
@@ -82,15 +87,14 @@ public class SaveFileController : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
             {
-                Debug.Log("hello");
                 LoadCodeNow();
                 _pressOk = false;
             }
         }
-        if (SceneManaging.sceneChanged)
-        {
+        // if (SceneManaging.sceneChanged)
+        // {
 
-        }
+        // }
     }
     public void SaveSceneToFile(int overwrite) // 0=save, 1=overwrite, 2=save with new code
     {
@@ -205,24 +209,23 @@ public class SaveFileController : MonoBehaviour
     }
     public void LoadSceneFromTempToStatic()
     {
-        // for (int i = 0; i < contentRailsMenue.GetComponent<RailManager>().railList.Length; i++)
-        // {
-        //     for (int j = 0; j < contentRailsMenue.GetComponent<RailManager>().railList[i].timelineInstanceObjects.Count; j++)
-        //     {
-        //         Debug.Log("before: element: " + contentRailsMenue.GetComponent<RailManager>().railList[i].timelineInstanceObjects[j] + ", size: " + contentRailsMenue.GetComponent<RailManager>().railList[i].timelineInstanceObjects[j].GetComponent<RectTransform>().sizeDelta);
-        //     }
-        // }
-
         if (tempSceneData != null)
         {
+            CoulissesManager tmpCoulMan = menuKulissen.GetComponent<CoulissesManager>();
+            RailManager tmpRailMan = contentMenueRails.GetComponent<RailManager>();
+
             for (int i = 0; i < this.GetComponent<UIController>().goButtonSceneryElements.Length; i++)
             {
-                menuKulissen.GetComponent<CoulissesManager>().placeInShelf(i);   // alle kulissen zurueck ins shelf
+                tmpCoulMan.placeInShelf(i);   // alle kulissen zurueck ins shelf
             }
-            // Todo: alle counter zurueck
-            for (int j = 0; j < contentRailsMenue.GetComponent<RailManager>().figCounterCircle.Length; j++)
+            // alle counter zurueck
+            for (int j = 0; j < tmpRailMan.figCounterCircle.Length; j++)
             {
-                contentRailsMenue.GetComponent<RailManager>().figCounterCircle[j].transform.GetChild(0).GetComponent<Text>().text = "0";
+                tmpRailMan.figCounterCircle[j].transform.GetChild(0).GetComponent<Text>().text = "0";
+            }
+            for (int k = 0; k < tmpCoulMan.coulisseCounter.Length; k++)
+            {
+                tmpCoulMan.coulisseCounter[k].text = "0";
             }
 
             StaticSceneData.StaticData = tempSceneData;
@@ -239,15 +242,11 @@ public class SaveFileController : MonoBehaviour
                 StartCoroutine(LoadFilesFromServer(false, "", false));
                 // ShowFilesFromDirectory();
             }
-            //AnimationTimer.SetTime(0);
-            //contentRailsMenue.GetComponent<RailManager>().openCloseObjectInTimeline(false,contentRailsMenue.GetComponent<RailManager>().railList[0].timelineInstanceObjects,0);
-            //contentRailsMenue.GetComponent<RailManager>().openTimelineByClick(false,0,false);
 
             // when scene is truly loaded then buttons shouldnt be green anymore and dateiinforamtionen ist leer
             for (int i = 0; i < contentFileSelect.transform.childCount; i++)
             {
                 contentFileSelect.transform.GetChild(i).GetComponent<Button>().image.color = new Color32(255, 255, 255, 255);
-                //Debug.Log("child: " + contentFileSelect.transform.GetChild(i));
             }
             textFileContentData.text = "";
             textFileMetaData.text = "";
@@ -256,7 +255,7 @@ public class SaveFileController : MonoBehaviour
             if (loadFromAwake)
             {
                 menuKulissen.SetActive(true);
-                StaticSceneData.StaticData.fileName = "neu";
+                StaticSceneData.StaticData.fileName = "Besucher";
                 loadFromAwake = false;
             }
 
@@ -308,13 +307,13 @@ public class SaveFileController : MonoBehaviour
 
         if (_isWebGl)
         {
-            if (fromCode) StartCoroutine(LoadFileFromWWW(fileName, true));
-            else StartCoroutine(LoadFileFromWWW(fileName, false));
+            if (fromCode) StartCoroutine(LoadFileFromWWW(fileName, true, false));
+            else StartCoroutine(LoadFileFromWWW(fileName, false, false));
         }
         else
         {
-            if (fromCode) StartCoroutine(LoadFileFromWWW(fileName, true));            // LoadFileFromDirectory(fileName);
-            else StartCoroutine(LoadFileFromWWW(fileName, false));
+            if (fromCode) StartCoroutine(LoadFileFromWWW(fileName, true, false));            // LoadFileFromDirectory(fileName);
+            else StartCoroutine(LoadFileFromWWW(fileName, false, false));
 
         }
     }
@@ -412,7 +411,7 @@ public class SaveFileController : MonoBehaviour
             {
                 panelWarningInput.SetActive(true);
                 panelWarningInput.GetComponent<Text>().text = "Bitte gib einen Code ein.";
-                _placeholderTextLoadWarning.color = new Color(1, 0, 0, 0.27f);
+                //_placeholderTextLoadWarning.color = new Color(1, 0, 0, 0.27f);
                 _borderLoad.SetActive(true);
             }
             // string eingegeben
@@ -501,7 +500,7 @@ public class SaveFileController : MonoBehaviour
         }
         if (fromAwake)
         {
-            StartCoroutine(LoadFileFromWWW("*Musterszene_leer.json", true));
+            StartCoroutine(LoadFileFromWWW("*Musterszene_leer.json", true, false));
         }
 
     }
@@ -541,9 +540,9 @@ public class SaveFileController : MonoBehaviour
         if (!isExpert)
         {
             _textSaveInputName.text = "Bitte schreibe dir deinen Code auf: ";
-            _inputFieldSaveName.GetComponent<InputField>().enabled = false;
-            _inputFieldSaveName.GetComponent<Image>().color = col_grey;
-            _inputFieldSaveName.transform.GetChild(2).GetComponent<Text>().text = filePath.Substring(0, 6);
+            //_inputFieldSaveName.GetComponent<InputField>().enabled = false;
+            //_inputFieldSaveName.GetComponent<Image>().color = col_grey;
+            _showSavedCode.transform.GetChild(0).GetComponent<Text>().text = filePath.Substring(0, 6);
             _placeholderTextWarning.text = "";
             _loadSaveNew = 3;
         }
@@ -558,9 +557,8 @@ public class SaveFileController : MonoBehaviour
          // ShowFilesFromDirectory();
          StartCoroutine(LoadFilesFromServer(false));
      }*/
-    public IEnumerator LoadFileFromWWW(string fileName, bool fromCode)
+    public IEnumerator LoadFileFromWWW(string fileName, bool fromCode, bool fromFlyer)
     {
-        //Debug.Log("klappt?");
         // UnityWebRequest uwr = UnityWebRequest.Get(_basepath + "Saves/" + fileName);
         // yield return uwr;
         // _jsonString = uwr.downloadHandler.text;
@@ -568,7 +566,7 @@ public class SaveFileController : MonoBehaviour
         yield return www;
         _jsonString = www.text;
         tempSceneData = this.GetComponent<SceneDataController>().CreateSceneDataFromJSON(_jsonString);
-//        Debug.Log("uwr: " + tempSceneData);
+
         this.GetComponent<SceneDataController>().CreateScene(tempSceneData);
         string sceneMetaData = "";
         sceneMetaData += tempSceneData.fileName + "\n\n";
@@ -590,6 +588,58 @@ public class SaveFileController : MonoBehaviour
             _canvas.GetComponent<ObjectShelfAll>().ButtonShelf02();
         }
         //contentRailsMenue.GetComponent<RailManager>().updateDataWhenOpeningNewScene();
+        else if (fromFlyer)
+        {
+            LoadSceneFromTempToStatic();
+            if (SceneManaging.flyerSpace[0] != -1)
+            {
+                //Debug.Log("1");
+                contentMenueRails.GetComponent<RailManager>().CreateNew2DInstance(SceneManaging.flyerSpace[0], 0, 0, 0, true);
+            }
+            if (SceneManaging.flyerSpace[1] != -1)
+            {
+                //Debug.Log("2");
+                contentMenueRails.GetComponent<RailManager>().CreateNew2DInstance(SceneManaging.flyerSpace[1], 30, 1, 0, true);
+            }
+            if (SceneManaging.flyerSpace[2] != -1)
+            {
+                Debug.Log("3");
+                contentMenueRails.GetComponent<RailManager>().CreateNew2DInstance(SceneManaging.flyerSpace[2], 40, 4, 0, true);
+            }
+            if (SceneManaging.flyerSpace[3] != -1)
+            {
+                Debug.Log("4");
+                contentMenueRails.GetComponent<RailManager>().CreateNew2DInstance(SceneManaging.flyerSpace[3], 70, 2, 0, true);
+            }
+            if (SceneManaging.flyerSpace[4] != -1)
+            {
+                //Debug.Log("5");
+                contentMenueRails.GetComponent<RailManager>().CreateNew2DInstance(SceneManaging.flyerSpace[4], 85, 1, 0, true);
+            }
+            if (SceneManaging.flyerSpace[5] != -1)
+            {
+                //Debug.Log("6");
+                contentMenueRails.GetComponent<RailManager>().CreateNew2DInstance(SceneManaging.flyerSpace[5], 90, 0, 0, true);
+            }
+            if (SceneManaging.flyerSpace[6] != -1)
+            {
+                //Debug.Log("7");
+                contentMenueRails.GetComponent<RailManager>().CreateNew2DInstance(SceneManaging.flyerSpace[6], 100, 3, 0, true);
+            }
+            if (SceneManaging.flyerSpace[7] != -1)
+            {
+                //Debug.Log("8");
+                contentMenueRails.GetComponent<RailManager>().CreateNew2DInstance(SceneManaging.flyerSpace[7], 120, 4, 0, true);
+            }
+            if (SceneManaging.flyerSpace[8] != -1)
+            {
+                //Debug.Log("9");
+                contentMenueRails.GetComponent<RailManager>().CreateNew2DInstance(SceneManaging.flyerSpace[8], 130, 5, 0, true);
+            }
+
+            flyer.SetActive(false);
+            SceneManaging.flyerActive = false;
+        }
     }
     // private void LoadFileFromDirectory(string fileName)
     // {
@@ -650,7 +700,7 @@ public class SaveFileController : MonoBehaviour
     }
     public void OnClickNewScene()
     {
-        StartCoroutine(LoadFileFromWWW("*Musterszene_leer.json", true));
+        StartCoroutine(LoadFileFromWWW("*Musterszene_leer.json", true, false));
         ClosePanelShowCode(_visitorPanelSave);
     }
     public void OnClickSaveTabs(int loadSaveNew)
@@ -673,8 +723,8 @@ public class SaveFileController : MonoBehaviour
     {
         switch (_loadSaveNew)
         {
-            case 0:
-                OnClickNewScene();
+            case 0: // click auf neue szene - ok
+                warningPanel.SetActive(true);
                 break;
             case 1:
                 LoadCodeNow();
@@ -687,19 +737,27 @@ public class SaveFileController : MonoBehaviour
                 break;
         }
     }
+    public void OnClickWarning(bool ok)
+    {
+        if (ok)
+        {
+            OnClickNewScene();
+        }
+        warningPanel.SetActive(false);
+    }
     private void ResetTabs(int tab)
     {
         _borderWarning.SetActive(false);
         _borderLoad.SetActive(false);
         panelWarningInput.SetActive(false);
         _placeholderTextWarning.color = new Color(.2f, .2f, .2f, 0.27f);
-        _placeholderTextLoadWarning.color = new Color(.2f, .2f, .2f, 0.27f);
+        //_placeholderTextLoadWarning.color = new Color(.2f, .2f, .2f, 0.27f);
 
-        _textSaveInputName.text = "Bitte Speicher-Namen eingeben.";
-        _inputFieldSaveName.GetComponent<InputField>().enabled = true;
-        _inputFieldSaveName.GetComponent<Image>().color = col_white; 
-        _inputFieldSaveName.transform.GetChild(2).GetComponent<Text>().text = "";
-        _placeholderTextWarning.text = "Szenen-Name";
+        _textSaveInputName.text = "Zum Speichern auf OK drücken.";
+        //_inputFieldSaveName.GetComponent<InputField>().enabled = true;
+        //_inputFieldSaveName.GetComponent<Image>().color = col_white; 
+        //_inputFieldSaveName.transform.GetChild(2).GetComponent<Text>().text = "";
+        //_placeholderTextWarning.text = "Szenen-Name";
 
         _dialogNewScene.SetActive(false);
         _dialogLoadCode.SetActive(false);

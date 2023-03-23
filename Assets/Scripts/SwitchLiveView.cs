@@ -25,9 +25,11 @@ public class SwitchLiveView : MonoBehaviour
     public void SwitchToFullscreen()
     {
 		liveViewFullscreenObj.SetActive(true);
+        SceneManaging.fullscreenOn = true;
     }
     public void SwitchToNormalsceen()
     {
+        SceneManaging.fullscreenOn = false;
 		liveViewFullscreenObj.SetActive(false);
     }
 	public void changePlayIcon()

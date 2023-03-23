@@ -8,7 +8,6 @@ namespace RockVR.Video.Demo
     public class PlayerControls : MonoBehaviour
     {
         public GameObject gameController;
-        public Text TimerText;
         public Button[] aPlayButtons;
         public Button[] aStopButtons;
         public Sprite[] aPlaySprites;
@@ -17,7 +16,6 @@ namespace RockVR.Video.Demo
         private float _f = 0.0f;
         private float _fps = 0.0f;
         private bool renderButtonPressed = false;
-        // Start is called before the first frame update
         void Start()
         {
             for (int i = 0; i < aPlayButtons.Length; i++)
@@ -30,7 +28,6 @@ namespace RockVR.Video.Demo
             }
         }
 
-        // Update is called once per frame
         void Update()
         {
             _f += Time.deltaTime;
@@ -39,7 +36,7 @@ namespace RockVR.Video.Demo
                 _fps = 1 / Time.deltaTime;
                 _f -= 1.0f;
             }
-            TimerText.text = AnimationTimer.GetTime().ToString("0.00") + "\n - \nfps: " + _fps.ToString("0");
+            //TimerText.text = AnimationTimer.GetTime().ToString("0.00") + "\n - \nfps: " + _fps.ToString("0");
         }
 
         public void ButtonReset()

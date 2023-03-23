@@ -16,11 +16,12 @@ public class CoulissesManager : MonoBehaviour
     [HideInInspector] public GameObject[] parentStart;
     [HideInInspector] public float[] shelfSizeWidth, shelfSizeHeight;
     [HideInInspector] public bool[] isWide, isHighlighted, isMirrored;
+    public Text[] coulisseCounter;
 
     #endregion
     #region private variables
     [SerializeField] GameObject scrollViewScenery, helpButton, liveView;
-    [SerializeField] Text[] coulisseCounter;
+    
     int currentObjectIndex, clickInSettingsWindow;
     bool dragging;
     private bool sliding;
@@ -221,10 +222,6 @@ public class CoulissesManager : MonoBehaviour
 
         if (dragging)
         {
-            // if (_timerCoulisse <= 0.5f)
-            // {
-            //     _timerCoulisse += Time.deltaTime;
-            // }
             if (coulisses[currentObjectIndex].GetComponent<RectTransform>().rect.width == shelfSizeWidth[currentObjectIndex])
             {
                 coulisses[currentObjectIndex].GetComponent<RectTransform>().sizeDelta = new Vector2(railWidth / 410 * coulisses[currentObjectIndex].GetComponent<CoulisseStats>().CoulisseWidth / coulisses[currentObjectIndex].transform.lossyScale.x, railWidth / 410 * coulisses[currentObjectIndex].GetComponent<CoulisseStats>().CoulisseHeight / coulisses[currentObjectIndex].transform.lossyScale.y);
@@ -247,6 +244,7 @@ public class CoulissesManager : MonoBehaviour
                 }
             }
             coulisses[currentObjectIndex].transform.SetParent(mainMenue.transform);
+
             // if coulisse is hitting a tab
             int hitIndexTab = checkHittingIndexTab(indexTabs, getMousePos);
             if (hitIndexTab != -1)
@@ -257,6 +255,7 @@ public class CoulissesManager : MonoBehaviour
                     setIndexTabActive(hitIndexTab);
                 }
             }
+
             // window or rail tab is hit
             else if (checkHittingSettings(coulisses[currentObjectIndex]))
             {
@@ -279,6 +278,7 @@ public class CoulissesManager : MonoBehaviour
                     objectInRail = true;
                 }
             }
+
             // nothing is hit
             else
             {
@@ -326,7 +326,7 @@ public class CoulissesManager : MonoBehaviour
                     for (int i = 0; i < collections.Length; i++)
                     {
                         // if object is on rail image
-                        if (objectInRail)
+                        if (objectInRail && SceneManaging.isExpert)
                         {
                             if (currentTabIndex == i)
                             {
@@ -346,7 +346,6 @@ public class CoulissesManager : MonoBehaviour
                                 {
                                     coulisses[currentObjectIndex].GetComponent<RectTransform>().anchoredPosition = new Vector2(coulisses[currentObjectIndex].GetComponent<RectTransform>().anchoredPosition.x, -135);
                                 }
-                                // coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition = new Vector2(coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.x, -130);
                             }
                         }
                         // limitierungen (snapping if dropped on the left/right of the min/max-value)
@@ -369,7 +368,6 @@ public class CoulissesManager : MonoBehaviour
                     }
                     showDeleteButton(deleteButton, coulisses[currentObjectIndex], true);
 
-                    //publicSibling = coulisses[currentObjectIndex].transform.GetSiblingIndex();
                     if (clickCoulisseFromShelf)
                     {
                         int tmpCount = collections[currentTabIndex].transform.childCount;
@@ -442,12 +440,6 @@ public class CoulissesManager : MonoBehaviour
                         //Debug.Log("hi");
                         helpButton.GetComponent<PressHelp>().helpTextLiveView.SetActive(true);
                     }
-                    // wenn figur nur angetoucht wurde
-                    // else if (_timerCoulisse < 0.5f)
-                    // {
-                    //     helpButton.GetComponent<PressHelp>().pressed = false;
-                    //     helpButton.GetComponent<PressHelp>().OnClick(0);
-                    // }
 
                     placeInShelf(currentObjectIndex);
                     StaticSceneData.StaticData.sceneryElements[currentObjectIndex].active = false;

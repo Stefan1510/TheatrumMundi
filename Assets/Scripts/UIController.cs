@@ -5,23 +5,22 @@ using UnityEngine.UI;
 
 public class UIController : MonoBehaviour
 {
-    public GameObject goMenueKulissen;
+    public CoulissesManager goMenueKulissen;
     public GameObject[] goCollection = null;
     public GameObject[] goButtonSceneryElements;
-    public GameObject[] goButtonFigureObjects;
     public GameObject[] goReiterActive;
     public GameObject[] goIndexTabs;
     public GameObject[] goRailDistSliders;
     public GameObject[] goRailHeightSliders;
-    private objectsLightElement[] objectsLightElements;
-    private FigureInstanceElement[] figureInstanceElements;
     public RailManager[] Rails;
-public GameObject menueFiguresContent;
+    public GameObject menueFiguresContent;
     public RailLightManager[] RailLightBG;
     public RailMusicManager RailMusic;
-    public CoulissesManager CoulissesMan;
+    //public CoulissesManager CoulissesMan;
+    private FigureInstanceElement[] figureInstanceElements;
+    private objectsLightElement[] objectsLightElements;
+    private GameObject[] goButtonFigureObjects;
     private int currenScreenWidth;
-
 
     private void Awake()
     {
@@ -38,7 +37,7 @@ public GameObject menueFiguresContent;
             //     Rails[i].ResetScreenSize();   
             // // }
             RailMusic.ResetScreenSize();
-            CoulissesMan.ResetScreenSize();
+            goMenueKulissen.ResetScreenSize();
             // RailLightBG[0].ResetScreenSize();
             // RailLightBG[1].ResetScreenSize();
             currenScreenWidth = Screen.width;
@@ -47,7 +46,8 @@ public GameObject menueFiguresContent;
 
     public void SceneriesApplyToUI()
     {
-        goMenueKulissen.SetActive(true);
+        int[] count = new int[8];
+        goMenueKulissen.gameObject.SetActive(true);
         for (int i = 0; i < StaticSceneData.StaticData.sceneryElements.Count; i++)
         {
             if (StaticSceneData.StaticData.sceneryElements[i].active)
@@ -62,14 +62,19 @@ public GameObject menueFiguresContent;
                 goButtonSceneryElements[i].GetComponent<BoxCollider2D>().offset = new Vector2(0, goButtonSceneryElements[i].GetComponent<RectTransform>().rect.height / 2);
 
                 // add active elements to "coulissesOnRails"
-                CoulissesMan.GetComponent<CoulissesManager>().coulissesOnRails.Add(goButtonSceneryElements[i]);
+                goMenueKulissen.coulissesOnRails.Add(goButtonSceneryElements[i]);
+                count[StaticSceneData.StaticData.sceneryElements[i].railnumber - 1]++;
             }
             else
             {
-                goButtonSceneryElements[i].transform.SetParent(goMenueKulissen.GetComponent<CoulissesManager>().parentStart[i].transform);
+                goButtonSceneryElements[i].transform.SetParent(goMenueKulissen.parentStart[i].transform);
             }
         }
-        goMenueKulissen.SetActive(false);
+        for (int i = 0; i < goMenueKulissen.coulisseCounter.Length; i++)
+        {
+            goMenueKulissen.coulisseCounter[i].text = count[i].ToString();
+        }
+        goMenueKulissen.gameObject.SetActive(false);
     }
 
     public void LightsApplyToUI()

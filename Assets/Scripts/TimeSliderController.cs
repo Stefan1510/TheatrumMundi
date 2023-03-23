@@ -12,6 +12,7 @@ public class TimeSliderController : MonoBehaviour, IPointerUpHandler, IDragHandl
 {
     [SerializeField] private Text _textTime;
     [SerializeField] private Text _textMaxTime;
+    [SerializeField] private Text _textFullScreen;
     [SerializeField] private Toggle _toggleKeyConfigControlls;
     [SerializeField] private GameObject _panelControls, _panelRailSpeedControls, _panelLightControls, _panelBackgroundPositionControls, imgTimelineSettingsArea;
     [SerializeField] private GameObject[] _keyButtons;
@@ -33,11 +34,14 @@ public class TimeSliderController : MonoBehaviour, IPointerUpHandler, IDragHandl
         ChangeControlsFromTimelineSelection();
     }
 
-    // Update is called once per frame
     void Update()
     {
         _thisSlider.value = AnimationTimer.GetTime();
         _textTime.text = UtilitiesTm.FloaTTimeToString(_thisSlider.value);
+        if (SceneManaging.fullscreenOn)
+        {
+            _textFullScreen.text = UtilitiesTm.FloaTTimeToString(_thisSlider.value);
+        }
         _textMaxTime.text = UtilitiesTm.FloaTTimeToString(AnimationTimer.GetMaxTime());
         //Debug.Log("maxtime: "+AnimationTimer.GetMaxTime()+", slider: "+_thisSlider.value);
         if (ImageTimelineSelection.UpdateNecessary())
