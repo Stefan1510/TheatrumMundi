@@ -5,40 +5,32 @@ using UnityEngine.UI;
 
 public class SwitchLiveView : MonoBehaviour
 {
-	public GameObject liveViewFullscreenObj;
-	public Button PlayBtn;
-	public Sprite PlayIcon;
-	public Sprite PauseIcon;
-	
-    //// Start is called before the first frame update
+    public GameObject liveViewFullscreenObj;
+    public Button PlayBtn;
+    public Sprite PlayIcon;
+    public Sprite PauseIcon;
+
     void Start()
     {
         SwitchToNormalsceen();
     }
-
-    //// Update is called once per frame
-    //void Update()
-    //{
-
-    //}
-
     public void SwitchToFullscreen()
     {
-		liveViewFullscreenObj.SetActive(true);
+        liveViewFullscreenObj.SetActive(true);
         SceneManaging.fullscreenOn = true;
     }
     public void SwitchToNormalsceen()
     {
         SceneManaging.fullscreenOn = false;
-		liveViewFullscreenObj.SetActive(false);
+        liveViewFullscreenObj.SetActive(false);
     }
-	public void changePlayIcon()
-	{
-		//Debug.Log("timerstate: "+AnimationTimer.GetTimerState());
-		switch (AnimationTimer.GetTimerState())
-		{
+    public void changePlayIcon()
+    {
+        //Debug.Log("timerstate: "+AnimationTimer.GetTimerState());
+        switch (AnimationTimer.GetTimerState())
+        {
             case AnimationTimer.TimerState.stopped:
-                PlayBtn.transform.GetComponent<Image>().sprite = PauseIcon;
+                PlayBtn.transform.GetComponent<Image>().sprite = PlayIcon;
                 break;
             case AnimationTimer.TimerState.playing:
                 PlayBtn.transform.GetComponent<Image>().sprite = PauseIcon;
@@ -46,6 +38,6 @@ public class SwitchLiveView : MonoBehaviour
             case AnimationTimer.TimerState.paused:
                 PlayBtn.transform.GetComponent<Image>().sprite = PlayIcon;
                 break;
-            }
-	}
+        }
+    }
 }
