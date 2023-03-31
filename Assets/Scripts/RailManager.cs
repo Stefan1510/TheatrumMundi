@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
+using TMPro;
 
 public class RailManager : MonoBehaviour
 {
@@ -122,7 +123,7 @@ public class RailManager : MonoBehaviour
         for (int i = 0; i < figureObjects.Length; i++)
         {
             figCounterCircle[i] = figureObjects[i].transform.parent.GetChild(2).gameObject;
-            figCounterCircle[i].transform.GetChild(0).GetComponent<Text>().text = "0";
+            figCounterCircle[i].transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "0";
         }
 
 
@@ -164,7 +165,7 @@ public class RailManager : MonoBehaviour
         _spaceMax = (0.1f * _spaceMax3D * 100) / maxTimeInSec * railwidthAbsolute;      // *100 fuer umrechnung m in cm, 0.1 fuer speed
         AnimationTimer.SetTime(0);
     }
-    public string identifyClickedObject()   //old
+    public string identifyClickedObject()  // from shelf
     {
         string objName = "";
         if (figureObjects.Length == 0)
@@ -192,7 +193,7 @@ public class RailManager : MonoBehaviour
         }
         return objName;
     }
-    public string identifyClickedObjectByList(List<GameObject> objectsOnTimeline)
+    public string identifyClickedObjectByList(List<GameObject> objectsOnTimeline)       // from timeline
     {
         string objName = "";
         if (objectsOnTimeline.Count == 0)
@@ -222,24 +223,53 @@ public class RailManager : MonoBehaviour
 
         return objName;
     }
-    private bool isCurrentFigureOverlapping(int railIndex, GameObject obj)
+    private bool isCurrentFigureOverlapping(int railIndex, GameObject obj, bool bothLayers)
     {
         bool val = false;
+        bool val2 = false;
+
         for (int i = 0; i < railList[railIndex].myObjectsPositionListLayer1.Count; i++)
         {
             //Debug.Log("pos1: " + railList[railIndex].myObjectsPositionListLayer1[i].position.x + ", pos obj: " + obj.GetComponent<RectTransform>().anchoredPosition.x);
 
-            if (((railList[railIndex].myObjectsPositionListLayer1[i].position.x < obj.GetComponent<RectTransform>().anchoredPosition.x
-            && railList[railIndex].myObjectsPositionListLayer1[i].position.x + railList[railIndex].myObjectsPositionListLayer1[i].position.y > obj.GetComponent<RectTransform>().anchoredPosition.x)
-            || (railList[railIndex].myObjectsPositionListLayer1[i].position.x > obj.GetComponent<RectTransform>().anchoredPosition.x
-            && railList[railIndex].myObjectsPositionListLayer1[i].position.x < obj.GetComponent<RectTransform>().anchoredPosition.x + obj.GetComponent<RectTransform>().sizeDelta.x))
+            if (((railList[railIndex].myObjectsPositionListLayer1[i].position.x <= obj.GetComponent<RectTransform>().anchoredPosition.x
+            && railList[railIndex].myObjectsPositionListLayer1[i].position.x + railList[railIndex].myObjectsPositionListLayer1[i].position.y >= obj.GetComponent<RectTransform>().anchoredPosition.x)
+            || (railList[railIndex].myObjectsPositionListLayer1[i].position.x >= obj.GetComponent<RectTransform>().anchoredPosition.x
+            && railList[railIndex].myObjectsPositionListLayer1[i].position.x <= obj.GetComponent<RectTransform>().anchoredPosition.x + obj.GetComponent<RectTransform>().sizeDelta.x))
             && railList[railIndex].myObjectsPositionListLayer1[i].objName != obj.name)
             {
-                //Debug.Log("name: " + obj.name + ", anderer: " + railList[railIndex].myObjectsPositionListLayer1[i].objName);
+                Debug.Log("name: " + obj.name + ", anderer: " + railList[railIndex].myObjectsPositionListLayer1[i].objName);
                 val = true;
             }
         }
-        return val;
+        if (bothLayers)
+        {
+            for (int i = 0; i < railList[railIndex].myObjectsPositionListLayer2.Count; i++)
+            {
+                if (((railList[railIndex].myObjectsPositionListLayer2[i].position.x <= obj.GetComponent<RectTransform>().anchoredPosition.x
+                && railList[railIndex].myObjectsPositionListLayer2[i].position.x + railList[railIndex].myObjectsPositionListLayer2[i].position.y >= obj.GetComponent<RectTransform>().anchoredPosition.x)
+                || (railList[railIndex].myObjectsPositionListLayer2[i].position.x >= obj.GetComponent<RectTransform>().anchoredPosition.x
+                && railList[railIndex].myObjectsPositionListLayer2[i].position.x <= obj.GetComponent<RectTransform>().anchoredPosition.x + obj.GetComponent<RectTransform>().sizeDelta.x))
+                && railList[railIndex].myObjectsPositionListLayer2[i].objName != obj.name)
+                {
+                    Debug.Log("name: " + obj.name + ", anderer: " + railList[railIndex].myObjectsPositionListLayer2[i].objName);
+                    val2 = true;
+                }
+            }
+        }
+        if (bothLayers)
+        {
+            if (val && val2)
+            {
+                return true;
+            }
+            else
+                return false;
+        }
+        else
+        {
+            return val;
+        }
     }
     public void openTimelineByClick(bool thisTimelineOpen, int index, bool fromShelf)
     {
@@ -815,19 +845,19 @@ public class RailManager : MonoBehaviour
             #region limit front and end of rail
             if (tmpRectTransform.anchoredPosition.x < 50)        //newCopyOfFigure.transform.position.x - 50 < 0.03f * Screen.width)  // 50 is half the box Collider width (mouse pos is in the middle of the figure) erstmal standard 50, dann wird erst calkuliert, welche groesse am zeitpunkt korrekt ist 
             {
-                Debug.Log("front");
+                //Debug.Log("front");
                 tmpRectTransform.anchoredPosition = new Vector3(50, tmpRectTransform.anchoredPosition.y, -1);
                 newCopyOfFigure.transform.position = new Vector3(newCopyOfFigure.transform.position.x, figureObjects[figureNr].transform.position.y, -1);
 
                 float moment = UtilitiesTm.FloatRemap((tmpRectTransform.anchoredPosition.x - 50), 0, railwidthAbsolute, 0, AnimationTimer.GetMaxTime());
-                Debug.Log("hi: moment " + moment);
+               // Debug.Log("hi: moment " + moment);
 
                 objectAnimationLength = rails3D[currentRailIndex].transform.GetChild(0).GetComponent<RailSpeedController>().GetEndTimeFromStartTime(moment);
-                Debug.Log("hi2");
+               // Debug.Log("hi2");
 
                 rectSize = railwidthAbsolute / (AnimationTimer.GetMaxTime() / objectAnimationLength);
 
-                Debug.Log("rect: " + rectSize);
+                //Debug.Log("rect: " + rectSize);
 
                 if (float.IsInfinity(objectAnimationLength))
                 {
@@ -835,49 +865,46 @@ public class RailManager : MonoBehaviour
                 }
             }
 
-
-
-
             // back of rail
             else if (tmpRectTransform.anchoredPosition.x + rectSize > railwidthAbsolute)
             {
                 float moment = UtilitiesTm.FloatRemap((tmpRectTransform.anchoredPosition.x - 50), 0, railwidthAbsolute, 0, AnimationTimer.GetMaxTime());
-                Debug.Log("hi: moment " + moment);
+                //Debug.Log("hi: moment " + moment);
 
                 objectAnimationLength = rails3D[currentRailIndex].transform.GetChild(0).GetComponent<RailSpeedController>().GetEndTimeFromStartTime(moment);
-                Debug.Log("hi2");
+                //Debug.Log("hi2");
 
                 rectSize = railwidthAbsolute / (AnimationTimer.GetMaxTime() / objectAnimationLength);
 
-                Debug.Log("rect: " + rectSize);
+                //Debug.Log("rect: " + rectSize);
 
                 if (float.IsInfinity(objectAnimationLength))
                 {
                     objectAnimationLength = 100;
                 }
 
-                Debug.Log("back");
+                //Debug.Log("back");
                 newCopyOfFigure.transform.position = new Vector3(newCopyOfFigure.transform.position.x, figureObjects[figureNr].transform.position.y, -1);
                 tmpRectTransform.anchoredPosition = new Vector2(railwidthAbsolute - rectSize + 50, tmpRectTransform.anchoredPosition.y);
             }
             else
             {
                 float moment = UtilitiesTm.FloatRemap((tmpRectTransform.anchoredPosition.x - 50), 0, railwidthAbsolute, 0, AnimationTimer.GetMaxTime());
-                Debug.Log("hi: moment " + moment);
+                //Debug.Log("hi: moment " + moment);
 
                 objectAnimationLength = rails3D[currentRailIndex].transform.GetChild(0).GetComponent<RailSpeedController>().GetEndTimeFromStartTime(moment);
-                Debug.Log("hi2");
+                //Debug.Log("hi2");
 
                 rectSize = railwidthAbsolute / (AnimationTimer.GetMaxTime() / objectAnimationLength);
 
-                Debug.Log("rect: " + rectSize);
+                //Debug.Log("rect: " + rectSize);
 
                 if (float.IsInfinity(objectAnimationLength))
                 {
                     objectAnimationLength = 100;
                 }
 
-                Debug.Log("else");
+               //Debug.Log("else");
                 newCopyOfFigure.transform.position = new Vector3(momentOrPosX, figureObjects[figureNr].transform.position.y, -1);
             }
             #endregion
@@ -1598,7 +1625,7 @@ public class RailManager : MonoBehaviour
                 // if there is only one layer on Rail
                 if (railList[currentRailIndex].sizeLayering == 1)
                 {
-                    if (isCurrentFigureOverlapping(currentRailIndex, currentObj))
+                    if (isCurrentFigureOverlapping(currentRailIndex, currentObj, false))
                     {
                         scaleToLayerSize(currentObj, 2, rails[currentRailIndex]);
 
@@ -1667,7 +1694,7 @@ public class RailManager : MonoBehaviour
                 if (currentPos.anchoredPosition.x <= 50)
                 {
                     currentPos.anchoredPosition = new Vector2(50, currentPos.anchoredPosition.y);
-                    if (isCurrentFigureOverlapping(currentRailIndex, currentObj))
+                    if (isCurrentFigureOverlapping(currentRailIndex, currentObj, true))
                     {
                         _toBeRemovedFromTimeline = true;
                         currentObj.transform.GetChild(0).GetComponent<Image>().color = colFigureRed;
@@ -1678,7 +1705,7 @@ public class RailManager : MonoBehaviour
                 else if ((currentPos.anchoredPosition.x + currentPos.sizeDelta.x - 50) > (railwidthAbsolute))
                 {
                     currentPos.anchoredPosition = new Vector2(railwidthAbsolute - currentPos.sizeDelta.x + 50, currentPos.anchoredPosition.y);
-                    if (isCurrentFigureOverlapping(currentRailIndex, currentObj))
+                    if (isCurrentFigureOverlapping(currentRailIndex, currentObj, true))
                     {
                         _toBeRemovedFromTimeline = true;
                         currentObj.transform.GetChild(0).GetComponent<Image>().color = colFigureRed;
@@ -1945,7 +1972,7 @@ public class RailManager : MonoBehaviour
                         if (railList[hitTimeline].sizeLayering == 1)
                         {
                             // wenn figur überlappt muss sie auf layer 2
-                            if (isCurrentFigureOverlapping(hitTimeline, railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex]))
+                            if (isCurrentFigureOverlapping(hitTimeline, railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex], false))
                             {
                                 railList[hitTimeline].sizeLayering = 2;
                                 railList[hitTimeline].figuresLayer2.Add(railList[currentRailIndex].timelineInstanceObjects[currentClickedInstanceObjectIndex]);

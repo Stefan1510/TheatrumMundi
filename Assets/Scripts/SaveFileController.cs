@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Networking;
 using System.IO;
+using TMPro;
 
 public class SaveFileController : MonoBehaviour
 {
@@ -221,7 +222,7 @@ public class SaveFileController : MonoBehaviour
             // alle counter zurueck
             for (int j = 0; j < tmpRailMan.figCounterCircle.Length; j++)
             {
-                tmpRailMan.figCounterCircle[j].transform.GetChild(0).GetComponent<Text>().text = "0";
+                tmpRailMan.figCounterCircle[j].transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "0";
             }
             for (int k = 0; k < tmpCoulMan.coulisseCounter.Length; k++)
             {

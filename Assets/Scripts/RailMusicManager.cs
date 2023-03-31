@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
+using TMPro;
 
 public class RailMusicManager : MonoBehaviour
 {
@@ -96,7 +97,7 @@ public class RailMusicManager : MonoBehaviour
         for (int i = 0; i < figureObjects.Length; i++)
         {
             figCounterCircle[i] = figureObjects[i].transform.parent.GetChild(2).gameObject;
-            figCounterCircle[i].transform.GetChild(0).GetComponent<Text>().text = "0";
+            figCounterCircle[i].transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "0";
         }
 
         List<GameObject> timelineObjects = new List<GameObject>();
