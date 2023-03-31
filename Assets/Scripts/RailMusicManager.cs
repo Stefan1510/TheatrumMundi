@@ -181,13 +181,13 @@ public class RailMusicManager : MonoBehaviour
                     contentRailsMenue.GetComponent<RailManager>().rails[i].GetComponent<RectTransform>().sizeDelta = new Vector2(timelineImage.rectTransform.rect.width, 20);
                     contentRailsMenue.GetComponent<RailManager>().rails[i].GetComponent<BoxCollider2D>().size = new Vector2(timelineImage.GetComponent<BoxCollider2D>().size.x, 20);
                     contentRailsMenue.GetComponent<RailManager>().railList[i].isTimelineOpen = false;
-                    for (int j = 0; j < contentRailsMenue.GetComponent<RailManager>().railList[i].timelineInstanceObjects3D.Count; j++)
+                    for (int j = 0; j < contentRailsMenue.GetComponent<RailManager>().railList[i].myObjects.Count; j++)
                     {
-                        contentRailsMenue.GetComponent<RailManager>().highlight(contentRailsMenue.GetComponent<RailManager>().railList[i].timelineInstanceObjects3D[j], contentRailsMenue.GetComponent<RailManager>().railList[i].timelineInstanceObjects[j], false);
-                        contentRailsMenue.GetComponent<RailManager>().openCloseObjectInTimeline(true, contentRailsMenue.GetComponent<RailManager>().railList[i].timelineInstanceObjects, i);
+                        contentRailsMenue.GetComponent<RailManager>().highlight(contentRailsMenue.GetComponent<RailManager>().railList[i].myObjects[j].figure3D, contentRailsMenue.GetComponent<RailManager>().railList[i].myObjects[j].figure, false);
+                        contentRailsMenue.GetComponent<RailManager>().openCloseObjectInTimeline(true, contentRailsMenue.GetComponent<RailManager>().railList[i].myObjects, i);
                     }
                 }
-                contentRailsMenue.GetComponent<RailManager>().openCloseObjectInTimeline(false, contentRailsMenue.GetComponent<RailManager>().railList[i].timelineInstanceObjects, i);
+                contentRailsMenue.GetComponent<RailManager>().openCloseObjectInTimeline(false, contentRailsMenue.GetComponent<RailManager>().railList[i].myObjects, i);
             }
             for (int k = 0; k < 2; k++)
             {

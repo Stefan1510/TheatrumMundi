@@ -335,20 +335,13 @@ public class SceneDataController : MonoBehaviour
 
         foreach (RailManager.Rail rail in ContentRailMenue.GetComponent<RailManager>().railList)
         {
-            foreach (GameObject obj in rail.timelineInstanceObjects)
+            foreach (RailManager.Figure obj in rail.myObjects)
             {
                 //Debug.Log("destroy "+obj);
-                Destroy(obj);
+                Destroy(obj.figure);
+                Destroy(obj.figure3D);
             }
-            foreach (GameObject obj3d in rail.timelineInstanceObjects3D)
-            {
-                Destroy(obj3d);
-            }
-            rail.timelineInstanceObjects.Clear();
-            rail.figuresLayer1.Clear();
-            rail.figuresLayer2.Clear();
-            rail.timelineInstanceObjects3D.Clear();
-
+            rail.myObjects.Clear();
             rail.myObjectsPositionListLayer1.Clear();
             rail.myObjectsPositionListLayer2.Clear();
             rail.sizeLayering = 1;

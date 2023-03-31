@@ -41,10 +41,10 @@ public class RailLightManager : MonoBehaviour
                     contentRailsMenue.GetComponent<RailManager>().rails[i].GetComponent<RectTransform>().sizeDelta = new Vector2(timelineImage.rectTransform.rect.width, heightClosed / gameObject.transform.lossyScale.x);
                     contentRailsMenue.GetComponent<RailManager>().rails[i].GetComponent<BoxCollider2D>().size = new Vector2(timelineImage.GetComponent<BoxCollider2D>().size.x, heightClosed / gameObject.transform.lossyScale.x);
                     contentRailsMenue.GetComponent<RailManager>().railList[i].isTimelineOpen = false;
-                    contentRailsMenue.GetComponent<RailManager>().openCloseObjectInTimeline(false, contentRailsMenue.GetComponent<RailManager>().railList[i].timelineInstanceObjects, i);
-                    for (int j = 0; j < contentRailsMenue.GetComponent<RailManager>().railList[i].timelineInstanceObjects3D.Count; j++)
+                    contentRailsMenue.GetComponent<RailManager>().openCloseObjectInTimeline(false, contentRailsMenue.GetComponent<RailManager>().railList[i].myObjects, i);
+                    for (int j = 0; j < contentRailsMenue.GetComponent<RailManager>().railList[i].myObjects.Count; j++)
                     {
-                        contentRailsMenue.GetComponent<RailManager>().highlight(contentRailsMenue.GetComponent<RailManager>().railList[i].timelineInstanceObjects3D[j], contentRailsMenue.GetComponent<RailManager>().railList[i].timelineInstanceObjects[j], false);
+                        contentRailsMenue.GetComponent<RailManager>().highlight(contentRailsMenue.GetComponent<RailManager>().railList[i].myObjects[j].figure3D, contentRailsMenue.GetComponent<RailManager>().railList[i].myObjects[j].figure, false);
                     }
                 }
 
