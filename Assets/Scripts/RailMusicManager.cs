@@ -462,7 +462,7 @@ public class RailMusicManager : MonoBehaviour
         //count objects from same kind
         int countName = 0;
         countName = countCopiesOfObject(figureObjects[musObjNr], timelineInstanceObjects);
-        figCounterCircle[musObjNr].transform.GetChild(0).GetComponent<Text>().text = (countName + 1).ToString();
+        figCounterCircle[musObjNr].transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = (countName + 1).ToString();
         newCopyOfFigure.name = figureObjects[musObjNr].name + "_instance" + countName.ToString("000");
         RectTransform tmpRectTransform = newCopyOfFigure.GetComponent<RectTransform>();
 
