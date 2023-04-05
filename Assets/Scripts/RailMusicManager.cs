@@ -11,15 +11,16 @@ public class RailMusicManager : MonoBehaviour
     #region public variables
     [HideInInspector] public List<ObjectsPoint> myObjectsPositionListLayer1 = new List<ObjectsPoint>();
     [HideInInspector] public List<ObjectsPoint> myObjectsPositionListLayer2 = new List<ObjectsPoint>();
-    public Image timelineImage;
+    [HideInInspector] public Image timelineImage;
     public GameObject gameController, UICanvas, contentRailsMenue;
     [HideInInspector] public bool isTimelineOpen;
     public GameObject objectLibrary, parentMenue; // mainMenue
     [HideInInspector] public List<GameObject> timelineInstanceObjects, figuresLayer1, figuresLayer2;
-    public int sizeLayering = 1;
+    [HideInInspector] public int sizeLayering = 1;
     public AudioClip[] clip;         // ought to be 6 audioclips
     #endregion
     #region private variables
+//    RailManager railManager = new RailManager();
     [SerializeField] private BoxCollider2D _backgroundBoxCollider;
     Vector2 sizeDeltaAsFactor;
     AudioSource audioSource;
@@ -36,7 +37,8 @@ public class RailMusicManager : MonoBehaviour
     double minX, maxX;
     private float railWidthAbsolute = 1670.4f;
     int maxTimeInSec, currentClip;
-    GameObject[] figCounterCircle, figureObjects;
+    GameObject[] figureObjects;
+    [SerializeField] TextMeshProUGUI[] figCounterCircle;
     int currentClickedObjectIndex, sampleButtonPressed;
     int currentClickedInstanceObjectIndex;
     private float currentLossyScale, tmpTime;
@@ -72,7 +74,7 @@ public class RailMusicManager : MonoBehaviour
         figureObjects = new GameObject[objectLibrary.transform.childCount];
         objectShelfPosition = new Vector2[figureObjects.Length];
         objectShelfParent = new GameObject[figureObjects.Length];
-        figCounterCircle = new GameObject[figureObjects.Length];
+        //figCounterCircle = new GameObject[figureObjects.Length];
 
         colMusic = new Color(0.21f, 0.51f, 0.267f, 0.5f);
         colMusicHighlighted = new Color(0.21f, 0.81f, 0.267f, 0.5f);
@@ -96,8 +98,8 @@ public class RailMusicManager : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
         for (int i = 0; i < figureObjects.Length; i++)
         {
-            figCounterCircle[i] = figureObjects[i].transform.parent.GetChild(2).gameObject;
-            figCounterCircle[i].transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "0";
+            //figCounterCircle[i] = figureObjects[i].transform.parent.GetChild(2).gameObject;
+            figCounterCircle[i].text = "0";
         }
 
         List<GameObject> timelineObjects = new List<GameObject>();
@@ -369,7 +371,7 @@ public class RailMusicManager : MonoBehaviour
     public void removeObjectFromTimeline(GameObject obj)
     {
         int tmpNr = int.Parse(obj.transform.GetChild(1).name.Substring(12));
-        int currentCounterNr = int.Parse(figCounterCircle[tmpNr - 1].transform.GetChild(0).GetComponent<Text>().text);
+        int currentCounterNr = int.Parse(figCounterCircle[tmpNr - 1].text);
 
         // erase from layer list
         if (figuresLayer1.Contains(obj))
@@ -405,7 +407,7 @@ public class RailMusicManager : MonoBehaviour
 
         Destroy(obj);
         timelineInstanceObjects.Remove(obj);
-        figCounterCircle[tmpNr - 1].transform.GetChild(0).GetComponent<Text>().text = (currentCounterNr - 1).ToString();
+        figCounterCircle[tmpNr - 1].text = (currentCounterNr - 1).ToString();
         StaticSceneData.StaticData.musicClipElements[Int32.Parse(obj.name.Substring(6, 2)) - 1].musicClipElementInstances.Remove(StaticSceneData.StaticData.musicClipElements[Int32.Parse(obj.name.Substring(6, 2)) - 1].musicClipElementInstances[Int32.Parse(obj.name.Substring(17, 3))]);
 
         // falls nach dem loeschen nichts mehr ueberlappt, dann alles gross skalieren
@@ -462,7 +464,7 @@ public class RailMusicManager : MonoBehaviour
         //count objects from same kind
         int countName = 0;
         countName = countCopiesOfObject(figureObjects[musObjNr], timelineInstanceObjects);
-        figCounterCircle[musObjNr].transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = (countName + 1).ToString();
+        figCounterCircle[musObjNr].text = (countName + 1).ToString();
         newCopyOfFigure.name = figureObjects[musObjNr].name + "_instance" + countName.ToString("000");
         RectTransform tmpRectTransform = newCopyOfFigure.GetComponent<RectTransform>();
 
@@ -1361,7 +1363,7 @@ public class RailMusicManager : MonoBehaviour
 
             else if (releaseOnTimeline == true)
             {
-                if (releaseObjMousePos == getMousePos)  //if release obj-pos and release mouse-button-pos is the same
+                if (releaseObjMousePos == getMousePos)  
                 {
                     //create a copy of this timelineObject and keep the original one
                     newCopyOfFigure = Instantiate(figureObjects[currentClickedObjectIndex]);
@@ -1380,30 +1382,31 @@ public class RailMusicManager : MonoBehaviour
 
                     createRectangle(newCopyOfFigure, gameObject.GetComponent<RectTransform>().rect.height, tmpLength);
 
-                    figCounterCircle[currentClickedObjectIndex].transform.GetChild(0).GetComponent<Text>().text = (countName + 1).ToString();
+                    figCounterCircle[currentClickedObjectIndex].text = (countName + 1).ToString();
 
                     //parent and position
                     newCopyOfFigure.transform.SetParent(gameObject.transform);
                     newCopyOfFigure.transform.localScale = Vector3.one;
 
                     //------------------------------------------limit front of rail---------------------------------------------//
-                    if (figureObjects[currentClickedObjectIndex].GetComponent<RectTransform>().position.x < (minX + 0.03f * Screen.width))  // 50 is half the box Collider width (mouse pos is in the middle of the figure)
+                    if (figureObjects[currentClickedObjectIndex].GetComponent<RectTransform>().position.x < minX )  // 50 is half the box Collider width (mouse pos is in the middle of the figure)
                     {
-                        tmpRectTransform.position = new Vector3((float)minX + 0.03f * Screen.width, figureObjects[currentClickedObjectIndex].transform.position.y, -1);    // tendenziell muesste das eher in buttonUp
+                        tmpRectTransform.position = new Vector3((float)minX, figureObjects[currentClickedObjectIndex].transform.position.y, -1);    
                     }
                     //------------------------------------------limit back of rail---------------------------------------------//
-                    else if ((tmpRectTransform.anchoredPosition.x + newCopyOfFigure.transform.GetComponent<BoxCollider2D>().size.x) > (GetComponent<RectTransform>().rect.width + 0.03f * Screen.width))
+                    else if ((tmpRectTransform.anchoredPosition.x + tmpLength) > railWidthAbsolute)
                     {
-                        tmpRectTransform.anchoredPosition = new Vector3((GetComponent<RectTransform>().rect.width + (0.03f * Screen.width) - newCopyOfFigure.transform.GetComponent<BoxCollider2D>().size.x), tmpRectTransform.anchoredPosition.y, -1);
+                        tmpRectTransform.position = new Vector2(tmpRectTransform.position.x, figureObjects[currentClickedObjectIndex].transform.position.y);
+                        tmpRectTransform.anchoredPosition = new Vector3((railWidthAbsolute - tmpLength), tmpRectTransform.anchoredPosition.y, -1);
                     }
                     else
                     {
                         newCopyOfFigure.transform.position = new Vector3(figureObjects[currentClickedObjectIndex].transform.position.x, figureObjects[currentClickedObjectIndex].transform.position.y, -1);
                         //Debug.Log("anch pos: "+tmpRectTransform.anchoredPosition.x+", pos: "+newCopyOfFigure.transform.position.x);
+                    // pos to mouse pos
+                    //tmpRectTransform.transform.position = new Vector2(getMousePos.x, tmpRectTransform.transform.position.y);
                     }
 
-                    // pos to mouse pos
-                    tmpRectTransform.transform.position = new Vector2(getMousePos.x, tmpRectTransform.transform.position.y);
 
                     // size of rectangle becomes size for figure that is clickable (bring in front)
                     tmpRectTransform.localPosition = new Vector3(tmpRectTransform.localPosition.x, tmpRectTransform.localPosition.y, -1.0f);
