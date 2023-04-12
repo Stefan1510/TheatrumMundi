@@ -21,13 +21,6 @@ public class DrawCurve : MonoBehaviour
     private float _maxValue;
     //private bool _gameObjectStarted = false;
 
-    // Start is called before the first frame update
-
-    private void Awake()
-    {
-        Debug.Log("ich: " + this.name);
-
-    }
     void Start()
     {
         if(gameController._isExpert)
