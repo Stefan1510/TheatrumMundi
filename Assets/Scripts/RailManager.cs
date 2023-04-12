@@ -51,8 +51,8 @@ public class RailManager : MonoBehaviour
     // Objects Position List
     public class Rail
     {
-        public List<Figure> myObjectsPositionListLayer1 = new List<Figure>();
-        public List<Figure> myObjectsPositionListLayer2 = new List<Figure>();
+        //public List<Figure> myObjectsPositionListLayer1 = new List<Figure>();
+        //public List<Figure> myObjectsPositionListLayer2 = new List<Figure>();
         public List<Figure> myObjects = new List<Figure>();
         //public List<GameObject> timelineInstanceObjects, timelineInstanceObjects3D, figuresLayer1, figuresLayer2; //figuresLayer3, figuresLayer4;
         public int sizeLayering;
@@ -63,6 +63,7 @@ public class RailManager : MonoBehaviour
     {
         public string objName;
         public Vector2 position;        // x ist x-Position (anchoredPosition.x) des objekts, y ist die länge des objekts (sizeDelta.x)
+        public int layer;
         public GameObject figure;
         public GameObject figure3D;
     }
@@ -215,12 +216,12 @@ public class RailManager : MonoBehaviour
 
         return objName;
     }
-    private bool isCurrentFigureOverlapping(int railIndex, Figure obj, bool bothLayers)
+    private bool isCurrentFigureOverlapping(int railIndex, Figure obj)
     {
         bool val = false;
         bool val2 = false;
 
-        for (int i = 0; i < railList[railIndex].myObjectsPositionListLayer1.Count; i++)
+        for (int i = 0; i < railList[railIndex].myObjects.Count; i++)
         {
             //Debug.Log("pos1: " + railList[railIndex].myObjectsPositionListLayer1[i].position.x + ", pos obj: " + obj.position.x);
 
@@ -1239,6 +1240,7 @@ public class RailManager : MonoBehaviour
                     && railList[railIndex].myObjectsPositionListLayer1[i].position.x <= foundIndexLayer1)
                     {
                         foundIndexLayer1 = railList[railIndex].myObjectsPositionListLayer1[i].position.x;
+                        break;
                         // Debug.Log("foundindex1: " + foundIndexLayer1);
                     }
                 }
@@ -1254,6 +1256,7 @@ public class RailManager : MonoBehaviour
                     && railList[railIndex].myObjectsPositionListLayer2[j].position.x <= foundIndexLayer2)
                     {
                         foundIndexLayer2 = railList[railIndex].myObjectsPositionListLayer2[j].position.x;
+                        break;
                         // Debug.Log("foundindex2: " + foundIndexLayer2);
                     }
                 }
