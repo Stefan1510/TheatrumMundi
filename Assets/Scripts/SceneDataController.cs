@@ -342,8 +342,6 @@ public class SceneDataController : MonoBehaviour
                 Destroy(obj.figure3D);
             }
             rail.myObjects.Clear();
-            rail.myObjectsPositionListLayer1.Clear();
-            rail.myObjectsPositionListLayer2.Clear();
             rail.sizeLayering = 1;
             //Debug.Log("rail : "+rail.myObjectsPositionListLayer2.Count);
         }

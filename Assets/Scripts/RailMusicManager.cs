@@ -96,11 +96,11 @@ public class RailMusicManager : MonoBehaviour
         gameObject.GetComponent<BoxCollider2D>().size = new Vector2(railWidthAbsolute, 20);
 
         audioSource = GetComponent<AudioSource>();
-        for (int i = 0; i < figureObjects.Length; i++)
-        {
-            //figCounterCircle[i] = figureObjects[i].transform.parent.GetChild(2).gameObject;
-            figCounterCircle[i].text = "0";
-        }
+        // for (int i = 0; i < figureObjects.Length; i++)
+        // {
+        //     //figCounterCircle[i] = figureObjects[i].transform.parent.GetChild(2).gameObject;
+        //     figCounterCircle[i].text = "0";
+        // }
 
         List<GameObject> timelineObjects = new List<GameObject>();
         List<GameObject> timelineInstanceObjects = new List<GameObject>();

@@ -23,35 +23,35 @@ public class DrawCurve : MonoBehaviour
 
     void Start()
     {
-        if(gameController._isExpert)
+        if (gameController._isExpert)
         {
-        Debug.Log("ich: " +this.name+"____"+ (int)(GetComponent<RectTransform>().rect.height));
-        _textureCurve = new Texture2D((int)(GetComponent<RectTransform>().rect.width), 80, TextureFormat.RGBA32, false); // wird durch Panel RectTransform stretch automatisch gescaled
-        _backColors = new Color32[_textureCurve.width * _textureCurve.height];
-        _backColors = UtilitiesTm.ChangeColors(_backColors, new Color32(255, 255, 255, 31));
-        //_curveColors = new Color32[_textureCurve.width * _textureCurve.height];
-        _curveColors = new Color32[3 * 3];
-        _curveColors = UtilitiesTm.ChangeColors(_curveColors, Color.black);
-        _middleLineColors = new Color32[_textureCurve.width * 2];
-        _middleLineColors = UtilitiesTm.ChangeColors(_middleLineColors, new Color32(224, 224, 224, 224));
-        _maxTime = AnimationTimer.GetMaxTime();
-        _minValue = _valueSlider.minValue;
-        _maxValue = _valueSlider.maxValue;
-        _imagePositionKnob.gameObject.SetActive(false);
-        _imagePositionKnobCollection = new List<Image>();
-        EventTrigger.Entry eventTriggerEntry = new EventTrigger.Entry();
-        eventTriggerEntry.eventID = EventTriggerType.PointerUp;
-        eventTriggerEntry.callback.AddListener((data) => { AddValue((PointerEventData)data); });
-        _valueSlider.GetComponent<EventTrigger>().triggers.Add(eventTriggerEntry);
+            //Debug.Log("ich: " + this.name + "____" + (int)(GetComponent<RectTransform>().rect.height));
+            _textureCurve = new Texture2D((int)(GetComponent<RectTransform>().rect.width), 80, TextureFormat.RGBA32, false); // wird durch Panel RectTransform stretch automatisch gescaled
+            _backColors = new Color32[_textureCurve.width * _textureCurve.height];
+            _backColors = UtilitiesTm.ChangeColors(_backColors, new Color32(255, 255, 255, 31));
+            //_curveColors = new Color32[_textureCurve.width * _textureCurve.height];
+            _curveColors = new Color32[3 * 3];
+            _curveColors = UtilitiesTm.ChangeColors(_curveColors, Color.black);
+            _middleLineColors = new Color32[_textureCurve.width * 2];
+            _middleLineColors = UtilitiesTm.ChangeColors(_middleLineColors, new Color32(224, 224, 224, 224));
+            _maxTime = AnimationTimer.GetMaxTime();
+            _minValue = _valueSlider.minValue;
+            _maxValue = _valueSlider.maxValue;
+            _imagePositionKnob.gameObject.SetActive(false);
+            _imagePositionKnobCollection = new List<Image>();
+            EventTrigger.Entry eventTriggerEntry = new EventTrigger.Entry();
+            eventTriggerEntry.eventID = EventTriggerType.PointerUp;
+            eventTriggerEntry.callback.AddListener((data) => { AddValue((PointerEventData)data); });
+            _valueSlider.GetComponent<EventTrigger>().triggers.Add(eventTriggerEntry);
 
 
-        //Debug.Log("start drawcurve");
-        StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds[0] = new RailElementSpeed { moment = 0, speed = _valueSlider.value };  // im SceneDataController MUSS ein erstes Element hinzugef�gt werden, bevor es hier angesprochen werden kann
-        //StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds[0] = new RailElementSpeed { moment = 0, speed = 1 };  // im SceneDataController MUSS ein erstes Element hinzugef�gt werden, bevor es hier angesprochen werden kann
-        //Debug.LogWarning(_valueSlider.value);
-        StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds.Sort((x, y) => x.moment.CompareTo(y.moment));   // sortiert die railElementSpeeds anhand der Eigenschaft moment
-        ChangeCurve();
-        //_gameObjectStarted = true;
+            //Debug.Log("start drawcurve");
+            StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds[0] = new RailElementSpeed { moment = 0, speed = _valueSlider.value };  // im SceneDataController MUSS ein erstes Element hinzugef�gt werden, bevor es hier angesprochen werden kann
+                                                                                                                                                         //StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds[0] = new RailElementSpeed { moment = 0, speed = 1 };  // im SceneDataController MUSS ein erstes Element hinzugef�gt werden, bevor es hier angesprochen werden kann
+                                                                                                                                                         //Debug.LogWarning(_valueSlider.value);
+            StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds.Sort((x, y) => x.moment.CompareTo(y.moment));   // sortiert die railElementSpeeds anhand der Eigenschaft moment
+            ChangeCurve();
+            //_gameObjectStarted = true;
         }
         else
         {
