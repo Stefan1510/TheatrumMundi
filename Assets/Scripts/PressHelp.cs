@@ -218,9 +218,9 @@ public class PressHelp : MonoBehaviour
         }
         if (_tutorialCounter == -1 && !_isClicked)
         {
-            _idleTimer += Time.deltaTime;
-            if (!_newScene && !SceneManaging.playing)
-                _timerOverlay += Time.deltaTime;
+            // _idleTimer += Time.deltaTime;
+            // if (!_newScene && !SceneManaging.playing)
+                //_timerOverlay += Time.deltaTime;
         }
         if (_idleTimer > _helpAnimWaitTime && !SceneManaging.playing)
         {
@@ -257,8 +257,6 @@ public class PressHelp : MonoBehaviour
                 _newScene = true;
             }
         }
-        // else if (_timerOverlay > 10.5f && !pressed)
-        //     pressed = true;
     }
     public void ClickOnLiveView()
     {

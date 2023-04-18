@@ -51,10 +51,7 @@ public class RailManager : MonoBehaviour
     // Objects Position List
     public class Rail
     {
-        //public List<Figure> myObjectsPositionListLayer1 = new List<Figure>();
-        //public List<Figure> myObjectsPositionListLayer2 = new List<Figure>();
         public List<Figure> myObjects = new List<Figure>();
-        //public List<GameObject> timelineInstanceObjects, timelineInstanceObjects3D, figuresLayer1, figuresLayer2; //figuresLayer3, figuresLayer4;
         public int sizeLayering;
         public bool isTimelineOpen;
     }
@@ -72,13 +69,11 @@ public class RailManager : MonoBehaviour
     #endregion
     void Awake()
     {
-
         float format = (float)Screen.width / (float)Screen.height;
         if (format > 1.78f)
         {
             //Debug.Log("format: "+format);
             float widthNew = Screen.height * 1.77f;
-            // Screen.SetResolution((int)widthNew, (int)Screen.height, true);
         }
 
         if (gameController.GetComponent<UnitySwitchExpertUser>()._isExpert)
@@ -222,23 +217,41 @@ public class RailManager : MonoBehaviour
     private int isCurrentFigureOverlapping(int railIndex, Figure obj, string dir)
     {
         int val = -1;
-        //bool val2 = false;
 
-        for (int i = 0; i < railList[railIndex].myObjects.Count; i++)
+        if (dir == "right")
         {
-            //Debug.Log("pos1: " + railList[railIndex].myObjectsPositionListLayer1[i].position.x + ", pos obj: " + obj.position.x);
-
-            if (((railList[railIndex].myObjects[i].position.x <= obj.position.x
-            && railList[railIndex].myObjects[i].position.x + railList[railIndex].myObjects[i].position.y >= obj.position.x)
-            || (railList[railIndex].myObjects[i].position.x >= obj.position.x
-            && railList[railIndex].myObjects[i].position.x <= obj.position.x + obj.position.y))
-            && railList[railIndex].myObjects[i].objName != obj.objName)
+            for (int i = 0; i < railList[railIndex].myObjects.Count; i++)
             {
-                Debug.Log("name: " + obj.objName + ", anderer: " + railList[railIndex].myObjects[i].objName);
-                val = i;
-                if (dir == "le") break;
+                //Debug.Log("name: " + railList[railIndex].myObjects[i].objName);
+                if (((railList[railIndex].myObjects[i].position.x <= obj.position.x
+                && railList[railIndex].myObjects[i].position.x + railList[railIndex].myObjects[i].position.y >= obj.position.x)
+                || (railList[railIndex].myObjects[i].position.x >= obj.position.x
+                && railList[railIndex].myObjects[i].position.x <= obj.position.x + obj.position.y))
+                && railList[railIndex].myObjects[i].objName != obj.objName)
+                {
+                    val = i;
+                    //Debug.Log("re name: " + railList[railIndex].myObjects[val].objName);
+                    break;
+                }
             }
         }
+        else
+        {
+            for (int i = railList[railIndex].myObjects.Count - 1; i >= 0; i--)
+            {
+                if (((railList[railIndex].myObjects[i].position.x <= obj.position.x
+                && railList[railIndex].myObjects[i].position.x + railList[railIndex].myObjects[i].position.y >= obj.position.x)
+                || (railList[railIndex].myObjects[i].position.x >= obj.position.x
+                && railList[railIndex].myObjects[i].position.x <= obj.position.x + obj.position.y))
+                && railList[railIndex].myObjects[i].objName != obj.objName)
+                {
+                    val = i;
+                    //Debug.Log("val: " + railList[railIndex].myObjects[val].objName);
+                    break;
+                }
+            }
+        }
+
         return val;
     }
     public void openTimelineByClick(bool thisTimelineOpen, int index, bool fromShelf)
@@ -502,11 +515,6 @@ public class RailManager : MonoBehaviour
     {
         fig.transform.position = new Vector3(fig.transform.position.x, y, -1.0f);
     }
-    // public void updateObjectList(List<Figure> objects, Figure obj)
-    // {
-    //     //check if the object is already in list
-    //     if (!objects.Contains(obj)) objects.Add(obj);
-    // }
     public void createRectangle(GameObject obj, Color col, double rectHeight)
     {
         double tmpLength = rectSize;//calcSecondsToPixel(objectAnimationLength, maxTimeInSec) / 2 + 25;
@@ -523,47 +531,7 @@ public class RailManager : MonoBehaviour
         tempColor.a = 0.5f;
         image.color = tempColor;
 
-        // if (defaultBox)
-        // {
-        //     trans.anchoredPosition = new Vector2(0, 0);
-        //     tmpLength = 100;
-        // }
-        // else
-        // {
         trans.SetSiblingIndex(0);
-        // }
-        // RectTransform trans;
-        // GameObject imgObject;
-        // Image image;
-        // double tmpLength;
-
-        // if (defaultBox)
-        // {
-        //     imgObject = new GameObject("RectBackground");
-        //     trans = imgObject.AddComponent<RectTransform>();
-        //     trans.anchoredPosition = new Vector2(0, 0);
-        //     tmpLength = 100;
-        //     image = imgObject.AddComponent<Image>();
-
-        // }
-        // else
-        // {
-        //     imgObject = obj.transform.GetChild(0).gameObject;
-        //     tmpLength = rectSize;//calcSecondsToPixel(objectAnimationLength, maxTimeInSec) / 2 + 25;
-        //     trans = obj.transform.GetChild(1).GetComponent<RectTransform>(); // hier ist rect noch an stelle 1
-        //     trans.anchoredPosition = new Vector2(-50, 0);
-        //     image = imgObject.GetComponent<Image>();
-        // }
-
-        // trans.transform.SetParent(obj.transform); // setting parent
-        // trans.SetSiblingIndex(0);
-        // trans.sizeDelta = new Vector2((float)tmpLength, (float)rectHeight);    //size related to animationLength
-        // image.color = col;
-        // var tempColor = image.color;
-        // tempColor.a = 0.5f;
-        // image.color = tempColor;
-        // trans.localScale = Vector3.one;
-
     }
     public int countCopiesOfObject(string fig)
     {
@@ -629,7 +597,8 @@ public class RailManager : MonoBehaviour
     public GameObject CreateNew2DInstance(int figureNr, float momentOrPosX, int loadFromFile, int savedLayer, bool saveToSceneData)   // if layer = -1, then new instance, else layer has been saved
     {
         GameObject curr3DObject;
-        if (loadFromFile != -1) currentRailIndex = loadFromFile;
+        if (loadFromFile != -1)
+            currentRailIndex = loadFromFile;
 
         int countName = 0;
         countName = countCopiesOfObject(figureObjects[figureNr].name);
@@ -642,6 +611,7 @@ public class RailManager : MonoBehaviour
         newCopyOfFigure = Instantiate(figureObjects[figureNr]);
         newCopyOfFigure.name = figureObjects[figureNr].name + "instance" + countName.ToString("000");
         RectTransform tmpRectTransform = newCopyOfFigure.GetComponent<RectTransform>();
+
         //add object to list which objects are on timeline, set placed figures to timelineInstanceObjects-list
         //parent and position
         newCopyOfFigure.transform.SetParent(rails[currentRailIndex].transform);
@@ -705,10 +675,8 @@ public class RailManager : MonoBehaviour
                 oP.position = new Vector2(50, oP.position.y);
 
                 float moment = UtilitiesTm.FloatRemap((tmpRectTransform.anchoredPosition.x - 50), 0, railwidthAbsolute, 0, AnimationTimer.GetMaxTime());
-                // Debug.Log("hi: moment " + moment);
 
                 objectAnimationLength = rails3D[currentRailIndex].transform.GetChild(0).GetComponent<RailSpeedController>().GetEndTimeFromStartTime(moment);
-                // Debug.Log("hi2");
 
                 rectSize = railwidthAbsolute / (AnimationTimer.GetMaxTime() / objectAnimationLength);
 
@@ -724,10 +692,8 @@ public class RailManager : MonoBehaviour
             else if (tmpRectTransform.anchoredPosition.x + rectSize > railwidthAbsolute)
             {
                 float moment = UtilitiesTm.FloatRemap((tmpRectTransform.anchoredPosition.x - 50), 0, railwidthAbsolute, 0, AnimationTimer.GetMaxTime());
-                //Debug.Log("hi: moment " + moment);
 
                 objectAnimationLength = rails3D[currentRailIndex].transform.GetChild(0).GetComponent<RailSpeedController>().GetEndTimeFromStartTime(moment);
-                //Debug.Log("hi2");
 
                 rectSize = railwidthAbsolute / (AnimationTimer.GetMaxTime() / objectAnimationLength);
 
@@ -746,14 +712,10 @@ public class RailManager : MonoBehaviour
             else
             {
                 float moment = UtilitiesTm.FloatRemap((tmpRectTransform.anchoredPosition.x - 50), 0, railwidthAbsolute, 0, AnimationTimer.GetMaxTime());
-                //Debug.Log("hi: moment " + moment);
 
                 objectAnimationLength = rails3D[currentRailIndex].transform.GetChild(0).GetComponent<RailSpeedController>().GetEndTimeFromStartTime(moment);
-                //Debug.Log("hi2");
 
                 rectSize = railwidthAbsolute / (AnimationTimer.GetMaxTime() / objectAnimationLength);
-
-                //Debug.Log("rect: " + rectSize);
 
                 if (float.IsInfinity(objectAnimationLength))
                 {
@@ -781,6 +743,7 @@ public class RailManager : MonoBehaviour
                     railList[currentRailIndex].sizeLayering = 2;
                     scaleToLayerSize(newCopyOfFigure, 2, rails[currentRailIndex]);
                     oP.layer = 2;
+                    //Debug.Log("layer: " + oP.layer);
 
                     // others to 1
                     for (int i = 0; i < railList[currentRailIndex].myObjects.Count; i++)
@@ -792,11 +755,9 @@ public class RailManager : MonoBehaviour
             }
             else
             {
-                //LookForFreeSpot(oP, currentRailIndex, true);
-
                 FindFreeSpot(oP);
             }
-            railList[currentRailIndex].myObjects = railList[currentRailIndex].myObjects.OrderBy(w => w.position.x).ToList();
+            //railList[currentRailIndex].myObjects = railList[currentRailIndex].myObjects.OrderBy(w => w.position.x).ToList();
 
             #endregion
         }
@@ -834,23 +795,13 @@ public class RailManager : MonoBehaviour
         railList[currentRailIndex].myObjects = railList[currentRailIndex].myObjects.OrderBy(w => w.position.x).ToList();
 
         // linken und rechten nachbarn berechnen
-        CalculateNeighbors(oP, out oP.neighborLeft, out oP.neighborRight);
+        CalculateNeighbors(oP);
 
-        // Debug.Log("________________________________________________________________");
-        // for (int i = 0; i < railList[currentRailIndex].myObjects.Count; i++)
-        // {
-        //     Debug.Log("vector " + i + ": " + railList[currentRailIndex].myObjects[i].position);
-        // }
-        // Debug.Log("______________1_________________");
-        // for (int i = 0; i < railList[currentRailIndex].myObjectsPositionListLayer1.Count; i++)
-        // {
-        //     Debug.Log("vector " + i + ": " + railList[currentRailIndex].myObjectsPositionListLayer1[i].position);
-        // }
-        // Debug.Log("_______________2________________");
-        // for (int i = 0; i < railList[currentRailIndex].myObjectsPositionListLayer2.Count; i++)
-        // {
-        //     Debug.Log("2 vector " + i + ": " + railList[currentRailIndex].myObjectsPositionListLayer2[i].position);
-        // }
+        Debug.LogWarning("________________________________________________________________");
+        for (int i = 0; i < railList[currentRailIndex].myObjects.Count; i++)
+        {
+            Debug.LogWarning("vector " + i + ": " + railList[currentRailIndex].myObjects[i].objName);
+        }
 
         return curr3DObject;
     }
@@ -888,17 +839,17 @@ public class RailManager : MonoBehaviour
         // color field
         flyerSpaces[spaceNr].GetComponent<Image>().color = new Color(.63f, .25f, .1f);
     }
-    private void CalculateNeighbors(Figure fig, out int left, out int right)
+    private void CalculateNeighbors(Figure fig)    // calculates neighbors index
     {
         int index = -1;
-        left = -1;
-        right = -1;
+
         // index der aktuellen figur
         for (int i = 0; i < railList[currentRailIndex].myObjects.Count; i++)
         {
             if (fig.objName == railList[currentRailIndex].myObjects[i].objName)
             {
                 index = i;
+                Debug.Log("i neigbor: " + i);
             }
         }
 
@@ -907,23 +858,27 @@ public class RailManager : MonoBehaviour
         {
             if (railList[currentRailIndex].myObjects[i].layer == fig.layer)
             {
-                right = i;
-                Debug.Log("rechter nachbar: "+railList[currentRailIndex].myObjects[i].objName);
+                fig.neighborRight = i;
+                railList[currentRailIndex].myObjects[i].neighborLeft = index;
+                //Debug.Log("rechter nachbar: " + railList[currentRailIndex].myObjects[i].objName);
+                //Debug.Log("linker nachbar von diesem: " + railList[currentRailIndex].myObjects[index].objName);
+
                 break;
             }
         }
 
         // left neighbor
-        for (int i = index -1; i > 0; i--)
+        for (int i = index - 1; i >= 0; i--)
         {
             if (railList[currentRailIndex].myObjects[i].layer == fig.layer)
             {
-                left = i;
-                Debug.Log("linker nachbar: "+railList[currentRailIndex].myObjects[i].objName);
+                fig.neighborLeft = i;
+                railList[currentRailIndex].myObjects[i].neighborRight = index;
+                //Debug.Log("linker nachbar: " + railList[currentRailIndex].myObjects[i].objName);
+                //Debug.Log("rechter nachbar von diesem: " + railList[currentRailIndex].myObjects[index].objName);
                 break;
             }
         }
-
     }
     public void ResetScreenSize()       // this probably has to be called globally, so that every Menue resizes (probably in the UIController). At the moment it is only scaled properly when rail tab is open e.g.
     {
@@ -980,78 +935,244 @@ public class RailManager : MonoBehaviour
         }
         return val;
     }
+    private void LoopRight(int startIdx, Figure fig, bool fromLeft)
+    {
+        RectTransform rectTransform = fig.figure.GetComponent<RectTransform>();
+
+        for (int i = startIdx; i < railList[currentRailIndex].myObjects.Count; i++)
+        {
+            // wenn es einen rechten nachbarn hat
+            if (railList[currentRailIndex].myObjects[i].neighborRight != -1)
+            {
+                Debug.Log("HAT einen rechten nachbarn");
+                // wenn zwischen den beiden genug platz ist
+                if (railList[currentRailIndex].myObjects[railList[currentRailIndex].myObjects[i].neighborRight].position.x > railList[currentRailIndex].myObjects[i].position.x + railList[currentRailIndex].myObjects[i].position.y + rectSize)
+                {
+                    Debug.Log("es ist genug platz");
+                    if (railList[currentRailIndex].myObjects[i].layer == 1)
+                    {
+                        Debug.Log("layer 1");
+                        scaleToLayerSize(fig.figure, 1, rails[currentRailIndex]);
+                        fig.layer = 1;
+                    }
+                    else
+                    {
+                        Debug.Log("layer 2");
+                        scaleToLayerSize(fig.figure, 2, rails[currentRailIndex]);
+                        fig.layer = 2;
+                    }
+
+                    rectTransform.anchoredPosition = new Vector2(railList[currentRailIndex].myObjects[i].position.x + railList[currentRailIndex].myObjects[i].position.y, rectTransform.anchoredPosition.y);
+
+                    break;
+                }
+                else
+                {
+                    // hier passiert nichts, es muss weiter gesucht werden
+                }
+            }
+            else
+            {
+                Debug.Log("hat KEINEN rechten nachbarn");
+                if (railList[currentRailIndex].myObjects[i].position.x + railList[currentRailIndex].myObjects[i].position.y + rectSize < railwidthAbsolute)
+                {
+                    Debug.Log("platz bis rand");
+                    if (railList[currentRailIndex].myObjects[i].layer == 1)
+                    {
+                        Debug.Log("layer 1");
+                        scaleToLayerSize(fig.figure, 1, rails[currentRailIndex]);
+                        fig.layer = 1;
+                    }
+                    else
+                    {
+                        Debug.Log("layer 2");
+                        scaleToLayerSize(fig.figure, 2, rails[currentRailIndex]);
+                        fig.layer = 2;
+                    }
+
+                    rectTransform.anchoredPosition = new Vector2(railList[currentRailIndex].myObjects[i].position.x + railList[currentRailIndex].myObjects[i].position.y, rectTransform.anchoredPosition.y);
+
+                    break;
+                }
+                else
+                {
+                    if (!fromLeft)
+                    {
+                    Debug.Log("kein platz bis zum rand, es muss links weitergesucht werden");
+                        LoopLeft(startIdx, fig, true);
+                    }
+                    else
+                    {
+                        Debug.Log("ab ins shelf mit dir!");
+                        // ins shelf zurueck!
+                    }
+                    break;
+                    // hier muss links weitergesucht werden
+                }
+            }
+        }
+    }
+    private void LoopLeft(int startIdx, Figure fig, bool fromRight)
+    {
+        RectTransform rectTransform = fig.figure.GetComponent<RectTransform>();
+
+        for (int i = startIdx; i >= 0; i--)
+        {
+            // wenn es einen linken nachbarn hat
+            if (railList[currentRailIndex].myObjects[i].neighborLeft != -1)
+            {
+                Debug.Log("HAT einen linken nachbarn");
+                // wenn zwischen den beiden genug platz ist
+                if (railList[currentRailIndex].myObjects[railList[currentRailIndex].myObjects[i].neighborLeft].position.x + railList[currentRailIndex].myObjects[railList[currentRailIndex].myObjects[i].neighborLeft].position.y + rectSize < railList[currentRailIndex].myObjects[i].position.x)
+                {
+                    Debug.Log("es ist genug platz");
+                    if (railList[currentRailIndex].myObjects[i].layer == 1)
+                    {
+                        Debug.Log("layer 1");
+                        scaleToLayerSize(fig.figure, 1, rails[currentRailIndex]);
+                        fig.layer = 1;
+                    }
+                    else
+                    {
+                        Debug.Log("layer 2");
+                        scaleToLayerSize(fig.figure, 2, rails[currentRailIndex]);
+                        fig.layer = 2;
+                    }
+
+                    rectTransform.anchoredPosition = new Vector2(railList[currentRailIndex].myObjects[i].position.x - rectSize, rectTransform.anchoredPosition.y);
+
+                    break;
+                }
+                else
+                {
+                    // hier passiert nichts, es muss weiter gesucht werden
+                }
+            }
+            else
+            {
+                Debug.Log("hat KEINEN linken nachbarn");
+                if (railList[currentRailIndex].myObjects[i].position.x - rectSize > 50)
+                {
+                    Debug.Log("platz bis rand");
+                    if (railList[currentRailIndex].myObjects[i].layer == 1)
+                    {
+                        Debug.Log("layer 1");
+                        scaleToLayerSize(fig.figure, 1, rails[currentRailIndex]);
+                        fig.layer = 1;
+                    }
+                    else
+                    {
+                        Debug.Log("layer 2");
+                        scaleToLayerSize(fig.figure, 2, rails[currentRailIndex]);
+                        fig.layer = 2;
+                    }
+
+                    rectTransform.anchoredPosition = new Vector2(railList[currentRailIndex].myObjects[i].position.x - rectSize, rectTransform.anchoredPosition.y);
+
+                    break;
+                }
+                else
+                {
+
+                    // hier muss rechts weitergesucht werden
+                    if (!fromRight)
+                    {
+                        Debug.Log("kein platz bis zum rand, es muss rechts weitergesucht werden");
+
+                        LoopRight(startIdx - 1, fig, true);
+                    }
+                    else
+                    {
+                        Debug.Log("ab ins shelf mit dir!");
+                        // ins shelf zurueck!
+                    }
+
+                    break;
+
+                }
+            }
+        }
+    }
     private void FindFreeSpot(Figure fig)
     {
         // find out index in the middle
         int middleIdx;
+        RectTransform rectTransform = fig.figure.GetComponent<RectTransform>();
 
         if (railList[currentRailIndex].myObjects.Count % 2 == 1)
         {
-            middleIdx = (railList[currentRailIndex].myObjects.Count + 1) / 2;
+            middleIdx = ((railList[currentRailIndex].myObjects.Count - 1) / 2) - 1;
         }
         else
         {
-            middleIdx = railList[currentRailIndex].myObjects.Count / 2;
+            middleIdx = (railList[currentRailIndex].myObjects.Count / 2) - 1;
         }
+        //Debug.Log("mitte: " + middleIdx);
 
         // maus ist LINKS vom bereich der figuren
         if (Input.mousePosition.x < railList[currentRailIndex].myObjects[middleIdx].figure.transform.position.x + (railList[currentRailIndex].myObjects[middleIdx].position.y / 2))
         {
-            Debug.Log("maus ist links");
-            int idx = isCurrentFigureOverlapping(currentRailIndex, fig, "le");
+            Debug.Log("_________________MAUS LINKS__________________");
+            int idx = isCurrentFigureOverlapping(currentRailIndex, fig, "left");
             if (idx != -1)
             {
-                // gibt es ein idx + 1?
-                if (idx < railList[currentRailIndex].myObjects.Count)
+                Debug.Log("idx: " + idx);
+                // gibt es ein idx + 1 mit unterschiedlicher Layer?
+                if (idx < railList[currentRailIndex].myObjects.Count - 1 && railList[currentRailIndex].myObjects[idx + 1].layer != railList[currentRailIndex].myObjects[idx].layer
+                && railList[currentRailIndex].myObjects[idx + 1].objName != fig.objName)
                 {
-                    Debug.Log("es gibt ein idx+1");
+                    Debug.Log("es gibt ein idx+1: " + railList[currentRailIndex].myObjects[idx + 1].objName);
 
                     // hat es einen linken nachbarn? 
-                    if (railList[currentRailIndex].myObjects[idx + 1].neighborLeft != -1)
-                    {
-                        Debug.Log("hat einen linken nachbarn");
-                    }
-                    else
-                    {
-                        Debug.Log("hat keinen linken nachbarn");
-                    }
+                    LoopLeft(idx + 1, fig, false);
                 }
                 else
                 {
                     Debug.Log("es gibt kein idx+1");
+                    LoopLeft(idx, fig, false);
                 }
                 // Debug.Log("fig: " + railList[currentRailIndex].myObjects[overlap].objName);
             }
+            else
+            {
+                Debug.Log("not overlapping");
+                scaleToLayerSize(fig.figure, 1, rails[currentRailIndex]);
+                fig.layer = 1;
+            }
         }
+        // maus ist RECHTS vom bereich der figuren
         else
         {
             Debug.Log("maus ist rechts");
-            int idx = isCurrentFigureOverlapping(currentRailIndex, fig, "ri");
+            int idx = isCurrentFigureOverlapping(currentRailIndex, fig, "right");
 
             if (idx != -1)
             {
-                // gibt es ein idx - 1?
-                if (idx > 0)
+                Debug.Log("idx: " + idx);
+                // gibt es ein idx - 1 mit unterschiedlicher Layer?
+                if (idx > 0 && railList[currentRailIndex].myObjects[idx - 1].layer != railList[currentRailIndex].myObjects[idx].layer)
                 {
-                    Debug.Log("es gibt ein idx-1");
+                    Debug.Log("es gibt ein idx-1: " + railList[currentRailIndex].myObjects[idx - 1].objName);
 
                     // hat es einen rechten nachbarn? 
-                    if (railList[currentRailIndex].myObjects[idx + 1].neighborRight != -1)
-                    {
-                        Debug.Log("hat einen rechten nachbarn");
-                    }
-                    else
-                    {
-                        Debug.Log("hat keinen rechten nachbarn");
-                    }
+                    LoopRight(idx - 1, fig, false);
                 }
                 else
                 {
                     Debug.Log("es gibt kein idx-1");
+                    LoopRight(idx, fig, false);
                 }
                 // Debug.Log("fig: " + railList[currentRailIndex].myObjects[overlap].objName);
             }
+            else
+            {
+                Debug.Log("not overlapping");
+                scaleToLayerSize(fig.figure, 1, rails[currentRailIndex]);
+                fig.layer = 1;
+            }
         }
+        fig.position = new Vector2(rectTransform.anchoredPosition.x, rectSize);
+        rectTransform.sizeDelta = new Vector2(rectSize, rectTransform.sizeDelta.y);
     }
     // private void LookForFreeSpot(Figure obj, int railIndex, bool create)
     // {
@@ -1452,36 +1573,8 @@ public class RailManager : MonoBehaviour
             }
         }
     }
-    // public void updateDataWhenOpeningNewScene()
-    // {
-    //     for (int i = 0; i < railList.Length; i++)
-    //     {
-    //         railList[i].myObjectsPositionListLayer1.Clear();
-    //         railList[i].myObjectsPositionListLayer2.Clear();
-
-    //         foreach (Figure figure in railList[i].myObjectsPositionListLayer1)
-    //         {
-    //             Figure oP = new Figure();
-    //             oP.objName = figure.objName;
-    //             oP.position = new Vector2(figure.GetComponent<RectTransform>().anchoredPosition.x, figure.GetComponent<RectTransform>().sizeDelta.x);
-    //             railList[i].myObjectsPositionListLayer1.Add(oP);
-    //             railList[i].myObjectsPositionListLayer1 = railList[i].myObjectsPositionListLayer1.OrderBy(w => w.position.x).ToList();
-    //         }
-    //         foreach (GameObject figure in railList[i].figuresLayer2)
-    //         {
-    //             Figure oP = new Figure();
-    //             oP.objName = figure.name;
-    //             oP.position = new Vector2(figure.GetComponent<RectTransform>().anchoredPosition.x, figure.GetComponent<RectTransform>().sizeDelta.x);
-    //             railList[i].myObjectsPositionListLayer2.Add(oP);
-    //             railList[i].myObjectsPositionListLayer2 = railList[i].myObjectsPositionListLayer2.OrderBy(w => w.position.x).ToList();
-    //         }
-    //         Debug.Log("rail: " + i + ": Count: " + railList[i].myObjectsPositionListLayer1.Count);
-    //     }
-    // }
     void Update()
     {
-        //Debug.Log("modulo: "+(railList[currentRailIndex].myObjects.Count%2)); ///2
-
         if (currentLossyScale != transform.lossyScale.x)    // Abfrage, ob sich lossyScale geaendert hat dann werden die Schienen rescaled
         {
             currentLossyScale = transform.lossyScale.x;
@@ -1980,7 +2073,7 @@ public class RailManager : MonoBehaviour
                         //2D object
                         railList[currentRailIndex].myObjects[currentClickedInstanceObjectIndex].figure.transform.SetParent(rails[hitTimeline].transform);
                         railList[currentRailIndex].myObjects[currentClickedInstanceObjectIndex].figure.transform.GetChild(0).gameObject.SetActive(true);        // set rect active
-                        //3D object
+                                                                                                                                                                //3D object
                         railList[currentRailIndex].myObjects[currentClickedInstanceObjectIndex].figure3D.transform.SetParent(rails3D[currentRailIndex].transform.GetChild(0));
 
                         #region limit front and end of rail
@@ -2086,7 +2179,7 @@ public class RailManager : MonoBehaviour
                                     UpdatePositionVectorInformation(railList[currentRailIndex].myObjects[currentClickedInstanceObjectIndex], railList[currentRailIndex].myObjects, railList[hitTimeline].myObjects);
                                 }
                                 scaleToLayerSize(railList[currentRailIndex].myObjects[currentClickedInstanceObjectIndex].figure, 1, rails[hitTimeline]);
-                                
+
                             } */
                         }
                         #endregion
