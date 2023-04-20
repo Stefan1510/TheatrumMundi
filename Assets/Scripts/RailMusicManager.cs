@@ -259,44 +259,10 @@ public class RailMusicManager : MonoBehaviour
             }
         }
     }
-    // private void scaleObject(GameObject fig, float x, float y, bool boxCollZero)
-    // {
-    //     //scale the object
-    //     fig.GetComponent<RectTransform>().sizeDelta = new Vector2(x, y);
-    //     fig.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(x, y);
-    //     //Debug.Log("fig 1: " + fig.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta.x + ", x: " + x);
-    //     fig.transform.GetChild(1).GetComponent<RectTransform>().sizeDelta = new Vector2(100, y);
-    //     //scale the collider, if object has one
-    //     if (fig.GetComponent<BoxCollider2D>() == true)
-    //     {
-    //         if (boxCollZero)
-    //         {
-    //             // get rid of Box Collider, if scaling down, so timeline can always be clicked
-    //             fig.GetComponent<BoxCollider2D>().enabled = false;
-    //         }
-    //         else
-    //         {
-    //             //scale the collider, if object has one
-    //             fig.GetComponent<BoxCollider2D>().enabled = true;
-    //             fig.GetComponent<BoxCollider2D>().size = new Vector2(fig.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta.x, y);
-    //         }
-    //     }
-    // }
     private void setObjectOnTimeline(GameObject fig, float x, float y)
     {
         fig.transform.position = new Vector2(fig.transform.position.x, y);
         fig.transform.localPosition = new Vector3(fig.transform.localPosition.x, fig.transform.localPosition.y, -1);
-    }
-    private int calculateFigureStartTimeInSec(GameObject fig, double animLength, int maxTimeLengthInSec)
-    {
-        int sec = 0;
-        double tmpX = fig.GetComponent<RectTransform>().position.x - minX + fig.GetComponent<RectTransform>().sizeDelta.x / 2;  //x-pos is screenX from left border, minX is the rail-startpoint
-        Vector2 tmpSize = fig.GetComponent<RectTransform>().sizeDelta;
-        double tmpMinX = (double)tmpX - (tmpSize.x / 2.0f); //if tmpX is the midpoint of figure
-        //get figure minX related to timelineMinX
-        double percentageOfRail = tmpMinX / (maxX - minX);  //max-min=real length, percentage: e.g. 0,3823124 (38%)
-        sec = (int)(((double)maxTimeLengthInSec) * percentageOfRail);
-        return sec;
     }
     private int countCopiesOfObject(GameObject fig, List<GameObject> tlObjs)
     {
@@ -370,20 +336,6 @@ public class RailMusicManager : MonoBehaviour
         //     myObjectsPositionListLayer1 = myObjectsPositionListLayer1.OrderBy(x => x.position.x).ToList();
         // }
     }
-    // private bool checkHittingTimeline(GameObject obj, Vector2 mousePos)
-    // {
-    //     bool hit = false;
-
-    //     Vector2 tlPos = new Vector2(timelineImage.transform.position.x, timelineImage.transform.position.y);
-    //     Vector2 colSize = new Vector2(timelineImage.GetComponent<BoxCollider2D>().size.x, timelineImage.GetComponent<BoxCollider2D>().size.y);
-    //     //if mouse hits the timeline while dragging an object
-    //     if (((mousePos.x <= (tlPos.x + (colSize.x / 2.0f))) && (mousePos.x > (tlPos.x - (colSize.x / 2.0f)))) &&
-    //     ((mousePos.y <= (tlPos.y + (colSize.y / 2.0f))) && (mousePos.y > (tlPos.y - (colSize.y / 2.0f)))))
-    //     {
-    //         hit = true;
-    //     }
-    //     return hit;
-    // }
     public void highlight(GameObject obj, bool highlightOn)
     {
         if (highlightOn)
@@ -418,13 +370,13 @@ public class RailMusicManager : MonoBehaviour
         else
             tmpLength = UtilitiesTm.FloatRemap(newCopyOfFigure.GetComponent<MusicLength>().musicLength, 0, AnimationTimer.GetMaxTime(), 0, (float)gameObject.GetComponent<RectTransform>().rect.width);
 
-        SceneManaging.createRectangle(newCopyOfFigure, colMusic, gameObject.GetComponent<RectTransform>().rect.height, Instantiate(prefabRect), tmpLength);
+        createRectangle(newCopyOfFigure, gameObject.GetComponent<RectTransform>().rect.height,tmpLength);
         //Debug.Log("tmpLength: " + tmpLength);
         SceneManaging.scaleObject(newCopyOfFigure, tmpLength, gameObject.GetComponent<RectTransform>().rect.height, false);
         newCopyOfFigure.transform.GetChild(0).GetComponent<RectTransform>().position = new Vector3(newCopyOfFigure.transform.GetChild(0).gameObject.GetComponent<RectTransform>().position.x, newCopyOfFigure.transform.GetChild(0).gameObject.GetComponent<RectTransform>().position.y, -1);
 
         //parent and position
-        float posX = UtilitiesTm.FloatRemap(moment, 0, AnimationTimer.GetMaxTime(), gameObject.GetComponent<RectTransform>().rect.width / -2, gameObject.GetComponent<RectTransform>().rect.width / 2);
+        float posX = UtilitiesTm.FloatRemap(moment, 0, AnimationTimer.GetMaxTime(), 0, gameObject.GetComponent<RectTransform>().rect.width);
         newCopyOfFigure.transform.SetParent(gameObject.transform);
         newCopyOfFigure.transform.localPosition = new Vector3(posX, 0, -1);
 
@@ -477,6 +429,7 @@ public class RailMusicManager : MonoBehaviour
         RectTransform trans = imgObject.GetComponent<RectTransform>();
         trans.transform.SetParent(obj.transform); // setting parent
         trans.localScale = Vector3.one;
+        
 
         trans.sizeDelta = new Vector2((float)animLength, height); // custom size
         //Debug.Log("size: " + animLength);
@@ -562,8 +515,9 @@ public class RailMusicManager : MonoBehaviour
         int musicCount = 0;
         for (int i = 0; i < timelineInstanceObjects.Count; i++)
         {
-            double startSec = calculateFigureStartTimeInSec(timelineInstanceObjects[i], timelineInstanceObjects[i].GetComponent<MusicLength>().musicLength, maxTimeInSec);
+            double startSec = UtilitiesTm.FloatRemap(timelineInstanceObjects[i].transform.localPosition.x,0, gameObject.GetComponent<RectTransform>().rect.width, 0, AnimationTimer.GetMaxTime());
             double endSec;
+            //Debug.Log("startsec: "+startSec);
             if (!gameController.GetComponent<UnitySwitchExpertUser>()._isExpert)
                 endSec = startSec + 60;
             else
@@ -585,9 +539,8 @@ public class RailMusicManager : MonoBehaviour
     {
         if (GetCurrentMusicCount(out int m, out int n, out int o) == 1)
         {
-            double startSec = calculateFigureStartTimeInSec(timelineInstanceObjects[m], timelineInstanceObjects[m].GetComponent<MusicLength>().musicLength, maxTimeInSec);
+            double startSec = UtilitiesTm.FloatRemap(timelineInstanceObjects[m].transform.localPosition.x,0, gameObject.GetComponent<RectTransform>().rect.width, 0, AnimationTimer.GetMaxTime());
             //Debug.Log("start: " + startSec);
-            //double endSec = calculateMusicEndTimeInSec(timelineInstanceObjects[m], timelineInstanceObjects[m].GetComponent<MusicLength>().musicLength, maxTimeInSec);
             tmpTime = AnimationTimer.GetTime();
 
             anyInstanceIsPlaying = true;
@@ -608,7 +561,7 @@ public class RailMusicManager : MonoBehaviour
         }
         else if (GetCurrentMusicCount(out m, out n, out o) == 2)
         {
-            double startSec = calculateFigureStartTimeInSec(timelineInstanceObjects[n], timelineInstanceObjects[n].GetComponent<MusicLength>().musicLength, maxTimeInSec);
+            double startSec = UtilitiesTm.FloatRemap(timelineInstanceObjects[n].transform.localPosition.x,0, gameObject.GetComponent<RectTransform>().rect.width, 0, AnimationTimer.GetMaxTime());
             float tmpTime = AnimationTimer.GetTime();
             if (!firstTimeSecond) // es switcht von 1 auf 2 musikstuecke gleichzeitig
             {
@@ -676,43 +629,6 @@ public class RailMusicManager : MonoBehaviour
             }
         }
     }
-    // private void scaleDeleteButton(GameObject btn, float posY, float size, float colSize)
-    // {
-    //     btn.transform.GetChild(1).GetChild(0).GetComponent<RectTransform>().anchoredPosition = new Vector3(30, posY, -1);
-    //     btn.transform.GetChild(1).GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(size, size);
-    // }
-    // private void scaleToLayerSize(GameObject obj, int layer)
-    // {
-    //     float rectSize = obj.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta.x;
-
-    //     switch (layer)
-    //     {
-    //         case 0:                 // only one layer
-    //             scaleDeleteButton(obj, 20, 40, 45);
-    //             scaleObject(obj, rectSize, GetComponent<RectTransform>().rect.height, false);      //scale the figure-picture in timeline to x: 100 and y: 80px
-    //             obj.transform.GetComponent<RectTransform>().pivot = new Vector3(obj.transform.GetComponent<RectTransform>().pivot.x, 0.5f, -1);
-    //             obj.GetComponent<BoxCollider2D>().size = new Vector2(obj.transform.GetChild(0).GetComponent<RectTransform>().rect.width, GetComponent<RectTransform>().rect.height);
-    //             // obj.GetComponent<BoxCollider2D>().offset = new Vector2(0, 0);
-    //             obj.GetComponent<BoxCollider2D>().offset = new Vector2(obj.GetComponent<BoxCollider2D>().size.x / 2, 0);
-    //             break;
-    //         case 1:                 // 2 layers, but object in layer 1
-    //             scaleDeleteButton(obj, 0, 35, 40);
-    //             scaleObject(obj, rectSize, GetComponent<RectTransform>().rect.height / 2, false);
-    //             obj.transform.GetComponent<RectTransform>().pivot = new Vector3(obj.transform.GetComponent<RectTransform>().pivot.x, 0, -1);
-    //             obj.GetComponent<BoxCollider2D>().size = new Vector2(obj.transform.GetChild(0).GetComponent<RectTransform>().rect.width, GetComponent<RectTransform>().rect.height / 2);
-    //             // obj.GetComponent<BoxCollider2D>().offset = new Vector2(0, obj.transform.GetChild(0).GetComponent<RectTransform>().rect.height / 2);
-    //             obj.GetComponent<BoxCollider2D>().offset = new Vector2(obj.GetComponent<BoxCollider2D>().size.x / 2, obj.transform.GetChild(0).GetComponent<RectTransform>().rect.height / 2);
-    //             break;
-    //         case 2:                 // 2 layers and object in layer 2
-    //             scaleDeleteButton(obj, 0, 35, 40);
-    //             scaleObject(obj, rectSize, GetComponent<RectTransform>().rect.height / 2, false);
-    //             obj.transform.GetComponent<RectTransform>().pivot = new Vector3(obj.transform.GetComponent<RectTransform>().pivot.x, 1, -1);
-    //             obj.GetComponent<BoxCollider2D>().size = new Vector2(obj.transform.GetChild(0).GetComponent<RectTransform>().rect.width, GetComponent<RectTransform>().rect.height / 2);
-    //             //obj.GetComponent<BoxCollider2D>().offset = new Vector2(0, -obj.transform.GetChild(0).GetComponent<RectTransform>().rect.height / 2);
-    //             obj.GetComponent<BoxCollider2D>().offset = new Vector2(obj.GetComponent<BoxCollider2D>().size.x / 2, -obj.transform.GetChild(0).GetComponent<RectTransform>().rect.height / 2);
-    //             break;
-    //     }
-    // }
     private bool isSomethingOverlapping()
     {
         bool val = false;
@@ -1521,7 +1437,7 @@ public class RailMusicManager : MonoBehaviour
             {
                 int musObjIndex = Int32.Parse(timelineInstanceObjects[i].name.Substring(6, 2)) - 1;
                 int musInsIndex = Int32.Parse(timelineInstanceObjects[i].name.Substring(17));
-                float moment = UtilitiesTm.FloatRemap(timelineInstanceObjects[i].transform.localPosition.x, gameObject.GetComponent<RectTransform>().rect.width / -2, gameObject.GetComponent<RectTransform>().rect.width / 2, 0, AnimationTimer.GetMaxTime());
+                float moment = UtilitiesTm.FloatRemap(timelineInstanceObjects[i].transform.localPosition.x,0, gameObject.GetComponent<RectTransform>().rect.width, 0, AnimationTimer.GetMaxTime());
 
                 StaticSceneData.StaticData.musicClipElements[musObjIndex].musicClipElementInstances[musInsIndex].moment = moment;
                 if (figuresLayer1.Contains(timelineInstanceObjects[i]))

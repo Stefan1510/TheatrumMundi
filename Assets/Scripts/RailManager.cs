@@ -337,7 +337,6 @@ public class RailManager : MonoBehaviour
 
         fig.position = new Vector2(rectTransform.anchoredPosition.x, rectSize);
         rectTransform.sizeDelta = new Vector2(rectSize, rectTransform.sizeDelta.y);
-
     }
     public void highlight(GameObject obj3D, GameObject obj, bool highlightOn)
     {
@@ -463,8 +462,6 @@ public class RailManager : MonoBehaviour
 
         for (int i = startIdx; i < listWithoutCurrentFigure.Count; i++)
         {
-            // if (i != currentClickedInstanceObjectIndex)
-            // {
             // wenn es einen rechten nachbarn hat (nicht sich selbst!)
             if (listWithoutCurrentFigure[i].neighborRight != -1)
             {
@@ -496,14 +493,9 @@ public class RailManager : MonoBehaviour
                 }
                 else
                 {
-                    Debug.Log("nicht genug platz. x: " + (listWithoutCurrentFigure[listWithoutCurrentFigure[i].neighborRight].position.x) + ", Figur: " + (listWithoutCurrentFigure[i].position.y + rectSize));
+                    Debug.Log("nicht genug platz. x: " + (listWithoutCurrentFigure[listWithoutCurrentFigure[i].neighborRight].position.x) + ", Figur: " + (listWithoutCurrentFigure[i].position.x+listWithoutCurrentFigure[i].position.y + rectSize));
                     // hier passiert nichts, es muss weiter gesucht werden
                 }
-                // }
-                // else
-                // {
-                //     Debug.Log("rechter nachbar ist akutelles objekt");
-                // }
             }
             else
             {
@@ -537,7 +529,7 @@ public class RailManager : MonoBehaviour
                     {
                         // hier muss links weitergesucht werden
                         Debug.Log("kein platz bis zum rand, es muss links weitergesucht werden");
-                        LoopLeft(startIdx, fig, true);
+                        LoopLeft(startIdx+1, fig, true);
                     }
                     else
                     {
@@ -567,12 +559,6 @@ public class RailManager : MonoBehaviour
                     break;
                 }
             }
-            // }
-
-            // else
-            // {
-            //     Debug.Log("eigenes obj!");
-            // }
         }
     }
     private void LoopLeft(int startIdx, Figure fig, bool fromRight)
@@ -581,13 +567,9 @@ public class RailManager : MonoBehaviour
 
         for (int i = startIdx; i >= 0; i--)
         {
-            // if (i != currentClickedInstanceObjectIndex)
-            // {
-            // wenn es einen linken nachbarn hat (nicht sich selbst!)
+            // wenn es einen linken nachbarn hat
             if (listWithoutCurrentFigure[i].neighborLeft != -1)
             {
-                // if (listWithoutCurrentFigure[i].neighborLeft != currentClickedInstanceObjectIndex)
-                // {
                 Debug.Log(listWithoutCurrentFigure[i].objName + " HAT einen linken nachbarn: " + listWithoutCurrentFigure[i].neighborLeft);
                 // wenn zwischen den beiden genug platz ist
                 if (listWithoutCurrentFigure[listWithoutCurrentFigure[i].neighborLeft].position.x + listWithoutCurrentFigure[listWithoutCurrentFigure[i].neighborLeft].position.y + rectSize <= listWithoutCurrentFigure[i].position.x)
@@ -617,11 +599,6 @@ public class RailManager : MonoBehaviour
                     Debug.Log("nicht genug platz. x: " + (listWithoutCurrentFigure[i].position.x) + ", Figur: " + (listWithoutCurrentFigure[listWithoutCurrentFigure[i].neighborLeft].position.x + listWithoutCurrentFigure[listWithoutCurrentFigure[i].neighborLeft].position.y + rectSize));
                     // hier passiert nichts, es muss weiter gesucht werden
                 }
-                // }
-                // else
-                // {
-                //     Debug.Log("linker nachbar ist akutelles objekt");
-                // }
             }
             else
             {
@@ -687,11 +664,6 @@ public class RailManager : MonoBehaviour
                     break;
                 }
             }
-            // }
-            // else
-            // {
-            //     Debug.Log("eigenes obj!");
-            // }
         }
     }
     public void openTimelineByClick(bool thisTimelineOpen, int index, bool fromShelf)
@@ -1486,7 +1458,7 @@ public class RailManager : MonoBehaviour
                         FindFreeSpot(currentObj);
                     }
                     // mindestabstand von 50 cm einhalten
-                    //holdMinimumDistance(currentObj, _spaceMax);
+                    holdMinimumDistance(currentObj, _spaceMax);
                 }
                 #endregion
 
