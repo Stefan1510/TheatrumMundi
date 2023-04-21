@@ -253,7 +253,7 @@ public class PressHelp : MonoBehaviour
             {
                 _countdown.SetActive(false);
                 _timerOverlay = 0;
-                StartCoroutine(gameController.GetComponent<SaveFileController>().LoadFileFromWWW("*Musterszene_leer.json", true, false));
+                StartCoroutine(gameController.GetComponent<SaveFileController>().LoadFileFromWWW("*Musterszene_leer.json", "fromCode"));
                 _newScene = true;
             }
         }

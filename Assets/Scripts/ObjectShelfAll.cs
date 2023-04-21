@@ -25,7 +25,7 @@ public class ObjectShelfAll : MonoBehaviour
 
     public GameObject ObjectMenueDirectorMain;
     public GameObject ObjectMenueConfigMain;
-    public GameObject MenueContentRails;
+    public RailManager MenueContentRails;
     public GameObject ButtonMenueConfig;    // Der Button in ObjectMenueDirectorMain der zum ConfigMenu leitet
     public GameObject ButtonMenueDirector;  // Der Button in ObjectMenueConfigMain der zum DirectorMenu leitet
 
@@ -106,6 +106,7 @@ public class ObjectShelfAll : MonoBehaviour
     {
         if (SceneManaging.mainMenuActive == 1 && SceneManaging.configMenueActive == 4 && !SceneManaging.isPreviewLoaded)
         {
+            Debug.Log("komme ihc hier hin?");
             StartCoroutine(panelPreviewNotLoaded.GetComponent<WarningPanelLoad>().WaitForButtonClick());
             StartCoroutine(ButtonShelfI(2));
         }
@@ -155,7 +156,7 @@ public class ObjectShelfAll : MonoBehaviour
             StartCoroutine(ButtonShelfI(5));
             if (fromRail == false)
             {
-                MenueContentRails.GetComponent<RailManager>().openTimelineByClick(false, 0, true);
+                MenueContentRails.openTimelineByClick(false, 0, true);
             }
         }
 
@@ -239,9 +240,13 @@ public class ObjectShelfAll : MonoBehaviour
         }
         if (panelPreviewNotLoaded.GetComponent<WarningPanelLoad>().buttonClicked == "ignore")
         {
+            Debug.Log("hier?");
+
         }
         else if (panelPreviewNotLoaded.GetComponent<WarningPanelLoad>().buttonClicked == "back")
         {
+            Debug.Log("hier?");
+
             shelfNumber = 4;
         }
 
@@ -361,7 +366,7 @@ public class ObjectShelfAll : MonoBehaviour
                 break;
         }
         StaticSceneData.Everything3D();
-        MenueContentRails.GetComponent<RailManager>().PublicUpdate();
+        MenueContentRails.PublicUpdate();
         SceneManaging.isPreviewLoaded = true;
         //overlayWaiting.SetActive(false);
     }

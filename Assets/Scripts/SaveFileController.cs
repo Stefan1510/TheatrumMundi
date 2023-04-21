@@ -11,7 +11,8 @@ public class SaveFileController : MonoBehaviour
     #region variables
     //private string[] _fileList;
     private string _jsonString, loadedFiles, tmpCode;
-    public GameObject contentFileSelect, panelCodeInput, panelSaveShowCode, panelWarningInput, panelWarningInputVisitor, panelOverwrite, menuKulissen, flyer, contentMenueRails;
+    public GameObject contentFileSelect, panelCodeInput, panelSaveShowCode, panelWarningInput, panelWarningInputVisitor, panelOverwrite, menuKulissen, flyer;
+    public RailManager contentMenueRails;
     //[SerializeField] RailManager railManager;
     [SerializeField] private GameObject _dialogSave, _dialogNewScene, _dialogLoadCode;
     [SerializeField] GameObject _borderWarning, _borderLoad;
@@ -29,6 +30,7 @@ public class SaveFileController : MonoBehaviour
     private string _selectedFile, _directorySaves, _basepath;
     private bool _isWebGl, loadFromAwake, _pressOk;
     private int _loadSaveNew;   // 0 = new, 1 = save, 2 = load
+    private string code;
 
     private Color col_grey = new Color(.4f, .4f, .4f, 1);
     private Color col_white = new Color(0.843f, 0.843f, 0.843f, 1);
@@ -101,17 +103,12 @@ public class SaveFileController : MonoBehaviour
     {
         //Debug.Log("hier");
         bool foundName = false;
-        string code = "";
+        //code = "";
         string filePath = "";
         SceneData sceneDataSave = this.GetComponent<SceneDataController>().CreateSceneData();
+        bool isExpert = this.GetComponent<UnitySwitchExpertUser>()._isExpert;
 
-        //Debug.Log(sceneDataSave.fileName);
-        if (sceneDataSave.fileName.Contains("*") || sceneDataSave.fileName.Contains("/"))
-        {
-            panelWarningInput.SetActive(true);
-            panelWarningInput.transform.GetChild(1).GetComponent<Text>().text = "Bitte verwende keine Sonderzeichen im Namen.";
-        }
-        else
+        if (!isExpert)
         {
             StaticSceneData.StaticData.fileName = sceneDataSave.fileName;
             StaticSceneData.StaticData.fileAuthor = sceneDataSave.fileAuthor;
@@ -119,110 +116,119 @@ public class SaveFileController : MonoBehaviour
             StaticSceneData.StaticData.fileDate = sceneDataSave.fileDate;
             string sceneDataSaveString = this.GetComponent<SceneDataController>().CreateJsonFromSceneData(StaticSceneData.StaticData);
 
-            if (overwrite != 1)
+            filePath = code + ".json";
+
+            if (_isWebGl)
             {
-                if (overwrite == 0)
+                StartCoroutine(WriteToServer(sceneDataSaveString, filePath, isExpert));
+            }
+            else
+            {
+                StartCoroutine(WriteToServer(sceneDataSaveString, filePath, isExpert));
+                // WriteFileToDirectory(sceneDataSaveString, filePath);
+            }
+        }
+        else
+        {
+            //Debug.Log(sceneDataSave.fileName);
+            if (sceneDataSave.fileName.Contains("*") || sceneDataSave.fileName.Contains("/"))
+            {
+                panelWarningInput.SetActive(true);
+                panelWarningInput.transform.GetChild(1).GetComponent<Text>().text = "Bitte verwende keine Sonderzeichen im Namen.";
+            }
+            else
+            {
+                StaticSceneData.StaticData.fileName = sceneDataSave.fileName;
+                StaticSceneData.StaticData.fileAuthor = sceneDataSave.fileAuthor;
+                StaticSceneData.StaticData.fileComment = sceneDataSave.fileComment;
+                StaticSceneData.StaticData.fileDate = sceneDataSave.fileDate;
+                string sceneDataSaveString = this.GetComponent<SceneDataController>().CreateJsonFromSceneData(StaticSceneData.StaticData);
+
+                if (overwrite != 1)
                 {
-                    if (!string.IsNullOrEmpty(loadedFiles))
+                    if (overwrite == 0)
                     {
-                        string[] separators = new string[] { "," };
-                        foreach (var word in loadedFiles.Split(separators, System.StringSplitOptions.RemoveEmptyEntries))
+                        if (!string.IsNullOrEmpty(loadedFiles))
                         {
-                            string[] x = word.Split('.');
-                            if (x[0].Substring(6) == sceneDataSave.fileName) // Name is already in loaded files -> overwrite
+                            string[] separators = new string[] { "," };
+                            foreach (var word in loadedFiles.Split(separators, System.StringSplitOptions.RemoveEmptyEntries))
                             {
-                                panelOverwrite.SetActive(true);
-                                foundName = true;
-                                tmpCode = x[0].Substring(0, 6);
+                                string[] x = word.Split('.');
+                                if (x[0].Substring(6) == sceneDataSave.fileName) // Name is already in loaded files -> overwrite
+                                {
+                                    panelOverwrite.SetActive(true);
+                                    foundName = true;
+                                    tmpCode = x[0].Substring(0, 6);
+                                }
                             }
                         }
                     }
-                }
 
-                if (!foundName)
-                {
-                    // wenn kein Name eingegeben wurde
-                    if (string.IsNullOrEmpty(sceneDataSave.fileName.ToString())) // Warnung, dass ein name eingegeben werden muss
+                    if (!foundName)
                     {
-                        // panelWarningInput.SetActive(true);
-                        // panelWarningInput.transform.GetChild(1).GetComponent<Text>().text = "Bitte gib erst einen Namen ein!";
-                        _borderWarning.SetActive(true);
-                        _placeholderTextWarning.color = new Color(1, 0, 0, 0.27f);
-                    }
-                    else
-                    {
-                        // create code if not expert
-                        if (!SceneManaging.isExpert)
+                        // wenn kein Name eingegeben wurde
+                        if (string.IsNullOrEmpty(sceneDataSave.fileName.ToString())) // Warnung, dass ein name eingegeben werden muss
                         {
-                            for (int i = 0; i < 6; i++)
-                            {
-                                int a = UnityEngine.Random.Range(0, characters.Length);
-                                code += characters[a].ToString();
-                            }
-                            filePath = code + sceneDataSave.fileName + ".json";
-                            panelSaveShowCode.SetActive(true);
-                            textShowCode.text = code;
-                            //loadedFiles += filePath + ",";
-
-                            _borderWarning.SetActive(false);
+                            // panelWarningInput.SetActive(true);
+                            // panelWarningInput.transform.GetChild(1).GetComponent<Text>().text = "Bitte gib erst einen Namen ein!";
+                            _borderWarning.SetActive(true);
+                            _placeholderTextWarning.color = new Color(1, 0, 0, 0.27f);
                         }
                         else
                         {
                             filePath = sceneDataSave.fileName + ".json";
                             ClosePanelShowCode(_visitorPanelSave);
-                        }
 
-                        if (sceneDataSaveString.Length != 0)
-                        {
-                            if (_isWebGl)
+                            if (sceneDataSaveString.Length != 0)
                             {
-                                StartCoroutine(WriteToServer(sceneDataSaveString, filePath, true, false));
+                                if (_isWebGl)
+                                {
+                                    StartCoroutine(WriteToServer(sceneDataSaveString, filePath, false));
+                                }
+                                else
+                                {
+                                    StartCoroutine(WriteToServer(sceneDataSaveString, filePath, isExpert));
+                                    // WriteFileToDirectory(sceneDataSaveString, filePath);
+                                }
+                                GenerateFileButton(filePath, true);
                             }
-                            else
-                            {
-                                StartCoroutine(WriteToServer(sceneDataSaveString, filePath, true, this.GetComponent<UnitySwitchExpertUser>()._isExpert));
-                                // WriteFileToDirectory(sceneDataSaveString, filePath);
-                            }
-                            GenerateFileButton(filePath, true);
-                        }
-                        panelOverwrite.SetActive(false);
+                            panelOverwrite.SetActive(false);
 
+                        }
                     }
                 }
-            }
-            else    // overwrite
-            {
-                if (_isWebGl)
+                else    // overwrite
                 {
-                    filePath = tmpCode + sceneDataSave.fileName + ".json";
-                    StartCoroutine(WriteToServer(sceneDataSaveString, filePath, true, true));
-                    panelOverwrite.SetActive(false);
+                    if (_isWebGl)
+                    {
+                        filePath = tmpCode + sceneDataSave.fileName + ".json";
+                        StartCoroutine(WriteToServer(sceneDataSaveString, filePath, true));
+                        panelOverwrite.SetActive(false);
+                    }
+                    else
+                    {
+                        StartCoroutine(WriteToServer(sceneDataSaveString, filePath, true));
+                        // WriteFileToDirectory(sceneDataSaveString, filePath);
+                    }
+                    GenerateFileButton(filePath, true);
                 }
-                else
-                {
-                    StartCoroutine(WriteToServer(sceneDataSaveString, filePath, true, true));
-                    // WriteFileToDirectory(sceneDataSaveString, filePath);
-                }
-                GenerateFileButton(filePath, true);
             }
         }
-
     }
     public void LoadSceneFromTempToStatic()
     {
         if (tempSceneData != null)
         {
             CoulissesManager tmpCoulMan = menuKulissen.GetComponent<CoulissesManager>();
-            RailManager tmpRailMan = contentMenueRails.GetComponent<RailManager>();
 
             for (int i = 0; i < this.GetComponent<UIController>().goButtonSceneryElements.Length; i++)
             {
                 tmpCoulMan.placeInShelf(i);   // alle kulissen zurueck ins shelf
             }
             // alle counter zurueck
-            for (int j = 0; j < tmpRailMan.figCounterCircle.Length; j++)
+            for (int j = 0; j < contentMenueRails.figCounterCircle.Length; j++)
             {
-                tmpRailMan.figCounterCircle[j].text = "0";
+                contentMenueRails.figCounterCircle[j].text = "0";
             }
             for (int k = 0; k < tmpCoulMan.coulisseCounter.Length; k++)
             {
@@ -259,12 +265,13 @@ public class SaveFileController : MonoBehaviour
                 StaticSceneData.StaticData.fileName = "Besucher";
                 loadFromAwake = false;
             }
+            //Debug.Log("hi2");
 
-            // for (int i = 0; i < contentRailsMenue.GetComponent<RailManager>().railList.Length; i++)
+            // for (int i = 0; i < contentRailsMenue.railList.Length; i++)
             // {
-            //     for (int j = 0; j < contentRailsMenue.GetComponent<RailManager>().railList[i].timelineInstanceObjects.Count; j++)
+            //     for (int j = 0; j < contentRailsMenue.railList[i].timelineInstanceObjects.Count; j++)
             //     {
-            //         Debug.Log("after: element: " + contentRailsMenue.GetComponent<RailManager>().railList[i].timelineInstanceObjects[j] + ", size: " + contentRailsMenue.GetComponent<RailManager>().railList[i].timelineInstanceObjects[j].GetComponent<RectTransform>().sizeDelta);
+            //         Debug.Log("after: element: " + contentRailsMenue.railList[i].timelineInstanceObjects[j] + ", size: " + contentRailsMenue.railList[i].timelineInstanceObjects[j].GetComponent<RectTransform>().sizeDelta);
             //     }
             // }
         }
@@ -308,13 +315,13 @@ public class SaveFileController : MonoBehaviour
 
         if (_isWebGl)
         {
-            if (fromCode) StartCoroutine(LoadFileFromWWW(fileName, true, false));
-            else StartCoroutine(LoadFileFromWWW(fileName, false, false));
+            if (fromCode) StartCoroutine(LoadFileFromWWW(fileName, "fromCode"));//true, false));
+            else StartCoroutine(LoadFileFromWWW(fileName, ""));
         }
         else
         {
-            if (fromCode) StartCoroutine(LoadFileFromWWW(fileName, true, false));            // LoadFileFromDirectory(fileName);
-            else StartCoroutine(LoadFileFromWWW(fileName, false, false));
+            if (fromCode) StartCoroutine(LoadFileFromWWW(fileName, "fromCode"));            // LoadFileFromDirectory(fileName);
+            else StartCoroutine(LoadFileFromWWW(fileName, ""));
 
         }
     }
@@ -393,7 +400,6 @@ public class SaveFileController : MonoBehaviour
     //}
     private IEnumerator LoadFilesFromServer(bool loadFromCode, string code, bool fromAwake)
     {
-
         WWWForm form = new WWWForm();
         // UnityWebRequest uwr = UnityWebRequest.Post(_basepath + "LoadFileNames.php", form);
         // yield return uwr;
@@ -403,6 +409,8 @@ public class SaveFileController : MonoBehaviour
         string line = www.text;
         string[] arr = line.Split('?');
         bool found = false;
+
+        //TODO: fuer besucherversion: wenn eintrag gleich eingegebener name
 
         // code laden
         if (loadFromCode)
@@ -418,7 +426,6 @@ public class SaveFileController : MonoBehaviour
             // string eingegeben
             else
             {
-                Debug.Log("arr: " + arr);
                 foreach (string fileEntry in arr)
                 {
                     if (fileEntry.Length > 6)
@@ -501,7 +508,7 @@ public class SaveFileController : MonoBehaviour
         }
         if (fromAwake)
         {
-            StartCoroutine(LoadFileFromWWW("*Musterszene_leer.json", true, false));
+            StartCoroutine(LoadFileFromWWW("*Musterszene_leer.json", "fromCode"));
         }
 
     }
@@ -526,7 +533,7 @@ public class SaveFileController : MonoBehaviour
     //     }
     //     fileSelectButton.gameObject.SetActive(false);
     // }
-    private IEnumerator WriteToServer(string json, string filePath, bool save, bool isExpert)
+    private IEnumerator WriteToServer(string json, string filePath, bool isExpert)
     {
         WWWForm form = new WWWForm();
         form.AddField("pathFile", filePath);
@@ -540,10 +547,10 @@ public class SaveFileController : MonoBehaviour
         yield return StartCoroutine(LoadFilesFromServer(false, "", false));
         if (!isExpert)
         {
-            _textSaveInputName.text = "Bitte schreibe dir deinen Code auf: ";
+            //_textSaveInputName.text = "Bitte schreibe dir deinen Code auf: ";
             //_inputFieldSaveName.GetComponent<InputField>().enabled = false;
             //_inputFieldSaveName.GetComponent<Image>().color = col_grey;
-            _showSavedCode.transform.GetChild(0).GetComponent<Text>().text = filePath.Substring(0, 6);
+            // _showSavedCode.transform.GetChild(0).GetComponent<Text>().text = filePath.Substring(0, 6);
             _placeholderTextWarning.text = "";
             _loadSaveNew = 3;
         }
@@ -558,7 +565,7 @@ public class SaveFileController : MonoBehaviour
          // ShowFilesFromDirectory();
          StartCoroutine(LoadFilesFromServer(false));
      }*/
-    public IEnumerator LoadFileFromWWW(string fileName, bool fromCode, bool fromFlyer)
+    public IEnumerator LoadFileFromWWW(string fileName, string status) //bool fromCode, bool fromFlyer)
     {
         // UnityWebRequest uwr = UnityWebRequest.Get(_basepath + "Saves/" + fileName);
         // yield return uwr;
@@ -583,63 +590,69 @@ public class SaveFileController : MonoBehaviour
         sceneContentData += "Lichter: " + this.GetComponent<SceneDataController>().countActiveLightElements.ToString() + "\n\n";
         sceneContentData += "Musik: " + this.GetComponent<SceneDataController>().countActiveMusicClips.ToString() + "\n\n";
         textFileContentData.text = sceneContentData;
-        if (fromCode)
+        if (status == "fromCode")
         {
             LoadSceneFromTempToStatic();
             _canvas.GetComponent<ObjectShelfAll>().ButtonShelf02();
         }
-        //contentRailsMenue.GetComponent<RailManager>().updateDataWhenOpeningNewScene();
-        else if (fromFlyer)
+
+        else if (status == "fromFlyerCreate")
         {
             LoadSceneFromTempToStatic();
             if (SceneManaging.flyerSpace[0] != -1)
             {
                 //Debug.Log("1");
-                contentMenueRails.GetComponent<RailManager>().CreateNew2DInstance(SceneManaging.flyerSpace[0], 0, 0, 0, true);
+                contentMenueRails.CreateNew2DInstance(SceneManaging.flyerSpace[0], 0, 0, 0, true);
             }
             if (SceneManaging.flyerSpace[1] != -1)
             {
                 //Debug.Log("2");
-                contentMenueRails.GetComponent<RailManager>().CreateNew2DInstance(SceneManaging.flyerSpace[1], 30, 1, 0, true);
+                contentMenueRails.CreateNew2DInstance(SceneManaging.flyerSpace[1], 30, 1, 0, true);
             }
             if (SceneManaging.flyerSpace[2] != -1)
             {
                 Debug.Log("3");
-                contentMenueRails.GetComponent<RailManager>().CreateNew2DInstance(SceneManaging.flyerSpace[2], 40, 4, 0, true);
+                contentMenueRails.CreateNew2DInstance(SceneManaging.flyerSpace[2], 40, 4, 0, true);
             }
             if (SceneManaging.flyerSpace[3] != -1)
             {
                 Debug.Log("4");
-                contentMenueRails.GetComponent<RailManager>().CreateNew2DInstance(SceneManaging.flyerSpace[3], 70, 2, 0, true);
+                contentMenueRails.CreateNew2DInstance(SceneManaging.flyerSpace[3], 70, 2, 0, true);
             }
             if (SceneManaging.flyerSpace[4] != -1)
             {
                 //Debug.Log("5");
-                contentMenueRails.GetComponent<RailManager>().CreateNew2DInstance(SceneManaging.flyerSpace[4], 85, 1, 0, true);
+                contentMenueRails.CreateNew2DInstance(SceneManaging.flyerSpace[4], 85, 1, 0, true);
             }
             if (SceneManaging.flyerSpace[5] != -1)
             {
                 //Debug.Log("6");
-                contentMenueRails.GetComponent<RailManager>().CreateNew2DInstance(SceneManaging.flyerSpace[5], 90, 0, 0, true);
+                contentMenueRails.CreateNew2DInstance(SceneManaging.flyerSpace[5], 90, 0, 0, true);
             }
             if (SceneManaging.flyerSpace[6] != -1)
             {
                 //Debug.Log("7");
-                contentMenueRails.GetComponent<RailManager>().CreateNew2DInstance(SceneManaging.flyerSpace[6], 100, 3, 0, true);
+                contentMenueRails.CreateNew2DInstance(SceneManaging.flyerSpace[6], 100, 3, 0, true);
             }
             if (SceneManaging.flyerSpace[7] != -1)
             {
                 //Debug.Log("8");
-                contentMenueRails.GetComponent<RailManager>().CreateNew2DInstance(SceneManaging.flyerSpace[7], 120, 4, 0, true);
+                contentMenueRails.CreateNew2DInstance(SceneManaging.flyerSpace[7], 120, 4, 0, true);
             }
             if (SceneManaging.flyerSpace[8] != -1)
             {
                 //Debug.Log("9");
-                contentMenueRails.GetComponent<RailManager>().CreateNew2DInstance(SceneManaging.flyerSpace[8], 130, 5, 0, true);
+                contentMenueRails.CreateNew2DInstance(SceneManaging.flyerSpace[8], 130, 5, 0, true);
             }
 
             flyer.SetActive(false);
             SceneManaging.flyerActive = false;
+        }
+        else if (status == "fromFlyerDelete")
+        {
+            LoadSceneFromTempToStatic();
+            //_canvas.GetComponent<ObjectShelfAll>().ButtonShelf02();
+            // _canvas.GetComponent<ObjectShelfAll>().ButtonShelf05(false);
         }
     }
     // private void LoadFileFromDirectory(string fileName)
@@ -701,7 +714,7 @@ public class SaveFileController : MonoBehaviour
     }
     public void OnClickNewScene()
     {
-        StartCoroutine(LoadFileFromWWW("*Musterszene_leer.json", true, false));
+        StartCoroutine(LoadFileFromWWW("*Musterszene_leer.json", "fromCode"));
         ClosePanelShowCode(_visitorPanelSave);
     }
     public void OnClickSaveTabs(int loadSaveNew)
@@ -715,6 +728,13 @@ public class SaveFileController : MonoBehaviour
                 _loadSaveNew = 1;
                 break;
             case 2: // Save Scene
+                code = "";
+                for (int i = 0; i < 6; i++)
+                {
+                    int a = UnityEngine.Random.Range(0, characters.Length);
+                    code += characters[a].ToString();
+                }
+                _showSavedCode.transform.GetChild(0).GetComponent<Text>().text = code;//filePath.Substring(0, 6);
                 _loadSaveNew = 2;
                 break;
         }
@@ -732,6 +752,7 @@ public class SaveFileController : MonoBehaviour
                 break;
             case 2:
                 SaveSceneToFile(0);
+                ClosePanelShowCode(_visitorPanelSave);
                 break;
             case 3:
                 ClosePanelShowCode(_visitorPanelSave);
@@ -754,7 +775,7 @@ public class SaveFileController : MonoBehaviour
         _placeholderTextWarning.color = new Color(.2f, .2f, .2f, 0.27f);
         //_placeholderTextLoadWarning.color = new Color(.2f, .2f, .2f, 0.27f);
 
-        _textSaveInputName.text = "Zum Speichern auf OK drücken.";
+        _textSaveInputName.text = "Bitte schreibe dir deinen Code auf: ";
         //_inputFieldSaveName.GetComponent<InputField>().enabled = true;
         //_inputFieldSaveName.GetComponent<Image>().color = col_white; 
         //_inputFieldSaveName.transform.GetChild(2).GetComponent<Text>().text = "";

@@ -11,8 +11,6 @@ public class RailMusicManager : MonoBehaviour
     #region public variables
     [HideInInspector] public List<ObjectsPoint> myObjectsPositionListLayer1 = new List<ObjectsPoint>();
     [HideInInspector] public List<ObjectsPoint> myObjectsPositionListLayer2 = new List<ObjectsPoint>();
-    [HideInInspector] public Image timelineImage;
-    public GameObject gameController, UICanvas, contentRailsMenue;
     [HideInInspector] public bool isTimelineOpen;
     public GameObject objectLibrary, parentMenue; // mainMenue
     [HideInInspector] public List<GameObject> timelineInstanceObjects, figuresLayer1, figuresLayer2;
@@ -20,7 +18,9 @@ public class RailMusicManager : MonoBehaviour
     public AudioClip[] clip;         // ought to be 6 audioclips
     #endregion
     #region private variables
-    //    RailManager railManager = new RailManager();
+    [SerializeField] Image timelineImage;
+    [SerializeField] private GameObject gameController, UICanvas;
+    [SerializeField] RailManager contentRailsMenue;
     [SerializeField] private BoxCollider2D _backgroundBoxCollider;
     [SerializeField] private GameObject prefabRect;
     Vector2 sizeDeltaAsFactor;
@@ -31,7 +31,6 @@ public class RailMusicManager : MonoBehaviour
     GameObject[] objectShelfParent;
     GameObject newCopyOfFigure;
     Color colMusic, colMusicHighlighted;
-    //float heightClosed, heightOpened;
     bool anyInstanceIsPlaying = false, firstTimeSecond = false;
     bool onlyPiecefinished = true, _toBeRemoved;
     Vector2 releaseObjMousePos, diff;
@@ -55,7 +54,6 @@ public class RailMusicManager : MonoBehaviour
     #endregion
     void Awake()
     {
-        timelineImage = this.GetComponent<Image>();
         minX = timelineImage.transform.position.x;
         maxX = minX + timelineImage.GetComponent<RectTransform>().sizeDelta.x;
         clip = gameController.GetComponent<SceneDataController>().objectsMusicClips;
@@ -146,26 +144,26 @@ public class RailMusicManager : MonoBehaviour
         {
             for (int i = 0; i < timelineInstanceObjects.Count; i++)
             {
-                highlight(timelineInstanceObjects[i], false);
+                SceneManaging.highlight(null, timelineInstanceObjects[i], false, false);
             }
         }
         else
         {
             // a different rail is open - close it
-            for (int i = 0; i < contentRailsMenue.GetComponent<RailManager>().railList.Length; i++)
+            for (int i = 0; i < contentRailsMenue.railList.Length; i++)
             {
-                if (contentRailsMenue.GetComponent<RailManager>().railList[i].isTimelineOpen)
+                if (contentRailsMenue.railList[i].isTimelineOpen)
                 {
-                    contentRailsMenue.GetComponent<RailManager>().rails[i].GetComponent<RectTransform>().sizeDelta = new Vector2(timelineImage.rectTransform.rect.width, 20);
-                    contentRailsMenue.GetComponent<RailManager>().rails[i].GetComponent<BoxCollider2D>().size = new Vector2(timelineImage.GetComponent<BoxCollider2D>().size.x, 20);
-                    contentRailsMenue.GetComponent<RailManager>().railList[i].isTimelineOpen = false;
-                    for (int j = 0; j < contentRailsMenue.GetComponent<RailManager>().railList[i].myObjects.Count; j++)
+                    contentRailsMenue.rails[i].GetComponent<RectTransform>().sizeDelta = new Vector2(timelineImage.rectTransform.rect.width, 20);
+                    contentRailsMenue.rails[i].GetComponent<BoxCollider2D>().size = new Vector2(timelineImage.GetComponent<BoxCollider2D>().size.x, 20);
+                    contentRailsMenue.railList[i].isTimelineOpen = false;
+                    for (int j = 0; j < contentRailsMenue.railList[i].myObjects.Count; j++)
                     {
-                        contentRailsMenue.GetComponent<RailManager>().highlight(contentRailsMenue.GetComponent<RailManager>().railList[i].myObjects[j].figure3D, contentRailsMenue.GetComponent<RailManager>().railList[i].myObjects[j].figure, false);
-                        contentRailsMenue.GetComponent<RailManager>().openCloseObjectInTimeline(true, contentRailsMenue.GetComponent<RailManager>().railList[i].myObjects, i);
+                        SceneManaging.highlight(contentRailsMenue.railList[i].myObjects[j].figure3D, contentRailsMenue.railList[i].myObjects[j].figure, false, true);
+                        contentRailsMenue.openCloseObjectInTimeline(true, contentRailsMenue.railList[i].myObjects, i);
                     }
                 }
-                contentRailsMenue.GetComponent<RailManager>().openCloseObjectInTimeline(false, contentRailsMenue.GetComponent<RailManager>().railList[i].myObjects, i);
+                contentRailsMenue.openCloseObjectInTimeline(false, contentRailsMenue.railList[i].myObjects, i);
             }
             for (int k = 0; k < 2; k++)
             {
@@ -336,21 +334,6 @@ public class RailMusicManager : MonoBehaviour
         //     myObjectsPositionListLayer1 = myObjectsPositionListLayer1.OrderBy(x => x.position.x).ToList();
         // }
     }
-    public void highlight(GameObject obj, bool highlightOn)
-    {
-        if (highlightOn)
-        {
-            obj.transform.GetChild(0).GetComponent<Image>().color = colMusicHighlighted;
-            obj.transform.GetChild(1).GetChild(0).gameObject.SetActive(true);   //show Delete-Button
-            SceneManaging.highlighted = true;
-        }
-        else
-        {
-            obj.transform.GetChild(0).GetComponent<Image>().color = colMusic;
-            obj.transform.GetChild(1).GetChild(0).gameObject.SetActive(false);  //hide Delete-Button
-            SceneManaging.highlighted = false;
-        }
-    }
     public void CreateNew2DInstance(int musObjNr, float moment, float savedLayer)
     {
         //create a copy of this timelineObject and keep the original one
@@ -370,7 +353,7 @@ public class RailMusicManager : MonoBehaviour
         else
             tmpLength = UtilitiesTm.FloatRemap(newCopyOfFigure.GetComponent<MusicLength>().musicLength, 0, AnimationTimer.GetMaxTime(), 0, (float)gameObject.GetComponent<RectTransform>().rect.width);
 
-        createRectangle(newCopyOfFigure, gameObject.GetComponent<RectTransform>().rect.height,tmpLength);
+        createRectangle(newCopyOfFigure, gameObject.GetComponent<RectTransform>().rect.height, tmpLength);
         //Debug.Log("tmpLength: " + tmpLength);
         SceneManaging.scaleObject(newCopyOfFigure, tmpLength, gameObject.GetComponent<RectTransform>().rect.height, false);
         newCopyOfFigure.transform.GetChild(0).GetComponent<RectTransform>().position = new Vector3(newCopyOfFigure.transform.GetChild(0).gameObject.GetComponent<RectTransform>().position.x, newCopyOfFigure.transform.GetChild(0).gameObject.GetComponent<RectTransform>().position.y, -1);
@@ -429,7 +412,7 @@ public class RailMusicManager : MonoBehaviour
         RectTransform trans = imgObject.GetComponent<RectTransform>();
         trans.transform.SetParent(obj.transform); // setting parent
         trans.localScale = Vector3.one;
-        
+
 
         trans.sizeDelta = new Vector2((float)animLength, height); // custom size
         //Debug.Log("size: " + animLength);
@@ -515,7 +498,7 @@ public class RailMusicManager : MonoBehaviour
         int musicCount = 0;
         for (int i = 0; i < timelineInstanceObjects.Count; i++)
         {
-            double startSec = UtilitiesTm.FloatRemap(timelineInstanceObjects[i].transform.localPosition.x,0, gameObject.GetComponent<RectTransform>().rect.width, 0, AnimationTimer.GetMaxTime());
+            double startSec = UtilitiesTm.FloatRemap(timelineInstanceObjects[i].transform.localPosition.x, 0, gameObject.GetComponent<RectTransform>().rect.width, 0, AnimationTimer.GetMaxTime());
             double endSec;
             //Debug.Log("startsec: "+startSec);
             if (!gameController.GetComponent<UnitySwitchExpertUser>()._isExpert)
@@ -539,7 +522,7 @@ public class RailMusicManager : MonoBehaviour
     {
         if (GetCurrentMusicCount(out int m, out int n, out int o) == 1)
         {
-            double startSec = UtilitiesTm.FloatRemap(timelineInstanceObjects[m].transform.localPosition.x,0, gameObject.GetComponent<RectTransform>().rect.width, 0, AnimationTimer.GetMaxTime());
+            double startSec = UtilitiesTm.FloatRemap(timelineInstanceObjects[m].transform.localPosition.x, 0, gameObject.GetComponent<RectTransform>().rect.width, 0, AnimationTimer.GetMaxTime());
             //Debug.Log("start: " + startSec);
             tmpTime = AnimationTimer.GetTime();
 
@@ -561,7 +544,7 @@ public class RailMusicManager : MonoBehaviour
         }
         else if (GetCurrentMusicCount(out m, out n, out o) == 2)
         {
-            double startSec = UtilitiesTm.FloatRemap(timelineInstanceObjects[n].transform.localPosition.x,0, gameObject.GetComponent<RectTransform>().rect.width, 0, AnimationTimer.GetMaxTime());
+            double startSec = UtilitiesTm.FloatRemap(timelineInstanceObjects[n].transform.localPosition.x, 0, gameObject.GetComponent<RectTransform>().rect.width, 0, AnimationTimer.GetMaxTime());
             float tmpTime = AnimationTimer.GetTime();
             if (!firstTimeSecond) // es switcht von 1 auf 2 musikstuecke gleichzeitig
             {
@@ -1068,9 +1051,9 @@ public class RailMusicManager : MonoBehaviour
                     //highlighting objects and showing delete button when clicked
                     for (int i = 0; i < timelineInstanceObjects.Count; i++)
                     {
-                        highlight(timelineInstanceObjects[i], false);
+                        SceneManaging.highlight(null,timelineInstanceObjects[i], false, false);
                     }
-                    highlight(timelineInstanceObjects[currentClickedInstanceObjectIndex], true);
+                    SceneManaging.highlight(null,timelineInstanceObjects[currentClickedInstanceObjectIndex],  true, false);
                 }
 
             }
@@ -1080,7 +1063,7 @@ public class RailMusicManager : MonoBehaviour
             {
                 for (int i = 0; i < timelineInstanceObjects.Count; i++)
                 {
-                    highlight(timelineInstanceObjects[i], false);
+                    SceneManaging.highlight(null,timelineInstanceObjects[i],  false, false);
                 }
             }
 
@@ -1264,7 +1247,7 @@ public class RailMusicManager : MonoBehaviour
                     else
                         tmpLength = UtilitiesTm.FloatRemap(newCopyOfFigure.GetComponent<MusicLength>().musicLength, 0, AnimationTimer.GetMaxTime(), 0, (float)gameObject.GetComponent<RectTransform>().rect.width);
 
-                    createRectangle(newCopyOfFigure, tmpLength,gameObject.GetComponent<RectTransform>().rect.height);
+                    createRectangle(newCopyOfFigure, tmpLength, gameObject.GetComponent<RectTransform>().rect.height);
 
                     figCounterCircle[currentClickedObjectIndex].text = (countName + 1).ToString();
 
@@ -1385,9 +1368,9 @@ public class RailMusicManager : MonoBehaviour
 
                     for (int i = 0; i < timelineInstanceObjects.Count; i++)
                     {
-                        highlight(timelineInstanceObjects[i], false);
+                        SceneManaging.highlight(null,timelineInstanceObjects[i],  false, false);
                     }
-                    highlight(timelineInstanceObjects[timelineInstanceObjects.Count - 1], true);
+                    SceneManaging.highlight(null,timelineInstanceObjects[timelineInstanceObjects.Count - 1],  true, false);
 
                     ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1437,7 +1420,7 @@ public class RailMusicManager : MonoBehaviour
             {
                 int musObjIndex = Int32.Parse(timelineInstanceObjects[i].name.Substring(6, 2)) - 1;
                 int musInsIndex = Int32.Parse(timelineInstanceObjects[i].name.Substring(17));
-                float moment = UtilitiesTm.FloatRemap(timelineInstanceObjects[i].transform.localPosition.x,0, gameObject.GetComponent<RectTransform>().rect.width, 0, AnimationTimer.GetMaxTime());
+                float moment = UtilitiesTm.FloatRemap(timelineInstanceObjects[i].transform.localPosition.x, 0, gameObject.GetComponent<RectTransform>().rect.width, 0, AnimationTimer.GetMaxTime());
 
                 StaticSceneData.StaticData.musicClipElements[musObjIndex].musicClipElementInstances[musInsIndex].moment = moment;
                 if (figuresLayer1.Contains(timelineInstanceObjects[i]))

@@ -8,6 +8,10 @@ public class Flyer : MonoBehaviour
     [SerializeField] SaveFileController tmpFileController;
     [SerializeField] GameObject[] _flyerSpaces;
 
+    void Awake()
+    {
+        gameObject.SetActive(false);
+    }
     void Start()
     {
         for (int i = 0; i < SceneManaging.flyerSpace.Length; i++)
@@ -20,7 +24,6 @@ public class Flyer : MonoBehaviour
     {
         // Warning current scene will be deleted
         warningPanel.SetActive(true);
-
     }
     public void ClickCancel()
     {
@@ -29,7 +32,7 @@ public class Flyer : MonoBehaviour
     }
     public void OnClickFillScene()
     {
-        StartCoroutine(tmpFileController.LoadFileFromWWW("Musterszene_Kulissen.json", false, true));
+        StartCoroutine(tmpFileController.LoadFileFromWWW("Musterszene_Kulissen.json", "fromFlyerCreate"));
     }
     public void OnClickWarning(bool cancel)
     {
@@ -44,14 +47,13 @@ public class Flyer : MonoBehaviour
         {
             // disable 'figures in schiene ziehen' in Rail Manager
             SceneManaging.flyerActive = true;
+            objShelfAll.ButtonShelf05(false);
+            gameObject.SetActive(true);
 
             // load new scene
-            gameObject.SetActive(true);
-            objShelfAll.ButtonShelf05(false);
+            StartCoroutine(tmpFileController.LoadFileFromWWW("*Musterszene_leer.json", "fromFlyerDelete"));
+
             warningPanel.SetActive(false);
-
-            StartCoroutine(tmpFileController.LoadFileFromWWW("*Musterszene_leer.json", false, false));
-
             // destroy children
             for (int i = 0; i < _flyerSpaces.Length; i++)
             {
@@ -60,8 +62,8 @@ public class Flyer : MonoBehaviour
                     Destroy(_flyerSpaces[i].transform.GetChild(0).gameObject);
                     // color field
                     _flyerSpaces[i].GetComponent<Image>().color = new Color(.78f, .54f, .44f);
+                    SceneManaging.flyerSpace[i] = -1;
                 }
-
             }
         }
     }

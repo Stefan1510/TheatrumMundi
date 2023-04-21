@@ -19,12 +19,15 @@ public static class SceneManaging
     public static int mainMenuActive;
     public static bool isPreviewLoaded;    // Variable zur Abfrage, ob die Szene in der Vorschau auch geladen wurde.
     public static bool isExpert;
-
     // flyer
     public static bool flyerActive;
     public static int[] flyerSpace = new int[9];
     //timeslider
     public static bool fullscreenOn = false;
+    public static Color _colFigure = new Color(0.06f, 0.66f, .74f, 0.5f);
+    public static Color _colFigureHighlighted = new Color(0f, 0.87f, 1.0f, 0.5f);
+    public static Color _colMusic = new Color(0.21f, 0.51f, 0.267f, 0.5f);
+    public static Color _colMusicHighlighted = new Color(0.21f, 0.81f, 0.267f, 0.5f);
     #endregion
     public static void createRectangle(GameObject obj, Color col, double rectHeight, GameObject prefab, double tmpLength)
     {
@@ -126,5 +129,54 @@ public static class SceneManaging
             }
         }
         return idx;
+    }
+    public static void highlight(GameObject obj3D, GameObject obj, bool highlightOn, bool figure)
+    {
+        Color colHighlighted;
+        Color col;
+
+        if (figure)
+        {
+            colHighlighted = _colFigureHighlighted;
+            col = _colFigure;
+        }
+        else
+        {
+            colHighlighted = _colMusicHighlighted;
+            col = _colMusic;
+        }
+        if (highlightOn)
+        {
+            obj.transform.GetChild(0).GetComponent<Image>().color = colHighlighted;
+            obj.transform.GetChild(1).GetChild(0).gameObject.SetActive(true);   //show Delete-Button
+            SceneManaging.highlighted = true;
+
+            if (obj3D != null)
+            {
+                if (obj3D.GetComponent<FigureStats>().isShip)
+                    obj3D.GetComponent<cakeslice.Outline>().enabled = true;
+                else
+                    obj3D.transform.GetChild(1).GetComponent<cakeslice.Outline>().enabled = true;
+            }
+        }
+        else
+        {
+            obj.transform.GetChild(0).GetComponent<Image>().color = col;
+            obj.transform.GetChild(1).GetChild(0).gameObject.SetActive(false);  //hide Delete-Button
+            SceneManaging.highlighted = false;
+
+            if (obj3D != null)
+            {
+                if (obj3D.GetComponent<FigureStats>().isShip)
+                    obj3D.GetComponent<cakeslice.Outline>().enabled = false;
+                else
+                    obj3D.transform.GetChild(1).GetComponent<cakeslice.Outline>().enabled = false;
+            }
+        }
+    }
+    public static void closeRail(GameObject rail, float railwidthAbsolute)
+    {
+        rail.GetComponent<RectTransform>().sizeDelta = new Vector2(railwidthAbsolute, 20);
+        rail.GetComponent<BoxCollider2D>().size = new Vector2(railwidthAbsolute, 20);
     }
 }
