@@ -1,7 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public static class SceneManaging
 {
@@ -28,6 +28,9 @@ public static class SceneManaging
     public static Color _colFigureHighlighted = new Color(0f, 0.87f, 1.0f, 0.5f);
     public static Color _colMusic = new Color(0.21f, 0.51f, 0.267f, 0.5f);
     public static Color _colMusicHighlighted = new Color(0.21f, 0.81f, 0.267f, 0.5f);
+    public static Color _colFlyerHighlighted = new Color(1, .5f, .25f);
+    public static Color _colFlyer = new Color(.78f, .46f, .31f);
+    public static Color _colFlyerSpace = new Color(.78f, .54f, .44f);
     #endregion
     public static void createRectangle(GameObject obj, Color col, double rectHeight, GameObject prefab, double tmpLength)
     {
@@ -130,47 +133,85 @@ public static class SceneManaging
         }
         return idx;
     }
-    public static void highlight(GameObject obj3D, GameObject obj, bool highlightOn, bool figure)
+    public static void highlight(GameObject obj3D, GameObject obj, bool highlightOn, string type)
     {
         Color colHighlighted;
         Color col;
 
-        if (figure)
+        if (type == "figure")
         {
             colHighlighted = _colFigureHighlighted;
             col = _colFigure;
         }
-        else
+        else if (type == "music")
         {
             colHighlighted = _colMusicHighlighted;
             col = _colMusic;
         }
+        else
+        {
+            colHighlighted = _colFlyerHighlighted;
+            col = _colFlyer;
+        }
         if (highlightOn)
         {
-            obj.transform.GetChild(0).GetComponent<Image>().color = colHighlighted;
-            obj.transform.GetChild(1).GetChild(0).gameObject.SetActive(true);   //show Delete-Button
-            SceneManaging.highlighted = true;
-
-            if (obj3D != null)
+            if (type == "flyer")
             {
-                if (obj3D.GetComponent<FigureStats>().isShip)
-                    obj3D.GetComponent<cakeslice.Outline>().enabled = true;
-                else
-                    obj3D.transform.GetChild(1).GetComponent<cakeslice.Outline>().enabled = true;
+                // Debug.Log("delete button: " + obj.transform.GetChild(1).name);
+                // if (obj.transform.childCount > 1)
+                // {
+                obj.GetComponent<Image>().color = colHighlighted;
+                obj.transform.GetChild(1).GetChild(0).GetChild(0).gameObject.SetActive(true);   //show Delete-Button
+                // }
+                obj.transform.GetChild(0).gameObject.SetActive(true);
+            }
+            else
+            {
+                obj.transform.GetChild(0).GetComponent<Image>().color = colHighlighted;
+                obj.transform.GetChild(1).GetChild(0).gameObject.SetActive(true);   //show Delete-Button
+                SceneManaging.highlighted = true;
+
+                if (obj3D != null)
+                {
+                    if (obj3D.GetComponent<FigureStats>().isShip)
+                        obj3D.GetComponent<cakeslice.Outline>().enabled = true;
+                    else
+                        obj3D.transform.GetChild(1).GetComponent<cakeslice.Outline>().enabled = true;
+                }
             }
         }
         else
         {
-            obj.transform.GetChild(0).GetComponent<Image>().color = col;
-            obj.transform.GetChild(1).GetChild(0).gameObject.SetActive(false);  //hide Delete-Button
-            SceneManaging.highlighted = false;
-
-            if (obj3D != null)
+            if (type == "flyer")
             {
-                if (obj3D.GetComponent<FigureStats>().isShip)
-                    obj3D.GetComponent<cakeslice.Outline>().enabled = false;
+                if (obj.transform.childCount > 1)
+                {
+                    //Debug.Log("hier?");
+                    obj.GetComponent<Image>().color = col;
+                    obj.transform.GetChild(1).GetChild(0).GetChild(0).gameObject.SetActive(false);   //show Delete-Button
+                    obj.transform.GetChild(0).gameObject.SetActive(false);
+                }
                 else
-                    obj3D.transform.GetChild(1).GetComponent<cakeslice.Outline>().enabled = false;
+                {
+                    //Debug.Log("childcount: " + obj.transform.childCount);
+                    obj.GetComponent<Image>().color = _colFlyerSpace;
+
+                }
+                SceneManaging.highlighted = false;
+            }
+            else
+            {
+                obj.transform.GetChild(0).GetComponent<Image>().color = col;
+                obj.transform.GetChild(1).GetChild(0).gameObject.SetActive(false);  //hide Delete-Button
+                SceneManaging.highlighted = false;
+
+                if (obj3D != null)
+                {
+                    if (obj3D.GetComponent<FigureStats>().isShip)
+                        obj3D.GetComponent<cakeslice.Outline>().enabled = false;
+                    else
+                        obj3D.transform.GetChild(1).GetComponent<cakeslice.Outline>().enabled = false;
+                }
             }
         }
     }
@@ -179,4 +220,5 @@ public static class SceneManaging
         rail.GetComponent<RectTransform>().sizeDelta = new Vector2(railwidthAbsolute, 20);
         rail.GetComponent<BoxCollider2D>().size = new Vector2(railwidthAbsolute, 20);
     }
+
 }

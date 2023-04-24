@@ -13,14 +13,14 @@ public class SaveFileController : MonoBehaviour
     private string _jsonString, loadedFiles, tmpCode;
     public GameObject contentFileSelect, panelCodeInput, panelSaveShowCode, panelWarningInput, panelWarningInputVisitor, panelOverwrite, menuKulissen, flyer;
     public RailManager contentMenueRails;
-    //[SerializeField] RailManager railManager;
     [SerializeField] private GameObject _dialogSave, _dialogNewScene, _dialogLoadCode;
     [SerializeField] GameObject _borderWarning, _borderLoad;
     [SerializeField] Text _placeholderTextWarning, _textSaveInputName;
     [SerializeField] GameObject warningPanel;
-    //[SerializeField] Text _placeholderTextLoadWarning;
     [SerializeField] private GameObject _canvas;
     [SerializeField] private GameObject _visitorPanelSave;
+    [SerializeField] private GameObject codeReminder;
+    [SerializeField] private TextMeshProUGUI codeReminderText;
     public InputField inputFieldShowCode, inputFieldShowCodeVisitor;
     [SerializeField] GameObject _showSavedCode;
     public Button fileSelectButton;
@@ -101,9 +101,7 @@ public class SaveFileController : MonoBehaviour
     }
     public void SaveSceneToFile(int overwrite) // 0=save, 1=overwrite, 2=save with new code
     {
-        //Debug.Log("hier");
         bool foundName = false;
-        //code = "";
         string filePath = "";
         SceneData sceneDataSave = this.GetComponent<SceneDataController>().CreateSceneData();
         bool isExpert = this.GetComponent<UnitySwitchExpertUser>()._isExpert;
@@ -127,6 +125,8 @@ public class SaveFileController : MonoBehaviour
                 StartCoroutine(WriteToServer(sceneDataSaveString, filePath, isExpert));
                 // WriteFileToDirectory(sceneDataSaveString, filePath);
             }
+            codeReminder.SetActive(true);
+            codeReminderText.text = "Zuletzt abgespeicherter Code: " + code;
         }
         else
         {
@@ -242,11 +242,17 @@ public class SaveFileController : MonoBehaviour
             //GetComponent<SceneDataController>().SetFileMetaDataToScene();
             if (_isWebGl)
             {
-                StartCoroutine(LoadFilesFromServer(false, "", false));
+                if (GetComponent<UnitySwitchExpertUser>()._isExpert)
+                {
+                    StartCoroutine(LoadFilesFromServer(false, "", false));
+                }
             }
             else
             {
-                StartCoroutine(LoadFilesFromServer(false, "", false));
+                if (GetComponent<UnitySwitchExpertUser>()._isExpert)
+                {
+                    StartCoroutine(LoadFilesFromServer(false, "", false));
+                }
                 // ShowFilesFromDirectory();
             }
 
@@ -650,6 +656,7 @@ public class SaveFileController : MonoBehaviour
         }
         else if (status == "fromFlyerDelete")
         {
+            Debug.Log("fehler 3");
             LoadSceneFromTempToStatic();
             //_canvas.GetComponent<ObjectShelfAll>().ButtonShelf02();
             // _canvas.GetComponent<ObjectShelfAll>().ButtonShelf05(false);
@@ -797,5 +804,9 @@ public class SaveFileController : MonoBehaviour
         {
             _dialogSave.SetActive(true);
         }
+    }
+    public void OnClickCloseCodeReminder()
+    {
+        codeReminder.SetActive(false);
     }
 }

@@ -34,7 +34,7 @@ public class RailLightManager : MonoBehaviour
                 contentRailsMenue.openCloseObjectInTimeline(false, contentRailsMenue.railList[i].myObjects, i);
                 for (int j = 0; j < contentRailsMenue.railList[i].myObjects.Count; j++)
                 {
-                    SceneManaging.highlight(contentRailsMenue.railList[i].myObjects[j].figure3D, contentRailsMenue.railList[i].myObjects[j].figure, false, true);
+                    SceneManaging.highlight(contentRailsMenue.railList[i].myObjects[j].figure3D, contentRailsMenue.railList[i].myObjects[j].figure, false, "figure");
                 }
             }
 
@@ -52,7 +52,7 @@ public class RailLightManager : MonoBehaviour
 
         for (int j = 0; j < gameController.GetComponent<UIController>().RailMusic.GetComponent<RailMusicManager>().timelineInstanceObjects.Count; j++)
         {
-            SceneManaging.highlight(null, gameController.GetComponent<UIController>().RailMusic.GetComponent<RailMusicManager>().timelineInstanceObjects[j], false, false);
+            SceneManaging.highlight(null, gameController.GetComponent<UIController>().RailMusic.GetComponent<RailMusicManager>().timelineInstanceObjects[j], false, "music");
         }
 
         // open clicked rail

@@ -5,7 +5,7 @@ using System;
 public class PressHelp : MonoBehaviour
 {
     #region variables
-    [SerializeField] GameObject helpButtonPressed, helpOverlayMenue2, helpOverlayMenue1, helpOverlayMenue3, helpOverlayMenue4, helpOverlayMenue5, helpOverlayMenue6, aboutScreen;
+    [SerializeField] GameObject helpButtonPressed, helpOverlayMenue2, helpOverlayMenue1, helpOverlayMenue3, helpOverlayMenue4, helpOverlayMenue5, helpOverlayMenue6, helpOverlayFlyer, aboutScreen;
     [SerializeField] GameObject timeSliderBubble, gameController;
     [SerializeField] GameObject maskTimeSlider, _timeSliderPlayButton;
     public GameObject _arrowHelp;
@@ -101,9 +101,15 @@ public class PressHelp : MonoBehaviour
             else
             {
                 helpButtonPressed.SetActive(true);
-                if (SceneManaging.mainMenuActive == 1 && SceneManaging.configMenueActive == 1)  // Buehne
+                if(SceneManaging.flyerActive)  // theaterzettel
                 {
-
+                    helpOverlayFlyer.SetActive(true);
+                    _tutorialCounter = 1;
+                    helpOverlayFlyer.transform.GetChild(0).gameObject.SetActive(true);
+                    _publicHelpMenue = helpOverlayFlyer;
+                }
+                else if (SceneManaging.mainMenuActive == 1 && SceneManaging.configMenueActive == 1)  // Buehne
+                {
                     helpOverlayMenue1.SetActive(true);
                 }
                 else if (SceneManaging.mainMenuActive == 2 && SceneManaging.directorMenueActive == 1)   // Figuren
@@ -138,6 +144,7 @@ public class PressHelp : MonoBehaviour
                 {
                     helpOverlayMenue4.SetActive(true);
                 }
+
                 pressed = true;
                 //Debug.Log("true");
             }
@@ -218,7 +225,7 @@ public class PressHelp : MonoBehaviour
         }
         if (_tutorialCounter == -1 && !_isClicked)
         {
-            // _idleTimer += Time.deltaTime;
+            _idleTimer += Time.deltaTime;
             // if (!_newScene && !SceneManaging.playing)
                 //_timerOverlay += Time.deltaTime;
         }

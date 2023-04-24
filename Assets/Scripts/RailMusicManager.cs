@@ -144,7 +144,7 @@ public class RailMusicManager : MonoBehaviour
         {
             for (int i = 0; i < timelineInstanceObjects.Count; i++)
             {
-                SceneManaging.highlight(null, timelineInstanceObjects[i], false, false);
+                SceneManaging.highlight(null, timelineInstanceObjects[i], false, "music");
             }
         }
         else
@@ -159,7 +159,7 @@ public class RailMusicManager : MonoBehaviour
                     contentRailsMenue.railList[i].isTimelineOpen = false;
                     for (int j = 0; j < contentRailsMenue.railList[i].myObjects.Count; j++)
                     {
-                        SceneManaging.highlight(contentRailsMenue.railList[i].myObjects[j].figure3D, contentRailsMenue.railList[i].myObjects[j].figure, false, true);
+                        SceneManaging.highlight(contentRailsMenue.railList[i].myObjects[j].figure3D, contentRailsMenue.railList[i].myObjects[j].figure, false, "figure");
                         contentRailsMenue.openCloseObjectInTimeline(true, contentRailsMenue.railList[i].myObjects, i);
                     }
                 }
@@ -1051,9 +1051,9 @@ public class RailMusicManager : MonoBehaviour
                     //highlighting objects and showing delete button when clicked
                     for (int i = 0; i < timelineInstanceObjects.Count; i++)
                     {
-                        SceneManaging.highlight(null,timelineInstanceObjects[i], false, false);
+                        SceneManaging.highlight(null,timelineInstanceObjects[i], false, "music");
                     }
-                    SceneManaging.highlight(null,timelineInstanceObjects[currentClickedInstanceObjectIndex],  true, false);
+                    SceneManaging.highlight(null,timelineInstanceObjects[currentClickedInstanceObjectIndex],  true, "music");
                 }
 
             }
@@ -1063,7 +1063,7 @@ public class RailMusicManager : MonoBehaviour
             {
                 for (int i = 0; i < timelineInstanceObjects.Count; i++)
                 {
-                    SceneManaging.highlight(null,timelineInstanceObjects[i],  false, false);
+                    SceneManaging.highlight(null,timelineInstanceObjects[i],  false, "music");
                 }
             }
 
@@ -1368,9 +1368,9 @@ public class RailMusicManager : MonoBehaviour
 
                     for (int i = 0; i < timelineInstanceObjects.Count; i++)
                     {
-                        SceneManaging.highlight(null,timelineInstanceObjects[i],  false, false);
+                        SceneManaging.highlight(null,timelineInstanceObjects[i],  false, "music");
                     }
-                    SceneManaging.highlight(null,timelineInstanceObjects[timelineInstanceObjects.Count - 1],  true, false);
+                    SceneManaging.highlight(null,timelineInstanceObjects[timelineInstanceObjects.Count - 1],  true, "music");
 
                     ///////////////////////////////////////////////////////////////////////////////////////////////////////
 

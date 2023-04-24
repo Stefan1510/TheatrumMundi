@@ -45,10 +45,12 @@ public class Flyer : MonoBehaviour
         // open flyer
         else
         {
+            Debug.Log("fehler 1");
             // disable 'figures in schiene ziehen' in Rail Manager
             SceneManaging.flyerActive = true;
             objShelfAll.ButtonShelf05(false);
             gameObject.SetActive(true);
+             Debug.Log("fehler 2");
 
             // load new scene
             StartCoroutine(tmpFileController.LoadFileFromWWW("*Musterszene_leer.json", "fromFlyerDelete"));
@@ -57,14 +59,17 @@ public class Flyer : MonoBehaviour
             // destroy children
             for (int i = 0; i < _flyerSpaces.Length; i++)
             {
-                if (_flyerSpaces[i].transform.childCount > 0)
+                if (_flyerSpaces[i].transform.childCount > 1)
                 {
-                    Destroy(_flyerSpaces[i].transform.GetChild(0).gameObject);
+                    Destroy(_flyerSpaces[i].transform.GetChild(1).gameObject);
                     // color field
                     _flyerSpaces[i].GetComponent<Image>().color = new Color(.78f, .54f, .44f);
                     SceneManaging.flyerSpace[i] = -1;
                 }
+            //destroy borders
+            _flyerSpaces[i].transform.GetChild(0).gameObject.SetActive(false);
             }
+            
         }
     }
 }
