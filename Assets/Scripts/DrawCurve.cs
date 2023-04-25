@@ -11,7 +11,6 @@ public class DrawCurve : MonoBehaviour
     [SerializeField] private Slider _valueSlider;
     [SerializeField] private Image _imagePositionKnob;
     [SerializeField] private int _railIndex;
-    //[SerializeField] private GameObject _representationPanel;
     private List<Image> _imagePositionKnobCollection;
     private Color32[] _backColors;
     private Color32[] _curveColors;
@@ -19,7 +18,6 @@ public class DrawCurve : MonoBehaviour
     private float _maxTime;
     private float _minValue;
     private float _maxValue;
-    //private bool _gameObjectStarted = false;
 
     void Start()
     {
@@ -45,7 +43,7 @@ public class DrawCurve : MonoBehaviour
             _valueSlider.GetComponent<EventTrigger>().triggers.Add(eventTriggerEntry);
 
 
-            //Debug.Log("start drawcurve");
+            Debug.Log("start drawcurve");
             StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds[0] = new RailElementSpeed { moment = 0, speed = _valueSlider.value };  // im SceneDataController MUSS ein erstes Element hinzugef�gt werden, bevor es hier angesprochen werden kann
                                                                                                                                                          //StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds[0] = new RailElementSpeed { moment = 0, speed = 1 };  // im SceneDataController MUSS ein erstes Element hinzugef�gt werden, bevor es hier angesprochen werden kann
                                                                                                                                                          //Debug.LogWarning(_valueSlider.value);
@@ -56,22 +54,9 @@ public class DrawCurve : MonoBehaviour
         else
         {
             this.gameObject.SetActive(false);
+            StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds[0] = new RailElementSpeed { moment = 0, speed = _valueSlider.value };
         }
     }
-
-    //private void OnEnable()
-    //{
-    //    if (_gameObjectStarted)
-    //    {
-    //    }
-    //}
-
-    //// Update is called once per frame
-    //void Update()
-    //{
-
-    //}
-
     public void AddValue(PointerEventData data)      // Aufruf auf Slider, der etwas ver�ndern soll, gel�st �ber EventTrigger, �bergebene data unn�tig
     {
         if (_railIndex == ImageTimelineSelection.GetRailNumber())
@@ -98,7 +83,6 @@ public class DrawCurve : MonoBehaviour
             ChangeCurve();
         }
     }
-
     public void ChangeCurve()
     {
         _maxTime = AnimationTimer.GetMaxTime();
@@ -157,7 +141,6 @@ public class DrawCurve : MonoBehaviour
         UpdateKnobPositions();
         //Debug.Log("ich: " + this.name);
     }
-
     public void UpdateKnobPositions()
     {
 

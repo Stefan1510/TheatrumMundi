@@ -369,16 +369,12 @@ public class SceneDataController : MonoBehaviour
     public void MusicApplyToScene(List<MusicClipElement> musicClipElements)
     {
         countActiveMusicClips = 0;
-        foreach (GameObject obj in imageTimelineRailMusic.GetComponent<RailMusicManager>().timelineInstanceObjects)
+        foreach (RailMusicManager.MusicPiece obj in imageTimelineRailMusic.GetComponent<RailMusicManager>().myObjects)
         {
-            Destroy(obj);
+            Destroy(obj.musicPiece);
         }
-        imageTimelineRailMusic.GetComponent<RailMusicManager>().timelineInstanceObjects.Clear();
-        imageTimelineRailMusic.GetComponent<RailMusicManager>().figuresLayer1.Clear();
-        imageTimelineRailMusic.GetComponent<RailMusicManager>().figuresLayer2.Clear();
+        imageTimelineRailMusic.GetComponent<RailMusicManager>().myObjects.Clear();
         imageTimelineRailMusic.GetComponent<RailMusicManager>().sizeLayering = 1;
-        imageTimelineRailMusic.GetComponent<RailMusicManager>().myObjectsPositionListLayer1.Clear();
-        imageTimelineRailMusic.GetComponent<RailMusicManager>().myObjectsPositionListLayer2.Clear();
 
         foreach (MusicClipElement mce in musicClipElements)
         {

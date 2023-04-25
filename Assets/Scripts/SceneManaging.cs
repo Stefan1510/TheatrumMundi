@@ -24,13 +24,15 @@ public static class SceneManaging
     public static int[] flyerSpace = new int[9];
     //timeslider
     public static bool fullscreenOn = false;
-    public static Color _colFigure = new Color(0.06f, 0.66f, .74f, 0.5f);
-    public static Color _colFigureHighlighted = new Color(0f, 0.87f, 1.0f, 0.5f);
-    public static Color _colMusic = new Color(0.21f, 0.51f, 0.267f, 0.5f);
-    public static Color _colMusicHighlighted = new Color(0.21f, 0.81f, 0.267f, 0.5f);
-    public static Color _colFlyerHighlighted = new Color(1, .5f, .25f);
-    public static Color _colFlyer = new Color(.78f, .46f, .31f);
-    public static Color _colFlyerSpace = new Color(.78f, .54f, .44f);
+    private static Color _colFigure = new Color(0.06f, 0.66f, .74f, 0.5f);
+    private static Color _colFigureHighlighted = new Color(0f, 0.87f, 1.0f, 0.5f);
+    private static Color _colMusic = new Color(0.21f, 0.51f, 0.267f, 0.5f);
+    private static Color _colMusicHighlighted = new Color(0.21f, 0.81f, 0.267f, 0.5f);
+    private static Color _colFlyerHighlighted = new Color(1, .5f, .25f);
+    private static Color _colFlyer = new Color(.78f, .46f, .31f);
+    private static Color _colFlyerSpace = new Color(.78f, .54f, .44f);
+    private static float _idleTimer = -1;
+    private static float alpha = 1;
     #endregion
     public static void createRectangle(GameObject obj, Color col, double rectHeight, GameObject prefab, double tmpLength)
     {
@@ -123,6 +125,7 @@ public static class SceneManaging
     public static int identifyClickedObjectByList(List<RailManager.Figure> objectsOnTimeline)       // from timeline
     {
         int idx = -1;
+
         for (int i = 0; i < objectsOnTimeline.Count; i++)
         {
             //which object in grid layout is clicked
@@ -130,7 +133,25 @@ public static class SceneManaging
             {
                 idx = i;
             }
+
         }
+
+        return idx;
+    }
+    public static int identifyClickedObjectByList(List<RailMusicManager.MusicPiece> musicOnTimeline)       // from timeline
+    {
+        int idx = -1;
+
+        for (int i = 0; i < musicOnTimeline.Count; i++)
+        {
+            //which object in grid layout is clicked
+            if (musicOnTimeline[i].musicPiece.GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(Input.mousePosition))
+            {
+                idx = i;
+            }
+
+        }
+
         return idx;
     }
     public static void highlight(GameObject obj3D, GameObject obj, bool highlightOn, string type)
@@ -143,16 +164,12 @@ public static class SceneManaging
             colHighlighted = _colFigureHighlighted;
             col = _colFigure;
         }
-        else if (type == "music")
-        {
-            colHighlighted = _colMusicHighlighted;
-            col = _colMusic;
-        }
         else
         {
             colHighlighted = _colFlyerHighlighted;
             col = _colFlyer;
         }
+
         if (highlightOn)
         {
             if (type == "flyer")
@@ -171,13 +188,10 @@ public static class SceneManaging
                 obj.transform.GetChild(1).GetChild(0).gameObject.SetActive(true);   //show Delete-Button
                 SceneManaging.highlighted = true;
 
-                if (obj3D != null)
-                {
-                    if (obj3D.GetComponent<FigureStats>().isShip)
-                        obj3D.GetComponent<cakeslice.Outline>().enabled = true;
-                    else
-                        obj3D.transform.GetChild(1).GetComponent<cakeslice.Outline>().enabled = true;
-                }
+                if (obj3D.GetComponent<FigureStats>().isShip)
+                    obj3D.GetComponent<cakeslice.Outline>().enabled = true;
+                else
+                    obj3D.transform.GetChild(1).GetComponent<cakeslice.Outline>().enabled = true;
             }
         }
         else
@@ -205,14 +219,27 @@ public static class SceneManaging
                 obj.transform.GetChild(1).GetChild(0).gameObject.SetActive(false);  //hide Delete-Button
                 SceneManaging.highlighted = false;
 
-                if (obj3D != null)
-                {
-                    if (obj3D.GetComponent<FigureStats>().isShip)
-                        obj3D.GetComponent<cakeslice.Outline>().enabled = false;
-                    else
-                        obj3D.transform.GetChild(1).GetComponent<cakeslice.Outline>().enabled = false;
-                }
+                if (obj3D.GetComponent<FigureStats>().isShip)
+                    obj3D.GetComponent<cakeslice.Outline>().enabled = false;
+                else
+                    obj3D.transform.GetChild(1).GetComponent<cakeslice.Outline>().enabled = false;
             }
+        }
+    }
+    public static void highlight(GameObject obj, bool highlightOn, string type)
+    {
+        if (highlightOn)
+        {
+            //Debug.Log("obj: "+obj.name);
+            obj.transform.GetChild(0).GetComponent<Image>().color = _colMusicHighlighted;
+            obj.transform.GetChild(1).GetChild(0).gameObject.SetActive(true);   //show Delete-Button
+            SceneManaging.highlighted = true;
+        }
+        else
+        {
+            obj.transform.GetChild(0).GetComponent<Image>().color = _colMusic;
+            obj.transform.GetChild(1).GetChild(0).gameObject.SetActive(false);  //hide Delete-Button
+            SceneManaging.highlighted = false;
         }
     }
     public static void closeRail(GameObject rail, float railwidthAbsolute)
@@ -220,5 +247,76 @@ public static class SceneManaging
         rail.GetComponent<RectTransform>().sizeDelta = new Vector2(railwidthAbsolute, 20);
         rail.GetComponent<BoxCollider2D>().size = new Vector2(railwidthAbsolute, 20);
     }
+    public static void CalculateNeighbors(List<RailManager.Figure> figureList)    // calculates neighbors index
+    {
+        // rechts
+        for (int i = 0; i < figureList.Count; i++)
+        {
+            figureList[i].neighborRight = -1;
 
+            for (int j = i + 1; j < figureList.Count; j++)
+            {
+
+                if (figureList[i].layer == figureList[j].layer)
+                {
+                    figureList[i].neighborRight = j;
+                    break;
+                }
+            }
+        }
+
+        // links
+        for (int i = figureList.Count - 1; i >= 0; i--)
+        {
+            figureList[i].neighborLeft = -1;
+
+            for (int j = i - 1; j >= 0; j--)
+            {
+                if (figureList[i].layer == figureList[j].layer)
+                {
+                    figureList[i].neighborLeft = j;
+                    break;
+                }
+            }
+        }
+    }
+    public static void CalculateNeighbors(List<RailMusicManager.MusicPiece> musicList)    // calculates neighbors index
+    {
+        // rechts
+        for (int i = 0; i < musicList.Count; i++)
+        {
+            musicList[i].neighborRight = -1;
+
+            for (int j = i + 1; j < musicList.Count; j++)
+            {
+
+                if (musicList[i].layer == musicList[j].layer)
+                {
+                    musicList[i].neighborRight = j;
+                    break;
+                }
+            }
+        }
+
+        // links
+        for (int i = musicList.Count - 1; i >= 0; i--)
+        {
+            musicList[i].neighborLeft = -1;
+
+            for (int j = i - 1; j >= 0; j--)
+            {
+                if (musicList[i].layer == musicList[j].layer)
+                {
+                    musicList[i].neighborLeft = j;
+                    break;
+                }
+            }
+        }
+    }
+    public static void WarningAnimation(Color colSpaceWarning, TextMeshProUGUI spaceWarning)
+    {
+        alpha -= 0.05f;
+        colSpaceWarning = new Color(1, 0, 0, alpha);
+        spaceWarning.color = colSpaceWarning;
+    }
 }
