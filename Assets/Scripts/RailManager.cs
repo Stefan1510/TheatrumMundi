@@ -313,7 +313,7 @@ public class RailManager : MonoBehaviour
                     }
                     else
                     {
-                       // Debug.Log("es gibt kein idx-1");
+                        // Debug.Log("es gibt kein idx-1");
                         LoopRight(railIndex, idx, fig, false);
                     }
                 }
@@ -468,7 +468,7 @@ public class RailManager : MonoBehaviour
                     }
                     else
                     {
-                       // Debug.Log("layer 2");
+                        // Debug.Log("layer 2");
                         SceneManaging.scaleToLayerSize(fig.figure, 2, rails[railIndex], rectSize);
                         fig.layer = 2;
                     }
@@ -487,10 +487,10 @@ public class RailManager : MonoBehaviour
                     }
                     else
                     {
-                       // Debug.Log("alles voll!");
+                        // Debug.Log("alles voll!");
                         if (currentClickedInstanceObjectIndex != -1)
                         {
-                           // Debug.Log("in der timeline");
+                            // Debug.Log("in der timeline");
                             // wenn maus links vom objekt ist
                             // if (Input.mousePosition.x < listWithoutCurrentFigure[currentClickedInstanceObjectIndex].figure.GetComponent<RectTransform>().position.x + listWithoutCurrentFigure[currentClickedInstanceObjectIndex].position.y / 2)
                             // {
@@ -505,7 +505,7 @@ public class RailManager : MonoBehaviour
                         else
                         {
                             // ins shelf zurueck!
-                        //    Debug.Log("vom shelf");
+                            //    Debug.Log("vom shelf");
                             spaceWarning.transform.position = new Vector2(spaceWarning.transform.position.x, rails[railIndex].transform.position.y);
                             spaceWarningBorder.transform.position = new Vector2(spaceWarning.transform.position.x, rails[railIndex].transform.position.y);
                             _toBeRemoved = true;
@@ -532,16 +532,16 @@ public class RailManager : MonoBehaviour
                 // wenn zwischen den beiden genug platz ist
                 if (listWithoutCurrentFigure[listWithoutCurrentFigure[i].neighborLeft].position.x + listWithoutCurrentFigure[listWithoutCurrentFigure[i].neighborLeft].position.y + rectSize <= listWithoutCurrentFigure[i].position.x + 1)
                 {
-                  //  Debug.Log("es ist genug platz");
+                    //  Debug.Log("es ist genug platz");
                     if (listWithoutCurrentFigure[i].layer == 1)
                     {
-                    //    Debug.Log("layer 1");
+                        //    Debug.Log("layer 1");
                         SceneManaging.scaleToLayerSize(fig.figure, 1, rails[railIndex], rectSize);
                         fig.layer = 1;
                     }
                     else
                     {
-                      //  Debug.Log("layer 2");
+                        //  Debug.Log("layer 2");
                         SceneManaging.scaleToLayerSize(fig.figure, 2, rails[railIndex], rectSize);
                         fig.layer = 2;
                     }
@@ -551,26 +551,26 @@ public class RailManager : MonoBehaviour
                 }
                 else
                 {
-                   // Debug.Log("nicht genug platz. x: " + (listWithoutCurrentFigure[i].position.x) + ", Figur: " + (listWithoutCurrentFigure[listWithoutCurrentFigure[i].neighborLeft].position.x + listWithoutCurrentFigure[listWithoutCurrentFigure[i].neighborLeft].position.y + rectSize));
+                    // Debug.Log("nicht genug platz. x: " + (listWithoutCurrentFigure[i].position.x) + ", Figur: " + (listWithoutCurrentFigure[listWithoutCurrentFigure[i].neighborLeft].position.x + listWithoutCurrentFigure[listWithoutCurrentFigure[i].neighborLeft].position.y + rectSize));
                     // hier passiert nichts, es muss weiter gesucht werden
                 }
             }
             else
             {
-                Debug.Log(listWithoutCurrentFigure[i].objName + " hat KEINEN linken nachbarn");
+                //Debug.Log(listWithoutCurrentFigure[i].objName + " hat KEINEN linken nachbarn");
                 if (listWithoutCurrentFigure[i].position.x - rectSize > 50)
                 {
-                   // Debug.Log("platz bis rand");
+                    // Debug.Log("platz bis rand");
                     if (listWithoutCurrentFigure[i].layer == 1)
                     {
-                     //   Debug.Log("layer 1");
+                        //   Debug.Log("layer 1");
                         SceneManaging.scaleToLayerSize(fig.figure, 1, rails[railIndex], rectSize);
                         fig.layer = 1;
 
                     }
                     else
                     {
-                      //  Debug.Log("layer 2");
+                        //  Debug.Log("layer 2");
                         SceneManaging.scaleToLayerSize(fig.figure, 2, rails[railIndex], rectSize);
                         fig.layer = 2;
                     }
@@ -582,13 +582,13 @@ public class RailManager : MonoBehaviour
                     // hier muss rechts weitergesucht werden
                     if (!fromRight)
                     {
-                      //  Debug.Log("kein platz bis zum rand, es muss rechts weitergesucht werden");
+                        //  Debug.Log("kein platz bis zum rand, es muss rechts weitergesucht werden");
                         LoopRight(currentRailIndex, 0, fig, true);
                     }
                     else
                     {
                         // ins shelf zurueck!
-                       // Debug.Log("alles voll!");
+                        // Debug.Log("alles voll!");
                         if (currentClickedInstanceObjectIndex != -1)
                         {
                             //Debug.Log("in der timeline");
@@ -608,7 +608,7 @@ public class RailManager : MonoBehaviour
                         // vom shelf
                         else
                         {
-                           // Debug.Log("vom shelf");
+                            // Debug.Log("vom shelf");
                             spaceWarning.transform.position = new Vector2(spaceWarning.transform.position.x, rails[currentRailIndex].transform.position.y);
                             spaceWarningBorder.transform.position = new Vector2(spaceWarning.transform.position.x, rails[railIndex].transform.position.y);
                             _toBeRemoved = true;
@@ -791,12 +791,21 @@ public class RailManager : MonoBehaviour
     {
         int tmpNr = int.Parse(obj.figure.transform.GetChild(1).name.Substring(12));
         int currentCounterNr = int.Parse(figCounterCircle[tmpNr - 1].text);
-
+        
         // erase from layer list
         railList[currentRailIndex].myObjects.Remove(obj);
 
         figCounterCircle[tmpNr - 1].text = (currentCounterNr - 1).ToString();
-        StaticSceneData.StaticData.figureElements[Int32.Parse(obj.objName.Substring(6, 2)) - 1].figureInstanceElements.Remove(StaticSceneData.StaticData.figureElements[Int32.Parse(obj.objName.Substring(6, 2)) - 1].figureInstanceElements[Int32.Parse(obj.objName.Substring(17))]);
+
+        // figure instance element rauskriegen (beim loeschen veraendert sich der platz im array, aber die endung ist noch 001 bspw.)
+        for (int j = 0; j < StaticSceneData.StaticData.figureElements[Int32.Parse(obj.figure.name.Substring(6, 2)) - 1].figureInstanceElements.Count; j++)
+        {
+            if (StaticSceneData.StaticData.figureElements[Int32.Parse(obj.figure.name.Substring(6, 2)) - 1].figureInstanceElements[j].instanceNr == int.Parse(obj.figure.name.Substring(16)))
+            {
+                // Debug.Log("remove: " + StaticSceneData.StaticData.figureElements[Int32.Parse(obj.figure.name.Substring(6, 2)) - 1].figureInstanceElements[j].name);
+                StaticSceneData.StaticData.figureElements[Int32.Parse(obj.figure.name.Substring(6, 2)) - 1].figureInstanceElements.Remove(StaticSceneData.StaticData.figureElements[Int32.Parse(obj.figure.name.Substring(6, 2)) - 1].figureInstanceElements[j]);
+            }
+        }
 
         Destroy(obj.figure);
         Destroy(obj.figure3D);
@@ -812,6 +821,7 @@ public class RailManager : MonoBehaviour
         }
         railList[currentRailIndex].myObjects = railList[currentRailIndex].myObjects.OrderBy(x => x.position.x).ToList();
         SceneManaging.CalculateNeighbors(railList[currentRailIndex].myObjects);
+
     }
     public GameObject CreateNew2DInstance(int figureNr, float momentOrPosX, int loadFromFile, int savedLayer, bool saveToSceneData)   // if layer = -1, then new instance, else layer has been saved
     {
@@ -971,8 +981,8 @@ public class RailManager : MonoBehaviour
             SceneManaging.scaleToLayerSize(newCopyOfFigure, 0, rails[currentRailIndex], rectSize);
             // Save to SceneData:
             FigureInstanceElement thisFigureInstanceElement = new FigureInstanceElement();
-            thisFigureInstanceElement.instanceNr = countCopiesOfObject(figureObjects[figureNr].name); //index
-            thisFigureInstanceElement.name = curr3DObject.name + "_" + countCopiesOfObject(figureObjects[figureNr].name).ToString("000");
+            thisFigureInstanceElement.instanceNr = (countCopiesOfObject(figureObjects[figureNr].name)) - 1; //index
+            thisFigureInstanceElement.name = curr3DObject.name + "_" + (countCopiesOfObject(figureObjects[figureNr].name) - 1).ToString("000");
             thisFigureInstanceElement.railStart = (int)Char.GetNumericValue(rails[currentRailIndex].name[17]) - 1; //railIndex
 
             StaticSceneData.StaticData.figureElements[figureNr].figureInstanceElements.Add(thisFigureInstanceElement);
@@ -1523,6 +1533,7 @@ public class RailManager : MonoBehaviour
                 releaseOnTimeline = false;
                 changedRail = false;
                 newHitTimeline = -1;
+                _toBeRemovedFromTimeline = true;
             }
         }
         // dragging an object from shelf to timeline / flyer
@@ -1794,8 +1805,8 @@ public class RailManager : MonoBehaviour
                         ///////////////////////////////////////////////////////////////////////////////////////////////////////
                         // Save to SceneData:
                         FigureInstanceElement thisFigureInstanceElement = new FigureInstanceElement();
-                        thisFigureInstanceElement.instanceNr = countCopiesOfObject(figureObjects[currentClickedObjectIndex].name); //index
-                        thisFigureInstanceElement.name = curr3DObject.name + "_" + countCopiesOfObject(figureObjects[currentClickedObjectIndex].name).ToString("000");
+                        thisFigureInstanceElement.instanceNr = (countCopiesOfObject(figureObjects[currentClickedObjectIndex].name)) - 1; //index
+                        thisFigureInstanceElement.name = curr3DObject.name + "_" + (countCopiesOfObject(figureObjects[currentClickedObjectIndex].name) - 1).ToString("000");
                         thisFigureInstanceElement.railStart = (int)Char.GetNumericValue(rails[currentRailIndex].name[17]) - 1; //railIndex
 
                         StaticSceneData.StaticData.figureElements[currentClickedObjectIndex].figureInstanceElements.Add(thisFigureInstanceElement);
@@ -1832,7 +1843,7 @@ public class RailManager : MonoBehaviour
                         {
                             if (railList[currentRailIndex].myObjects[i].objName == currentName)
                             {
-                                //Debug.Log("remove: " + railList[currentRailIndex].myObjects[i].objName);
+                                Debug.Log("remove: " + railList[currentRailIndex].myObjects[i].objName);
                                 removeObjectFromTimeline(railList[currentRailIndex].myObjects[i]);
                             }
                         }
@@ -1860,13 +1871,13 @@ public class RailManager : MonoBehaviour
             }
 
             // if instance is dropped somewhere else than on timeline: delete instance
-            else if (releaseOnTimeline == false && currentClickedInstanceObjectIndex != -1 && isInstance)
+            else if (releaseOnTimeline == false && currentClickedInstanceObjectIndex != -1 && isInstance && _toBeRemovedFromTimeline)
             {
                 for (int i = 0; i < railList[currentRailIndex].myObjects.Count; i++)
                 {
                     if (railList[currentRailIndex].myObjects[i].objName == currentName)
                     {
-                        //Debug.Log("remove: " + railList[currentRailIndex].myObjects[i].objName);
+                        // Debug.Log("remove: " + railList[currentRailIndex].myObjects[i].objName);
                         removeObjectFromTimeline(railList[currentRailIndex].myObjects[i]);
                     }
                 }
@@ -1909,19 +1920,31 @@ public class RailManager : MonoBehaviour
                     {
                         railList[k].myObjects[i].figure3D.transform.localEulerAngles = new Vector3(railList[k].myObjects[i].figure3D.transform.localEulerAngles.x, 270, railList[k].myObjects[i].figure3D.transform.localEulerAngles.z);
                     }
-                    StaticSceneData.StaticData.figureElements[Int32.Parse(railList[k].myObjects[i].figure.name.Substring(6, 2)) - 1].figureInstanceElements[Int32.Parse(railList[k].myObjects[i].figure.name.Substring(17))].moment = moment;
+                    //Debug.Log("versuch: "+ "FigObj"+Int32.Parse(railList[k].myObjects[i].figure.name.Substring(6, 2)) + "instance"+(railList[k].myObjects[i].figure.name.Substring(16)));
 
-                    if (railList[k].myObjects[i].layer == 1) //railList[k].myObjects.Contains(railList[k].myObjects[i]))
+                    for (int j = 0; j < StaticSceneData.StaticData.figureElements[Int32.Parse(railList[k].myObjects[i].figure.name.Substring(6, 2)) - 1].figureInstanceElements.Count; j++)
                     {
-                        if (railList[k].sizeLayering == 1)
-                            StaticSceneData.StaticData.figureElements[Int32.Parse(railList[k].myObjects[i].figure.name.Substring(6, 2)) - 1].figureInstanceElements[Int32.Parse(railList[k].myObjects[i].figure.name.Substring(17))].layer = 0;
-                        else
-                            StaticSceneData.StaticData.figureElements[Int32.Parse(railList[k].myObjects[i].figure.name.Substring(6, 2)) - 1].figureInstanceElements[Int32.Parse(railList[k].myObjects[i].figure.name.Substring(17))].layer = 1;
+                        if (StaticSceneData.StaticData.figureElements[Int32.Parse(railList[k].myObjects[i].figure.name.Substring(6, 2)) - 1].figureInstanceElements[j].instanceNr == int.Parse(railList[k].myObjects[i].figure.name.Substring(16)))
+                        {
+
+                            StaticSceneData.StaticData.figureElements[Int32.Parse(railList[k].myObjects[i].figure.name.Substring(6, 2)) - 1].figureInstanceElements[j].moment = moment;
+                            // Debug.Log("moment: " + StaticSceneData.StaticData.figureElements[Int32.Parse(railList[k].myObjects[i].figure.name.Substring(6, 2)) - 1].figureInstanceElements[j].moment);
+
+                            if (railList[k].myObjects[i].layer == 1) //railList[k].myObjects.Contains(railList[k].myObjects[i]))
+                            {
+                                if (railList[k].sizeLayering == 1)
+                                    StaticSceneData.StaticData.figureElements[Int32.Parse(railList[k].myObjects[i].figure.name.Substring(6, 2)) - 1].figureInstanceElements[j].layer = 0;
+                                else
+                                    StaticSceneData.StaticData.figureElements[Int32.Parse(railList[k].myObjects[i].figure.name.Substring(6, 2)) - 1].figureInstanceElements[j].layer = 1;
+                            }
+                            else
+                            {
+                                StaticSceneData.StaticData.figureElements[Int32.Parse(railList[k].myObjects[i].figure.name.Substring(6, 2)) - 1].figureInstanceElements[j].layer = 2;
+                            }
+                            // Debug.Log("layer: " + StaticSceneData.StaticData.figureElements[Int32.Parse(railList[k].myObjects[i].figure.name.Substring(6, 2)) - 1].figureInstanceElements[j].layer);
+                        }
                     }
-                    else
-                    {
-                        StaticSceneData.StaticData.figureElements[Int32.Parse(railList[k].myObjects[i].figure.name.Substring(6, 2)) - 1].figureInstanceElements[Int32.Parse(railList[k].myObjects[i].figure.name.Substring(17))].layer = 2;
-                    }
+                    // Debug.Log("test: "+StaticSceneData.StaticData.figureElements[Int32.Parse(railList[k].myObjects[i].figure.name.Substring(6, 2)) - 1].figureInstanceElements.Count+", nummer: "+railList[k].myObjects[i].figure.name.Substring(17));
                 }
             }
 

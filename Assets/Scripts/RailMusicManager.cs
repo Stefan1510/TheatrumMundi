@@ -120,31 +120,6 @@ public class RailMusicManager : MonoBehaviour
         maxTimeInSec = (int)AnimationTimer.GetMaxTime();
         sizeDeltaAsFactor = new Vector2(1.0f, 1.0f);
     }
-    /*private string identifyClickedObjectByList(List<GameObject> objectsOnTimeline)
-    {
-        string objName = "";
-        if (objectsOnTimeline.Count == 0)
-            return "no object found! [-1]";             //error-handling if no clickable object found
-
-        for (int i = 0; i < objectsOnTimeline.Count; i++)
-        {
-            //save last correct index
-            int oldClickedObject = currentClickedInstanceObjectIndex;
-            //which object in grid layout is clicked
-            if (objectsOnTimeline[i].GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(Input.mousePosition))
-            {
-                //save the index of clicked object
-                currentClickedInstanceObjectIndex = i;
-                return objectsOnTimeline[i].GetComponent<BoxCollider2D>().name;
-            }
-            else
-            {
-                objName = "no object clicked!";
-            }
-        }
-
-        return objName;
-    }*/
     public void openTimelineByClick(bool thisTimelineOpen, bool fromShelf)
     {
         if (fromShelf == false && SceneManaging.mainMenuActive == 2 && SceneManaging.directorMenueActive != 3)
@@ -1065,7 +1040,7 @@ public class RailMusicManager : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0)) //left mouse button down
         {
-            if (!SceneManaging.tutorialActive)
+            if (!SceneManaging.tutorialActive && !SceneManaging.flyerActive)
             {
                 //identify which gameobject you clicked
                 currentClickedObjectIndex = SceneManaging.identifyClickedObject(figureObjects);         //method fills up the current clicked index
