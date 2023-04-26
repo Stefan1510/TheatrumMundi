@@ -22,6 +22,7 @@ public class RailManager : MonoBehaviour
     [SerializeField] GameObject scrollRect, areaFiguresPut;
     [SerializeField] GameObject prefabRect;
     [SerializeField] TextMeshProUGUI spaceWarning;
+    [SerializeField] Image spaceWarningBorder;
     Vector2 objectShelfSize;
     GameObject[] objectShelfParent;
     GameObject newCopyOfFigure;
@@ -53,7 +54,7 @@ public class RailManager : MonoBehaviour
     private List<Figure> listWithoutCurrentFigure = new List<Figure>();
     private int countOverlaps;
     private float _idleTimer = -1;
-    private float alpha = 1;
+    // private float alpha = 1;
     #endregion
     #region Lists
     // Objects Position List
@@ -312,7 +313,7 @@ public class RailManager : MonoBehaviour
                     }
                     else
                     {
-                        //Debug.Log("es gibt kein idx-1");
+                       // Debug.Log("es gibt kein idx-1");
                         LoopRight(railIndex, idx, fig, false);
                     }
                 }
@@ -454,7 +455,7 @@ public class RailManager : MonoBehaviour
             }
             else
             {
-                ////Debug.Log("platz bis rand: " + (listWithoutCurrentFigure[i].position.x + listWithoutCurrentFigure[i].position.y + rectSize) + ", rand: " + railwidthAbsolute);
+                //Debug.Log("platz bis rand: " + (listWithoutCurrentFigure[i].position.x + listWithoutCurrentFigure[i].position.y + rectSize) + ", rand: " + railwidthAbsolute);
 
                 //Debug.Log("hat KEINEN rechten nachbarn");
                 if (listWithoutCurrentFigure[i].position.x + listWithoutCurrentFigure[i].position.y + rectSize - 50 < railwidthAbsolute)
@@ -467,7 +468,7 @@ public class RailManager : MonoBehaviour
                     }
                     else
                     {
-                        //Debug.Log("layer 2");
+                       // Debug.Log("layer 2");
                         SceneManaging.scaleToLayerSize(fig.figure, 2, rails[railIndex], rectSize);
                         fig.layer = 2;
                     }
@@ -486,10 +487,10 @@ public class RailManager : MonoBehaviour
                     }
                     else
                     {
-                        ////Debug.Log("alles voll!");
+                       // Debug.Log("alles voll!");
                         if (currentClickedInstanceObjectIndex != -1)
                         {
-                            //Debug.Log("in der timeline");
+                           // Debug.Log("in der timeline");
                             // wenn maus links vom objekt ist
                             // if (Input.mousePosition.x < listWithoutCurrentFigure[currentClickedInstanceObjectIndex].figure.GetComponent<RectTransform>().position.x + listWithoutCurrentFigure[currentClickedInstanceObjectIndex].position.y / 2)
                             // {
@@ -504,12 +505,13 @@ public class RailManager : MonoBehaviour
                         else
                         {
                             // ins shelf zurueck!
-                            //Debug.Log("vom shelf");
+                        //    Debug.Log("vom shelf");
                             spaceWarning.transform.position = new Vector2(spaceWarning.transform.position.x, rails[railIndex].transform.position.y);
+                            spaceWarningBorder.transform.position = new Vector2(spaceWarning.transform.position.x, rails[railIndex].transform.position.y);
                             _toBeRemoved = true;
                             spaceWarning.enabled = true;
+                            spaceWarningBorder.enabled = true;
                             _idleTimer = 0;
-                            //WarningAnimation();
                         }
                     }
                     break;
@@ -530,16 +532,16 @@ public class RailManager : MonoBehaviour
                 // wenn zwischen den beiden genug platz ist
                 if (listWithoutCurrentFigure[listWithoutCurrentFigure[i].neighborLeft].position.x + listWithoutCurrentFigure[listWithoutCurrentFigure[i].neighborLeft].position.y + rectSize <= listWithoutCurrentFigure[i].position.x + 1)
                 {
-                    //Debug.Log("es ist genug platz");
+                  //  Debug.Log("es ist genug platz");
                     if (listWithoutCurrentFigure[i].layer == 1)
                     {
-                        //Debug.Log("layer 1");
+                    //    Debug.Log("layer 1");
                         SceneManaging.scaleToLayerSize(fig.figure, 1, rails[railIndex], rectSize);
                         fig.layer = 1;
                     }
                     else
                     {
-                        //Debug.Log("layer 2");
+                      //  Debug.Log("layer 2");
                         SceneManaging.scaleToLayerSize(fig.figure, 2, rails[railIndex], rectSize);
                         fig.layer = 2;
                     }
@@ -549,26 +551,26 @@ public class RailManager : MonoBehaviour
                 }
                 else
                 {
-                    //Debug.Log("nicht genug platz. x: " + (listWithoutCurrentFigure[i].position.x) + ", Figur: " + (listWithoutCurrentFigure[listWithoutCurrentFigure[i].neighborLeft].position.x + listWithoutCurrentFigure[listWithoutCurrentFigure[i].neighborLeft].position.y + rectSize));
+                   // Debug.Log("nicht genug platz. x: " + (listWithoutCurrentFigure[i].position.x) + ", Figur: " + (listWithoutCurrentFigure[listWithoutCurrentFigure[i].neighborLeft].position.x + listWithoutCurrentFigure[listWithoutCurrentFigure[i].neighborLeft].position.y + rectSize));
                     // hier passiert nichts, es muss weiter gesucht werden
                 }
             }
             else
             {
-                //Debug.Log(listWithoutCurrentFigure[i].objName + " hat KEINEN linken nachbarn");
+                Debug.Log(listWithoutCurrentFigure[i].objName + " hat KEINEN linken nachbarn");
                 if (listWithoutCurrentFigure[i].position.x - rectSize > 50)
                 {
-                    //Debug.Log("platz bis rand");
+                   // Debug.Log("platz bis rand");
                     if (listWithoutCurrentFigure[i].layer == 1)
                     {
-                        //Debug.Log("layer 1");
+                     //   Debug.Log("layer 1");
                         SceneManaging.scaleToLayerSize(fig.figure, 1, rails[railIndex], rectSize);
                         fig.layer = 1;
 
                     }
                     else
                     {
-                        //Debug.Log("layer 2");
+                      //  Debug.Log("layer 2");
                         SceneManaging.scaleToLayerSize(fig.figure, 2, rails[railIndex], rectSize);
                         fig.layer = 2;
                     }
@@ -580,13 +582,13 @@ public class RailManager : MonoBehaviour
                     // hier muss rechts weitergesucht werden
                     if (!fromRight)
                     {
-                        //Debug.Log("kein platz bis zum rand, es muss rechts weitergesucht werden");
+                      //  Debug.Log("kein platz bis zum rand, es muss rechts weitergesucht werden");
                         LoopRight(currentRailIndex, 0, fig, true);
                     }
                     else
                     {
                         // ins shelf zurueck!
-                        //Debug.Log("alles voll!");
+                       // Debug.Log("alles voll!");
                         if (currentClickedInstanceObjectIndex != -1)
                         {
                             //Debug.Log("in der timeline");
@@ -606,12 +608,13 @@ public class RailManager : MonoBehaviour
                         // vom shelf
                         else
                         {
-                            //Debug.Log("vom shelf");
+                           // Debug.Log("vom shelf");
                             spaceWarning.transform.position = new Vector2(spaceWarning.transform.position.x, rails[currentRailIndex].transform.position.y);
+                            spaceWarningBorder.transform.position = new Vector2(spaceWarning.transform.position.x, rails[railIndex].transform.position.y);
                             _toBeRemoved = true;
                             spaceWarning.enabled = true;
+                            spaceWarningBorder.enabled = true;
                             _idleTimer = 0;
-                            //WarningAnimation();
                         }
                     }
                     break;
@@ -778,7 +781,7 @@ public class RailManager : MonoBehaviour
     public void updateObjectPosition(Figure obj, Vector2 mousePos)
     {
         obj.figure.transform.position = new Vector3(mousePos.x, mousePos.y, -1.0f);
-        obj.position = new Vector2(obj.position.x, obj.figure.GetComponent<RectTransform>().sizeDelta.x);
+        obj.position = new Vector2(obj.figure.GetComponent<RectTransform>().anchoredPosition.x, obj.figure.GetComponent<RectTransform>().sizeDelta.x);
     }
     public void setObjectOnTimeline(GameObject fig, float y)
     {
@@ -1145,190 +1148,197 @@ public class RailManager : MonoBehaviour
             if (_idleTimer >= 2)
             {
                 SceneManaging.WarningAnimation(colSpaceWarning, spaceWarning);
+                SceneManaging.WarningAnimation(colSpaceWarning, spaceWarningBorder);
             }
         }
         else if (_idleTimer >= 3)
         {
             _idleTimer = -1;
-            alpha = 1;
-            colSpaceWarning = new Color(1, 0, 0, alpha);
+            SceneManaging.alpha = 1;
+            colSpaceWarning = new Color(1, 0, 0, 1);
             spaceWarning.color = colSpaceWarning;
             spaceWarning.enabled = false;
+            spaceWarningBorder.color = colSpaceWarning;
+            spaceWarningBorder.enabled = false;
         }
         if (Input.GetMouseButtonDown(0)) //left mouse button down
         {
             #region identifying
-            //identify which gameobject you clicked
-            currentClickedObjectIndex = SceneManaging.identifyClickedObject(figureObjects);         //method fills up the current clicked index
-            currentClickedInstanceObjectIndex = SceneManaging.identifyClickedObjectByList(railList[currentRailIndex].myObjects);
-            editTimelineObject = false;                             //flag to prevent closing the timeline if you click an object in timeline
-            releaseOnTimeline = false;                              //because you have not set anything on timeline 
-            releaseObjMousePos = new Vector2(0.0f, 0.0f);
 
-            int tmpI = -1;
-            for (int i = 0; i < railList[currentRailIndex].myObjects.Count; i++)
+            if (!SceneManaging.tutorialActive)  // wenn tutorial gerade ausgeführt wird, soll nichts klickbar sein
             {
-                if (railList[currentRailIndex].myObjects[i].figure.GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(getMousePos))
-                    tmpI = i;
-            }
-            if (tmpI >= 0)
-                editTimelineObject = true;
-            else
-                editTimelineObject = false;
-            #endregion
+                //identify which gameobject you clicked
+                currentClickedObjectIndex = SceneManaging.identifyClickedObject(figureObjects);         //method fills up the current clicked index
+                currentClickedInstanceObjectIndex = SceneManaging.identifyClickedObjectByList(railList[currentRailIndex].myObjects);
+                editTimelineObject = false;                             //flag to prevent closing the timeline if you click an object in timeline
+                releaseOnTimeline = false;                              //because you have not set anything on timeline 
+                releaseObjMousePos = new Vector2(0.0f, 0.0f);
 
-            //if you click the timeline with the mouse
-            if (!SceneManaging.flyerActive)
-            {
-                for (int i = 0; i < rails.Length; i++)
-                    if (rails[i].GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(getMousePos) && i != currentRailIndex)
-                    {
-                        currentRailIndex = i;
-                        //open or close timeline
-                        if (!railList[i].isTimelineOpen)
+                int tmpI = -1;
+                for (int i = 0; i < railList[currentRailIndex].myObjects.Count; i++)
+                {
+                    if (railList[currentRailIndex].myObjects[i].figure.GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(getMousePos))
+                        tmpI = i;
+                }
+                if (tmpI >= 0)
+                    editTimelineObject = true;
+                else
+                    editTimelineObject = false;
+                #endregion
+
+                //if you click the timeline with the mouse
+                if (!SceneManaging.flyerActive)
+                {
+                    for (int i = 0; i < rails.Length; i++)
+                        if (rails[i].GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(getMousePos) && i != currentRailIndex)
                         {
-                            openTimelineByClick(railList[i].isTimelineOpen, i, false);
+                            currentRailIndex = i;
+                            //open or close timeline
+                            if (!railList[i].isTimelineOpen)
+                            {
+                                openTimelineByClick(railList[i].isTimelineOpen, i, false);
+                            }
+                        }
+                }
+
+                // wenn theaterzettel aktiv ist    
+                else //if (SceneManaging.flyerActive)
+                {
+                    if (currentSpaceActive != -1)
+                    {
+                        // click delete
+                        Vector2 pos = flyerSpaces[currentSpaceActive].transform.GetChild(1).GetChild(0).GetChild(0).position;
+                        RectTransform rect = flyerSpaces[currentSpaceActive].transform.GetChild(1).GetChild(0).GetChild(0).GetComponent<RectTransform>();
+                        if (getMousePos.x >= pos.x - rect.sizeDelta.x / 2.5f && getMousePos.x <= pos.x + rect.sizeDelta.x / 2.5f && getMousePos.y >= pos.y - rect.sizeDelta.y / 2.5f && getMousePos.y <= pos.y + rect.sizeDelta.y / 2.5f)
+                        {
+                            SceneManaging.flyerSpace[currentSpaceActive] = -1;
+                            Destroy(flyerSpaces[currentSpaceActive].transform.GetChild(1).gameObject);
+                            // color field
+                            //SceneManaging.highlight(null, flyerSpaces[currentSpaceActive], false, "flyer");
+                            flyerSpaces[currentSpaceActive].GetComponent<Image>().color = new Color(.78f, .54f, .44f);
+                            flyerSpaces[currentSpaceActive].transform.GetChild(0).gameObject.SetActive(false);
+
                         }
                     }
-            }
 
-            // wenn theaterzettel aktiv ist    
-            else //if (SceneManaging.flyerActive)
-            {
-                if (currentSpaceActive != -1)
-                {
-                    // click delete
-                    Vector2 pos = flyerSpaces[currentSpaceActive].transform.GetChild(1).GetChild(0).GetChild(0).position;
-                    RectTransform rect = flyerSpaces[currentSpaceActive].transform.GetChild(1).GetChild(0).GetChild(0).GetComponent<RectTransform>();
-                    if (getMousePos.x >= pos.x - rect.sizeDelta.x / 2.5f && getMousePos.x <= pos.x + rect.sizeDelta.x / 2.5f && getMousePos.y >= pos.y - rect.sizeDelta.y / 2.5f && getMousePos.y <= pos.y + rect.sizeDelta.y / 2.5f)
+                    int tmpHit = checkHittingFlyerSpace(getMousePos);
+                    // wenn eine figur im kaestchen ist und diese geklickt wird
+                    if (tmpHit != -1 && SceneManaging.flyerSpace[tmpHit] != -1)
                     {
-                        SceneManaging.flyerSpace[currentSpaceActive] = -1;
-                        Destroy(flyerSpaces[currentSpaceActive].transform.GetChild(1).gameObject);
-                        // color field
-                        //SceneManaging.highlight(null, flyerSpaces[currentSpaceActive], false, "flyer");
-                        flyerSpaces[currentSpaceActive].GetComponent<Image>().color = new Color(.78f, .54f, .44f);
-                        flyerSpaces[currentSpaceActive].transform.GetChild(0).gameObject.SetActive(false);
+                        for (int i = 0; i < flyerSpaces.Length; i++)
+                        {
+                            SceneManaging.highlight(null, flyerSpaces[i], false, "flyer");
+                        }
+                        SceneManaging.highlight(null, flyerSpaces[tmpHit], true, "flyer");
 
+                        // delete button
+                        //flyerSpaces[tmpHit].transform.GetChild(1).GetChild(0).GetChild(0).gameObject.SetActive(true);
+                        // if (currentSpaceActive != tmpHit && currentSpaceActive != -1)
+                        // {
+                        //     flyerSpaces[currentSpaceActive].transform.GetChild(1).GetChild(0).GetChild(0).gameObject.SetActive(false);
+                        // }
+                        currentSpaceActive = tmpHit;
+                    }
+                    else
+                    {
+                        if (currentSpaceActive != -1)
+                        {
+                            flyerSpaces[currentSpaceActive].transform.GetChild(1).GetChild(0).GetChild(0).gameObject.SetActive(false);
+                            currentSpaceActive = -1;
+                            // for (int i = 0; i < flyerSpaces.Length; i++)
+                            // {
+                            //     SceneManaging.highlight(null, flyerSpaces[i], false, "flyer");
+                            // }
+                        }
                     }
                 }
 
-                int tmpHit = checkHittingFlyerSpace(getMousePos);
-                // wenn eine figur im kaestchen ist und diese geklickt wird
-                if (tmpHit != -1 && SceneManaging.flyerSpace[tmpHit] != -1)
+                //if you click on an object in shelf
+                if (currentClickedObjectIndex != (-1))      //is set in the identify-methods
                 {
+                    //wenn neues objekt genommen wird, soll altes aktuelles objekt unhighlighted werden
+                    for (int j = 0; j < railList[currentRailIndex].myObjects.Count; j++)
+                    {
+                        SceneManaging.highlight(railList[currentRailIndex].myObjects[j].figure3D, railList[currentRailIndex].myObjects[j].figure, false, "figure");
+                    }
                     for (int i = 0; i < flyerSpaces.Length; i++)
                     {
                         SceneManaging.highlight(null, flyerSpaces[i], false, "flyer");
                     }
-                    SceneManaging.highlight(null, flyerSpaces[tmpHit], true, "flyer");
 
-                    // delete button
-                    //flyerSpaces[tmpHit].transform.GetChild(1).GetChild(0).GetChild(0).gameObject.SetActive(true);
-                    // if (currentSpaceActive != tmpHit && currentSpaceActive != -1)
-                    // {
-                    //     flyerSpaces[currentSpaceActive].transform.GetChild(1).GetChild(0).GetChild(0).gameObject.SetActive(false);
-                    // }
-                    currentSpaceActive = tmpHit;
-                }
-                else
-                {
-                    if (currentSpaceActive != -1)
+                    if (!SceneManaging.sceneChanged)
+                        SceneManaging.sceneChanged = true;
+
+                    diff = new Vector2(getMousePos.x - figureObjects[currentClickedObjectIndex].transform.position.x, getMousePos.y - figureObjects[currentClickedObjectIndex].transform.position.y);
+
+                    if (figureObjects[currentClickedObjectIndex].GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(getMousePos))
                     {
-                        flyerSpaces[currentSpaceActive].transform.GetChild(1).GetChild(0).GetChild(0).gameObject.SetActive(false);
-                        currentSpaceActive = -1;
-                        // for (int i = 0; i < flyerSpaces.Length; i++)
-                        // {
-                        //     SceneManaging.highlight(null, flyerSpaces[i], false, "flyer");
-                        // }
+                        draggingObject = true;
+                        SceneManaging.dragging = true;
                     }
                 }
-            }
-
-            //if you click on an object in shelf
-            if (currentClickedObjectIndex != (-1))      //is set in the identify-methods
-            {
-                //wenn neues objekt genommen wird, soll altes aktuelles objekt unhighlighted werden
-                for (int j = 0; j < railList[currentRailIndex].myObjects.Count; j++)
+                //or check if you click an object in timeline
+                else if (currentClickedInstanceObjectIndex != -1 && editTimelineObject && railList[currentRailIndex].isTimelineOpen)
                 {
-                    SceneManaging.highlight(railList[currentRailIndex].myObjects[j].figure3D, railList[currentRailIndex].myObjects[j].figure, false, "figure");
-                }
-                for (int i = 0; i < flyerSpaces.Length; i++)
-                {
-                    SceneManaging.highlight(null, flyerSpaces[i], false, "flyer");
-                }
+                    // todo: das muss in die button up (wenn was in der szene veraendert wurde)
+                    if (!SceneManaging.sceneChanged) SceneManaging.sceneChanged = true;
 
-                if (!SceneManaging.sceneChanged)
-                    SceneManaging.sceneChanged = true;
-
-                diff = new Vector2(getMousePos.x - figureObjects[currentClickedObjectIndex].transform.position.x, getMousePos.y - figureObjects[currentClickedObjectIndex].transform.position.y);
-
-                if (figureObjects[currentClickedObjectIndex].GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(getMousePos))
-                {
-                    draggingObject = true;
-                    SceneManaging.dragging = true;
-                }
-            }
-            //or check if you click an object in timeline
-            else if (currentClickedInstanceObjectIndex != -1 && editTimelineObject && railList[currentRailIndex].isTimelineOpen)
-            {
-                // todo: das muss in die button up (wenn was in der szene veraendert wurde)
-                if (!SceneManaging.sceneChanged) SceneManaging.sceneChanged = true;
-
-                if (railList[currentRailIndex].myObjects[currentClickedInstanceObjectIndex].figure.GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(getMousePos))
-                {
-                    // aktuellen namen speichern, um spaeter die aktuelle position nach dem sortieren rauszubekommen
-                    currentName = railList[currentRailIndex].myObjects[currentClickedInstanceObjectIndex].objName;
-
-                    CreateListWithoutCurrentFigure(railList[currentRailIndex].myObjects[currentClickedInstanceObjectIndex]);
-                    SceneManaging.CalculateNeighbors(listWithoutCurrentFigure);
-
-
-                    // click on delete-Button
-                    if (railList[currentRailIndex].myObjects[currentClickedInstanceObjectIndex].figure.transform.GetChild(1).GetChild(0).gameObject.activeSelf
-                        && getMousePos.x >= railList[currentRailIndex].myObjects[currentClickedInstanceObjectIndex].figure.transform.GetChild(1).GetChild(0).position.x - railList[currentRailIndex].myObjects[currentClickedInstanceObjectIndex].figure.transform.GetChild(1).GetChild(0).GetComponent<RectTransform>().sizeDelta.x / 2.5f && getMousePos.x <= railList[currentRailIndex].myObjects[currentClickedInstanceObjectIndex].figure.transform.GetChild(1).GetChild(0).position.x + railList[currentRailIndex].myObjects[currentClickedInstanceObjectIndex].figure.transform.GetChild(1).GetChild(0).GetComponent<RectTransform>().sizeDelta.x / 2.5f
-                        && getMousePos.y >= railList[currentRailIndex].myObjects[currentClickedInstanceObjectIndex].figure.transform.GetChild(1).GetChild(0).position.y - railList[currentRailIndex].myObjects[currentClickedInstanceObjectIndex].figure.transform.GetChild(1).GetChild(0).GetComponent<RectTransform>().sizeDelta.y / 2.5f && getMousePos.y <= railList[currentRailIndex].myObjects[currentClickedInstanceObjectIndex].figure.transform.GetChild(1).GetChild(0).position.y + railList[currentRailIndex].myObjects[currentClickedInstanceObjectIndex].figure.transform.GetChild(1).GetChild(0).GetComponent<RectTransform>().sizeDelta.y / 2.5f)
+                    if (railList[currentRailIndex].myObjects[currentClickedInstanceObjectIndex].figure.GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(getMousePos))
                     {
-                        // Debug.Log("delete");
-                        _toBeRemovedFromTimeline = true;
-                    }
+                        // aktuellen namen speichern, um spaeter die aktuelle position nach dem sortieren rauszubekommen
+                        currentName = railList[currentRailIndex].myObjects[currentClickedInstanceObjectIndex].objName;
 
-                    diff = new Vector2(getMousePos.x - railList[currentRailIndex].myObjects[currentClickedInstanceObjectIndex].figure.transform.position.x, getMousePos.y - railList[currentRailIndex].myObjects[currentClickedInstanceObjectIndex].figure.transform.position.y);
-                    draggingOnTimeline = true;
-                    SceneManaging.dragging = true;
+                        CreateListWithoutCurrentFigure(railList[currentRailIndex].myObjects[currentClickedInstanceObjectIndex]);
+                        SceneManaging.CalculateNeighbors(listWithoutCurrentFigure);
 
-                    //highlighting objects and showing delete button when clicked
-                    if (SceneManaging.highlighted == false)
-                    {
-                        SceneManaging.highlight(railList[currentRailIndex].myObjects[currentClickedInstanceObjectIndex].figure3D, railList[currentRailIndex].myObjects[currentClickedInstanceObjectIndex].figure, true, "figure");
-                    }
-                    else if (SceneManaging.highlighted && railList[currentRailIndex].myObjects[currentClickedInstanceObjectIndex].figure.transform.GetChild(0).GetComponent<Image>().color == colFigureHighlighted) // checkFigureHighlighted(timelineInstanceObjects3D[currentClickedInstanceObjectIndex].transform.GetChild(1).gameObject))  // check if second child (which is never the armature) has emission enabled (=is highlighted)
-                    {
-                        // highlight(timelineInstanceObjects3D[currentClickedInstanceObjectIndex], timelineInstanceObjects[currentClickedInstanceObjectIndex], false);
-                    }
-                    else
-                    {
-                        for (int i = 0; i < railList[currentRailIndex].myObjects.Count; i++)
+
+                        // click on delete-Button
+                        if (railList[currentRailIndex].myObjects[currentClickedInstanceObjectIndex].figure.transform.GetChild(1).GetChild(0).gameObject.activeSelf
+                            && getMousePos.x >= railList[currentRailIndex].myObjects[currentClickedInstanceObjectIndex].figure.transform.GetChild(1).GetChild(0).position.x - railList[currentRailIndex].myObjects[currentClickedInstanceObjectIndex].figure.transform.GetChild(1).GetChild(0).GetComponent<RectTransform>().sizeDelta.x / 2.5f && getMousePos.x <= railList[currentRailIndex].myObjects[currentClickedInstanceObjectIndex].figure.transform.GetChild(1).GetChild(0).position.x + railList[currentRailIndex].myObjects[currentClickedInstanceObjectIndex].figure.transform.GetChild(1).GetChild(0).GetComponent<RectTransform>().sizeDelta.x / 2.5f
+                            && getMousePos.y >= railList[currentRailIndex].myObjects[currentClickedInstanceObjectIndex].figure.transform.GetChild(1).GetChild(0).position.y - railList[currentRailIndex].myObjects[currentClickedInstanceObjectIndex].figure.transform.GetChild(1).GetChild(0).GetComponent<RectTransform>().sizeDelta.y / 2.5f && getMousePos.y <= railList[currentRailIndex].myObjects[currentClickedInstanceObjectIndex].figure.transform.GetChild(1).GetChild(0).position.y + railList[currentRailIndex].myObjects[currentClickedInstanceObjectIndex].figure.transform.GetChild(1).GetChild(0).GetComponent<RectTransform>().sizeDelta.y / 2.5f)
                         {
-                            SceneManaging.highlight(railList[currentRailIndex].myObjects[i].figure3D, railList[currentRailIndex].myObjects[i].figure, false, "figure");
+                            // Debug.Log("delete");
+                            _toBeRemovedFromTimeline = true;
                         }
-                        SceneManaging.highlight(railList[currentRailIndex].myObjects[currentClickedInstanceObjectIndex].figure3D, railList[currentRailIndex].myObjects[currentClickedInstanceObjectIndex].figure, true, "figure");
+
+                        diff = new Vector2(getMousePos.x - railList[currentRailIndex].myObjects[currentClickedInstanceObjectIndex].figure.transform.position.x, getMousePos.y - railList[currentRailIndex].myObjects[currentClickedInstanceObjectIndex].figure.transform.position.y);
+                        draggingOnTimeline = true;
+                        SceneManaging.dragging = true;
+
+                        //highlighting objects and showing delete button when clicked
+                        if (SceneManaging.highlighted == false)
+                        {
+                            SceneManaging.highlight(railList[currentRailIndex].myObjects[currentClickedInstanceObjectIndex].figure3D, railList[currentRailIndex].myObjects[currentClickedInstanceObjectIndex].figure, true, "figure");
+                        }
+                        else if (SceneManaging.highlighted && railList[currentRailIndex].myObjects[currentClickedInstanceObjectIndex].figure.transform.GetChild(0).GetComponent<Image>().color == colFigureHighlighted) // checkFigureHighlighted(timelineInstanceObjects3D[currentClickedInstanceObjectIndex].transform.GetChild(1).gameObject))  // check if second child (which is never the armature) has emission enabled (=is highlighted)
+                        {
+                            // highlight(timelineInstanceObjects3D[currentClickedInstanceObjectIndex], timelineInstanceObjects[currentClickedInstanceObjectIndex], false);
+                        }
+                        else
+                        {
+                            for (int i = 0; i < railList[currentRailIndex].myObjects.Count; i++)
+                            {
+                                SceneManaging.highlight(railList[currentRailIndex].myObjects[i].figure3D, railList[currentRailIndex].myObjects[i].figure, false, "figure");
+                            }
+                            SceneManaging.highlight(railList[currentRailIndex].myObjects[currentClickedInstanceObjectIndex].figure3D, railList[currentRailIndex].myObjects[currentClickedInstanceObjectIndex].figure, true, "figure");
+                        }
                     }
+
                 }
 
-            }
-
-            //if you hit/clicked nothing with mouse
-            else if (Physics2D.OverlapPoint(getMousePos) == false)
-            {
-                // delete highlight of everything if nothing is clicked
-                for (int i = 0; i < railList[currentRailIndex].myObjects.Count; i++)
+                //if you hit/clicked nothing with mouse
+                else if (Physics2D.OverlapPoint(getMousePos) == false)
                 {
-                    SceneManaging.highlight(railList[currentRailIndex].myObjects[i].figure3D, railList[currentRailIndex].myObjects[i].figure, false, "figure");
+                    // delete highlight of everything if nothing is clicked
+                    for (int i = 0; i < railList[currentRailIndex].myObjects.Count; i++)
+                    {
+                        SceneManaging.highlight(railList[currentRailIndex].myObjects[i].figure3D, railList[currentRailIndex].myObjects[i].figure, false, "figure");
+                    }
+                    // for (int i = 0; i < flyerSpaces.Length; i++)
+                    // {
+                    //     SceneManaging.highlight(null, flyerSpaces[i], false, "flyer");
+                    // }
                 }
-                // for (int i = 0; i < flyerSpaces.Length; i++)
-                // {
-                //     SceneManaging.highlight(null, flyerSpaces[i], false, "flyer");
-                // }
             }
         }
         // if timeline is open and something is being dragged
@@ -1349,6 +1359,7 @@ public class RailManager : MonoBehaviour
                         {
                             //Debug.Log("tauschen");
                             currentClickedInstanceObjectIndex = i;
+                            currentObj = railList[currentRailIndex].myObjects[i];
                             //currentObj = currentObj;
                         }
                     }

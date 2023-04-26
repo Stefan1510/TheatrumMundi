@@ -9,12 +9,9 @@ using TMPro;
 public class RailMusicManager : MonoBehaviour
 {
     #region public variables
-    // [HideInInspector] public List<ObjectsPoint> myObjectsPositionListLayer1 = new List<ObjectsPoint>();
-    // [HideInInspector] public List<ObjectsPoint> myObjectsPositionListLayer2 = new List<ObjectsPoint>();
     [HideInInspector] public List<MusicPiece> myObjects = new List<MusicPiece>();
     [HideInInspector] public bool isTimelineOpen;
     public GameObject objectLibrary, parentMenue; // mainMenue
-    // [HideInInspector] public List<GameObject> timelineInstanceObjects, figuresLayer1, figuresLayer2;
     [HideInInspector] public int sizeLayering = 1;
     public AudioClip[] clip;         // ought to be 6 audioclips
     #endregion
@@ -25,6 +22,7 @@ public class RailMusicManager : MonoBehaviour
     [SerializeField] private BoxCollider2D _backgroundBoxCollider;
     [SerializeField] private GameObject prefabRect;
     [SerializeField] private TextMeshProUGUI spaceWarning;
+    [SerializeField] private Image spaceWarningBorder;
     Vector2 sizeDeltaAsFactor;
     AudioSource audioSource;
     Vector2[] objectShelfPosition;
@@ -49,7 +47,7 @@ public class RailMusicManager : MonoBehaviour
     private List<MusicPiece> listWithoutCurrentFigure = new List<MusicPiece>();
     private int currentPosInList;
     float _idleTimer = -1;
-    private float alpha = 1;
+    // public float alpha = 1;
     Color colSpaceWarning;
     #endregion
     #region Lists
@@ -1053,135 +1051,137 @@ public class RailMusicManager : MonoBehaviour
             if (_idleTimer >= 2)
             {
                 SceneManaging.WarningAnimation(colSpaceWarning, spaceWarning);
+                SceneManaging.WarningAnimation(colSpaceWarning, spaceWarningBorder);
             }
         }
         else if (_idleTimer >= 3)
         {
             _idleTimer = -1;
-            alpha = 1;
-            colSpaceWarning = new Color(1, 0, 0, alpha);
+            SceneManaging.alpha = 1;
+            colSpaceWarning = new Color(1, 0, 0, 1);
             spaceWarning.color = colSpaceWarning;
             spaceWarning.enabled = false;
         }
 
-
         if (Input.GetMouseButtonDown(0)) //left mouse button down
         {
-            //identify which gameobject you clicked
-            currentClickedObjectIndex = SceneManaging.identifyClickedObject(figureObjects);         //method fills up the current clicked index
-            currentClickedInstanceObjectIndex = SceneManaging.identifyClickedObjectByList(myObjects);
-            editTimelineObject = false;                             //flag to prevent closing the timeline if you click an object in timeline
-            releaseOnTimeline = false;                              //because you have not set anything on timeline 
-            releaseObjMousePos = new Vector2(0.0f, 0.0f);
-
-            int tmpI = -1;
-            for (int i = 0; i < myObjects.Count; i++)
+            if (!SceneManaging.tutorialActive)
             {
-                if (myObjects[i].musicPiece.GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(getMousePos))
-                {
-                    tmpI = i;
-                }
-            }
-            if (tmpI >= 0)
-            {
-                editTimelineObject = true;
-            }
-            else
-            {
-                editTimelineObject = false;
-            }
-            // if you click in slider window
-            if (_backgroundBoxCollider == Physics2D.OverlapPoint(getMousePos))
-            {
-                PlayLatestPiece(true);
-            }
-            //if you click the timeline with the mouse
-            if (this.GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(getMousePos))
-            {
-                //open or close timeline
-                openTimelineByClick(isTimelineOpen, false);
-            }
+                //identify which gameobject you clicked
+                currentClickedObjectIndex = SceneManaging.identifyClickedObject(figureObjects);         //method fills up the current clicked index
+                currentClickedInstanceObjectIndex = SceneManaging.identifyClickedObjectByList(myObjects);
+                editTimelineObject = false;                             //flag to prevent closing the timeline if you click an object in timeline
+                releaseOnTimeline = false;                              //because you have not set anything on timeline 
+                releaseObjMousePos = new Vector2(0.0f, 0.0f);
 
-            //if you click on an object in shelf
-            else if (currentClickedObjectIndex != (-1))      //is set in the identify-methods
-            {
-                //wenn neues objekt genommen wird, soll altes aktuelles objekt unhighlighted werden
-                for (int j = 0; j < myObjects.Count; j++)
-                {
-                    SceneManaging.highlight(myObjects[j].musicPiece, false, "music");
-                }
-
-                if (!SceneManaging.sceneChanged)
-                    SceneManaging.sceneChanged = true;
-
-                diff = new Vector2(getMousePos.x - figureObjects[currentClickedObjectIndex].transform.position.x, getMousePos.y - figureObjects[currentClickedObjectIndex].transform.position.y);
-
-                if (figureObjects[currentClickedObjectIndex].GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(getMousePos))
-                {
-                    //set up some flags
-                    draggingObject = true;
-                }
-            }
-            //or check if you click an object in timeline
-            else if (currentClickedInstanceObjectIndex != -1 && editTimelineObject)
-            {
-                if (!SceneManaging.sceneChanged)
-                    SceneManaging.sceneChanged = true;
-
-                if (myObjects[currentClickedInstanceObjectIndex].musicPiece.GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(getMousePos))
-                {
-                    // aktuellen namen speichern, um spaeter die aktuelle position nach dem sortieren rauszubekommen
-                    currentName = myObjects[currentClickedInstanceObjectIndex].objName;
-
-                    CreateListWithoutCurrentFigure(myObjects[currentClickedInstanceObjectIndex]);
-                    SceneManaging.CalculateNeighbors(listWithoutCurrentFigure);
-
-                    // click on delete-Button
-                    Vector2 pos = myObjects[currentClickedInstanceObjectIndex].musicPiece.transform.GetChild(1).GetChild(0).position;
-                    RectTransform rect = myObjects[currentClickedInstanceObjectIndex].musicPiece.transform.GetChild(1).GetChild(0).GetComponent<RectTransform>();
-
-                    if (myObjects[currentClickedInstanceObjectIndex].musicPiece.transform.GetChild(1).GetChild(0).gameObject.activeSelf
-                        && getMousePos.x >= pos.x - rect.sizeDelta.x / 2.5f && getMousePos.x <= pos.x + rect.sizeDelta.x / 2.5f
-                        && getMousePos.y >= pos.y - rect.sizeDelta.y / 2.5f && getMousePos.y <= pos.y + rect.sizeDelta.y / 2.5f)
-                    {
-                        _toBeRemoved = true;
-                    }
-                    diff = new Vector2(getMousePos.x - myObjects[currentClickedInstanceObjectIndex].musicPiece.transform.position.x, getMousePos.y - myObjects[currentClickedInstanceObjectIndex].musicPiece.transform.position.y);
-
-                    //set up some flags
-                    draggingObject = true;
-                    draggingOnTimeline = true;
-
-                    //highlighting objects and showing delete button when clicked
-                    if (SceneManaging.highlighted == false)
-                    {
-                        SceneManaging.highlight(myObjects[currentClickedInstanceObjectIndex].musicPiece, true, "music");
-                    }
-                    else if (SceneManaging.highlighted && myObjects[currentClickedInstanceObjectIndex].musicPiece.transform.GetChild(0).GetComponent<Image>().color == colMusicHighlighted) // checkFigureHighlighted(timelineInstanceObjects3D[currentClickedInstanceObjectIndex].transform.GetChild(1).gameObject))  // check if second child (which is never the armature) has emission enabled (=is highlighted)
-                    {
-                        // highlight(timelineInstanceObjects3D[currentClickedInstanceObjectIndex], timelineInstanceObjects[currentClickedInstanceObjectIndex], false);
-                    }
-                    else
-                    {
-                        for (int i = 0; i < myObjects.Count; i++)
-                        {
-                            SceneManaging.highlight(myObjects[i].musicPiece, false, "music");
-                        }
-                        SceneManaging.highlight(myObjects[currentClickedInstanceObjectIndex].musicPiece, true, "music");
-                    }
-                }
-
-            }
-
-            //if you hit/clicked nothing with mouse
-            else if (Physics2D.OverlapPoint(getMousePos) == false)
-            {
+                int tmpI = -1;
                 for (int i = 0; i < myObjects.Count; i++)
                 {
-                    SceneManaging.highlight(myObjects[i].musicPiece, false, "music");
+                    if (myObjects[i].musicPiece.GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(getMousePos))
+                    {
+                        tmpI = i;
+                    }
+                }
+                if (tmpI >= 0)
+                {
+                    editTimelineObject = true;
+                }
+                else
+                {
+                    editTimelineObject = false;
+                }
+                // if you click in slider window
+                if (_backgroundBoxCollider == Physics2D.OverlapPoint(getMousePos))
+                {
+                    PlayLatestPiece(true);
+                }
+                //if you click the timeline with the mouse
+                if (this.GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(getMousePos))
+                {
+                    //open or close timeline
+                    openTimelineByClick(isTimelineOpen, false);
+                }
+
+                //if you click on an object in shelf
+                else if (currentClickedObjectIndex != (-1))      //is set in the identify-methods
+                {
+                    //wenn neues objekt genommen wird, soll altes aktuelles objekt unhighlighted werden
+                    for (int j = 0; j < myObjects.Count; j++)
+                    {
+                        SceneManaging.highlight(myObjects[j].musicPiece, false, "music");
+                    }
+
+                    if (!SceneManaging.sceneChanged)
+                        SceneManaging.sceneChanged = true;
+
+                    diff = new Vector2(getMousePos.x - figureObjects[currentClickedObjectIndex].transform.position.x, getMousePos.y - figureObjects[currentClickedObjectIndex].transform.position.y);
+
+                    if (figureObjects[currentClickedObjectIndex].GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(getMousePos))
+                    {
+                        //set up some flags
+                        draggingObject = true;
+                    }
+                }
+                //or check if you click an object in timeline
+                else if (currentClickedInstanceObjectIndex != -1 && editTimelineObject)
+                {
+                    if (!SceneManaging.sceneChanged)
+                        SceneManaging.sceneChanged = true;
+
+                    if (myObjects[currentClickedInstanceObjectIndex].musicPiece.GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(getMousePos))
+                    {
+                        // aktuellen namen speichern, um spaeter die aktuelle position nach dem sortieren rauszubekommen
+                        currentName = myObjects[currentClickedInstanceObjectIndex].objName;
+
+                        CreateListWithoutCurrentFigure(myObjects[currentClickedInstanceObjectIndex]);
+                        SceneManaging.CalculateNeighbors(listWithoutCurrentFigure);
+
+                        // click on delete-Button
+                        Vector2 pos = myObjects[currentClickedInstanceObjectIndex].musicPiece.transform.GetChild(1).GetChild(0).position;
+                        RectTransform rect = myObjects[currentClickedInstanceObjectIndex].musicPiece.transform.GetChild(1).GetChild(0).GetComponent<RectTransform>();
+
+                        if (myObjects[currentClickedInstanceObjectIndex].musicPiece.transform.GetChild(1).GetChild(0).gameObject.activeSelf
+                            && getMousePos.x >= pos.x - rect.sizeDelta.x / 2.5f && getMousePos.x <= pos.x + rect.sizeDelta.x / 2.5f
+                            && getMousePos.y >= pos.y - rect.sizeDelta.y / 2.5f && getMousePos.y <= pos.y + rect.sizeDelta.y / 2.5f)
+                        {
+                            _toBeRemoved = true;
+                        }
+                        diff = new Vector2(getMousePos.x - myObjects[currentClickedInstanceObjectIndex].musicPiece.transform.position.x, getMousePos.y - myObjects[currentClickedInstanceObjectIndex].musicPiece.transform.position.y);
+
+                        //set up some flags
+                        draggingObject = true;
+                        draggingOnTimeline = true;
+
+                        //highlighting objects and showing delete button when clicked
+                        if (SceneManaging.highlighted == false)
+                        {
+                            SceneManaging.highlight(myObjects[currentClickedInstanceObjectIndex].musicPiece, true, "music");
+                        }
+                        else if (SceneManaging.highlighted && myObjects[currentClickedInstanceObjectIndex].musicPiece.transform.GetChild(0).GetComponent<Image>().color == colMusicHighlighted) // checkFigureHighlighted(timelineInstanceObjects3D[currentClickedInstanceObjectIndex].transform.GetChild(1).gameObject))  // check if second child (which is never the armature) has emission enabled (=is highlighted)
+                        {
+                            // highlight(timelineInstanceObjects3D[currentClickedInstanceObjectIndex], timelineInstanceObjects[currentClickedInstanceObjectIndex], false);
+                        }
+                        else
+                        {
+                            for (int i = 0; i < myObjects.Count; i++)
+                            {
+                                SceneManaging.highlight(myObjects[i].musicPiece, false, "music");
+                            }
+                            SceneManaging.highlight(myObjects[currentClickedInstanceObjectIndex].musicPiece, true, "music");
+                        }
+                    }
+
+                }
+
+                //if you hit/clicked nothing with mouse
+                else if (Physics2D.OverlapPoint(getMousePos) == false)
+                {
+                    for (int i = 0; i < myObjects.Count; i++)
+                    {
+                        SceneManaging.highlight(myObjects[i].musicPiece, false, "music");
+                    }
                 }
             }
-
         }
         // if timeline is open and something is being dragged
         if (draggingOnTimeline && isTimelineOpen)

@@ -22,6 +22,7 @@ public static class SceneManaging
     // flyer
     public static bool flyerActive;
     public static int[] flyerSpace = new int[9];
+    public static bool tutorialActive;
     //timeslider
     public static bool fullscreenOn = false;
     private static Color _colFigure = new Color(0.06f, 0.66f, .74f, 0.5f);
@@ -32,7 +33,7 @@ public static class SceneManaging
     private static Color _colFlyer = new Color(.78f, .46f, .31f);
     private static Color _colFlyerSpace = new Color(.78f, .54f, .44f);
     private static float _idleTimer = -1;
-    private static float alpha = 1;
+    public static float alpha = 1;
     #endregion
     public static void createRectangle(GameObject obj, Color col, double rectHeight, GameObject prefab, double tmpLength)
     {
@@ -314,6 +315,12 @@ public static class SceneManaging
         }
     }
     public static void WarningAnimation(Color colSpaceWarning, TextMeshProUGUI spaceWarning)
+    {
+        alpha -= 0.05f;
+        colSpaceWarning = new Color(1, 0, 0, alpha);
+        spaceWarning.color = colSpaceWarning;
+    }
+    public static void WarningAnimation(Color colSpaceWarning, Image spaceWarning)
     {
         alpha -= 0.05f;
         colSpaceWarning = new Color(1, 0, 0, alpha);

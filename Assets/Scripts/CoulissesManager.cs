@@ -22,7 +22,7 @@ public class CoulissesManager : MonoBehaviour
     #endregion
     #region private variables
     [SerializeField] GameObject scrollViewScenery, helpButton, liveView;
-    
+
     int currentObjectIndex, clickInSettingsWindow;
     bool dragging;
     private bool sliding;
@@ -132,92 +132,95 @@ public class CoulissesManager : MonoBehaviour
         }
         if (Input.GetMouseButtonDown(0)) //left mouse button down
         {
-            // if indexTab is clicked
-            for (int i = 0; i < indexTabs.Length; i++)
+            if (!SceneManaging.tutorialActive)
             {
-                if (indexTabs[i].GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(Input.mousePosition))
+                // if indexTab is clicked
+                for (int i = 0; i < indexTabs.Length; i++)
                 {
+                    if (indexTabs[i].GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(Input.mousePosition))
+                    {
+                        if (isAnythingHighlighted())
+                        {
+                            for (int j = 0; j < coulissesOnRails.Count; j++)
+                            {
+                                int k = int.Parse(coulissesOnRails[j].name.Substring(8, 2)) - 1;
+                                highlight(k, 0);
+                            }
+                        }
+                        setIndexTabActive(i);
+                    }
+                }
+                // if (gameController.GetComponent<UnitySwitchExpertUser>()._isExpert)
+                // {
+                clickInSettingsWindow = isSettingsWindowClicked();
+                // }
+                clickOnDelete = isDeleteButtonClicked();
+
+                // if settingswindow (feineinstellungen) is clicked
+                if (clickInSettingsWindow != -1)
+                {
+                    if (!SceneManaging.sceneChanged) SceneManaging.sceneChanged = true;
+                    sliding = true;
+                }
+                // if delete button is clicked
+                else if (clickOnDelete)
+                {
+                    removeCoulisse();
+                }
+                else
+                {
+                    currentObjectIndex = identifyClickedObjectIndex();
+                }
+
+                // if a coulisse is clicked
+                if (currentObjectIndex != -1 && clickInSettingsWindow == -1)
+                {
+                    // if (_counterTouched < 2)
+                    //     _counterTouched++;
+                    // else if (_counterTouched == 2)
+                    //     _timerCoulisse = 0.0f;
+
+                    if (!SceneManaging.sceneChanged) SceneManaging.sceneChanged = true;
+                    scrollViewScenery.GetComponent<ScrollRect>().enabled = false;
+                    diff = new Vector2(getMousePos.x - coulisses[currentObjectIndex].transform.position.x, getMousePos.y - coulisses[currentObjectIndex].transform.position.y);
+                    dragging = true;
                     if (isAnythingHighlighted())
                     {
-                        for (int j = 0; j < coulissesOnRails.Count; j++)
+                        for (int i = 0; i < coulissesOnRails.Count; i++)
                         {
-                            int k = int.Parse(coulissesOnRails[j].name.Substring(8, 2)) - 1;
-                            highlight(k, 0);
+                            int j = int.Parse(coulissesOnRails[i].name.Substring(8, 2)) - 1;
+                            highlight(j, 0);
                         }
+                        highlight(currentObjectIndex, 2);
+                        showDeleteButton(deleteButton, coulisses[currentObjectIndex], false);
                     }
-                    setIndexTabActive(i);
+                    else
+                    {
+                        highlight(currentObjectIndex, 2);
+                        showDeleteButton(deleteButton, coulisses[currentObjectIndex], false);
+                    }
+                    // if coulisse is clicked in shelf ('first time')
+                    if (coulisses[currentObjectIndex].GetComponent<RectTransform>().rect.width.ToString().Substring(0, 5) == shelfSizeWidth[currentObjectIndex].ToString().Substring(0, 5))
+                    {
+                        coulisses[currentObjectIndex].GetComponent<RectTransform>().sizeDelta = coulisses[currentObjectIndex].GetComponent<BoxCollider2D>().size = new Vector2(railWidth / 410 * coulisses[currentObjectIndex].GetComponent<CoulisseStats>().CoulisseWidth / coulisses[currentObjectIndex].transform.lossyScale.x, railWidth / 410 * coulisses[currentObjectIndex].GetComponent<CoulisseStats>().CoulisseHeight / coulisses[currentObjectIndex].transform.lossyScale.y);
+                        coulisses[currentObjectIndex].GetComponent<BoxCollider2D>().offset = new Vector2(0, coulisses[currentObjectIndex].GetComponent<RectTransform>().rect.height / 2);
+                        clickCoulisseFromShelf = true;
+                    }
+                    publicSibling = coulisses[currentObjectIndex].transform.GetSiblingIndex();
+                    //Debug.Log(publicSibling);
+                    textPositionZCoulisses.GetComponent<TextMeshProUGUI>().text = (coulisses[currentObjectIndex].transform.parent.transform.childCount - publicSibling) + "/" + coulisses[currentObjectIndex].transform.parent.transform.childCount;
+                    coulisses[currentObjectIndex].transform.SetParent(mainMenue.transform);
                 }
-            }
-            // if (gameController.GetComponent<UnitySwitchExpertUser>()._isExpert)
-            // {
-            clickInSettingsWindow = isSettingsWindowClicked();
-            // }
-            clickOnDelete = isDeleteButtonClicked();
 
-            // if settingswindow (feineinstellungen) is clicked
-            if (clickInSettingsWindow != -1)
-            {
-                if (!SceneManaging.sceneChanged) SceneManaging.sceneChanged = true;
-                sliding = true;
-            }
-            // if delete button is clicked
-            else if (clickOnDelete)
-            {
-                removeCoulisse();
-            }
-            else
-            {
-                currentObjectIndex = identifyClickedObjectIndex();
-            }
-
-            // if a coulisse is clicked
-            if (currentObjectIndex != -1 && clickInSettingsWindow == -1)
-            {
-                // if (_counterTouched < 2)
-                //     _counterTouched++;
-                // else if (_counterTouched == 2)
-                //     _timerCoulisse = 0.0f;
-
-                if (!SceneManaging.sceneChanged) SceneManaging.sceneChanged = true;
-                scrollViewScenery.GetComponent<ScrollRect>().enabled = false;
-                diff = new Vector2(getMousePos.x - coulisses[currentObjectIndex].transform.position.x, getMousePos.y - coulisses[currentObjectIndex].transform.position.y);
-                dragging = true;
-                if (isAnythingHighlighted())
+                else if (currentObjectIndex == -1 && clickInSettingsWindow == -1) // if nothing is hit
                 {
                     for (int i = 0; i < coulissesOnRails.Count; i++)
                     {
                         int j = int.Parse(coulissesOnRails[i].name.Substring(8, 2)) - 1;
                         highlight(j, 0);
                     }
-                    highlight(currentObjectIndex, 2);
-                    showDeleteButton(deleteButton, coulisses[currentObjectIndex], false);
+                    StaticSceneData.Sceneries3D(); //CreateScene der SceneryElements
                 }
-                else
-                {
-                    highlight(currentObjectIndex, 2);
-                    showDeleteButton(deleteButton, coulisses[currentObjectIndex], false);
-                }
-                // if coulisse is clicked in shelf ('first time')
-                if (coulisses[currentObjectIndex].GetComponent<RectTransform>().rect.width.ToString().Substring(0, 5) == shelfSizeWidth[currentObjectIndex].ToString().Substring(0, 5))
-                {
-                    coulisses[currentObjectIndex].GetComponent<RectTransform>().sizeDelta = coulisses[currentObjectIndex].GetComponent<BoxCollider2D>().size = new Vector2(railWidth / 410 * coulisses[currentObjectIndex].GetComponent<CoulisseStats>().CoulisseWidth / coulisses[currentObjectIndex].transform.lossyScale.x, railWidth / 410 * coulisses[currentObjectIndex].GetComponent<CoulisseStats>().CoulisseHeight / coulisses[currentObjectIndex].transform.lossyScale.y);
-                    coulisses[currentObjectIndex].GetComponent<BoxCollider2D>().offset = new Vector2(0, coulisses[currentObjectIndex].GetComponent<RectTransform>().rect.height / 2);
-                    clickCoulisseFromShelf = true;
-                }
-                publicSibling = coulisses[currentObjectIndex].transform.GetSiblingIndex();
-                //Debug.Log(publicSibling);
-                textPositionZCoulisses.GetComponent<TextMeshProUGUI>().text = (coulisses[currentObjectIndex].transform.parent.transform.childCount - publicSibling) + "/" + coulisses[currentObjectIndex].transform.parent.transform.childCount;
-                coulisses[currentObjectIndex].transform.SetParent(mainMenue.transform);
-            }
-
-            else if (currentObjectIndex == -1 && clickInSettingsWindow == -1) // if nothing is hit
-            {
-                for (int i = 0; i < coulissesOnRails.Count; i++)
-                {
-                    int j = int.Parse(coulissesOnRails[i].name.Substring(8, 2)) - 1;
-                    highlight(j, 0);
-                }
-                StaticSceneData.Sceneries3D(); //CreateScene der SceneryElements
             }
         }
 
@@ -616,6 +619,7 @@ public class CoulissesManager : MonoBehaviour
             if (isHighlighted[j])
             {
                 val = true;
+                break;
             }
         }
         return val;

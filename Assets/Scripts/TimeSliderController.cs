@@ -62,9 +62,13 @@ public class TimeSliderController : MonoBehaviour, IPointerUpHandler, IDragHandl
 
     void UpdateTimeSlider(float value)
     {
-        //AnimationTimer.SetTime(_thisSlider.value);
-        AnimationTimer.SetTime(value);
-        //Debug.Log("value: "+value);
+
+        if (!SceneManaging.tutorialActive)
+        {
+            //AnimationTimer.SetTime(_thisSlider.value);
+            AnimationTimer.SetTime(value);
+            //Debug.Log("value: "+value);
+        }
     }
 
     void SwitchKeyConfigControls(bool value)
@@ -121,7 +125,4 @@ public class TimeSliderController : MonoBehaviour, IPointerUpHandler, IDragHandl
         }
 
     }
-
-
-
 }

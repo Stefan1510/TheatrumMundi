@@ -1,14 +1,18 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using TMPro;
 
 public class PressHelp : MonoBehaviour
 {
     #region variables
     [SerializeField] GameObject helpButtonPressed, helpOverlayMenue2, helpOverlayMenue1, helpOverlayMenue3, helpOverlayMenue4, helpOverlayMenue5, helpOverlayMenue6, helpOverlayFlyer, aboutScreen;
-    [SerializeField] GameObject timeSliderBubble, gameController;
+    [SerializeField] GameObject timeSliderBubbleFigure, timeSliderBubbleMusic, gameController;
     [SerializeField] GameObject maskTimeSlider, _timeSliderPlayButton;
+    [SerializeField] TextMeshProUGUI tutText;
+    [SerializeField] GameObject tutorialCountImage;
     public GameObject _arrowHelp;
+    GameObject _timeSliderBubble;
     [SerializeField] GameObject _countdown;
     GameObject _publicHelpMenue;
     [HideInInspector] public bool pressed = false, arrowPressed = false;
@@ -96,12 +100,14 @@ public class PressHelp : MonoBehaviour
 
                 maskTimeSlider.SetActive(false);
                 _tutorialCounter = -1;
+                tutorialCountImage.SetActive(false);
+                SceneManaging.tutorialActive = false;
             }
 
             else
             {
                 helpButtonPressed.SetActive(true);
-                if(SceneManaging.flyerActive)  // theaterzettel
+                if (SceneManaging.flyerActive)  // theaterzettel
                 {
                     helpOverlayFlyer.SetActive(true);
                     _tutorialCounter = 1;
@@ -119,6 +125,7 @@ public class PressHelp : MonoBehaviour
                     _tutorialCounter = 1;
                     helpOverlayMenue5.transform.GetChild(0).gameObject.SetActive(true);
                     _publicHelpMenue = helpOverlayMenue5;
+                    _timeSliderBubble = timeSliderBubbleFigure;
                 }
                 else if (SceneManaging.mainMenuActive == 1 && SceneManaging.configMenueActive == 2)    // kulissen
                 {
@@ -126,6 +133,7 @@ public class PressHelp : MonoBehaviour
                     _publicHelpMenue = helpOverlayMenue2;
                     _tutorialCounter = 1;
                     helpOverlayMenue2.transform.GetChild(0).gameObject.SetActive(true);
+
                 }
                 /*else if (SceneManaging.mainMenuActive == 2 && SceneManaging.directorMenueActive == 2)    // (light director) verworfen
                 {
@@ -139,12 +147,18 @@ public class PressHelp : MonoBehaviour
                 else if (SceneManaging.directorMenueActive == 3 && SceneManaging.mainMenuActive == 2)  // musik
                 {
                     helpOverlayMenue6.SetActive(true);
+                    _publicHelpMenue = helpOverlayMenue6;
+                    _tutorialCounter = 1;
+                    helpOverlayMenue6.transform.GetChild(0).gameObject.SetActive(true);
+                    _timeSliderBubble = timeSliderBubbleMusic;
                 }
                 else if (SceneManaging.configMenueActive == 4)  // speichern
                 {
                     helpOverlayMenue4.SetActive(true);
                 }
-
+                tutorialCountImage.SetActive(true);
+                tutText.text = "Hinweis " + _tutorialCounter + "/" + _publicHelpMenue.transform.childCount;
+                SceneManaging.tutorialActive = true;
                 pressed = true;
                 //Debug.Log("true");
             }
@@ -157,112 +171,6 @@ public class PressHelp : MonoBehaviour
         else // close about
         {
             aboutScreen.SetActive(false);
-        }
-    }
-    private void LateUpdate()
-    {
-        if (Input.GetMouseButtonDown(0))
-        {
-            _isClicked = true;
-            // tutorial
-            if (_tutorialCounter != -1 && _tutorialCounter < _publicHelpMenue.transform.childCount)
-            {
-                //Debug.Log("counter: " + _tutorialCounter);
-                for (int i = 0; i < _publicHelpMenue.transform.childCount; i++)
-                {
-                    _publicHelpMenue.transform.GetChild(i).gameObject.SetActive(false);
-                }
-                _publicHelpMenue.transform.GetChild(_tutorialCounter).gameObject.SetActive(true);
-
-                if (_publicHelpMenue == helpOverlayMenue5)
-                {
-                    if (_tutorialCounter == 2) // timeslider
-                    {
-                        timeSliderBubble.transform.position = _timeSliderPlayButton.transform.position;
-                        maskTimeSlider.SetActive(true);
-                        timeSliderBubble.GetComponent<RectTransform>().anchoredPosition = new Vector2(timeSliderBubble.GetComponent<RectTransform>().anchoredPosition.x, 13);
-                    }
-                    else if (_tutorialCounter == 3) // nach timeslider
-                    {
-                        maskTimeSlider.SetActive(false);
-                    }
-                }
-                _tutorialCounter++;
-            }
-            else
-            {
-                try
-                {
-                    _publicHelpMenue.SetActive(false);
-                    _tutorialCounter = -1;
-                    helpButtonPressed.SetActive(false);
-                    pressed = false;
-                    for (int i = 0; i < _publicHelpMenue.transform.childCount; i++)
-                    {
-                        _publicHelpMenue.transform.GetChild(i).gameObject.SetActive(false);
-                    }
-                }
-                catch (NullReferenceException) { }
-
-            }
-            helpTextLiveView.SetActive(false);
-            pressedLiveView = false;
-        }
-        if (Input.anyKeyDown)
-        {
-            StopHelpAnimation();
-            StopOverlay();
-            _newScene = false;
-
-            if (_countdown.activeSelf)
-                _countdown.SetActive(false);
-        }
-        if (Input.GetMouseButtonUp(0))
-        {
-            _isClicked = false;
-            _timerOverlay = 0;
-            _idleTimer = 0;
-        }
-        if (_tutorialCounter == -1 && !_isClicked)
-        {
-            _idleTimer += Time.deltaTime;
-            // if (!_newScene && !SceneManaging.playing)
-                //_timerOverlay += Time.deltaTime;
-        }
-        if (_idleTimer > _helpAnimWaitTime && !SceneManaging.playing)
-        {
-            HelpAnimation();
-        }
-        if (_idleTimer >= _helpAnimWaitTime + _helpAnimDuration)
-        {
-            StopHelpAnimation();
-            secondHighlight = false;
-        }
-        if (_timerOverlay > _maxTimeArrow && _timerOverlay < _maxTimeCountdown && !SceneManaging.playing && !SceneManaging.dragging && !arrowPressed)
-        {
-            _arrowHelp.SetActive(true);
-            arrowPressed = true;
-        }
-        else if (_timerOverlay >= _maxTimeCountdown && arrowPressed)
-        {
-            _arrowHelp.SetActive(false);
-            arrowPressed = false;
-            _countdown.SetActive(true);
-        }
-        else if (_timerOverlay > _maxTimeCountdown)
-        {
-            for (int i = 0; i < 11; i++)
-            {
-                if (_timerOverlay > _maxTimeCountdown + i)
-                    _countdown.transform.GetChild(0).GetChild(0).GetComponent<Text>().text = "Achtung! Die Szene wird in " + (10 - i) + " Sekunden gelöscht.\nZum Abbrechen bitte klicken.";
-            }
-            if (_timerOverlay > _maxTimeCountdown + 10)
-            {
-                _countdown.SetActive(false);
-                _timerOverlay = 0;
-                StartCoroutine(gameController.GetComponent<SaveFileController>().LoadFileFromWWW("*Musterszene_leer.json", "fromCode"));
-                _newScene = true;
-            }
         }
     }
     public void ClickOnLiveView()
@@ -304,5 +212,114 @@ public class PressHelp : MonoBehaviour
             pressedLiveView = true;
         }
     }
+    private void LateUpdate()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            _isClicked = true;
+            // tutorial
+            if (_tutorialCounter != -1 && _tutorialCounter < _publicHelpMenue.transform.childCount)
+            {
+                //Debug.Log("counter: " + _tutorialCounter);
+                for (int i = 0; i < _publicHelpMenue.transform.childCount; i++)
+                {
+                    _publicHelpMenue.transform.GetChild(i).gameObject.SetActive(false);
+                }
+                _publicHelpMenue.transform.GetChild(_tutorialCounter).gameObject.SetActive(true);
 
+                if (_publicHelpMenue == helpOverlayMenue5 || _publicHelpMenue == helpOverlayMenue6)
+                {
+                    if (_tutorialCounter == 2) // timeslider
+                    {
+                        _timeSliderBubble.transform.position = _timeSliderPlayButton.transform.position;
+                        maskTimeSlider.SetActive(true);
+                        _timeSliderBubble.GetComponent<RectTransform>().anchoredPosition = new Vector2(_timeSliderBubble.GetComponent<RectTransform>().anchoredPosition.x, 13);
+                    }
+                    else if (_tutorialCounter == 3) // nach timeslider
+                    {
+                        maskTimeSlider.SetActive(false);
+                    }
+                }
+                _tutorialCounter++;
+                tutText.text = "Hinweis " + _tutorialCounter + "/" + _publicHelpMenue.transform.childCount;
+            }
+            else
+            {
+                try
+                {
+            tutorialCountImage.SetActive(false);
+                    _publicHelpMenue.SetActive(false);
+                    _tutorialCounter = -1;
+                    helpButtonPressed.SetActive(false);
+                    pressed = false;
+                    for (int i = 0; i < _publicHelpMenue.transform.childCount; i++)
+                    {
+                        _publicHelpMenue.transform.GetChild(i).gameObject.SetActive(false);
+                    }
+                    SceneManaging.tutorialActive = false;
+                }
+                catch (NullReferenceException) { 
+                }
+
+            }
+            helpTextLiveView.SetActive(false);
+            pressedLiveView = false;
+        }
+        if (Input.anyKeyDown)
+        {
+            StopHelpAnimation();
+            StopOverlay();
+            _newScene = false;
+
+            if (_countdown.activeSelf)
+                _countdown.SetActive(false);
+        }
+        if (Input.GetMouseButtonUp(0))
+        {
+            _isClicked = false;
+            _timerOverlay = 0;
+            _idleTimer = 0;
+        }
+        if (_tutorialCounter == -1 && !_isClicked)
+        {
+            _idleTimer += Time.deltaTime;
+            // if (!_newScene && !SceneManaging.playing)
+            //_timerOverlay += Time.deltaTime;
+        }
+        if (_idleTimer > _helpAnimWaitTime && !SceneManaging.playing)
+        {
+            HelpAnimation();
+        }
+        if (_idleTimer >= _helpAnimWaitTime + _helpAnimDuration)
+        {
+            StopHelpAnimation();
+            secondHighlight = false;
+        }
+        if (_timerOverlay > _maxTimeArrow && _timerOverlay < _maxTimeCountdown && !SceneManaging.playing && !SceneManaging.dragging && !arrowPressed)
+        {
+            _arrowHelp.SetActive(true);
+            arrowPressed = true;
+        }
+        else if (_timerOverlay >= _maxTimeCountdown && arrowPressed)
+        {
+            _arrowHelp.SetActive(false);
+            arrowPressed = false;
+            _countdown.SetActive(true);
+        }
+        else if (_timerOverlay > _maxTimeCountdown)
+        {
+            for (int i = 0; i < 11; i++)
+            {
+                if (_timerOverlay > _maxTimeCountdown + i)
+                    _countdown.transform.GetChild(0).GetChild(0).GetComponent<Text>().text = "Achtung! Die Szene wird in " + (10 - i) + " Sekunden gelöscht.\nZum Abbrechen bitte klicken.";
+            }
+            if (_timerOverlay > _maxTimeCountdown + 10)
+            {
+                _countdown.SetActive(false);
+                _timerOverlay = 0;
+                StartCoroutine(gameController.GetComponent<SaveFileController>().LoadFileFromWWW("*Musterszene_leer.json", "fromCode"));
+                _newScene = true;
+            }
+        }
+    }
 }
