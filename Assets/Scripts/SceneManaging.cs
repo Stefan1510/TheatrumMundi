@@ -11,7 +11,6 @@ public static class SceneManaging
     public static bool dragging;
     public static bool updateMusic = false;
     public static bool highlighted;                 //global variable since only one object can be highlighted - everything else is unhighlighted
-    //public static int objectsTimeline;
     public static bool openUp;
     public static bool sceneChanged;
     public static int configMenueActive;

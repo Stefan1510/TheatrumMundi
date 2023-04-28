@@ -85,6 +85,7 @@ public class ObjectShelfAll : MonoBehaviour
 
             SceneManaging.mainMenuActive = 1;
             SceneManaging.configMenueActive = 1;
+            Debug.Log("1,1 active");
         }
         ObjectMenueConfigMain.SetActive(true);
         ObjectMenueDirectorMain.SetActive(false);
@@ -106,7 +107,7 @@ public class ObjectShelfAll : MonoBehaviour
     {
         if (SceneManaging.mainMenuActive == 1 && SceneManaging.configMenueActive == 4 && !SceneManaging.isPreviewLoaded)
         {
-            Debug.Log("komme ihc hier hin?");
+            //Debug.Log("komme ihc hier hin?");
             StartCoroutine(panelPreviewNotLoaded.GetComponent<WarningPanelLoad>().WaitForButtonClick());
             StartCoroutine(ButtonShelfI(2));
         }
@@ -240,13 +241,9 @@ public class ObjectShelfAll : MonoBehaviour
         }
         if (panelPreviewNotLoaded.GetComponent<WarningPanelLoad>().buttonClicked == "ignore")
         {
-            Debug.Log("hier?");
-
         }
         else if (panelPreviewNotLoaded.GetComponent<WarningPanelLoad>().buttonClicked == "back")
         {
-            Debug.Log("hier?");
-
             shelfNumber = 4;
         }
 
@@ -277,17 +274,20 @@ public class ObjectShelfAll : MonoBehaviour
             MenueButton03.SetActive(true);
             MenueButton06.SetActive(true);
             MenueButton08.SetActive(true);
+            Debug.Log(" 1,2,3,6,8");
         }
 
         switch (shelfNumber)
         {
             case 1:         // MenueBuehne
+                //Debug.Log("buehne");
                 MenueShelf01.SetActive(true);
                 MenueButton01.SetActive(false);
                 SceneManaging.configMenueActive = 1;
                 SceneManaging.mainMenuActive = 1;
                 break;
             case 2:         // MenueKulissen
+                //Debug.Log("kulissen");
                 ObjectMenueConfigMain.SetActive(true);
                 MenueShelf02.SetActive(true);
                 MenueButton02.SetActive(false);

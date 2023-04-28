@@ -43,7 +43,7 @@ public class DrawCurve : MonoBehaviour
             _valueSlider.GetComponent<EventTrigger>().triggers.Add(eventTriggerEntry);
 
 
-            Debug.Log("start drawcurve");
+            //Debug.Log("start drawcurve");
             StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds[0] = new RailElementSpeed { moment = 0, speed = _valueSlider.value };  // im SceneDataController MUSS ein erstes Element hinzugef�gt werden, bevor es hier angesprochen werden kann
                                                                                                                                                          //StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds[0] = new RailElementSpeed { moment = 0, speed = 1 };  // im SceneDataController MUSS ein erstes Element hinzugef�gt werden, bevor es hier angesprochen werden kann
                                                                                                                                                          //Debug.LogWarning(_valueSlider.value);

@@ -197,7 +197,6 @@ public class SceneDataController : MonoBehaviour
             };
             sceneData.musicClipElements.Add(sceneMusicClipElement);
         }
-
         recentSceneData = sceneData;
         return sceneData;
     }

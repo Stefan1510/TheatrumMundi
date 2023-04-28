@@ -27,6 +27,7 @@ public class LightAnimationRepresentation : MonoBehaviour
         _lightColorsColumn = new Color32[_textureLightRepresentation.height];
         _imagePositionKnob.gameObject.SetActive(false);
         _imagePositionKnobCollection = new List<Image>();
+
     }
 
     void Start()
@@ -45,10 +46,12 @@ public class LightAnimationRepresentation : MonoBehaviour
 
     public void ChangeImage()
     {
+        Debug.Log("listLength " + StaticSceneData.StaticData.lightingSets.Count);
         if(!SceneManaging.sceneChanged) SceneManaging.sceneChanged = true;
         //Debug.Log("change");
         _maxTime = AnimationTimer.GetMaxTime();
         _lightColors = ChangeColors(_lightColors, new Color32(255, 255, 255, 255));
+        Debug.Log("col: "+_lightColors);
         _textureLightRepresentation.SetPixels32(_lightColors);
         Color32 colorStart = new Color(StaticSceneData.StaticData.lightingSets[0].r, StaticSceneData.StaticData.lightingSets[0].g, StaticSceneData.StaticData.lightingSets[0].b);
         Color32 colorEnd = new Color(StaticSceneData.StaticData.lightingSets[0].r, StaticSceneData.StaticData.lightingSets[0].g, StaticSceneData.StaticData.lightingSets[0].b);
@@ -61,7 +64,6 @@ public class LightAnimationRepresentation : MonoBehaviour
         int secondCount = 0;
         int listLength = StaticSceneData.StaticData.lightingSets.Count;
 
-        //Debug.Log("listLength " + listLength);
         Color32 colorGradient;
         for (int lightStates = 0; lightStates < listLength - 1; lightStates++)
         {
@@ -72,6 +74,7 @@ public class LightAnimationRepresentation : MonoBehaviour
             momentStart = (int)UtilitiesTm.FloatRemap(momentStartF, 0, _maxTime, 0, _textureLightRepresentation.width);    // mappen des "fr�heren" Moments von zwischen TimeSlider auf zwischen PanelWeite
             float momentEndF = StaticSceneData.StaticData.lightingSets[lightStates + 1].moment; // holen des "sp�teren" Moments aus der Datenhaltung
             momentEnd = (int)UtilitiesTm.FloatRemap(momentEndF, 0, _maxTime, 0, _textureLightRepresentation.width); // mappen des "sp�teren" Moments von zwischen TimeSlider auf zwischen PanelWeite
+            Debug.Log("start: "+momentStartF+", moment end: "+momentEnd+", moment End F: "+momentEndF+", momentStart F : "+momentStartF);
             intensityStart = StaticSceneData.StaticData.lightingSets[lightStates].intensity;  // holen der "fr�heren" Lichtst�rke aus der Datenhaltung
             intensityEnd = StaticSceneData.StaticData.lightingSets[lightStates + 1].intensity;    // holen der "sp�teren" Lichtst�rke aus der Datenhaltung
             //Debug.Log("momentStart: " + momentStart + " - momentEnd: " + momentEnd + " - intensityStart: " + intensityStart + " - intensityEnd: " + intensityEnd);
@@ -82,7 +85,7 @@ public class LightAnimationRepresentation : MonoBehaviour
                 float intensityGradientF = Mathf.Lerp(intensityStart, intensityEnd, _interpolationStep);
                 intensityGradient = UtilitiesTm.FloatRemap(intensityGradientF, 0, _maxIntensity, 0, _textureLightRepresentation.height);
                 _lightColorsColumn = ChangeColors(_lightColorsColumn, colorGradient);
-                //Debug.Log("secondCount " + secondCount + " -intensityGradient " + intensityGradient + " -_lightColorsColumn " + _lightColorsColumn);
+                Debug.Log("secondCount " + secondCount + " -intensityGradient " + intensityGradient + " -_lightColorsColumn " + _lightColorsColumn);
                 _textureLightRepresentation.SetPixels32(secondCount, 0, 1, (int)intensityGradient, _lightColorsColumn);
             }
         }

@@ -20,7 +20,8 @@ public class TimeSliderController : MonoBehaviour, IPointerUpHandler, IDragHandl
     private Slider _thisSlider;
     void Start()
     {
-        if (SceneManaging.isExpert) imgTimelineSettingsArea.SetActive(true);
+        // if (SceneManaging.isExpert)
+         imgTimelineSettingsArea.SetActive(true);
         _thisSlider = GetComponent<Slider>();
         _textTime.text = UtilitiesTm.FloaTTimeToString(_thisSlider.value);
         _textMaxTime.text = UtilitiesTm.FloaTTimeToString(AnimationTimer.GetMaxTime());

@@ -514,7 +514,7 @@ public class SaveFileController : MonoBehaviour
         }
         if (fromAwake)
         {
-            StartCoroutine(LoadFileFromWWW("*Musterszene_leer.json", "fromCode"));
+            StartCoroutine(LoadFileFromWWW("*Musterszene_leer_Visitor.json", "fromCode"));
         }
 
     }
@@ -596,7 +596,7 @@ public class SaveFileController : MonoBehaviour
         sceneContentData += "Lichter: " + this.GetComponent<SceneDataController>().countActiveLightElements.ToString() + "\n\n";
         sceneContentData += "Musik: " + this.GetComponent<SceneDataController>().countActiveMusicClips.ToString() + "\n\n";
         textFileContentData.text = sceneContentData;
-        if (status == "fromCode")
+        if (status == "fromCode" && !GetComponent<UnitySwitchExpertUser>()._isExpert)
         {
             LoadSceneFromTempToStatic();
             _canvas.GetComponent<ObjectShelfAll>().ButtonShelf02();

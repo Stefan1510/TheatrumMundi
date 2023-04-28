@@ -111,7 +111,7 @@ public class UnitySwitchExpertUser : MonoBehaviour
             //_imageTimelineRailBg.GetComponent<Image>().color = Color.gray;
             //_imageTimelineRailBg.GetComponent<RailLightManager>().enabled = false;
             //_imageTimelineRailBg.GetComponent<BoxCollider2D>().enabled = false;
-            _imageTimelineRailLight.SetActive(false);
+            //_imageTimelineRailLight.SetActive(false);
             _imageTimelineRailMusic.transform.SetSiblingIndex(6);
             // foreach (GameObject imageTimeSliderSetting in _aImageTimeSliderSettings)
             // {
@@ -147,7 +147,6 @@ public class UnitySwitchExpertUser : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (_gameControllerStarted)

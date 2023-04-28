@@ -142,7 +142,8 @@ public class DrawCurveBg : MonoBehaviour
 
         _textureCurve.Apply();
         _PanelLineDraw.GetComponent<Image>().sprite = Sprite.Create(_textureCurve, new Rect(0, 0, _textureCurve.width, _textureCurve.height), new Vector2(0.5f, 0.5f));
-        UpdateKnobPositions();
+        if (SceneManaging.isExpert)
+            UpdateKnobPositions();
     }
 
     public void UpdateKnobPositions()

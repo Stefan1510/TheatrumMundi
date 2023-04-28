@@ -8,13 +8,21 @@ public class AnimationTimer : MonoBehaviour
     private static bool _runTimer = false;
     private static float _timer = 0.0f;
     private static float _minTime = 0.0f;
-    private static float _maxTime = 3 * 60;
+    private static float _maxTime;
     
     public enum TimerState { stopped, playing, paused };
     private static TimerState _timerState = TimerState.stopped;
     // Start is called before the first frame update
     void Start()
     {
+        if(SceneManaging.isExpert)
+        {
+            _maxTime = 10*60+14;
+        }
+        else
+        {
+            _maxTime = 3 * 60;
+        }
         ResetTime();
         
     }
