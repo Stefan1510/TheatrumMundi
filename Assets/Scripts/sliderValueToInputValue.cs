@@ -74,7 +74,7 @@ public class sliderValueToInputValue : MonoBehaviour
 		//Debug.Log(">>>curr SlideVal: "+currSliderVal.ToString());
 		//Debug.Log("+++Name of Slider: " +slider.ToString());
 		//Debug.Log("---before sidePosObj: "+attachedRailSide.transform.localPosition);
-			Debug.Log("---before sidePosVec: "+v);
+			//Debug.Log("---before sidePosVec: "+v);
 		//seperate the height-slider from horizontal slider by name
 		string [] returnedArray = slider.ToString().Split(' ');
 		if ((returnedArray[0]=="SliderHeight12to34") || (returnedArray[0]=="SliderHeight34to56") || (returnedArray[0]=="SliderHeight56to78") || (returnedArray[0]=="SliderStageHeight"))

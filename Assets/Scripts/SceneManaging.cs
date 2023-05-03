@@ -219,7 +219,6 @@ public static class SceneManaging
                 obj.transform.GetChild(0).GetComponent<Image>().color = col;
                 obj.transform.GetChild(1).GetChild(0).gameObject.SetActive(false);  //hide Delete-Button
                 SceneManaging.highlighted = false;
-
                 if (obj3D.GetComponent<FigureStats>().isShip)
                     obj3D.GetComponent<cakeslice.Outline>().enabled = false;
                 else

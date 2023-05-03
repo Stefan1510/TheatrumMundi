@@ -69,7 +69,8 @@ public class SaveFileController : MonoBehaviour
         _directorySaves = "Saves";
         if (_isWebGl)
         {
-            StartCoroutine(LoadFilesFromServer(false, "", true));
+            StartCoroutine(LoadFileFromWWW("*Musterszene_leer_Visitor.json", "fromCode"));
+            // StartCoroutine(LoadFilesFromServer(false, "", true));
         }
         else
         {
@@ -265,7 +266,7 @@ public class SaveFileController : MonoBehaviour
             textFileMetaData.text = "";
 
             // if loaded from Awake coulisses-menue should be loaded
-            if (loadFromAwake)
+            if (loadFromAwake && !SceneManaging.isExpert)
             {
                 menuKulissen.SetActive(true);
                 StaticSceneData.StaticData.fileName = "Besucher";
@@ -514,7 +515,7 @@ public class SaveFileController : MonoBehaviour
         }
         if (fromAwake && !SceneManaging.isExpert)
         {
-            StartCoroutine(LoadFileFromWWW("*Musterszene_leer.json", "fromCode"));
+            StartCoroutine(LoadFileFromWWW("*Musterszene_leer_Visitor.json", "fromCode"));
         }
 
     }
@@ -596,7 +597,7 @@ public class SaveFileController : MonoBehaviour
         sceneContentData += "Lichter: " + this.GetComponent<SceneDataController>().countActiveLightElements.ToString() + "\n\n";
         sceneContentData += "Musik: " + this.GetComponent<SceneDataController>().countActiveMusicClips.ToString() + "\n\n";
         textFileContentData.text = sceneContentData;
-        if (status == "fromCode")
+        if (status == "fromCode" && !SceneManaging.isExpert)
         {
             LoadSceneFromTempToStatic();
             _canvas.GetComponent<ObjectShelfAll>().ButtonShelf02();
@@ -656,7 +657,6 @@ public class SaveFileController : MonoBehaviour
         }
         else if (status == "fromFlyerDelete")
         {
-            Debug.Log("fehler 3");
             LoadSceneFromTempToStatic();
             //_canvas.GetComponent<ObjectShelfAll>().ButtonShelf02();
             // _canvas.GetComponent<ObjectShelfAll>().ButtonShelf05(false);
@@ -721,7 +721,7 @@ public class SaveFileController : MonoBehaviour
     }
     public void OnClickNewScene()
     {
-        StartCoroutine(LoadFileFromWWW("*Musterszene_leer.json", "fromCode"));
+        StartCoroutine(LoadFileFromWWW("*Musterszene_leer_Visitor.json", "fromCode"));
         ClosePanelShowCode(_visitorPanelSave);
     }
     public void OnClickSaveTabs(int loadSaveNew)

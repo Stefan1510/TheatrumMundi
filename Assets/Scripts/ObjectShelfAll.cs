@@ -106,7 +106,6 @@ public class ObjectShelfAll : MonoBehaviour
     {
         if (SceneManaging.mainMenuActive == 1 && SceneManaging.configMenueActive == 4 && !SceneManaging.isPreviewLoaded)
         {
-            Debug.Log("komme ihc hier hin?");
             StartCoroutine(panelPreviewNotLoaded.GetComponent<WarningPanelLoad>().WaitForButtonClick());
             StartCoroutine(ButtonShelfI(2));
         }

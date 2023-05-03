@@ -20,10 +20,6 @@ public class SetLightColors : MonoBehaviour
     {
         //objectsLight = GameObject.Find("GameController").GetComponent<SceneDataController>().objectsLightElements;
         objectsLight = GameController.GetComponent<SceneDataController>().objectsLightElements;
-    }
-
-    void Start()
-    {
         _savedButtonColor = 0;
         ButtonClick(0);
         ChangeLightColor();

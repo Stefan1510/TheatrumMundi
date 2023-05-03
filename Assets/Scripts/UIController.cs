@@ -68,6 +68,7 @@ public class UIController : MonoBehaviour
             else
             {
                 goButtonSceneryElements[i].transform.SetParent(goMenueKulissen.parentStart[i].transform);
+                //Debug.Log("parent: "+goButtonSceneryElements[i].name);
             }
         }
         for (int i = 0; i < goMenueKulissen.coulisseCounter.Length; i++)

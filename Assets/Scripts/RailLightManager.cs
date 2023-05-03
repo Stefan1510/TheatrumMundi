@@ -10,6 +10,7 @@ public class RailLightManager : MonoBehaviour
     [SerializeField] Image timelineImage;
     [SerializeField] private GameObject gameController;
     [SerializeField] private RailManager contentRailsMenue;
+    [SerializeField] private LightAnimationRepresentation tmpLightAnim;
     [HideInInspector] public bool isTimelineOpen;
     private float heightOpened, heightClosed;
     private float maxX, minX;
@@ -36,45 +37,47 @@ public class RailLightManager : MonoBehaviour
                 {
                     SceneManaging.highlight(contentRailsMenue.railList[i].myObjects[j].figure3D, contentRailsMenue.railList[i].myObjects[j].figure, false, "figure");
                 }
+
+                for (int j = 0; j < 2; j++)
+                {
+                    gameController.GetComponent<UIController>().RailLightBG[j].GetComponent<RectTransform>().sizeDelta = new Vector2(timelineImage.rectTransform.rect.width, heightClosed / gameObject.transform.lossyScale.x);
+                    gameController.GetComponent<UIController>().RailLightBG[j].GetComponent<BoxCollider2D>().size = new Vector2(timelineImage.GetComponent<BoxCollider2D>().size.x, heightClosed / gameObject.transform.lossyScale.x);
+                    gameController.GetComponent<UIController>().RailLightBG[j].GetComponent<RailLightManager>().isTimelineOpen = false;
+                }
+
+                gameController.GetComponent<UIController>().RailMusic.GetComponent<RectTransform>().sizeDelta = new Vector2(timelineImage.rectTransform.rect.width, heightClosed / gameObject.transform.lossyScale.x);
+                gameController.GetComponent<UIController>().RailMusic.GetComponent<BoxCollider2D>().size = new Vector2(timelineImage.GetComponent<BoxCollider2D>().size.x, heightClosed / gameObject.transform.lossyScale.x);
+                gameController.GetComponent<UIController>().RailMusic.GetComponent<RailMusicManager>().isTimelineOpen = false;
+                gameController.GetComponent<UIController>().RailMusic.GetComponent<RailMusicManager>().openCloseObjectInTimeline(false);
+
+                for (int j = 0; j < gameController.GetComponent<UIController>().RailMusic.GetComponent<RailMusicManager>().myObjects.Count; j++)
+                {
+                    SceneManaging.highlight(gameController.GetComponent<UIController>().RailMusic.GetComponent<RailMusicManager>().myObjects[j].musicPiece, false, "music");
+                }
+
+                // open clicked rail
+                timelineImage.rectTransform.sizeDelta = new Vector2(timelineImage.rectTransform.rect.width, heightOpened / gameObject.transform.lossyScale.x);
+                //scale up the collider
+                timelineImage.GetComponent<BoxCollider2D>().size = new Vector2(timelineImage.GetComponent<BoxCollider2D>().size.x, heightOpened / gameObject.transform.lossyScale.x);
+                isTimelineOpen = true;
+                if (gameObject.name == "ImageTimelineRailLight")
+                {
+                    ImageTimelineSelection.SetRailNumber(7);
+                    ImageTimelineSelection.SetRailType(1);  // for light-rail
+                }
+                else
+                {
+                    ImageTimelineSelection.SetRailNumber(6);
+                    ImageTimelineSelection.SetRailType(3);  // for background-rail 
+                }
+            tmpLightAnim.UpdateKnobPositions();
             }
 
-        for (int j = 0; j < 2; j++)
-        {
-            gameController.GetComponent<UIController>().RailLightBG[j].GetComponent<RectTransform>().sizeDelta = new Vector2(timelineImage.rectTransform.rect.width, heightClosed / gameObject.transform.lossyScale.x);
-            gameController.GetComponent<UIController>().RailLightBG[j].GetComponent<BoxCollider2D>().size = new Vector2(timelineImage.GetComponent<BoxCollider2D>().size.x, heightClosed / gameObject.transform.lossyScale.x);
-            gameController.GetComponent<UIController>().RailLightBG[j].GetComponent<RailLightManager>().isTimelineOpen = false;
-        }
-
-        gameController.GetComponent<UIController>().RailMusic.GetComponent<RectTransform>().sizeDelta = new Vector2(timelineImage.rectTransform.rect.width, heightClosed / gameObject.transform.lossyScale.x);
-        gameController.GetComponent<UIController>().RailMusic.GetComponent<BoxCollider2D>().size = new Vector2(timelineImage.GetComponent<BoxCollider2D>().size.x, heightClosed / gameObject.transform.lossyScale.x);
-        gameController.GetComponent<UIController>().RailMusic.GetComponent<RailMusicManager>().isTimelineOpen = false;
-        gameController.GetComponent<UIController>().RailMusic.GetComponent<RailMusicManager>().openCloseObjectInTimeline(false);
-
-        for (int j = 0; j < gameController.GetComponent<UIController>().RailMusic.GetComponent<RailMusicManager>().myObjects.Count; j++)
-        {
-            SceneManaging.highlight(null, gameController.GetComponent<UIController>().RailMusic.GetComponent<RailMusicManager>().myObjects[j].musicPiece, false, "music");
-        }
-
-        // open clicked rail
-        timelineImage.rectTransform.sizeDelta = new Vector2(timelineImage.rectTransform.rect.width, heightOpened / gameObject.transform.lossyScale.x);
-        //scale up the collider
-        timelineImage.GetComponent<BoxCollider2D>().size = new Vector2(timelineImage.GetComponent<BoxCollider2D>().size.x, heightOpened / gameObject.transform.lossyScale.x);
-        isTimelineOpen = true;
-        if (gameObject.name == "ImageTimelineRailLight")
-        {
-            ImageTimelineSelection.SetRailNumber(7);
-            ImageTimelineSelection.SetRailType(1);  // for light-rail
-        }
-        else
-        {
-            ImageTimelineSelection.SetRailNumber(6);
-            ImageTimelineSelection.SetRailType(3);  // for background-rail 
-        }
     }
     public void ResetScreenSize()
     {
         minX = 0.146f * Screen.width;// / gameObject.transform.lossyScale.x; //301.0f;  //timeline-minX
-                                     //Debug.Log("minX: " + minX);
+        //Debug.Log("minX: " + minX);
         railWidth = 0.87f * Screen.width;           //railwidth=1670.4px / gameObject.transform.lossyScale.x;
         heightClosed = 0.018f * Screen.height;// / gameObject.transform.lossyScale.x;
         heightOpened = 0.074f * Screen.height;// / gameObject.transform.lossyScale.x;

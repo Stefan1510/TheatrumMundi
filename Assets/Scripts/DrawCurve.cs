@@ -42,20 +42,21 @@ public class DrawCurve : MonoBehaviour
             eventTriggerEntry.callback.AddListener((data) => { AddValue((PointerEventData)data); });
             _valueSlider.GetComponent<EventTrigger>().triggers.Add(eventTriggerEntry);
 
-
-            Debug.Log("start drawcurve");
             StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds[0] = new RailElementSpeed { moment = 0, speed = _valueSlider.value };  // im SceneDataController MUSS ein erstes Element hinzugef�gt werden, bevor es hier angesprochen werden kann
-                                                                                                                                                         //StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds[0] = new RailElementSpeed { moment = 0, speed = 1 };  // im SceneDataController MUSS ein erstes Element hinzugef�gt werden, bevor es hier angesprochen werden kann
-                                                                                                                                                         //Debug.LogWarning(_valueSlider.value);
+            // Debug.Log("value: "+_valueSlider.value+", bei: "+this.name);
             StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds.Sort((x, y) => x.moment.CompareTo(y.moment));   // sortiert die railElementSpeeds anhand der Eigenschaft moment
             ChangeCurve();
-            //_gameObjectStarted = true;
         }
         else
         {
             this.gameObject.SetActive(false);
             StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds[0] = new RailElementSpeed { moment = 0, speed = _valueSlider.value };
         }
+        // if(this.name == "PanelLineDraw7")
+        // {
+        //     gameObject.transform.parent.parent.gameObject.SetActive(false);
+        //     Debug.Log("loeschen");
+        // }
     }
     public void AddValue(PointerEventData data)      // Aufruf auf Slider, der etwas ver�ndern soll, gel�st �ber EventTrigger, �bergebene data unn�tig
     {
