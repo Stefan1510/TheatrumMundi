@@ -512,7 +512,7 @@ public class SaveFileController : MonoBehaviour
 
             }
         }
-        if (fromAwake)
+        if (fromAwake && !SceneManaging.isExpert)
         {
             StartCoroutine(LoadFileFromWWW("*Musterszene_leer.json", "fromCode"));
         }

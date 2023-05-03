@@ -15,6 +15,14 @@ public class AnimationTimer : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        if(SceneManaging.isExpert)
+        {
+            _maxTime = 10*60+14;
+        }
+        else
+        {
+            _maxTime = 3 * 60;
+        }
         ResetTime();
         
     }
