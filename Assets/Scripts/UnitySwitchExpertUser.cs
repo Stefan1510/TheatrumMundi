@@ -25,7 +25,7 @@ public class UnitySwitchExpertUser : MonoBehaviour
     [SerializeField] private GameObject _buttonAbout;
     [SerializeField] private GameObject _buttonDummy; // leeres dummy
 
-    [SerializeField] private GameObject _buttonMenueDirector, _buttonMenueConfig, _buttonHelp, _buttonHelpPressed, _buttonAboutWebGL, _buttonSend, _buttonMovie;
+    [SerializeField] private GameObject _buttonMenueDirector, _buttonMenueConfig, _buttonHelp, _buttonHelpPressed, _buttonAboutWebGL, _buttonFlyer, _buttonMovie;
 
     [SerializeField] private GameObject _buttonDelete;
     [SerializeField] private GameObject _buttonSave;
@@ -33,6 +33,7 @@ public class UnitySwitchExpertUser : MonoBehaviour
     [SerializeField] private GameObject[] _aInputFieldSave;
     [SerializeField] private GameObject _buttonLoad;
     [SerializeField] private GameObject _scrollViewFileSelect;
+    [SerializeField] private GameObject bgBrownImage;
 
 
 
@@ -56,9 +57,10 @@ public class UnitySwitchExpertUser : MonoBehaviour
     private void Awake()
     {
         SceneManaging.isExpert = _isExpert;
-        _buttonAboutWebGL.gameObject.SetActive(false);
         if (!_isExpert)
         {
+            _buttonAboutWebGL.gameObject.SetActive(false);
+
             _buttonKulissen.transform.SetParent(_buttonKulissen.transform.parent.parent);
             _buttonKulissen.GetComponent<RectTransform>().anchoredPosition = new Vector2(_buttonKulissen.GetComponent<RectTransform>().anchoredPosition.x, 465);
             _buttonKulissen.transform.SetSiblingIndex(5);
@@ -85,15 +87,19 @@ public class UnitySwitchExpertUser : MonoBehaviour
             _buttonHelpPressed.GetComponent<RectTransform>().anchoredPosition = _buttonHelp.GetComponent<RectTransform>().anchoredPosition;
             _buttonAboutWebGL.gameObject.SetActive(true);
             _buttonAboutWebGL.GetComponent<RectTransform>().anchoredPosition = new Vector2(_buttonAboutWebGL.GetComponent<RectTransform>().anchoredPosition.x, 315);
+            _buttonAboutWebGL.transform.GetChild(0).gameObject.SetActive(true);
             //_buttonMenueDirector.GetComponent<RectTransform>().anchoredPosition = new Vector2(_buttonMenueDirector.GetComponent<RectTransform>().anchoredPosition.x, 165);
             _buttonMenueDirector.SetActive(false);
-            _buttonSend.GetComponent<RectTransform>().anchoredPosition = new Vector2(_buttonSend.GetComponent<RectTransform>().anchoredPosition.x, 15);
-            _buttonSend.transform.GetChild(0).gameObject.SetActive(false);
+            _buttonFlyer.SetActive(true);
+            _buttonFlyer.GetComponent<RectTransform>().anchoredPosition = new Vector2(_buttonFlyer.GetComponent<RectTransform>().anchoredPosition.x, 15);
+            //_buttonFlyer.transform.GetChild(0).gameObject.SetActive(false);
             //_buttonMovie.transform.GetChild(0).gameObject.SetActive(false);
             //_panelLightAmbient.SetActive(false);
             //_buttonDelete.SetActive(false);
             //_buttonSave.SetActive(false);
+            _buttonMovie.SetActive(true);
             _buttonDummy.SetActive(false);
+            bgBrownImage.SetActive(true);
             //_textSave.SetActive(false);
             //foreach (GameObject inputFieldSave in _aInputFieldSave)
             //{

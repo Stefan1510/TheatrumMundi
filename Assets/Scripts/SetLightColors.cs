@@ -19,13 +19,7 @@ public class SetLightColors : MonoBehaviour
     private void Awake()
     {
         //objectsLight = GameObject.Find("GameController").GetComponent<SceneDataController>().objectsLightElements;
-        Debug.Log("listLength " + StaticSceneData.StaticData.lightingSets.Count);
         objectsLight = GameController.GetComponent<SceneDataController>().objectsLightElements;
-        Debug.Log("listLength " + StaticSceneData.StaticData.lightingSets.Count);
-    }
-
-    void Start()
-    {
         _savedButtonColor = 0;
         ButtonClick(0);
         ChangeLightColor();
@@ -64,7 +58,6 @@ public class SetLightColors : MonoBehaviour
         if (momentIndex == -1)
         {
             StaticSceneData.StaticData.lightingSets.Add(thisLightingSet);
-            Debug.Log("hier wird ein neues hinzugefuegt.");
         }
         else
         {
@@ -140,7 +133,6 @@ public class SetLightColors : MonoBehaviour
                 element.goLightElement.GetComponent<Light>().intensity = lightAnimationIntensityValue * _lightSpotIntensity;
             }
         }
-        Debug.Log("schleife fertig");
     }
 
     // Update is called once per frame

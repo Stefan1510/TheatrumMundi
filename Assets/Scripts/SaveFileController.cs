@@ -14,6 +14,7 @@ public class SaveFileController : MonoBehaviour
     public GameObject contentFileSelect, panelCodeInput, panelSaveShowCode, panelWarningInput, panelWarningInputVisitor, panelOverwrite, menuKulissen, flyer;
     public RailManager contentMenueRails;
     [SerializeField] private GameObject _dialogSave, _dialogNewScene, _dialogLoadCode;
+    [SerializeField] AnimationTimer _animTimer;
     [SerializeField] GameObject _borderWarning, _borderLoad;
     [SerializeField] Text _placeholderTextWarning, _textSaveInputName;
     [SerializeField] GameObject warningPanel;
@@ -69,7 +70,8 @@ public class SaveFileController : MonoBehaviour
         _directorySaves = "Saves";
         if (_isWebGl)
         {
-            StartCoroutine(LoadFilesFromServer(false, "", true));
+            StartCoroutine(LoadFileFromWWW("*Musterszene_leer_Visitor.json", "fromCode"));
+            // StartCoroutine(LoadFilesFromServer(false, "", true));
         }
         else
         {
@@ -265,7 +267,7 @@ public class SaveFileController : MonoBehaviour
             textFileMetaData.text = "";
 
             // if loaded from Awake coulisses-menue should be loaded
-            if (loadFromAwake)
+            if (loadFromAwake && !SceneManaging.isExpert)
             {
                 menuKulissen.SetActive(true);
                 StaticSceneData.StaticData.fileName = "Besucher";
@@ -512,7 +514,7 @@ public class SaveFileController : MonoBehaviour
 
             }
         }
-        if (fromAwake)
+        if (fromAwake && !SceneManaging.isExpert)
         {
             StartCoroutine(LoadFileFromWWW("*Musterszene_leer_Visitor.json", "fromCode"));
         }
@@ -573,13 +575,14 @@ public class SaveFileController : MonoBehaviour
      }*/
     public IEnumerator LoadFileFromWWW(string fileName, string status) //bool fromCode, bool fromFlyer)
     {
+        SceneDataController tmpSceneDataController = this.GetComponent<SceneDataController>();
         // UnityWebRequest uwr = UnityWebRequest.Get(_basepath + "Saves/" + fileName);
         // yield return uwr;
         // _jsonString = uwr.downloadHandler.text;
         WWW www = new WWW(_basepath + "Saves/" + fileName);
         yield return www;
         _jsonString = www.text;
-        tempSceneData = this.GetComponent<SceneDataController>().CreateSceneDataFromJSON(_jsonString);
+        tempSceneData = tmpSceneDataController.CreateSceneDataFromJSON(_jsonString);
 
         this.GetComponent<SceneDataController>().CreateScene(tempSceneData);
         string sceneMetaData = "";
@@ -590,13 +593,16 @@ public class SaveFileController : MonoBehaviour
         textFileMetaData.text = sceneMetaData;
         string sceneContentData = "";
         sceneContentData += "Dateiinformationen:\n\n";
-        sceneContentData += "Kulissen: " + this.GetComponent<SceneDataController>().countActiveSceneryElements.ToString() + "\n\n";
-        sceneContentData += "Figuren: " + this.GetComponent<SceneDataController>().countActiveFigureElements.ToString() + "\n\n";
+        sceneContentData += "Kulissen: " + tmpSceneDataController.countActiveSceneryElements.ToString() + "\n\n";
+        sceneContentData += "Figuren: " + tmpSceneDataController.countActiveFigureElements.ToString() + "\n\n";
         sceneContentData += "Länge: " + "\n\n";
-        sceneContentData += "Lichter: " + this.GetComponent<SceneDataController>().countActiveLightElements.ToString() + "\n\n";
-        sceneContentData += "Musik: " + this.GetComponent<SceneDataController>().countActiveMusicClips.ToString() + "\n\n";
+        sceneContentData += "Lichter: " + tmpSceneDataController.countActiveLightElements.ToString() + "\n\n";
+        sceneContentData += "Musik: " + tmpSceneDataController.countActiveMusicClips.ToString() + "\n\n";
         textFileContentData.text = sceneContentData;
-        if (status == "fromCode" && !GetComponent<UnitySwitchExpertUser>()._isExpert)
+        Debug.Log("piecelength: "+tmpSceneDataController.pieceLength);
+        _animTimer.SetMaxTime(tmpSceneDataController.pieceLength);
+
+        if (status == "fromCode" && !SceneManaging.isExpert)
         {
             LoadSceneFromTempToStatic();
             _canvas.GetComponent<ObjectShelfAll>().ButtonShelf02();
@@ -656,7 +662,6 @@ public class SaveFileController : MonoBehaviour
         }
         else if (status == "fromFlyerDelete")
         {
-            Debug.Log("fehler 3");
             LoadSceneFromTempToStatic();
             //_canvas.GetComponent<ObjectShelfAll>().ButtonShelf02();
             // _canvas.GetComponent<ObjectShelfAll>().ButtonShelf05(false);
@@ -721,7 +726,7 @@ public class SaveFileController : MonoBehaviour
     }
     public void OnClickNewScene()
     {
-        StartCoroutine(LoadFileFromWWW("*Musterszene_leer.json", "fromCode"));
+        StartCoroutine(LoadFileFromWWW("*Musterszene_leer_Visitor.json", "fromCode"));
         ClosePanelShowCode(_visitorPanelSave);
     }
     public void OnClickSaveTabs(int loadSaveNew)

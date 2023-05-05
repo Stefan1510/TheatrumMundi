@@ -117,6 +117,9 @@ public class PressHelp : MonoBehaviour
                 else if (SceneManaging.mainMenuActive == 1 && SceneManaging.configMenueActive == 1)  // Buehne
                 {
                     helpOverlayMenue1.SetActive(true);
+                    _tutorialCounter = 1;
+                    _publicHelpMenue = helpOverlayMenue1;
+                    helpOverlayMenue1.transform.GetChild(0).gameObject.SetActive(true);
                 }
                 else if (SceneManaging.mainMenuActive == 2 && SceneManaging.directorMenueActive == 1)   // Figuren
                 {
@@ -143,6 +146,9 @@ public class PressHelp : MonoBehaviour
                 else if (SceneManaging.mainMenuActive == 1 && SceneManaging.configMenueActive == 3)  // licht
                 {
                     helpOverlayMenue3.SetActive(true);
+                    _publicHelpMenue = helpOverlayMenue3;
+                    helpOverlayMenue3.transform.GetChild(0).gameObject.SetActive(true);
+                    _tutorialCounter = 1;
                 }
                 else if (SceneManaging.directorMenueActive == 3 && SceneManaging.mainMenuActive == 2)  // musik
                 {
@@ -155,6 +161,9 @@ public class PressHelp : MonoBehaviour
                 else if (SceneManaging.configMenueActive == 4)  // speichern
                 {
                     helpOverlayMenue4.SetActive(true);
+                    _publicHelpMenue = helpOverlayMenue4;
+                    helpOverlayMenue4.transform.GetChild(0).gameObject.SetActive(true);
+                    _tutorialCounter = 1;
                 }
                 tutorialCountImage.SetActive(true);
                 tutText.text = "Hinweis " + _tutorialCounter + "/" + _publicHelpMenue.transform.childCount;

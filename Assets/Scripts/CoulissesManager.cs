@@ -52,6 +52,12 @@ public class CoulissesManager : MonoBehaviour
         isMirrored = new bool[coulisses.Length];
         currentLossyScale = 1.0f;
 
+        colHighlightedGrey = new Color(.5f, .5f, 0.5f, .7f);    // falls doch rote farbe: 1f, .45f, 0.33f, 1f
+        colHighlightedGreen = new Color(0f, .8f, 0f, .7f);
+        colCoulisse = new Color(1f, 1f, 1f, 1f);
+        colSilhouette = new Color(0f, 0f, 0f, 0.4f);
+        colSilhouetteActive = new Color(0.6f, 0f, 0f, 0.4f);
+
         // width and height of coulisses in shelf - saved in the arrays 'isWide', 'shelfSizeWidth' and 'shelfSizeHeight'
         for (int i = 0; i < coulisses.Length; i++)
         {
@@ -77,19 +83,18 @@ public class CoulissesManager : MonoBehaviour
             coulisses[i].GetComponent<RectTransform>().localPosition = new Vector2(0.0f, -coulisses[i].GetComponent<RectTransform>().rect.height / 2);
             coulisses[i].GetComponent<BoxCollider2D>().offset = new Vector2(0, -coulisses[i].GetComponent<RectTransform>().localPosition.y);
         }
+
+        for (int i = 0; i < collections.Length; i++)
+        {
+            coulisseCounter[i].text = "0";
+        }
+
+        ResetScreenSize();
+        StaticSceneData.Sceneries3D(); //CreateScene der SceneryElements
     }
     void Start()
     {
-        colHighlightedGrey = new Color(.5f, .5f, 0.5f, .7f);    // falls doch rote farbe: 1f, .45f, 0.33f, 1f
-        colHighlightedGreen = new Color(0f, .8f, 0f, .7f);
-        colCoulisse = new Color(1f, 1f, 1f, 1f);
-        colSilhouette = new Color(0f, 0f, 0f, 0.4f);
-        colSilhouetteActive = new Color(0.6f, 0f, 0f, 0.4f);
-
-        ResetScreenSize();
-
         setIndexTabActive(0);
-        StaticSceneData.Sceneries3D(); //CreateScene der SceneryElements
     }
     void Update()
     {

@@ -45,12 +45,10 @@ public class Flyer : MonoBehaviour
         // open flyer
         else
         {
-            Debug.Log("fehler 1");
             // disable 'figures in schiene ziehen' in Rail Manager
             SceneManaging.flyerActive = true;
             objShelfAll.ButtonShelf05(false);
             gameObject.SetActive(true);
-             Debug.Log("fehler 2");
 
             // load new scene
             StartCoroutine(tmpFileController.LoadFileFromWWW("*Musterszene_leer.json", "fromFlyerDelete"));

@@ -124,7 +124,7 @@ public class RailManager : MonoBehaviour
 
             objectShelfParent[i] = figureObjects[i].transform.parent.gameObject;
         }
-        for (int i = 0; i < figureObjects.Length; i++)
+        for (int i = 0; i < figCounterCircle.Length; i++)
         {
             figCounterCircle[i].text = "0";
         }
@@ -802,7 +802,6 @@ public class RailManager : MonoBehaviour
         {
             if (StaticSceneData.StaticData.figureElements[Int32.Parse(obj.figure.name.Substring(6, 2)) - 1].figureInstanceElements[j].instanceNr == int.Parse(obj.figure.name.Substring(16)))
             {
-                // Debug.Log("remove: " + StaticSceneData.StaticData.figureElements[Int32.Parse(obj.figure.name.Substring(6, 2)) - 1].figureInstanceElements[j].name);
                 StaticSceneData.StaticData.figureElements[Int32.Parse(obj.figure.name.Substring(6, 2)) - 1].figureInstanceElements.Remove(StaticSceneData.StaticData.figureElements[Int32.Parse(obj.figure.name.Substring(6, 2)) - 1].figureInstanceElements[j]);
             }
         }
@@ -862,16 +861,12 @@ public class RailManager : MonoBehaviour
 
             objectAnimationLength = rails3D[currentRailIndex].transform.GetChild(0).GetComponent<RailSpeedController>().GetEndTimeFromStartTime(momentOrPosX);
             rectSize = railwidthAbsolute / (AnimationTimer.GetMaxTime() / objectAnimationLength);
-
             SceneManaging.createRectangle(newCopyOfFigure, colFigure, rails[currentRailIndex].GetComponent<RectTransform>().rect.height, Instantiate(prefabRect), rectSize);
 
             if (savedLayer != -1)
             {
                 tmpRectTransform.anchoredPosition = new Vector3(posX, -rails[currentRailIndex].GetComponent<RectTransform>().rect.height / 2, -1);
                 oP.position = new Vector2(tmpRectTransform.anchoredPosition.x, rectSize);
-
-                //Debug.Log("neue figur: pos: " + oP.position.x);
-                //Debug.Log("saved layer: " + savedLayer);
 
                 if (savedLayer == 1)
                 {

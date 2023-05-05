@@ -23,13 +23,14 @@ public class SceneDataController : MonoBehaviour
     [HideInInspector] public string sceneFileAuthor;
     [HideInInspector] public string sceneFileDate;
     [HideInInspector] public string sceneFileComment;
-    [HideInInspector] public string recentSceneDataSerialized;
+    //[HideInInspector] public string recentSceneDataSerialized;
     [HideInInspector] public int countActiveSceneryElements = 0;
     [HideInInspector] public int countActiveLightElements = 0;
     [HideInInspector] public int countActiveFigureElements = 0;
     [HideInInspector] public int countActiveMusicClips = 0;
-    [HideInInspector] public int currentTime;
-    [HideInInspector] public Material[] matCoulisse;
+    // [HideInInspector] public int currentTime;
+    [HideInInspector] public int pieceLength;
+    //[HideInInspector] public Material[] matCoulisse;
 
     [HideInInspector] public List<GameObject> objects3dFigureInstances;
     [HideInInspector] public List<GameObject> objects2dFigureInstances;
@@ -40,6 +41,7 @@ public class SceneDataController : MonoBehaviour
 
     void Awake()
     {
+        StaticSceneData.StaticData = CreateSceneData();
         foreach (GameObject objectSceneryElement in objectsSceneryElements)
         {
             objectSceneryElement.transform.SetParent(GameObject.Find("Schiene1").transform);
@@ -47,7 +49,7 @@ public class SceneDataController : MonoBehaviour
 
             objectSceneryElement.GetComponent<cakeslice.Outline>().enabled = false;
         }
-        StaticSceneData.StaticData = CreateSceneData();
+        
     }
 
     private void GetFileMetaDataFromScene()
@@ -76,19 +78,8 @@ public class SceneDataController : MonoBehaviour
     public SceneData CreateSceneData()  // only in awake
     {
         SceneData sceneData = new SceneData();
-        GetFileMetaDataFromScene();
-        sceneData.fileName = sceneFileName;
-        sceneData.fileAuthor = sceneFileAuthor;
-        sceneData.fileComment = sceneFileComment;
-        sceneData.fileDate = sceneFileDate;
-        sceneData.railElements = new List<RailElement>();
-        sceneData.sceneryElements = new List<SceneryElement>();
-        sceneData.figureElements = new List<FigureElement>();
-        sceneData.lightElements = new List<LightElement>();
-        sceneData.lightingSets = new List<LightingSet>();
-        sceneData.backgroundPositions = new List<BackgroundPosition>();
-        sceneData.musicClipElements = new List<MusicClipElement>();
 
+        sceneData.railElements = new List<RailElement>();
         foreach (GameObject objectRailElement in objectsRailElements)
         {
             RailElement sceneRailElement = new RailElement
@@ -104,6 +95,21 @@ public class SceneDataController : MonoBehaviour
             sceneRailElement.railElementSpeeds.Add(new RailElementSpeed());
             sceneData.railElements.Add(sceneRailElement);
         }
+
+        GetFileMetaDataFromScene();
+        sceneData.fileName = sceneFileName;
+        sceneData.fileAuthor = sceneFileAuthor;
+        sceneData.fileComment = sceneFileComment;
+        sceneData.fileDate = sceneFileDate;
+
+        sceneData.sceneryElements = new List<SceneryElement>();
+        sceneData.figureElements = new List<FigureElement>();
+        sceneData.lightElements = new List<LightElement>();
+        sceneData.lightingSets = new List<LightingSet>();
+        sceneData.backgroundPositions = new List<BackgroundPosition>();
+        sceneData.musicClipElements = new List<MusicClipElement>();
+
+
 
         //scenery aka kulissen
         foreach (GameObject objectSceneryElement in objectsSceneryElements)
@@ -207,6 +213,8 @@ public class SceneDataController : MonoBehaviour
         sceneFileAuthor = sceneData.fileAuthor;
         sceneFileDate = sceneData.fileDate;
         sceneFileComment = sceneData.fileComment;
+
+        pieceLength = sceneData.pieceLength;
 
         //rail elements
         RailsApplyToScene(sceneData.railElements);
@@ -349,7 +357,7 @@ public class SceneDataController : MonoBehaviour
         {
             // Debug.Log("fiugre: "+fe.name);
             for (int i = 0; i < objectsFigureElements.Length; i++)
-            {                
+            {
                 if (fe.name == objectsFigureElements[i].name)
                 {
                     foreach (FigureInstanceElement feInstance in fe.figureInstanceElements)

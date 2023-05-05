@@ -9,7 +9,6 @@ public class RailSpeedController : MonoBehaviour
     private float _speedAtTime;
     private float _durationFromTime;
 
-    // Update is called once per frame
     void Update()
     {
         if (railIndex % 2 == 0)
@@ -51,7 +50,6 @@ public class RailSpeedController : MonoBehaviour
         int momentAfter = railElementSpeeds.FindIndex(speed => speed.moment > tStart);      //sucht von vorne aus und findet den ersten Moment, der nach t liegt
         int momentBefore = railElementSpeeds.FindLastIndex(speed => speed.moment <= tStart); //sucht von hinten aus und findet den ersten Moment, der vor t liegt
         int momentCount = railElementSpeeds.Count;
-// Debug.Log("momentBefore: "+momentBefore);
 
         //Debug.LogWarning("Before: " + momentBefore + " - After: " + momentAfter);
         if (momentAfter == -1) //ein momentBefore existiert immer, da der erste Wert von railElementSpeeds bei Programmstart gesetzt wird
