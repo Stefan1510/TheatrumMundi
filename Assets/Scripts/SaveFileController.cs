@@ -14,6 +14,7 @@ public class SaveFileController : MonoBehaviour
     public GameObject contentFileSelect, panelCodeInput, panelSaveShowCode, panelWarningInput, panelWarningInputVisitor, panelOverwrite, menuKulissen, flyer;
     public RailManager contentMenueRails;
     [SerializeField] private GameObject _dialogSave, _dialogNewScene, _dialogLoadCode;
+    [SerializeField] AnimationTimer _animTimer;
     [SerializeField] GameObject _borderWarning, _borderLoad;
     [SerializeField] Text _placeholderTextWarning, _textSaveInputName;
     [SerializeField] GameObject warningPanel;
@@ -574,13 +575,14 @@ public class SaveFileController : MonoBehaviour
      }*/
     public IEnumerator LoadFileFromWWW(string fileName, string status) //bool fromCode, bool fromFlyer)
     {
+        SceneDataController tmpSceneDataController = this.GetComponent<SceneDataController>();
         // UnityWebRequest uwr = UnityWebRequest.Get(_basepath + "Saves/" + fileName);
         // yield return uwr;
         // _jsonString = uwr.downloadHandler.text;
         WWW www = new WWW(_basepath + "Saves/" + fileName);
         yield return www;
         _jsonString = www.text;
-        tempSceneData = this.GetComponent<SceneDataController>().CreateSceneDataFromJSON(_jsonString);
+        tempSceneData = tmpSceneDataController.CreateSceneDataFromJSON(_jsonString);
 
         this.GetComponent<SceneDataController>().CreateScene(tempSceneData);
         string sceneMetaData = "";
@@ -591,12 +593,15 @@ public class SaveFileController : MonoBehaviour
         textFileMetaData.text = sceneMetaData;
         string sceneContentData = "";
         sceneContentData += "Dateiinformationen:\n\n";
-        sceneContentData += "Kulissen: " + this.GetComponent<SceneDataController>().countActiveSceneryElements.ToString() + "\n\n";
-        sceneContentData += "Figuren: " + this.GetComponent<SceneDataController>().countActiveFigureElements.ToString() + "\n\n";
+        sceneContentData += "Kulissen: " + tmpSceneDataController.countActiveSceneryElements.ToString() + "\n\n";
+        sceneContentData += "Figuren: " + tmpSceneDataController.countActiveFigureElements.ToString() + "\n\n";
         sceneContentData += "Länge: " + "\n\n";
-        sceneContentData += "Lichter: " + this.GetComponent<SceneDataController>().countActiveLightElements.ToString() + "\n\n";
-        sceneContentData += "Musik: " + this.GetComponent<SceneDataController>().countActiveMusicClips.ToString() + "\n\n";
+        sceneContentData += "Lichter: " + tmpSceneDataController.countActiveLightElements.ToString() + "\n\n";
+        sceneContentData += "Musik: " + tmpSceneDataController.countActiveMusicClips.ToString() + "\n\n";
         textFileContentData.text = sceneContentData;
+        Debug.Log("piecelength: "+tmpSceneDataController.pieceLength);
+        _animTimer.SetMaxTime(tmpSceneDataController.pieceLength);
+
         if (status == "fromCode" && !SceneManaging.isExpert)
         {
             LoadSceneFromTempToStatic();

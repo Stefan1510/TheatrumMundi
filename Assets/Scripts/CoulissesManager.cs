@@ -93,8 +93,6 @@ public class CoulissesManager : MonoBehaviour
     }
     void Start()
     {
-
-
         setIndexTabActive(0);
     }
     void Update()

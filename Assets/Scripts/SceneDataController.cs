@@ -23,13 +23,14 @@ public class SceneDataController : MonoBehaviour
     [HideInInspector] public string sceneFileAuthor;
     [HideInInspector] public string sceneFileDate;
     [HideInInspector] public string sceneFileComment;
-    [HideInInspector] public string recentSceneDataSerialized;
+    //[HideInInspector] public string recentSceneDataSerialized;
     [HideInInspector] public int countActiveSceneryElements = 0;
     [HideInInspector] public int countActiveLightElements = 0;
     [HideInInspector] public int countActiveFigureElements = 0;
     [HideInInspector] public int countActiveMusicClips = 0;
-    [HideInInspector] public int currentTime;
-    [HideInInspector] public Material[] matCoulisse;
+    // [HideInInspector] public int currentTime;
+    [HideInInspector] public int pieceLength;
+    //[HideInInspector] public Material[] matCoulisse;
 
     [HideInInspector] public List<GameObject> objects3dFigureInstances;
     [HideInInspector] public List<GameObject> objects2dFigureInstances;
@@ -213,6 +214,8 @@ public class SceneDataController : MonoBehaviour
         sceneFileAuthor = sceneData.fileAuthor;
         sceneFileDate = sceneData.fileDate;
         sceneFileComment = sceneData.fileComment;
+
+        pieceLength = sceneData.pieceLength;
 
         //rail elements
         RailsApplyToScene(sceneData.railElements);
