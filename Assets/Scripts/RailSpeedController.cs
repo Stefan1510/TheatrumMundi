@@ -5,7 +5,7 @@ using UnityEngine;
 public class RailSpeedController : MonoBehaviour
 {
     public int railIndex;
-    public float speed=0;
+    public float speed = 0;
     private float _speedAtTime;
     private float _durationFromTime;
 
@@ -28,7 +28,6 @@ public class RailSpeedController : MonoBehaviour
         //}
     }
 
-
     //  t is the elapsed time
     //  t1, t2 are two moments, where t1 < than t2
     //  s0 initial distance from the origin
@@ -37,8 +36,6 @@ public class RailSpeedController : MonoBehaviour
     //  v(t) is the velocity at time t 
     //  v1 and v2 are the velocities at time t1 and t2
     //  a is the uniform rate of acceleration.
-
-
 
     public float GetEndTimeFromStartTime(float tStart, float distance = 4.1f)
     {
@@ -55,10 +52,10 @@ public class RailSpeedController : MonoBehaviour
         if (momentAfter == -1) //ein momentBefore existiert immer, da der erste Wert von railElementSpeeds bei Programmstart gesetzt wird
         {
             v1 = v2 = railElementSpeeds[momentBefore].speed;
-            // Debug.Log("speed: "+railElementSpeeds[momentBefore].speed);
+            Debug.Log("speed: " + railElementSpeeds[momentBefore].speed);
             //distance = GetDistanceBetweenTwoMoments(0, tStart, v1, v2);
-            deltaT =  distance / v1;
-            // Debug.Log("delta: "+deltaT);
+            deltaT = distance / v1;
+            Debug.Log("delta: " + deltaT);
         }
         else
         {
@@ -67,43 +64,75 @@ public class RailSpeedController : MonoBehaviour
             v1 = railElementSpeeds[momentBefore].speed;
             v2 = railElementSpeeds[momentAfter].speed;
             vt = UtilitiesTm.FloatRemap(tStart, t1, t2, v1, v2);
-            //currentDistance = GetDistanceBetweenTwoMoments(tStart, t2, vt, v2);
+            currentDistance = GetDistanceBetweenTwoMoments(tStart, t2, vt, v2);
 
-            //Debug.LogWarning(" t1   ; tStart ;   t2   ;   v1   ;   vt   ;   v2   ; currentDistance \n   \t   " + t1 + " ; " + tStart + "  " + t2 + " ; " + v1 + " ; " + vt + " ; " + v2 + " ; " + currentDistance);
+            Debug.LogWarning(" t1: " + t1 + ", tStart: " + tStart + ", t2: " + t2 + ", v1: " + v1 + ", vt: " + vt + ", v2: " + v2 + ", currentDistance: " + currentDistance);
 
-
-            //if (currentDistance < distance)
-            //{
-            //    deltaT += (t2 - tStart);
-            //}
-            //else
-            //{
-            //    currentDistance = 0;
-            //}
-
-            int i = momentAfter;
-            //while (i < momentCount - 1 && currentDistance < distance)
-            //{
-            //    t1 = railElementSpeeds[i].moment;
-            //    t2 = railElementSpeeds[i + 1].moment;
-            //    v1 = railElementSpeeds[i].speed;
-            //    v2 = railElementSpeeds[i + 1].speed;
-            //    currentDistance += GetDistanceBetweenTwoMoments(t1, t2, v1, v2);
-            //    if (currentDistance < distance)
-            //    {
-            //        deltaT += (t2 - t1);
-            //    }
-            //    i++;
-            //}
-            //if (currentDistance < distance)
+            int i;
+            if (currentDistance < distance)
             {
+                deltaT += (t2 - tStart);
+                i = momentAfter;
+            }
+            else
+            {
+                currentDistance = 0;
+                i = momentBefore;
+            }
+            // int i;
+            // if (currentDistance == 0)
+            // {
+            //     i = momentBefore;
+            // }
+            // else
+            // {
+            //     i = momentAfter;
+            // }
+            Debug.Log("i: " + i + ", momentCount-1: " + (momentCount - 1) + ", currentdist: " + currentDistance);
+            
+            // wenn bis zum naechsten Punkt zu viel Weg zurueckgelegt worden waere
+            if(currentDistance == 0)
+            {
+                Debug.Log("bis zum naechsten Punkt ist ueber 4.1!");
+            }
+
+            // wenn bis zum naechsten Punkt noch keine 4,1 zurueckgelegt wurden
+            while (i < momentCount - 1 && currentDistance < distance)
+            {
+                t1 = railElementSpeeds[i].moment;
+                t2 = railElementSpeeds[i + 1].moment;
+                v1 = railElementSpeeds[i].speed;
+                v2 = railElementSpeeds[i + 1].speed;
+                Debug.Log("zusammen: "+(currentDistance + GetDistanceBetweenTwoMoments(t1, t2, v1, v2)));
+                if (currentDistance + GetDistanceBetweenTwoMoments(t1, t2, v1, v2) < distance)
+                {
+                    
+                    currentDistance += GetDistanceBetweenTwoMoments(t1, t2, v1, v2);
+                    deltaT += (t2 - t1);
+                    Debug.Log("deltaT: " + deltaT);
+                }
+                else 
+                {
+                    break;
+                }
+                Debug.Log("currentdis: " + currentDistance+", deltaT: "+deltaT);
+                // if (currentDistance < distance)
+                // {
+
+                // }
+                i++;
+            }
+            // if (currentDistance < distance)
+            {
+                // Debug.Log("currentdis ist kleiner als 4.1");
+
                 //t1 = railElementSpeeds[i].moment;
                 //t2 = railElementSpeeds[i + 1].moment;
                 //v1 = railElementSpeeds[i].speed;
                 //v2 = railElementSpeeds[i + 1].speed;
                 a = (v2 - v1) / (t2 - t1);
-                //float sRest = distance - currentDistance;
-                float sRest = distance;
+                float sRest = distance - currentDistance;
+                // float sRest = distance;
                 //float tRest = Mathf.Sqrt((2 * sRest) / a);
 
                 float tRest = 0;
@@ -116,6 +145,7 @@ public class RailSpeedController : MonoBehaviour
                 else
                 {
                     tRest = -(v1 / a) + Mathf.Sqrt(((v1 * v1) / (a * a)) + (2 * sRest / a));
+                    Debug.Log("trest: "+tRest);
                 }
 
                 deltaT += tRest;
@@ -200,6 +230,7 @@ public class RailSpeedController : MonoBehaviour
             a = (v2 - v1) / (t2 - t1);
             s = 0.5f * a * t * t + v1 * t;
         }
+        //Debug.Log("zurueckgelegter weg zwischen "+ t1+" und "+t2+": "+s);
         return s;
     }
 

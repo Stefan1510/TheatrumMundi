@@ -599,7 +599,6 @@ public class SaveFileController : MonoBehaviour
         sceneContentData += "Lichter: " + tmpSceneDataController.countActiveLightElements.ToString() + "\n\n";
         sceneContentData += "Musik: " + tmpSceneDataController.countActiveMusicClips.ToString() + "\n\n";
         textFileContentData.text = sceneContentData;
-        Debug.Log("piecelength: "+tmpSceneDataController.pieceLength);
         _animTimer.SetMaxTime(tmpSceneDataController.pieceLength);
 
         if (status == "fromCode" && !SceneManaging.isExpert)

@@ -29,7 +29,7 @@ public class DrawCurve : MonoBehaviour
             _backColors = UtilitiesTm.ChangeColors(_backColors, new Color32(255, 255, 255, 31));
             //_curveColors = new Color32[_textureCurve.width * _textureCurve.height];
             _curveColors = new Color32[3 * 3];
-            _curveColors = UtilitiesTm.ChangeColors(_curveColors, Color.black);
+            _curveColors = UtilitiesTm.ChangeColors(_curveColors, new Color32(200,200,200,150));
             _middleLineColors = new Color32[_textureCurve.width * 2];
             _middleLineColors = UtilitiesTm.ChangeColors(_middleLineColors, new Color32(224, 224, 224, 224));
             _maxTime = AnimationTimer.GetMaxTime();
@@ -52,11 +52,6 @@ public class DrawCurve : MonoBehaviour
             this.gameObject.SetActive(false);
             StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds[0] = new RailElementSpeed { moment = 0, speed = _valueSlider.value };
         }
-        // if(this.name == "PanelLineDraw7")
-        // {
-        //     gameObject.transform.parent.parent.gameObject.SetActive(false);
-        //     Debug.Log("loeschen");
-        // }
     }
     public void AddValue(PointerEventData data)      // Aufruf auf Slider, der etwas ver�ndern soll, gel�st �ber EventTrigger, �bergebene data unn�tig
     {

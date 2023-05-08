@@ -41,7 +41,7 @@ public static class SceneManaging
         RectTransform trans = imgObject.GetComponent<RectTransform>();
         trans.SetParent(obj.transform); // setting parent
         trans.localScale = Vector3.one;
-        trans.anchoredPosition = new Vector2(-50, 0);
+        trans.anchoredPosition = new Vector2(0, 0);
 
         trans.sizeDelta = new Vector2((float)tmpLength, (float)rectHeight);    //size related to animationLength
         Image image = imgObject.GetComponent<Image>();
@@ -88,23 +88,23 @@ public static class SceneManaging
                 scaleDeleteButton(obj, 20, 40, 45);
                 scaleObject(obj, rectSize, timeline.GetComponent<RectTransform>().rect.height, false);      //scale the figure-picture in timeline to x: 100 and y: 80px
                 obj.transform.GetComponent<RectTransform>().pivot = new Vector3(obj.transform.GetComponent<RectTransform>().pivot.x, 0.5f, -1);
-                obj.GetComponent<BoxCollider2D>().size = new Vector2(obj.transform.GetChild(0).GetComponent<RectTransform>().rect.width, timeline.GetComponent<RectTransform>().rect.height);
-                obj.GetComponent<BoxCollider2D>().offset = new Vector2((obj.GetComponent<BoxCollider2D>().size.x - 100) / 2, 0);
+                obj.GetComponent<BoxCollider2D>().size = new Vector2(rectSize, timeline.GetComponent<RectTransform>().rect.height);
+                obj.GetComponent<BoxCollider2D>().offset = new Vector2(rectSize / 2, 0);
                 break;
             case 1:                 // 2 layers, but object in layer 1
                 scaleDeleteButton(obj, 0, 35, 40);
                 //Debug.Log("scale to one");
                 scaleObject(obj, rectSize, timeline.GetComponent<RectTransform>().rect.height / 2, false);
                 obj.transform.GetComponent<RectTransform>().pivot = new Vector3(obj.transform.GetComponent<RectTransform>().pivot.x, 0, -1);
-                obj.GetComponent<BoxCollider2D>().size = new Vector2(obj.transform.GetChild(0).GetComponent<RectTransform>().rect.width, timeline.GetComponent<RectTransform>().rect.height / 2);
-                obj.GetComponent<BoxCollider2D>().offset = new Vector2((obj.GetComponent<BoxCollider2D>().size.x - 100) / 2, obj.transform.GetChild(0).GetComponent<RectTransform>().rect.height / 2);
+                obj.GetComponent<BoxCollider2D>().size = new Vector2(rectSize, timeline.GetComponent<RectTransform>().rect.height / 2);
+                obj.GetComponent<BoxCollider2D>().offset = new Vector2(rectSize / 2, obj.transform.GetChild(0).GetComponent<RectTransform>().rect.height / 2);
                 break;
             case 2:                 // 2 layers and object in layer 2
                 scaleDeleteButton(obj, 0, 35, 40);
                 scaleObject(obj, rectSize, timeline.GetComponent<RectTransform>().rect.height / 2, false);
                 obj.transform.GetComponent<RectTransform>().pivot = new Vector3(obj.transform.GetComponent<RectTransform>().pivot.x, 1, -1);
-                obj.GetComponent<BoxCollider2D>().size = new Vector2(obj.transform.GetChild(0).GetComponent<RectTransform>().rect.width, timeline.GetComponent<RectTransform>().rect.height / 2);
-                obj.GetComponent<BoxCollider2D>().offset = new Vector2((obj.GetComponent<BoxCollider2D>().size.x - 100) / 2, -obj.transform.GetChild(0).GetComponent<RectTransform>().rect.height / 2);
+                obj.GetComponent<BoxCollider2D>().size = new Vector2(rectSize, timeline.GetComponent<RectTransform>().rect.height / 2);
+                obj.GetComponent<BoxCollider2D>().offset = new Vector2(rectSize / 2, -obj.transform.GetChild(0).GetComponent<RectTransform>().rect.height / 2);
                 break;
         }
     }

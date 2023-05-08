@@ -10,18 +10,14 @@ public class AnimationTimer : MonoBehaviour
     private static float _timer = 0.0f;
     private static float _minTime = 0.0f;
     public static float _maxTime = 3 * 60;
-    [SerializeField] private Slider _sliderMaxLength;
-    [SerializeField] private GameObject _settingsLength;
-    [SerializeField] private TMP_InputField _inputSliderLength;
-    [SerializeField] private TextMeshProUGUI _inputText;
+   
     public enum TimerState { stopped, playing, paused };
     private static TimerState _timerState = TimerState.stopped;
-    // Start is called before the first frame update
     void Start()
     {
         if (SceneManaging.isExpert)
         {
-            _maxTime = 10 * 60 + 14;
+            _maxTime = 10 * 60;
         }
         else
         {
@@ -30,7 +26,6 @@ public class AnimationTimer : MonoBehaviour
         ResetTime();
 
     }
-
     void Update()
     {
         if (_runTimer)
@@ -42,7 +37,6 @@ public class AnimationTimer : MonoBehaviour
     }
     public void SetMaxTime(float maxTime)
     {
-        Debug.Log("max: "+maxTime);
         _maxTime = maxTime;
     }
     public static float GetMaxTime()
@@ -86,24 +80,5 @@ public class AnimationTimer : MonoBehaviour
     {
         return _timerState;
     }
-    public void ChangeMaxLength()
-    {
-        Debug.Log("value: " + (_sliderMaxLength.value));
-        _maxTime = 60 * _sliderMaxLength.value;
-        _inputSliderLength.text = _sliderMaxLength.value.ToString("0");
-        StaticSceneData.StaticData.pieceLength = 60 * int.Parse(_inputSliderLength.text);
-    }
-    public void PressInfoButton(bool on)
-    {
-        if (on)
-            _settingsLength.SetActive(true);
-        else
-            _settingsLength.SetActive(false);
-    }
-    public void ChangeSliderValue()
-    {
-        _sliderMaxLength.value = int.Parse(_inputSliderLength.text);
-        _maxTime = 60 * _sliderMaxLength.value;
-        StaticSceneData.StaticData.pieceLength = 60 * int.Parse(_inputSliderLength.text);
-    }
+    
 }

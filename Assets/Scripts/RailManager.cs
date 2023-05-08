@@ -791,7 +791,7 @@ public class RailManager : MonoBehaviour
     {
         int tmpNr = int.Parse(obj.figure.transform.GetChild(1).name.Substring(12));
         int currentCounterNr = int.Parse(figCounterCircle[tmpNr - 1].text);
-        
+
         // erase from layer list
         railList[currentRailIndex].myObjects.Remove(obj);
 
@@ -844,7 +844,7 @@ public class RailManager : MonoBehaviour
         //parent and position
         newCopyOfFigure.transform.SetParent(rails[currentRailIndex].transform);
         newCopyOfFigure.transform.localScale = Vector3.one;
-        newCopyOfFigure.transform.GetChild(0).GetComponent<RectTransform>().anchoredPosition = new Vector2(newCopyOfFigure.transform.GetChild(0).GetComponent<RectTransform>().anchoredPosition.x - 50, newCopyOfFigure.transform.GetChild(0).GetComponent<RectTransform>().anchoredPosition.y);
+        //newCopyOfFigure.transform.GetChild(0).GetComponent<RectTransform>().anchoredPosition = new Vector2(newCopyOfFigure.transform.GetChild(0).GetComponent<RectTransform>().anchoredPosition.x, newCopyOfFigure.transform.GetChild(0).GetComponent<RectTransform>().anchoredPosition.y);
 
         Figure oP = new Figure();
         oP.objName = newCopyOfFigure.name;
@@ -914,10 +914,12 @@ public class RailManager : MonoBehaviour
             }
             else
             {
-                float moment = UtilitiesTm.FloatRemap((tmpRectTransform.anchoredPosition.x - 50), 0, railwidthAbsolute, 0, AnimationTimer.GetMaxTime());
+                float moment = UtilitiesTm.FloatRemap((tmpRectTransform.anchoredPosition.x), 0, railwidthAbsolute, 0, AnimationTimer.GetMaxTime());
                 objectAnimationLength = rails3D[currentRailIndex].transform.GetChild(0).GetComponent<RailSpeedController>().GetEndTimeFromStartTime(moment);
                 rectSize = railwidthAbsolute / (AnimationTimer.GetMaxTime() / objectAnimationLength);
-                newCopyOfFigure.transform.position = new Vector3(momentOrPosX, figureObjects[figureNr].transform.position.y, -1);
+                newCopyOfFigure.transform.position = new Vector3(newCopyOfFigure.transform.position.x, figureObjects[figureNr].transform.position.y, -1);
+                //tmpRectTransform.anchoredPosition = new Vector2(moment)
+                Debug.Log("length: " + objectAnimationLength + ", moment: " + moment);
             }
             #endregion
 
@@ -1838,7 +1840,7 @@ public class RailManager : MonoBehaviour
                         {
                             if (railList[currentRailIndex].myObjects[i].objName == currentName)
                             {
-                                Debug.Log("remove: " + railList[currentRailIndex].myObjects[i].objName);
+                                //Debug.Log("remove: " + railList[currentRailIndex].myObjects[i].objName);
                                 removeObjectFromTimeline(railList[currentRailIndex].myObjects[i]);
                             }
                         }
@@ -1888,7 +1890,7 @@ public class RailManager : MonoBehaviour
             {
                 for (int i = 0; i < railList[k].myObjects.Count; i++)
                 {
-                    float moment = UtilitiesTm.FloatRemap(railList[k].myObjects[i].position.x - 50, 0, railwidthAbsolute, 0, AnimationTimer.GetMaxTime());
+                    float moment = UtilitiesTm.FloatRemap(railList[k].myObjects[i].position.x, 0, railwidthAbsolute, 0, AnimationTimer.GetMaxTime());
                     float zPosFigure = (rails3D[k].transform.GetChild(0).GetComponent<RailSpeedController>().GetDistanceAtTime(moment));
                     // Debug.Log("moment: " + moment + ", zpos: " + zPosFigure);
 
