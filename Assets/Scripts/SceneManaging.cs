@@ -179,6 +179,7 @@ public static class SceneManaging
                 // {
                 obj.GetComponent<Image>().color = colHighlighted;
                 obj.transform.GetChild(1).GetChild(0).GetChild(0).gameObject.SetActive(true);   //show Delete-Button
+                Debug.Log("delete button: "+obj.transform.GetChild(1).GetChild(0).GetChild(0).gameObject.name);
                 // }
                 obj.transform.GetChild(0).gameObject.SetActive(true);
             }

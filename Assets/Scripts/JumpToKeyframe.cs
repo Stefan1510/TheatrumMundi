@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class JumpToKeyframe : MonoBehaviour
 {
@@ -10,15 +11,16 @@ public class JumpToKeyframe : MonoBehaviour
     [SerializeField] private GameObject _panelColorGradient;
     [SerializeField] private GameObject _imageTimelineRailBg;
     [SerializeField] private GameObject[] _railPanelsLineDraw;
-    // Start is called before the first frame update
+    [SerializeField] private Slider _sliderLightIntensity;
+    [SerializeField] private Slider _sliderRailSpeed;
+    [SerializeField] private Slider _sliderBackgroundPosition;
+
     void Start()
     {
         keyFrames = new List<float>();
         ChangeSelection(ImageTimelineSelection.GetRailType());         //0 - railspeed; 1 - light; 2 - music; 3 - background
         ChangeRailSelection(ImageTimelineSelection.GetRailNumber());     //der index der Rails in der Rail-Liste
     }
-
-    // Update is called once per frame
     void Update()
     {
         if (ImageTimelineSelection.UpdateNecessary())
@@ -27,10 +29,9 @@ public class JumpToKeyframe : MonoBehaviour
             ChangeRailSelection(ImageTimelineSelection.GetRailNumber());
         }
     }
-
     public void ChangeSelection(int selectSelection)
     {
-        if (selectSelection >= 0 && selectSelection <= 3 )
+        if (selectSelection >= 0 && selectSelection <= 3)
         {
             _selection = selectSelection;
         }
@@ -50,8 +51,6 @@ public class JumpToKeyframe : MonoBehaviour
             _railSelection = 0;
         }
     }
-
-
     public void PreviousKeyframe()
     {
         //Debug.LogError("<-- BING! BING! BING!");
@@ -59,16 +58,36 @@ public class JumpToKeyframe : MonoBehaviour
         keyFrames.Sort();
         float timerNow = AnimationTimer.GetTime();
         float previousKeyframe = 0;
-        foreach (float keyFrame in keyFrames)
+        int knobIndex = 0;
+        int railIndex = 0;
+
+        for (int i = 0; i < keyFrames.Count; i++)
         {
-            if (keyFrame < timerNow)
+            if (keyFrames[i] < timerNow)
             {
-                previousKeyframe = keyFrame;
+                previousKeyframe = keyFrames[i];
+                knobIndex = keyFrames.Count - 1 - i;
             }
+        }
+
+        if (ImageTimelineSelection.GetRailType() == 0)
+        {
+            railIndex = ImageTimelineSelection.GetRailNumber();
+            _sliderRailSpeed.value = StaticSceneData.StaticData.railElements[railIndex].railElementSpeeds[knobIndex].speed;
+            // Debug.Log("rail speed: " + StaticSceneData.StaticData.railElements[railIndex].railElementSpeeds[knobIndex].speed);
+        }
+        else if (ImageTimelineSelection.GetRailType() == 1)
+        {
+            // Debug.Log("lighting set: " + StaticSceneData.StaticData.lightingSets[knobIndex].intensity);
+            _sliderLightIntensity.value = StaticSceneData.StaticData.lightingSets[knobIndex].intensity;
+            // Debug.Log("value: " + _sliderLightIntensity.value);
+        }
+        else if (ImageTimelineSelection.GetRailType() == 3)
+        {
+            _sliderBackgroundPosition.value = StaticSceneData.StaticData.backgroundPositions[knobIndex].yPosition;
         }
         AnimationTimer.SetTime(previousKeyframe);
     }
-
     public void NextKeyframe()
     {
         //Debug.LogError("BONG! BONG! BONG! -->");
@@ -76,16 +95,37 @@ public class JumpToKeyframe : MonoBehaviour
         keyFrames.Reverse();
         float timerNow = AnimationTimer.GetTime();
         float nextKeyframe = AnimationTimer.GetMaxTime();
-        foreach (float keyFrame in keyFrames)
+        int knobIndex = 0;
+        int railIndex = 0;
+
+        for (int i = 0; i < keyFrames.Count; i++)   // (float keyFrame in keyFrames)
         {
-            if (keyFrame > timerNow)
+            if (keyFrames[i] > timerNow)
             {
-                nextKeyframe = keyFrame;
+                nextKeyframe = keyFrames[i];
+                // Debug.Log("i: " + (keyFrames.Count - 1 - i) + ", Keyframe: " + nextKeyframe);
+                knobIndex = keyFrames.Count - 1 - i;
             }
         }
+        if (ImageTimelineSelection.GetRailType() == 0)
+        {
+            railIndex = ImageTimelineSelection.GetRailNumber();
+            _sliderRailSpeed.value = StaticSceneData.StaticData.railElements[railIndex].railElementSpeeds[knobIndex].speed;
+            // Debug.Log("rail speed: " + StaticSceneData.StaticData.railElements[railIndex].railElementSpeeds[knobIndex].speed);
+        }
+        else if (ImageTimelineSelection.GetRailType() == 1)
+        {
+            // Debug.Log("lighting set: " + StaticSceneData.StaticData.lightingSets[knobIndex].intensity);
+            _sliderLightIntensity.value = StaticSceneData.StaticData.lightingSets[knobIndex].intensity;
+            // Debug.Log("value: " + _sliderLightIntensity.value);
+        }
+        else if (ImageTimelineSelection.GetRailType() == 3)
+        {
+            _sliderBackgroundPosition.value = StaticSceneData.StaticData.backgroundPositions[knobIndex].yPosition;
+        }
         AnimationTimer.SetTime(nextKeyframe);
+        // float intensityValue = SliderIntensity.value;
     }
-
     public void DeleteCurrentKeyframe()
     {
         int momentIndex = -1;
@@ -121,7 +161,6 @@ public class JumpToKeyframe : MonoBehaviour
                 break;
         }
     }
-
     void GetMomentsFromRailElementSpeeds()
     {
         keyFrames.Clear();
@@ -130,7 +169,6 @@ public class JumpToKeyframe : MonoBehaviour
             keyFrames.Add(railElementSpeed.moment);
         }
     }
-
     void GetMomentsFromLightingSets()
     {
         keyFrames.Clear();
@@ -140,20 +178,17 @@ public class JumpToKeyframe : MonoBehaviour
             //Debug.LogWarning(lightingSet.moment);
         }
     }
-
     void GetMomentFromBackgroundPositions()
     {
         keyFrames.Clear();
-        foreach(BackgroundPosition backgroundPosition in StaticSceneData.StaticData.backgroundPositions)
+        foreach (BackgroundPosition backgroundPosition in StaticSceneData.StaticData.backgroundPositions)
         {
             keyFrames.Add(backgroundPosition.moment);
         }
     }
-
-
     void SelectKeyFrames() //0 - railspeed; 1 - light; 2 - music; 3 - background
     {
-        switch(_selection)
+        switch (_selection)
         {
             case 0:
                 GetMomentsFromRailElementSpeeds();
@@ -168,6 +203,6 @@ public class JumpToKeyframe : MonoBehaviour
                 GetMomentFromBackgroundPositions();
                 break;
         }
-            
+
     }
 }

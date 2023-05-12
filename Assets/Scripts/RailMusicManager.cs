@@ -17,7 +17,8 @@ public class RailMusicManager : MonoBehaviour
     #endregion
     #region private variables
     [SerializeField] Image timelineImage;
-    [SerializeField] private GameObject gameController, UICanvas;
+    [SerializeField] private GameObject UICanvas;
+    [SerializeField] private UIController gameController;
     [SerializeField] RailManager contentRailsMenue;
     [SerializeField] private BoxCollider2D _backgroundBoxCollider;
     [SerializeField] private GameObject prefabRect;
@@ -32,7 +33,7 @@ public class RailMusicManager : MonoBehaviour
     GameObject newCopyOfFigure;
     Color colMusic, colMusicHighlighted;
     bool anyInstanceIsPlaying = false, firstTimeSecond = false;
-    bool onlyPiecefinished = true, _toBeRemoved;
+    bool onlyPiecefinished = true, _toBeRemoved, _toBeRemovedFromTimeline;
     Vector2 releaseObjMousePos, diff;
     double minX, maxX;
     private float railWidthAbsolute = 1670.4f;
@@ -155,14 +156,14 @@ public class RailMusicManager : MonoBehaviour
             }
             for (int k = 0; k < 2; k++)
             {
-                if (gameController.GetComponent<UIController>().RailLightBG[k].isTimelineOpen)
+                if (gameController.RailLightBG[k].isTimelineOpen)
                 {
-                    gameController.GetComponent<UIController>().RailLightBG[k].GetComponent<RectTransform>().sizeDelta = new Vector2(timelineImage.rectTransform.rect.width, 20);
-                    gameController.GetComponent<UIController>().RailLightBG[k].GetComponent<BoxCollider2D>().size = new Vector2(timelineImage.GetComponent<BoxCollider2D>().size.x, 20);
-                    gameController.GetComponent<UIController>().RailLightBG[k].GetComponent<RailLightManager>().isTimelineOpen = false;
+                    gameController.RailLightBG[k].GetComponent<RectTransform>().sizeDelta = new Vector2(timelineImage.rectTransform.rect.width, 20);
+                    gameController.RailLightBG[k].GetComponent<BoxCollider2D>().size = new Vector2(timelineImage.GetComponent<BoxCollider2D>().size.x, 20);
+                    gameController.RailLightBG[k].GetComponent<RailLightManager>().isTimelineOpen = false;
                 }
-
             }
+            contentRailsMenue.currentRailIndex = -1;
             // open clicked rail and scale up timeline
             timelineImage.rectTransform.sizeDelta = new Vector2(timelineImage.rectTransform.rect.width, 80);
             //scale up the collider
@@ -172,24 +173,6 @@ public class RailMusicManager : MonoBehaviour
             ImageTimelineSelection.SetRailNumber(6);
             ImageTimelineSelection.SetRailType(2);  // for rail-rails
         }
-    }
-    private void setParent(GameObject obj, GameObject parentToSet)
-    {
-        try
-        {
-            GameObject oldParent;
-            if (obj.transform.parent != null)
-                //save old parent
-                oldParent = obj.transform.parent.gameObject;
-            //set new parent
-            obj.transform.SetParent(parentToSet.transform);
-        }
-        catch (NullReferenceException) { }
-    }
-    private void updateObjectPosition(MusicPiece obj, Vector2 mousePos)
-    {
-        obj.musicPiece.transform.position = new Vector3(mousePos.x, mousePos.y, -1.0f);
-        obj.position = new Vector2(obj.musicPiece.GetComponent<RectTransform>().anchoredPosition.x, obj.musicPiece.GetComponent<RectTransform>().sizeDelta.x);
     }
     private bool checkHittingTimeline(Vector2 mousePos)
     {
@@ -201,6 +184,85 @@ public class RailMusicManager : MonoBehaviour
             hit = true; ;
         }
         return hit;
+    }
+    private int isCurrentFigureOverlapping(MusicPiece obj, string dir, out int count, List<MusicPiece> musicList)
+    {
+        int val = -1;
+        int val2 = -1;
+        int val3 = -1;
+
+        count = 0;
+        if (dir == "right")
+        {
+            for (int i = 0; i < musicList.Count; i++)
+            {
+                //Debug.Log("name: " + figureList.objName);
+                if (((musicList[i].position.x <= obj.position.x
+                && musicList[i].position.x + musicList[i].position.y >= obj.position.x)
+                || (musicList[i].position.x >= obj.position.x
+                && musicList[i].position.x <= obj.position.x + obj.position.y))
+                && musicList[i].objName != obj.objName)
+                {
+                    if (val2 != -1)
+                        val3 = val2;
+                    if (val == -1)
+                        val = i;
+                    val2 = i;
+
+                    count++;
+                    //Debug.LogWarning("val2: " + val2 + ", val3: " + val3);
+                }
+                if (count > 1)
+                {
+                    if (musicList[val2].layer == musicList[val3].layer)
+                    {
+                        //Debug.Log("count: " + count);
+                        count = 1;
+                    }
+                    else
+                    {
+                        //Debug.Log("es gibt mehr als eine überlappung auf unterschiedlichen Ebenen");
+                        break;
+                    }
+                }
+            }
+        }
+        else
+        {
+            for (int i = musicList.Count - 1; i >= 0; i--)
+            {
+                if (((musicList[i].position.x <= obj.position.x
+                && musicList[i].position.x + musicList[i].position.y >= obj.position.x)
+                || (musicList[i].position.x >= obj.position.x
+                && musicList[i].position.x <= obj.position.x + obj.position.y))
+                && musicList[i].objName != obj.objName)
+                {
+                    if (val2 != -1)
+                        val3 = val2;
+                    if (val == -1)
+                        val = i;
+                    val2 = i;
+
+                    count++;
+                    //Debug.LogWarning("val2: " + val2 + ", val3: " + val3);
+                }
+                if (count > 1)
+                {
+                    if (musicList[val2].layer == musicList[val3].layer)
+                    {
+                        //Debug.Log("count: " + count);
+                        count = 1;
+                    }
+                    else
+                    {
+                        //Debug.Log("es gibt mehr als eine überlappung auf unterschiedlichen Ebenen");
+                        break;
+                    }
+                }
+            }
+        }
+
+        return val;
     }
     public void openCloseObjectInTimeline(bool timelineOpen)
     {
@@ -278,12 +340,9 @@ public class RailMusicManager : MonoBehaviour
         int tmpNr = int.Parse(obj.musicPiece.transform.GetChild(1).name.Substring(12));
         int currentCounterNr = int.Parse(figCounterCircle[tmpNr - 1].text);
 
-
         figCounterCircle[tmpNr - 1].text = (currentCounterNr - 1).ToString();
 
-
         StaticSceneData.StaticData.musicClipElements[Int32.Parse(obj.objName.Substring(6, 2)) - 1].musicClipElementInstances.Remove(StaticSceneData.StaticData.musicClipElements[Int32.Parse(obj.objName.Substring(6, 2)) - 1].musicClipElementInstances[Int32.Parse(obj.objName.Substring(17))]);
-
 
         Destroy(obj.musicPiece);
 
@@ -921,84 +980,23 @@ public class RailMusicManager : MonoBehaviour
         }
         return val;
     }
-    private int isCurrentFigureOverlapping(MusicPiece obj, string dir, out int count, List<MusicPiece> musicList)
+    private void setParent(GameObject obj, GameObject parentToSet)
     {
-        int val = -1;
-        int val2 = -1;
-        int val3 = -1;
-
-        count = 0;
-        if (dir == "right")
+        try
         {
-            for (int i = 0; i < musicList.Count; i++)
-            {
-                //Debug.Log("name: " + figureList.objName);
-                if (((musicList[i].position.x <= obj.position.x
-                && musicList[i].position.x + musicList[i].position.y >= obj.position.x)
-                || (musicList[i].position.x >= obj.position.x
-                && musicList[i].position.x <= obj.position.x + obj.position.y))
-                && musicList[i].objName != obj.objName)
-                {
-                    if (val2 != -1)
-                        val3 = val2;
-                    if (val == -1)
-                        val = i;
-                    val2 = i;
-
-                    count++;
-                    //Debug.LogWarning("val2: " + val2 + ", val3: " + val3);
-                }
-                if (count > 1)
-                {
-                    if (musicList[val2].layer == musicList[val3].layer)
-                    {
-                        //Debug.Log("count: " + count);
-                        count = 1;
-                    }
-                    else
-                    {
-                        //Debug.Log("es gibt mehr als eine überlappung auf unterschiedlichen Ebenen");
-                        break;
-                    }
-                }
-            }
+            GameObject oldParent;
+            if (obj.transform.parent != null)
+                //save old parent
+                oldParent = obj.transform.parent.gameObject;
+            //set new parent
+            obj.transform.SetParent(parentToSet.transform);
         }
-        else
-        {
-            for (int i = musicList.Count - 1; i >= 0; i--)
-            {
-                if (((musicList[i].position.x <= obj.position.x
-                && musicList[i].position.x + musicList[i].position.y >= obj.position.x)
-                || (musicList[i].position.x >= obj.position.x
-                && musicList[i].position.x <= obj.position.x + obj.position.y))
-                && musicList[i].objName != obj.objName)
-                {
-                    if (val2 != -1)
-                        val3 = val2;
-                    if (val == -1)
-                        val = i;
-                    val2 = i;
-
-                    count++;
-                    //Debug.LogWarning("val2: " + val2 + ", val3: " + val3);
-                }
-                if (count > 1)
-                {
-                    if (musicList[val2].layer == musicList[val3].layer)
-                    {
-                        //Debug.Log("count: " + count);
-                        count = 1;
-                    }
-                    else
-                    {
-                        //Debug.Log("es gibt mehr als eine überlappung auf unterschiedlichen Ebenen");
-                        break;
-                    }
-                }
-            }
-        }
-
-        return val;
+        catch (NullReferenceException) { }
+    }
+    private void updateObjectPosition(MusicPiece obj, Vector2 mousePos)
+    {
+        obj.musicPiece.transform.position = new Vector3(mousePos.x, mousePos.y, -1.0f);
+        obj.position = new Vector2(obj.musicPiece.GetComponent<RectTransform>().anchoredPosition.x, obj.musicPiece.GetComponent<RectTransform>().sizeDelta.x);
     }
     void UpdatePositionVectorInformation(GameObject currentObj, List<MusicPiece> listFrom, List<MusicPiece> listTo)
     {
@@ -1121,7 +1119,8 @@ public class RailMusicManager : MonoBehaviour
                             && getMousePos.x >= pos.x - rect.sizeDelta.x / 2.5f && getMousePos.x <= pos.x + rect.sizeDelta.x / 2.5f
                             && getMousePos.y >= pos.y - rect.sizeDelta.y / 2.5f && getMousePos.y <= pos.y + rect.sizeDelta.y / 2.5f)
                         {
-                            _toBeRemoved = true;
+                            _toBeRemovedFromTimeline = true;
+                            Debug.Log("delete");
                         }
                         diff = new Vector2(getMousePos.x - myObjects[currentClickedInstanceObjectIndex].musicPiece.transform.position.x, getMousePos.y - myObjects[currentClickedInstanceObjectIndex].musicPiece.transform.position.y);
 
@@ -1202,7 +1201,7 @@ public class RailMusicManager : MonoBehaviour
                         {
                             if (myObjects[j].musicPiece != currentObj.musicPiece && myObjects[j].layer == 1)
                             {
-                                SceneManaging.scaleToLayerSize(myObjects[j].musicPiece, 1, gameObject, currentObj.position.y);
+                                SceneManaging.scaleToLayerSize(myObjects[j].musicPiece, 1, gameObject, myObjects[j].position.y);
                                 myObjects[j].layer = 1;
                             }
                         }
@@ -1302,6 +1301,8 @@ public class RailMusicManager : MonoBehaviour
             else
             {
                 figureObjects[currentClickedObjectIndex].GetComponent<RectTransform>().sizeDelta = new Vector2(objectShelfSize.x, objectShelfSize.y);
+                figureObjects[currentClickedObjectIndex].transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(objectShelfSize.x, objectShelfSize.y);
+                Debug.Log("hier?");
                 // scaleObject(figureObjects[currentClickedObjectIndex].transform.GetChild(0).gameObject, objectShelfSize.x, objectShelfSize.y, false);
                 // scale up currentFigure
                 releaseOnTimeline = false;
@@ -1399,7 +1400,7 @@ public class RailMusicManager : MonoBehaviour
                             for (int i = 0; i < myObjects.Count; i++)
                             {
                                 if (myObjects[i].layer == 1)
-                                    SceneManaging.scaleToLayerSize(myObjects[i].musicPiece, 1, gameObject, tmpLength);
+                                    SceneManaging.scaleToLayerSize(myObjects[i].musicPiece, 1, gameObject, myObjects[i].position.y);
                             }
                             //Debug.Log("op: "+oP.position);
                         }
@@ -1455,17 +1456,17 @@ public class RailMusicManager : MonoBehaviour
                     myObjects = myObjects.OrderBy(w => w.position.x).ToList();
                     SceneManaging.CalculateNeighbors(myObjects);
 
-                    // if (_toBeRemovedFromTimeline)
-                    // {
-                    //     for (int i = 0; i < myObjects.Count; i++)
-                    //     {
-                    //         if (myObjects[i].objName == currentName)
-                    //         {
-                    //             Debug.Log("remove: " + myObjects[i].objName);
-                    //             removeObjectFromTimeline(myObjects[i]);
-                    //         }
-                    //     }
-                    // }
+                    if (_toBeRemovedFromTimeline)
+                    {
+                        for (int i = 0; i < myObjects.Count; i++)
+                        {
+                            if (myObjects[i].objName == currentName)
+                            {
+                                Debug.Log("remove: " + myObjects[i].objName);
+                                removeObjectFromTimeline(myObjects[i]);
+                            }
+                        }
+                    }
                 }
 
             }
@@ -1516,6 +1517,7 @@ public class RailMusicManager : MonoBehaviour
             isInstance = false;
             onlyPiecefinished = true;
             _toBeRemoved = false;
+            _toBeRemovedFromTimeline = false;
         }
 
         // turning music on and off in playmode

@@ -19,10 +19,6 @@ public class AnimationTimer : MonoBehaviour
         {
             _maxTime = 10 * 60;
         }
-        else
-        {
-            _maxTime = 3 * 60;
-        }
         ResetTime();
 
     }

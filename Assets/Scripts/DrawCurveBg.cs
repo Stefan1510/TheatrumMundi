@@ -18,59 +18,43 @@ public class DrawCurveBg : MonoBehaviour
     private float _maxTime;
     private float _minValue;
     private float _maxValue;
-    private bool _gameObjectStarted = false;
+    private int _rectWidth;
 
-    // Start is called before the first frame update
-
-    //private void Awake()
-    //{
-
-    //}
     void Start()
     {
-        StaticSceneData.StaticData.backgroundPositions[0] = new BackgroundPosition { moment = 0, yPosition = _valueSlider.value };  // im SceneDataController MUSS ein erstes Element hinzugef�gt werden, bevor es hier angesprochen werden kann
-        StaticSceneData.StaticData.backgroundPositions.Sort((x, y) => x.moment.CompareTo(y.moment));   // sortiert die railElementSpeeds anhand der Eigenschaft moment
-        _gameObjectStarted = true;
-        _textureCurve = new Texture2D((int)(_PanelLineDraw.GetComponent<RectTransform>().rect.width), (int)(_PanelLineDraw.GetComponent<RectTransform>().rect.height), TextureFormat.RGBA32, false); // wird durch Panel RectTransform stretch automatisch gescaled
+        _rectWidth = (int)GetComponent<RectTransform>().rect.width;
+        _textureCurve = new Texture2D(_rectWidth, (int)(_PanelLineDraw.GetComponent<RectTransform>().rect.height), TextureFormat.RGBA32, false); // wird durch Panel RectTransform stretch automatisch gescaled
+       
         _backColors = new Color32[_textureCurve.width * _textureCurve.height];
         _backColors = UtilitiesTm.ChangeColors(_backColors, new Color32(255, 255, 255, 31));
-        //_curveColors = new Color32[_textureCurve.width * _textureCurve.height];
         _curveColors = new Color32[3 * 3];
-        _curveColors = UtilitiesTm.ChangeColors(_curveColors, Color.black);
+        _curveColors = UtilitiesTm.ChangeColors(_curveColors, new Color32(180, 180, 180, 150));
+        
         _maxTime = AnimationTimer.GetMaxTime();
-        //        Debug.Log("maxtime: " + _maxTime);
         _minValue = _valueSlider.minValue;
         _maxValue = _valueSlider.maxValue;
         _imagePositionKnob.gameObject.SetActive(false);
         _imagePositionKnobCollection = new List<Image>();
+        
         EventTrigger.Entry eventTriggerEntry = new EventTrigger.Entry();
         eventTriggerEntry.eventID = EventTriggerType.PointerUp;
-        eventTriggerEntry.callback.AddListener((data) => { AddValue((PointerEventData)data); });
+        eventTriggerEntry.callback.AddListener((data) => { AddValue(); });
         _valueSlider.onValueChanged.AddListener((float value) => ChangeLiveBackground(value));
         _valueSlider.GetComponent<EventTrigger>().triggers.Add(eventTriggerEntry);
-        ChangeCurve();
-        ChangeBackgroundPosition();
+        
+        StaticSceneData.StaticData.backgroundPositions[0] = new BackgroundPosition { moment = 0, yPosition = _valueSlider.value };  // im SceneDataController MUSS ein erstes Element hinzugef�gt werden, bevor es hier angesprochen werden kann
+        StaticSceneData.StaticData.backgroundPositions.Sort((x, y) => x.moment.CompareTo(y.moment));   // sortiert die railElementSpeeds anhand der Eigenschaft moment
+        //ChangeCurve();
+        //ChangeBackgroundPosition();
     }
 
-    private void OnEnable()
-    {
-        if (_gameObjectStarted)
-        {
-            ChangeCurve();
-        }
-    }
-
-
-    // Update is called once per frame
     void Update()
     {
         ChangeBackgroundPosition();
     }
 
-    public void AddValue(PointerEventData data)      // Aufruf auf Slider, der etwas ver�ndern soll, gel�st �ber EventTrigger, �bergebene data unn�tig
+    public void AddValue()      // Aufruf auf Slider, der etwas veraendern soll, geloest ueber EventTrigger, uebergebene data unnoetig
     {
-
-        //Debug.LogError(data);
         float valueSliderValue = _valueSlider.value;
         float valueMoment = AnimationTimer.GetTime();
         int momentIndex = StaticSceneData.StaticData.backgroundPositions.FindIndex(bgPos => bgPos.moment == valueMoment);
@@ -81,6 +65,7 @@ public class DrawCurveBg : MonoBehaviour
         {
             thisBackgroundPosition = new BackgroundPosition { moment = valueMoment, yPosition = valueSliderValue };
             StaticSceneData.StaticData.backgroundPositions.Add(thisBackgroundPosition);
+            // Debug.Log("value: " + valueMoment);
         }
         else
         {
@@ -94,7 +79,7 @@ public class DrawCurveBg : MonoBehaviour
 
     public void ChangeCurve()
     {
-        //_maxTime = AnimationTimer.GetMaxTime();
+        _maxTime = AnimationTimer.GetMaxTime();
         _textureCurve.SetPixels32(_backColors);
         //_textureCurve = UtilitiesTm.Bresenham(_textureCurve, 0, _textureCurve.height / 2, _textureCurve.width - 3, _textureCurve.height / 2, _middleLineColors);
 
@@ -113,16 +98,8 @@ public class DrawCurveBg : MonoBehaviour
             momentStart = (int)momentStartF;
 
             float momentEndF = (int)StaticSceneData.StaticData.backgroundPositions[valueStates + 1].moment; // holen des "spaeteren" Moments aus der Datenhaltung
-            //Debug.Log("momentEndF: " + momentEndF + ", _maxtime: " + _maxTime + ", texturecurve: " + _textureCurve.width);
 
-            if (listLength == 2)
-            {
-                momentEndF = UtilitiesTm.FloatRemap(_maxTime, 0, _maxTime, 0, _textureCurve.width - 3); // mappen des "spaeteren" Moments von zwischen TimeSlider auf zwischen PanelWeite
-            }
-            else
-            {
-                momentEndF = UtilitiesTm.FloatRemap(momentEndF, 0, _maxTime, 0, _textureCurve.width - 3); // mappen des "spaeteren" Moments von zwischen TimeSlider auf zwischen PanelWeite
-            }
+            momentEndF = UtilitiesTm.FloatRemap(momentEndF, 0, _maxTime, 0, _textureCurve.width - 3); // mappen des "spaeteren" Moments von zwischen TimeSlider auf zwischen PanelWeite
             momentEnd = (int)momentEndF;
 
             float valueStartF = StaticSceneData.StaticData.backgroundPositions[valueStates].yPosition;  // holen des "fr�heren" Werts aus der Datenhaltung
@@ -139,6 +116,8 @@ public class DrawCurveBg : MonoBehaviour
             float deltaValue = valueEndF - valueStartF;     // deltaY
         }
 
+        Debug.Log("bg: momentend: "+momentEnd+", valueEnd: "+valueEnd+", valueStart: "+valueStart+", _texturewidth: "+(_textureCurve.width-3));
+        _textureCurve = UtilitiesTm.Bresenham(_textureCurve, momentEnd, valueEnd, _textureCurve.width - 3, valueEnd, _curveColors);
 
         _textureCurve.Apply();
         _PanelLineDraw.GetComponent<Image>().sprite = Sprite.Create(_textureCurve, new Rect(0, 0, _textureCurve.width, _textureCurve.height), new Vector2(0.5f, 0.5f));
@@ -154,14 +133,13 @@ public class DrawCurveBg : MonoBehaviour
         }
         _imagePositionKnobCollection.Clear();
 
-        float panelWidth = _PanelLineDraw.GetComponent<RectTransform>().rect.width;
         float panelHeight = _PanelLineDraw.GetComponent<RectTransform>().rect.height;
 
         foreach (BackgroundPosition backgroundPosition in StaticSceneData.StaticData.backgroundPositions)
         {
             Image knobInstance = Instantiate(_imagePositionKnob, _imagePositionKnob.transform.parent);
             knobInstance.gameObject.SetActive(true);
-            float knobPosX = UtilitiesTm.FloatRemap(backgroundPosition.moment, 0, _maxTime, 0, panelWidth);
+            float knobPosX = UtilitiesTm.FloatRemap(backgroundPosition.moment, 0, _maxTime, 0, _rectWidth);
             float knobPosY = UtilitiesTm.FloatRemap(backgroundPosition.yPosition, _minValue, _maxValue, -panelHeight / 2, panelHeight / 2);
             knobInstance.transform.localPosition = new Vector3(knobPosX, knobPosY, knobInstance.transform.localPosition.z);
             _imagePositionKnobCollection.Add(knobInstance);

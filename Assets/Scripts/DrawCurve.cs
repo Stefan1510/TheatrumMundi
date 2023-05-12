@@ -6,7 +6,8 @@ using UnityEngine.EventSystems;
 
 public class DrawCurve : MonoBehaviour
 {
-    private Texture2D _textureCurve;
+    #region variables
+    private Texture2D _textureCurve, _textureRest;
     [SerializeField] private UnitySwitchExpertUser gameController;
     [SerializeField] private Slider _valueSlider;
     [SerializeField] private Image _imagePositionKnob;
@@ -18,32 +19,36 @@ public class DrawCurve : MonoBehaviour
     private float _maxTime;
     private float _minValue;
     private float _maxValue;
-
+    private int _rectWidth;
+    #endregion
     void Start()
     {
         if (gameController._isExpert)
         {
-            //Debug.Log("ich: " + this.name + "____" + (int)(GetComponent<RectTransform>().rect.height));
-            _textureCurve = new Texture2D((int)(GetComponent<RectTransform>().rect.width), 80, TextureFormat.RGBA32, false); // wird durch Panel RectTransform stretch automatisch gescaled
+            _rectWidth = (int)GetComponent<RectTransform>().rect.width;
+            _textureCurve = new Texture2D(_rectWidth, 80, TextureFormat.RGBA32, false); // wird durch Panel RectTransform stretch automatisch gescaled
+
             _backColors = new Color32[_textureCurve.width * _textureCurve.height];
             _backColors = UtilitiesTm.ChangeColors(_backColors, new Color32(255, 255, 255, 31));
-            //_curveColors = new Color32[_textureCurve.width * _textureCurve.height];
             _curveColors = new Color32[3 * 3];
-            _curveColors = UtilitiesTm.ChangeColors(_curveColors, new Color32(200,200,200,150));
+            _curveColors = UtilitiesTm.ChangeColors(_curveColors, new Color32(180, 180, 180, 150));
+            
             _middleLineColors = new Color32[_textureCurve.width * 2];
             _middleLineColors = UtilitiesTm.ChangeColors(_middleLineColors, new Color32(224, 224, 224, 224));
+            
             _maxTime = AnimationTimer.GetMaxTime();
             _minValue = _valueSlider.minValue;
             _maxValue = _valueSlider.maxValue;
             _imagePositionKnob.gameObject.SetActive(false);
             _imagePositionKnobCollection = new List<Image>();
+            
             EventTrigger.Entry eventTriggerEntry = new EventTrigger.Entry();
             eventTriggerEntry.eventID = EventTriggerType.PointerUp;
-            eventTriggerEntry.callback.AddListener((data) => { AddValue((PointerEventData)data); });
+            eventTriggerEntry.callback.AddListener((data) => { AddValue(); });
             _valueSlider.GetComponent<EventTrigger>().triggers.Add(eventTriggerEntry);
-
+Debug.Log("val: "+_valueSlider.value);
             StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds[0] = new RailElementSpeed { moment = 0, speed = _valueSlider.value };  // im SceneDataController MUSS ein erstes Element hinzugef�gt werden, bevor es hier angesprochen werden kann
-            // Debug.Log("value: "+_valueSlider.value+", bei: "+this.name);
+            Debug.Log("speed: "+StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds[0].speed);
             StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds.Sort((x, y) => x.moment.CompareTo(y.moment));   // sortiert die railElementSpeeds anhand der Eigenschaft moment
             ChangeCurve();
         }
@@ -53,7 +58,7 @@ public class DrawCurve : MonoBehaviour
             StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds[0] = new RailElementSpeed { moment = 0, speed = _valueSlider.value };
         }
     }
-    public void AddValue(PointerEventData data)      // Aufruf auf Slider, der etwas ver�ndern soll, gel�st �ber EventTrigger, �bergebene data unn�tig
+    public void AddValue()      // Aufruf auf Slider, der etwas ver�ndern soll, gel�st �ber EventTrigger, �bergebene data unn�tig
     {
         if (_railIndex == ImageTimelineSelection.GetRailNumber())
         {
@@ -90,16 +95,17 @@ public class DrawCurve : MonoBehaviour
         int momentEnd = (int)StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds[0].moment;
 
         int valueStart = (int)StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds[0].speed;
-        int valueEnd = (int)StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds[0].speed;
+        int valueEnd = 39;
+        Debug.Log("rail ind: "+_railIndex+", value: "+StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds[0].speed);
 
         int listLength = StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds.Count;
         for (int valueStates = 0; valueStates < listLength - 1; valueStates++)
         {
-            float momentStartF = (int)StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds[valueStates].moment; // holen des "fr�heren" Moments aus der Datenhaltung
-            momentStartF = UtilitiesTm.FloatRemap(momentStartF, 0, _maxTime, 0, _textureCurve.width - 3);    // mappen des "fr�heren" Moments von zwischen TimeSlider auf zwischen PanelWeite
+            float momentStartF = (int)StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds[valueStates].moment; // holen des "frueheren" Moments aus der Datenhaltung
+            momentStartF = UtilitiesTm.FloatRemap(momentStartF, 0, _maxTime, 0, _textureCurve.width - 3);    // mappen des "frueheren" Moments von zwischen TimeSlider auf zwischen PanelWeite
             momentStart = (int)momentStartF;
 
-            float momentEndF = (int)StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds[valueStates + 1].moment; // holen des "sp�teren" Moments aus der Datenhaltung
+            float momentEndF = (int)StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds[valueStates + 1].moment; // holen des "spaeteren" Moments aus der Datenhaltung
             momentEndF = UtilitiesTm.FloatRemap(momentEndF, 0, _maxTime, 0, _textureCurve.width - 3); // mappen des "sp�teren" Moments von zwischen TimeSlider auf zwischen PanelWeite
             momentEnd = (int)momentEndF;
 
@@ -115,22 +121,12 @@ public class DrawCurve : MonoBehaviour
 
             float deltaMoment = momentEndF - momentStartF;  // deltaX
             float deltaValue = valueEndF - valueStartF;     // deltaY
-            //Debug.Log("Deltas: x: " + deltaMoment + " // y: " + deltaValue);
-            //if (Mathf.Abs(deltaMoment)>=Mathf.Abs(deltaValue))  // y ist kleinergleich x
-            //{
 
-            //}
-            //else    // x ist kleiner als y
-            //{
-            //    int step = (int)(Mathf.Abs(deltaValue) / Mathf.Abs(deltaMoment));
-            //    for (int i = 0; i < deltaMoment; i++)
-            //    {
-            //        Debug.Log("ACHTUNG ACHTUNG HIER IST EIN i" + i + "und ein Wert: " + deltaValue / deltaMoment);
-            //        _textureCurve.SetPixels32((int)(momentStartF + i), (int)(valueStartF + i * (Mathf.Abs(deltaValue) / Mathf.Abs(deltaMoment))), 3, (int)(Mathf.Abs(deltaValue) / Mathf.Abs(deltaMoment))+1, _curveColors);
-            //    }
-            //}
         }
 
+        _textureRest = new Texture2D(_rectWidth, 80, TextureFormat.RGBA32, false); // wird durch Panel RectTransform stretch automatisch gescaled
+        Debug.Log("momentend: "+momentEnd+", valueEnd: "+valueEnd+", _texturewidth: "+(_textureCurve.width-3));
+        _textureRest = UtilitiesTm.Bresenham(_textureCurve, momentEnd, valueEnd, _textureCurve.width - 3, valueEnd, _curveColors);
 
         _textureCurve.Apply();
         GetComponent<Image>().sprite = Sprite.Create(_textureCurve, new Rect(0, 0, _textureCurve.width, _textureCurve.height), new Vector2(0.5f, 0.5f));
@@ -146,14 +142,14 @@ public class DrawCurve : MonoBehaviour
         }
         _imagePositionKnobCollection.Clear();
 
-        float panelWidth = GetComponent<RectTransform>().rect.width;
+        //float panelWidth = GetComponent<RectTransform>().rect.width;
         float panelHeight = GetComponent<RectTransform>().rect.height;
 
         foreach (RailElementSpeed railElementSpeed in StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds)
         {
             Image knobInstance = Instantiate(_imagePositionKnob, _imagePositionKnob.transform.parent);
             knobInstance.gameObject.SetActive(true);
-            float knobPosX = UtilitiesTm.FloatRemap(railElementSpeed.moment, 0, _maxTime, 0, panelWidth);
+            float knobPosX = UtilitiesTm.FloatRemap(railElementSpeed.moment, 0, _maxTime, 0, _rectWidth);
             float knobPosY = UtilitiesTm.FloatRemap(railElementSpeed.speed, _minValue, _maxValue, -panelHeight / 2, panelHeight / 2);
             knobInstance.transform.localPosition = new Vector3(knobPosX, knobPosY, knobInstance.transform.localPosition.z);
             _imagePositionKnobCollection.Add(knobInstance);
