@@ -179,7 +179,7 @@ public static class SceneManaging
                 // {
                 obj.GetComponent<Image>().color = colHighlighted;
                 obj.transform.GetChild(1).GetChild(0).GetChild(0).gameObject.SetActive(true);   //show Delete-Button
-                Debug.Log("delete button: "+obj.transform.GetChild(1).GetChild(0).GetChild(0).gameObject.name);
+                //Debug.Log("delete button: "+obj.transform.GetChild(1).GetChild(0).GetChild(0).gameObject.name);
                 // }
                 obj.transform.GetChild(0).gameObject.SetActive(true);
             }
@@ -204,7 +204,7 @@ public static class SceneManaging
                     //Debug.Log("hier?");
                     obj.GetComponent<Image>().color = col;
                     obj.transform.GetChild(1).GetChild(0).GetChild(0).gameObject.SetActive(false);   //show Delete-Button
-                    obj.transform.GetChild(0).gameObject.SetActive(false);
+                    obj.transform.GetChild(0).gameObject.SetActive(false);  // border
                 }
                 else
                 {
@@ -212,17 +212,19 @@ public static class SceneManaging
                     obj.GetComponent<Image>().color = _colFlyerSpace;
 
                 }
-                SceneManaging.highlighted = false;
+                //SceneManaging.highlighted = true;
             }
             else
             {
-                obj.transform.GetChild(0).GetComponent<Image>().color = col;
-                obj.transform.GetChild(1).GetChild(0).gameObject.SetActive(false);  //hide Delete-Button
-                SceneManaging.highlighted = false;
+                obj.GetComponent<Image>().color = col;
+                obj.transform.GetChild(1).GetChild(0).GetChild(0).gameObject.SetActive(false);  //hide Delete-Button
+                obj.transform.GetChild(0).gameObject.SetActive(true); // border
+
                 if (obj3D.GetComponent<FigureStats>().isShip)
                     obj3D.GetComponent<cakeslice.Outline>().enabled = false;
                 else
                     obj3D.transform.GetChild(1).GetComponent<cakeslice.Outline>().enabled = false;
+                //SceneManaging.highlighted = false;
             }
         }
     }

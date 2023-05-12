@@ -1016,6 +1016,8 @@ public class RailManager : MonoBehaviour
         if (SceneManaging.flyerSpace[spaceNr] != -1)
         {
             Destroy(flyerSpaces[spaceNr].transform.GetChild(1).gameObject);
+            flyerSpaces[spaceNr].transform.GetChild(1).SetParent(parentMenue.transform);
+            //Debug.Log("destroy: "+flyerSpaces[spaceNr].transform.GetChild(1).gameObject.name+", child: "+flyerSpaces[spaceNr].transform.GetChild(1).gameObject.name);
         }
 
         // save figure nr 
@@ -1026,14 +1028,14 @@ public class RailManager : MonoBehaviour
 
         RectTransform tmpRectTransform = newCopyOfFigure.GetComponent<RectTransform>();
         newCopyOfFigure.transform.SetParent(flyerSpaces[spaceNr].transform);
-        Debug.Log("newcopy: "+newCopyOfFigure.name);
+        Debug.Log("newcopy: " + newCopyOfFigure.name + " ist child von: " + flyerSpaces[spaceNr] + ", child: " + flyerSpaces[spaceNr].transform.GetChild(1).gameObject.name);
         tmpRectTransform.pivot = new Vector2(.5f, .5f);
         tmpRectTransform.anchorMin = new Vector2(.5f, .5f);
         tmpRectTransform.anchorMax = new Vector2(.5f, .5f);
         tmpRectTransform.sizeDelta = new Vector3(39, 39, 1);
         tmpRectTransform.anchoredPosition = Vector2.zero;
         newCopyOfFigure.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(39, 39);
-
+        tmpRectTransform.localScale = Vector2.one;
 
         // color field
         //flyerSpaces[spaceNr].GetComponent<Image>().color = new Color(.63f, .25f, .1f);
@@ -1252,11 +1254,13 @@ public class RailManager : MonoBehaviour
                         // }
                         currentSpaceActive = tmpHit;
                     }
+
+                    // nothing clicked
                     else
                     {
                         if (currentSpaceActive != -1)
                         {
-                            flyerSpaces[currentSpaceActive].transform.GetChild(1).GetChild(0).GetChild(0).gameObject.SetActive(false);
+                            SceneManaging.highlight(null, flyerSpaces[currentSpaceActive].gameObject, false, "flyer");// flyerSpaces[currentSpaceActive].transform.GetChild(1).GetChild(0).GetChild(0).gameObject.SetActive(false);
                             currentSpaceActive = -1;
                             // for (int i = 0; i < flyerSpaces.Length; i++)
                             // {
@@ -1674,9 +1678,9 @@ public class RailManager : MonoBehaviour
                         SceneManaging.highlight(null, flyerSpaces[i], false, "flyer");
                     }
                     SceneManaging.highlight(null, flyerSpaces[flyerHit], true, "flyer");
-                        Debug.Log("highlight: "+flyerSpaces[flyerHit]);
+                    //Debug.Log("highlight: "+flyerSpaces[flyerHit]);
                     currentSpaceActive = flyerHit;
-                    Debug.Log("deletebutton: "+ flyerSpaces[flyerHit].transform.GetChild(1).gameObject.name);
+                    //Debug.Log("deletebutton: "+ flyerSpaces[flyerHit].transform.GetChild(1).gameObject.name);
                 }
 
             }
