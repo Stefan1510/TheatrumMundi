@@ -60,36 +60,57 @@ public class RailSpeedController : MonoBehaviour
         }
         else
         {
+            float tRest;
+
             t1 = railElementSpeeds[momentBefore].moment;
             t2 = railElementSpeeds[momentAfter].moment;
             v1 = railElementSpeeds[momentBefore].speed;
             v2 = railElementSpeeds[momentAfter].speed;
             vt = UtilitiesTm.FloatRemap(tStart, t1, t2, v1, v2);
-            currentDistance = GetDistanceBetweenTwoMoments(tStart, t2, vt, v2);
 
-            Debug.LogWarning(" t1: " + t1 + ", tStart: " + tStart + ", t2: " + t2 + ", v1: " + v1 + ", vt: " + vt + ", v2: " + v2 + ", currentDistance: " + currentDistance);
+            a = (v2 - vt) / (t2 - tStart);
+            float sqrV = vt * vt;
+            float sqrA = a * a;
+            Debug.Log("v: "+(v2-vt)+", t: "+(t2-tStart)+", a: "+a);
 
-            if (currentDistance < distance)
+            // erst abstand ausrechnen bis 4.1
+            tRest = -(vt / a) + Mathf.Sqrt((sqrV / sqrA) + (2 * distance / a));
+            Debug.Log("trest: " + tRest);
+
+            if (tStart + tRest > t2)
             {
-                deltaT += (t2 - tStart);
-                sRest = distance - currentDistance;
-                v1 = v2;
-                Debug.LogWarning("if 1: deltaT: " + deltaT.ToString("0.00"));
+                Debug.Log("groesser! ");
             }
             else
             {
-                sRest = distance;
-                t1 = tStart;
-                v1 = vt;
-                Debug.LogWarning("else 1");
+                Debug.Log("kleiner! ");
+                deltaT = tRest;
             }
+            // currentDistance = GetDistanceBetweenTwoMoments(tStart, t2, vt, v2);
 
-            int i = momentAfter;
+           // Debug.LogWarning(" t1: " + t1 + ", tStart: " + tStart + ", t2: " + t2 + ", v1: " + v1 + ", vt: " + vt + ", v2: " + v2 + ", currentDistance: " + currentDistance);
 
-            Debug.Log("i: " + i + ", momentCount-1: " + (momentCount - 1) + ", currentdist: " + currentDistance);
+            // if (currentDistance < distance)
+            // {
+            //     deltaT += (t2 - tStart);
+            //     sRest = distance - currentDistance;
+            //     v1 = v2;
+            //     Debug.LogWarning("if 1: deltaT: " + deltaT.ToString("0.00"));
+            // }
+            // else
+            // {
+            //     sRest = distance;
+            //     t1 = tStart;
+            //     v1 = vt;
+            //     Debug.LogWarning("else 1");
+            // }
+
+            // int i = momentAfter;
+
+            // Debug.Log("i: " + i + ", momentCount-1: " + (momentCount - 1) + ", currentdist: " + currentDistance);
 
             // wenn bis zum naechsten Punkt noch keine 4,1 zurueckgelegt wurden
-            while (i < momentCount - 1 && currentDistance < distance)
+            /*while (i < momentCount - 1 && currentDistance < distance)
             {
                 t1 = railElementSpeeds[i].moment;
                 t2 = railElementSpeeds[i + 1].moment;
@@ -112,7 +133,7 @@ public class RailSpeedController : MonoBehaviour
                 }
 
                 Debug.Log("currentdis: " + currentDistance + ", deltaT: " + deltaT);
-                sRest = distance - currentDistance;
+                sRest = sRest - currentDistance;
                 Debug.LogWarning("after while if");
                 i++;
             }
@@ -127,31 +148,33 @@ public class RailSpeedController : MonoBehaviour
                 tRest = sRest / v1;
                 Debug.LogWarning("if 3");
             }
-            else if(a>0)
-            {
-                Debug.LogWarning("else if 3, a>0");
-
-                float sqrV = v1*v1;
-                float sqrA = a *a;
-                tRest = -(v1 / a) + Mathf.Sqrt((sqrV / sqrA) + (2 * sRest / a));
-                Debug.Log("trest: "+tRest);
-
-            }
             else
             {
-                Debug.LogWarning("else 3: a<0");
-                tRest = (2*sRest)/(v1+v2);
-                Debug.Log("trest: "+tRest);
-                //tRest = Mathf.Abs(tRest);
-                //tRest = (v2-v1) / a;
+                Debug.LogWarning("else if 3");
 
-                //Debug.Log("trest: " + tRest);
-            
+                float sqrV = v1 * v1;
+                float sqrA = a * a;
+                tRest = -(v1 / a) + Mathf.Sqrt((sqrV / sqrA) + (2 * sRest / a));
+                Debug.Log("trest: " + tRest);
+
             }
+            // else
+            // {
+            //     Debug.LogWarning("else 3: a<0");
+            //     tRest = (2*sRest)/(v1+v2);
+            //     Debug.Log("trest: "+tRest);
+            //     //tRest = Mathf.Abs(tRest);
+            //     //tRest = (v2-v1) / a;
+
+            //     //Debug.Log("trest: " + tRest);
+
+            // }
             Debug.Log("deltaT: " + deltaT);
             deltaT += tRest;
             Debug.LogWarning("\n sRest \t deltaT \t currentDistance \n" + sRest.ToString("0.00") + " \t " + deltaT.ToString("0.00") + " \t " + currentDistance.ToString("0.00"));
+            */
         }
+
         return deltaT;
     }
 

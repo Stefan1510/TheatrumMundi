@@ -217,7 +217,7 @@ public static class SceneManaging
             else
             {
                 obj.GetComponent<Image>().color = col;
-                obj.transform.GetChild(1).GetChild(0).GetChild(0).gameObject.SetActive(false);  //hide Delete-Button
+                //obj.transform.GetChild(1).GetChild(0).GetChild(0).gameObject.SetActive(false);  //hide Delete-Button
                 obj.transform.GetChild(0).gameObject.SetActive(true); // border
 
                 if (obj3D.GetComponent<FigureStats>().isShip)
