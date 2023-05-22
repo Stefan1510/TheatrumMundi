@@ -19,7 +19,6 @@ public class Flyer : MonoBehaviour
             SceneManaging.flyerSpace[i] = -1;
         }
     }
-
     public void OnClickStartFlyer()
     {
         // Warning current scene will be deleted
@@ -51,7 +50,7 @@ public class Flyer : MonoBehaviour
             gameObject.SetActive(true);
 
             // load new scene
-            StartCoroutine(tmpFileController.LoadFileFromWWW("*Musterszene_leer.json", "fromFlyerDelete"));
+            StartCoroutine(tmpFileController.LoadFileFromWWW("*Musterszene_leer_Visitor.json", "fromFlyerDelete"));
 
             warningPanel.SetActive(false);
             // destroy children

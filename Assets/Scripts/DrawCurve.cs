@@ -56,9 +56,10 @@ public class DrawCurve : MonoBehaviour
         {
             this.gameObject.SetActive(false);
             StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds[0] = new RailElementSpeed { moment = 0, speed = _valueSlider.value };
+            //Debug.Log("railind: "+_railIndex+", value: "+StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds[0].speed);
         }
     }
-    public void AddValue()      // Aufruf auf Slider, der etwas ver�ndern soll, gel�st �ber EventTrigger, �bergebene data unn�tig
+    public void AddValue()      // Aufruf auf Slider, der etwas ver�ndern soll, gel�st �ber EventTrigger
     {
         if (_railIndex == ImageTimelineSelection.GetRailNumber())
         {

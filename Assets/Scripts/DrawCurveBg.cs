@@ -47,7 +47,7 @@ public class DrawCurveBg : MonoBehaviour
         StaticSceneData.StaticData.backgroundPositions.Sort((x, y) => x.moment.CompareTo(y.moment));   // sortiert die railElementSpeeds anhand der Eigenschaft moment
         //ChangeCurve();
         //ChangeBackgroundPosition();
-        Debug.Log("start fertig");
+        //Debug.Log("start fertig");
     }
 
     void Update()
@@ -57,7 +57,7 @@ public class DrawCurveBg : MonoBehaviour
 
     public void AddValue()      // Aufruf auf Slider, der etwas veraendern soll, geloest ueber EventTrigger, uebergebene data unnoetig
     {
-        Debug.Log("addvalue");
+        //Debug.Log("addvalue");
         float valueSliderValue = _valueSlider.value;
         float valueMoment = AnimationTimer.GetTime();
         int momentIndex = StaticSceneData.StaticData.backgroundPositions.FindIndex(bgPos => bgPos.moment == valueMoment);
@@ -68,11 +68,11 @@ public class DrawCurveBg : MonoBehaviour
         {
             thisBackgroundPosition = new BackgroundPosition { moment = valueMoment, yPosition = valueSliderValue };
             StaticSceneData.StaticData.backgroundPositions.Add(thisBackgroundPosition);
-            Debug.Log("count: "+StaticSceneData.StaticData.backgroundPositions.Count+", value: " + valueMoment);
+            //Debug.Log("count: "+StaticSceneData.StaticData.backgroundPositions.Count+", value: " + valueMoment);
         }
         else
         {
-            Debug.Log("else");
+            //Debug.Log("else");
             StaticSceneData.StaticData.backgroundPositions[momentIndex] = new BackgroundPosition { moment = valueMoment, yPosition = valueSliderValue };
         }
         StaticSceneData.StaticData.backgroundPositions.Sort((x, y) => x.moment.CompareTo(y.moment));   // sortiert die backgroundPositions anhand der Eigenschaft moment
@@ -88,7 +88,7 @@ public class DrawCurveBg : MonoBehaviour
 
         int momentStart = (int)StaticSceneData.StaticData.backgroundPositions[0].moment;
         int momentEnd = (int)StaticSceneData.StaticData.backgroundPositions[0].moment;
-        Debug.Log("momentStart: "+momentStart+", momentend: " + momentEnd);
+        //Debug.Log("momentStart: "+momentStart+", momentend: " + momentEnd);
 
         int valueStart = (int)StaticSceneData.StaticData.backgroundPositions[0].yPosition;
         int valueEnd = (int)StaticSceneData.StaticData.backgroundPositions[0].yPosition;
@@ -127,11 +127,11 @@ public class DrawCurveBg : MonoBehaviour
             float valueEndF = StaticSceneData.StaticData.backgroundPositions[0].yPosition;    // holen des "sp�teren" Werts aus der Datenhaltung
             valueEndF = UtilitiesTm.FloatRemap(valueEndF, _minValue, _maxValue, 0, _textureCurve.height - 3);    // mappen des "fr�heren" Moments von zwischen TimeSlider auf zwischen PanelWeite
             valueEnd = (int)valueEndF;
-            Debug.Log("valueEnd: "+valueEnd);
+            //Debug.Log("valueEnd: "+valueEnd);
         }
 
         _textureRest = new Texture2D(_rectWidth, 80, TextureFormat.RGBA32, false); // wird durch Panel RectTransform stretch automatisch gescaled
-        Debug.Log("bg: momentend: " + momentEnd + ", valueEnd: " + valueEnd + ", valueStart: " + valueStart + ", _texturewidth: " + (_textureCurve.width - 3));
+        //Debug.Log("bg: momentend: " + momentEnd + ", valueEnd: " + valueEnd + ", valueStart: " + valueStart + ", _texturewidth: " + (_textureCurve.width - 3));
         _textureRest = UtilitiesTm.Bresenham(_textureCurve, momentEnd, valueEnd, _textureCurve.width - 3, valueEnd, _curveColors);
 
         _textureCurve.Apply();

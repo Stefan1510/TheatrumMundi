@@ -13,6 +13,7 @@ public class SaveFileController : MonoBehaviour
     private string _jsonString, loadedFiles, tmpCode;
     public GameObject contentFileSelect, panelCodeInput, panelSaveShowCode, panelWarningInput, panelWarningInputVisitor, panelOverwrite, menuKulissen, flyer;
     public RailManager contentMenueRails;
+    [SerializeField] private RailMusicManager tmpMusicManager;
     [SerializeField] private GameObject _dialogSave, _dialogNewScene, _dialogLoadCode;
     [SerializeField] AnimationTimer _animTimer;
     [SerializeField] GameObject _borderWarning, _borderLoad;
@@ -622,12 +623,12 @@ public class SaveFileController : MonoBehaviour
             }
             if (SceneManaging.flyerSpace[2] != -1)
             {
-                Debug.Log("3");
+                //Debug.Log("3");
                 contentMenueRails.CreateNew2DInstance(SceneManaging.flyerSpace[2], 40, 4, 0, true);
             }
             if (SceneManaging.flyerSpace[3] != -1)
             {
-                Debug.Log("4");
+                //Debug.Log("4");
                 contentMenueRails.CreateNew2DInstance(SceneManaging.flyerSpace[3], 70, 2, 0, true);
             }
             if (SceneManaging.flyerSpace[4] != -1)
@@ -655,9 +656,20 @@ public class SaveFileController : MonoBehaviour
                 //Debug.Log("9");
                 contentMenueRails.CreateNew2DInstance(SceneManaging.flyerSpace[8], 130, 5, 0, true);
             }
+            // boxcollider ausschalten, damit musikstuecke und figuren nicht gedruekct weren koennen wenn schiene klein
+            for (int i = 0; i < tmpMusicManager.myObjects.Count; i++)
+            {
+                tmpMusicManager.myObjects[i].musicPiece.GetComponent<BoxCollider2D>().enabled = false;
+            }
+            for (int i = 0; i < contentMenueRails.railList[contentMenueRails.currentRailIndex].myObjects.Count; i++)
+            {
+                contentMenueRails.railList[contentMenueRails.currentRailIndex].myObjects[i].figure.GetComponent<BoxCollider2D>().enabled = false;
+            }
 
             flyer.SetActive(false);
             SceneManaging.flyerActive = false;
+            contentMenueRails.currentRailIndex = 0;
+            Debug.Log("aktuelle schiene: "+contentMenueRails.currentRailIndex);
         }
         else if (status == "fromFlyerDelete")
         {

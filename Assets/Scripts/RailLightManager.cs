@@ -55,7 +55,7 @@ public class RailLightManager : MonoBehaviour
 
             for (int j = 0; j < gameController.RailMusic.GetComponent<RailMusicManager>().myObjects.Count; j++)
             {
-                SceneManaging.highlight(gameController.RailMusic.GetComponent<RailMusicManager>().myObjects[j].musicPiece, false, "music");
+                SceneManaging.highlight(gameController.RailMusic.GetComponent<RailMusicManager>().myObjects[j].musicPiece, false);
             }
 
             // open clicked rail

@@ -52,11 +52,12 @@ public class RailSpeedController : MonoBehaviour
         //Debug.LogWarning("Before: " + momentBefore + " - After: " + momentAfter);
         if (momentAfter == -1) //ein momentBefore existiert immer, da der erste Wert von railElementSpeeds bei Programmstart gesetzt wird
         {
+            //Debug.Log("momentbefore: "+momentBefore+", railind: "+railIndex);
             v1 = v2 = railElementSpeeds[momentBefore].speed;
-            Debug.Log("speed: " + railElementSpeeds[momentBefore].speed);
+            //Debug.Log("speed: " + railElementSpeeds[momentBefore].speed);
             //distance = GetDistanceBetweenTwoMoments(0, tStart, v1, v2);
             deltaT = distance / v1;
-            Debug.Log("delta: " + deltaT);
+            //Debug.Log("delta: " + deltaT);
         }
         else
         {
@@ -71,10 +72,11 @@ public class RailSpeedController : MonoBehaviour
             a = (v2 - vt) / (t2 - tStart);
             float sqrV = vt * vt;
             float sqrA = a * a;
-            Debug.Log("v: "+(v2-vt)+", t: "+(t2-tStart)+", a: "+a);
+            Debug.Log("v: "+vt+", v2: "+v2+", t: "+tStart+", t2: "+t2+", a: "+a+", distance: "+distance);
 
             // erst abstand ausrechnen bis 4.1
-            tRest = -(vt / a) + Mathf.Sqrt((sqrV / sqrA) + (2 * distance / a));
+            // tRest = -(vt / a) + Mathf.Sqrt((sqrV / sqrA) + (2 * distance / a));
+            tRest = (2*distance)/(v2+vt);
             Debug.Log("trest: " + tRest);
 
             if (tStart + tRest > t2)
@@ -86,7 +88,8 @@ public class RailSpeedController : MonoBehaviour
                 Debug.Log("kleiner! ");
                 deltaT = tRest;
             }
-            // currentDistance = GetDistanceBetweenTwoMoments(tStart, t2, vt, v2);
+
+            //currentDistance = GetDistanceBetweenTwoMoments(tStart, t2, vt, v2);
 
            // Debug.LogWarning(" t1: " + t1 + ", tStart: " + tStart + ", t2: " + t2 + ", v1: " + v1 + ", vt: " + vt + ", v2: " + v2 + ", currentDistance: " + currentDistance);
 

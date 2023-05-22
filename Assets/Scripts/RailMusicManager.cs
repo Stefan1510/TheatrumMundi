@@ -133,7 +133,7 @@ public class RailMusicManager : MonoBehaviour
         {
             for (int i = 0; i < myObjects.Count; i++)
             {
-                SceneManaging.highlight(myObjects[i].musicPiece, false, "music");
+                SceneManaging.highlight(myObjects[i].musicPiece, false);
             }
         }
         else
@@ -146,10 +146,12 @@ public class RailMusicManager : MonoBehaviour
                     contentRailsMenue.rails[i].GetComponent<RectTransform>().sizeDelta = new Vector2(timelineImage.rectTransform.rect.width, 20);
                     contentRailsMenue.rails[i].GetComponent<BoxCollider2D>().size = new Vector2(timelineImage.GetComponent<BoxCollider2D>().size.x, 20);
                     contentRailsMenue.railList[i].isTimelineOpen = false;
+                    
                     for (int j = 0; j < contentRailsMenue.railList[i].myObjects.Count; j++)
                     {
                         SceneManaging.highlight(contentRailsMenue.railList[i].myObjects[j].figure3D, contentRailsMenue.railList[i].myObjects[j].figure, false, "figure");
                         contentRailsMenue.openCloseObjectInTimeline(true, contentRailsMenue.railList[i].myObjects, i);
+                        contentRailsMenue.railList[i].myObjects[j].figure.GetComponent<BoxCollider2D>().enabled = false;
                     }
                 }
                 contentRailsMenue.openCloseObjectInTimeline(false, contentRailsMenue.railList[i].myObjects, i);
@@ -264,28 +266,28 @@ public class RailMusicManager : MonoBehaviour
 
         return val;
     }
-    public void openCloseObjectInTimeline(bool timelineOpen)
+    public void openCloseObjectInTimeline(bool openTimeline)
     {
         for (int i = 0; i < myObjects.Count; i++)
         {
             myObjects[i].musicPiece.GetComponent<RectTransform>().anchoredPosition = new Vector3(myObjects[i].position.x, -GetComponent<RectTransform>().rect.height / 2, -1);
 
-            if (timelineOpen)
+            if (openTimeline)
             {
                 if (sizeLayering == 1)
                 {
-                    SceneManaging.scaleToLayerSize(myObjects[i].musicPiece, 0, gameObject, myObjects[i].position.y);
+                    SceneManaging.scaleToLayerSize(myObjects[i].musicPiece, 0, gameObject, myObjects[i].position.y,false);
                 }
                 else if (sizeLayering == 2)
                 {
                     if (myObjects[i].layer == 1)
                     {
-                        SceneManaging.scaleToLayerSize(myObjects[i].musicPiece, 1, gameObject, myObjects[i].position.y);
+                        SceneManaging.scaleToLayerSize(myObjects[i].musicPiece, 1, gameObject, myObjects[i].position.y,false);
                         myObjects[i].musicPiece.GetComponent<BoxCollider2D>().offset = new Vector2(myObjects[i].musicPiece.GetComponent<BoxCollider2D>().offset.x, GetComponent<RectTransform>().rect.height / 4);
                     }
                     else
                     {
-                        SceneManaging.scaleToLayerSize(myObjects[i].musicPiece, 2, gameObject, myObjects[i].position.y);
+                        SceneManaging.scaleToLayerSize(myObjects[i].musicPiece, 2, gameObject, myObjects[i].position.y,false);
                         myObjects[i].musicPiece.GetComponent<BoxCollider2D>().offset = new Vector2(myObjects[i].musicPiece.GetComponent<BoxCollider2D>().offset.x, -GetComponent<RectTransform>().rect.height / 4);
                     }
                 }
@@ -353,7 +355,7 @@ public class RailMusicManager : MonoBehaviour
             sizeLayering = 1;
             for (int i = 0; i < myObjects.Count; i++)
             {
-                SceneManaging.scaleToLayerSize(myObjects[i].musicPiece, 0, gameObject, myObjects[i].position.y);
+                SceneManaging.scaleToLayerSize(myObjects[i].musicPiece, 0, gameObject, myObjects[i].position.y, false);
                 myObjects[i].layer = 1;
             }
         }
@@ -377,13 +379,13 @@ public class RailMusicManager : MonoBehaviour
                     if (listWithoutCurrentFigure[i].layer == 1)
                     {
                         //Debug.Log("layer 1");
-                        SceneManaging.scaleToLayerSize(mus.musicPiece, 1, gameObject, mus.position.y);
+                        SceneManaging.scaleToLayerSize(mus.musicPiece, 1, gameObject, mus.position.y, false);
                         mus.layer = 1;
                     }
                     else
                     {
                         //Debug.Log("layer 2");
-                        SceneManaging.scaleToLayerSize(mus.musicPiece, 2, gameObject, mus.position.y);
+                        SceneManaging.scaleToLayerSize(mus.musicPiece, 2, gameObject, mus.position.y,false);
                         mus.layer = 2;
                     }
 
@@ -407,13 +409,13 @@ public class RailMusicManager : MonoBehaviour
                     if (listWithoutCurrentFigure[i].layer == 1)
                     {
                         //Debug.Log("layer 1");
-                        SceneManaging.scaleToLayerSize(mus.musicPiece, 1, gameObject, mus.position.y);
+                        SceneManaging.scaleToLayerSize(mus.musicPiece, 1, gameObject, mus.position.y,false);
                         mus.layer = 1;
                     }
                     else
                     {
                         //_Debug.Log("layer 2");
-                        SceneManaging.scaleToLayerSize(mus.musicPiece, 2, gameObject, mus.position.y);
+                        SceneManaging.scaleToLayerSize(mus.musicPiece, 2, gameObject, mus.position.y,false);
                         mus.layer = 2;
                     }
 
@@ -478,13 +480,13 @@ public class RailMusicManager : MonoBehaviour
                     if (listWithoutCurrentFigure[i].layer == 1)
                     {
                         //Debug.Log("layer 1");
-                        SceneManaging.scaleToLayerSize(mus.musicPiece, 1, gameObject, mus.position.y);
+                        SceneManaging.scaleToLayerSize(mus.musicPiece, 1, gameObject, mus.position.y,false);
                         mus.layer = 1;
                     }
                     else
                     {
                         //Debug.Log("layer 2");
-                        SceneManaging.scaleToLayerSize(mus.musicPiece, 2, gameObject, mus.position.y);
+                        SceneManaging.scaleToLayerSize(mus.musicPiece, 2, gameObject, mus.position.y,false);
                         mus.layer = 2;
                     }
 
@@ -506,14 +508,14 @@ public class RailMusicManager : MonoBehaviour
                     if (listWithoutCurrentFigure[i].layer == 1)
                     {
                         //Debug.Log("layer 1");
-                        SceneManaging.scaleToLayerSize(mus.musicPiece, 1, gameObject, mus.position.y);
+                        SceneManaging.scaleToLayerSize(mus.musicPiece, 1, gameObject, mus.position.y,false);
                         mus.layer = 1;
 
                     }
                     else
                     {
                         //Debug.Log("layer 2");
-                        SceneManaging.scaleToLayerSize(mus.musicPiece, 2, gameObject, mus.position.y);
+                        SceneManaging.scaleToLayerSize(mus.musicPiece, 2, gameObject, mus.position.y,false);
                         mus.layer = 2;
                     }
                     rectTransform.anchoredPosition = new Vector2(listWithoutCurrentFigure[i].position.x - mus.position.y, rectTransform.anchoredPosition.y);
@@ -592,14 +594,14 @@ public class RailMusicManager : MonoBehaviour
                 {
                     //Debug.Log("layer 1");
                     mus.layer = 2;
-                    SceneManaging.scaleToLayerSize(mus.musicPiece, 2, gameObject, mus.position.y);
+                    SceneManaging.scaleToLayerSize(mus.musicPiece, 2, gameObject, mus.position.y,false);
                 }
                 // overlapping obj is layer 2, obj needs to be layer 1
                 else
                 {
                     //Debug.Log("layer 2");
                     mus.layer = 1;
-                    SceneManaging.scaleToLayerSize(mus.musicPiece, 1, gameObject, mus.position.y);
+                    SceneManaging.scaleToLayerSize(mus.musicPiece, 1, gameObject, mus.position.y,false);
                 }
             }
             else
@@ -628,7 +630,7 @@ public class RailMusicManager : MonoBehaviour
                     //Debug.Log("not overlapping");
                     if (mus.layer != 1)
                     {
-                        SceneManaging.scaleToLayerSize(mus.musicPiece, 1, gameObject, mus.position.y);
+                        SceneManaging.scaleToLayerSize(mus.musicPiece, 1, gameObject, mus.position.y,false);
                         mus.layer = 1;
                     }
                 }
@@ -647,14 +649,14 @@ public class RailMusicManager : MonoBehaviour
                 {
                     //Debug.Log("layer 1");
                     mus.layer = 2;
-                    SceneManaging.scaleToLayerSize(mus.musicPiece, 2, gameObject, mus.position.y);
+                    SceneManaging.scaleToLayerSize(mus.musicPiece, 2, gameObject, mus.position.y,false);
                 }
                 // overlapping obj is layer 2, obj needs to be layer 1
                 else
                 {
                     //Debug.Log("layer 2");
                     mus.layer = 1;
-                    SceneManaging.scaleToLayerSize(mus.musicPiece, 1, gameObject, mus.position.y);
+                    SceneManaging.scaleToLayerSize(mus.musicPiece, 1, gameObject, mus.position.y,false);
                 }
             }
             else
@@ -678,7 +680,7 @@ public class RailMusicManager : MonoBehaviour
                 else
                 {
                     //Debug.Log("not overlapping");
-                    SceneManaging.scaleToLayerSize(mus.musicPiece, 1, gameObject, mus.position.y);
+                    SceneManaging.scaleToLayerSize(mus.musicPiece, 1, gameObject, mus.position.y,false);
                     mus.layer = 1;
                 }
             }
@@ -689,6 +691,7 @@ public class RailMusicManager : MonoBehaviour
     }
     public void CreateNew2DInstance(int musObjNr, float moment, float savedLayer)
     {
+        //Debug.Log("moment: " + moment);
         //create a copy of this timelineObject and keep the original one
         newCopyOfFigure = Instantiate(figureObjects[musObjNr]);
 
@@ -706,17 +709,16 @@ public class RailMusicManager : MonoBehaviour
         else
             tmpLength = UtilitiesTm.FloatRemap(newCopyOfFigure.GetComponent<MusicLength>().musicLength, 0, AnimationTimer.GetMaxTime(), 0, (float)gameObject.GetComponent<RectTransform>().rect.width);
 
-        createRectangle(newCopyOfFigure, gameObject.GetComponent<RectTransform>().rect.height, tmpLength);
-        ////Debug.Log("tmpLength: " + tmpLength);
-        SceneManaging.scaleObject(newCopyOfFigure, tmpLength, gameObject.GetComponent<RectTransform>().rect.height, false);
-        newCopyOfFigure.transform.GetChild(0).GetComponent<RectTransform>().position = new Vector3(newCopyOfFigure.transform.GetChild(0).gameObject.GetComponent<RectTransform>().position.x, newCopyOfFigure.transform.GetChild(0).gameObject.GetComponent<RectTransform>().position.y, -1);
-
         //parent and position
-        float posX = UtilitiesTm.FloatRemap(moment, 0, AnimationTimer.GetMaxTime(), 0, gameObject.GetComponent<RectTransform>().rect.width);
+        float posX = UtilitiesTm.FloatRemap(moment, 0, AnimationTimer.GetMaxTime(), 0, railWidthAbsolute);
+        // Debug.Log("posX: " + posX);
         newCopyOfFigure.transform.SetParent(gameObject.transform);
         newCopyOfFigure.transform.localPosition = new Vector3(posX, 0, -1);
 
-        //openTimelineByClick(true, true);
+        createRectangle(newCopyOfFigure, gameObject.GetComponent<RectTransform>().rect.height, tmpLength);
+        SceneManaging.scaleObject(newCopyOfFigure, tmpLength, gameObject.GetComponent<RectTransform>().rect.height, true);
+        newCopyOfFigure.transform.GetChild(0).GetComponent<RectTransform>().position = new Vector3(newCopyOfFigure.transform.GetChild(0).gameObject.GetComponent<RectTransform>().position.x, newCopyOfFigure.transform.GetChild(0).gameObject.GetComponent<RectTransform>().position.y, -1);
+
         newCopyOfFigure.transform.localScale = Vector3.one;
 
         // size of rectangle becomes size for figure that is clickable
@@ -737,21 +739,23 @@ public class RailMusicManager : MonoBehaviour
 
         if (savedLayer == 1)
         {
-            SceneManaging.scaleToLayerSize(newCopyOfFigure, 1, gameObject, tmpLength);
+            SceneManaging.scaleToLayerSize(newCopyOfFigure, 1, gameObject, tmpLength,true);
             sizeLayering = 2;
             oP.layer = 1;
         }
         else if (savedLayer == 0)
         {
-            SceneManaging.scaleToLayerSize(newCopyOfFigure, 0, gameObject, tmpLength);
+            SceneManaging.scaleToLayerSize(newCopyOfFigure, 0, gameObject, tmpLength,true);
             oP.layer = 1;
         }
         else
         {
-            SceneManaging.scaleToLayerSize(newCopyOfFigure, 2, gameObject, tmpLength);
+            SceneManaging.scaleToLayerSize(newCopyOfFigure, 2, gameObject, tmpLength,true);
             sizeLayering = 2;
             oP.layer = 2;
         }
+
+        // box collider ausschalten? 
     }
     private void createRectangle(GameObject obj, float height, double animLength)
     {
@@ -1083,7 +1087,7 @@ public class RailMusicManager : MonoBehaviour
                     //wenn neues objekt genommen wird, soll altes aktuelles objekt unhighlighted werden
                     for (int j = 0; j < myObjects.Count; j++)
                     {
-                        SceneManaging.highlight(myObjects[j].musicPiece, false, "music");
+                        SceneManaging.highlight(myObjects[j].musicPiece, false);
                     }
 
                     if (!SceneManaging.sceneChanged)
@@ -1131,7 +1135,7 @@ public class RailMusicManager : MonoBehaviour
                         //highlighting objects and showing delete button when clicked
                         if (SceneManaging.highlighted == false)
                         {
-                            SceneManaging.highlight(myObjects[currentClickedInstanceObjectIndex].musicPiece, true, "music");
+                            SceneManaging.highlight(myObjects[currentClickedInstanceObjectIndex].musicPiece, true);
                         }
                         else if (SceneManaging.highlighted && myObjects[currentClickedInstanceObjectIndex].musicPiece.transform.GetChild(0).GetComponent<Image>().color == colMusicHighlighted) // checkFigureHighlighted(timelineInstanceObjects3D[currentClickedInstanceObjectIndex].transform.GetChild(1).gameObject))  // check if second child (which is never the armature) has emission enabled (=is highlighted)
                         {
@@ -1141,9 +1145,9 @@ public class RailMusicManager : MonoBehaviour
                         {
                             for (int i = 0; i < myObjects.Count; i++)
                             {
-                                SceneManaging.highlight(myObjects[i].musicPiece, false, "music");
+                                SceneManaging.highlight(myObjects[i].musicPiece, false);
                             }
-                            SceneManaging.highlight(myObjects[currentClickedInstanceObjectIndex].musicPiece, true, "music");
+                            SceneManaging.highlight(myObjects[currentClickedInstanceObjectIndex].musicPiece, true);
                         }
                     }
 
@@ -1154,7 +1158,7 @@ public class RailMusicManager : MonoBehaviour
                 {
                     for (int i = 0; i < myObjects.Count; i++)
                     {
-                        SceneManaging.highlight(myObjects[i].musicPiece, false, "music");
+                        SceneManaging.highlight(myObjects[i].musicPiece, false);
                     }
                 }
             }
@@ -1192,7 +1196,7 @@ public class RailMusicManager : MonoBehaviour
                 {
                     if (isCurrentFigureOverlapping(currentObj, "", out countOverlaps, myObjects) != -1)
                     {
-                        SceneManaging.scaleToLayerSize(currentObj.musicPiece, 2, gameObject, currentObj.position.y);
+                        SceneManaging.scaleToLayerSize(currentObj.musicPiece, 2, gameObject, currentObj.position.y,false);
                         sizeLayering = 2;
                         currentObj.layer = 2;
 
@@ -1201,7 +1205,7 @@ public class RailMusicManager : MonoBehaviour
                         {
                             if (myObjects[j].musicPiece != currentObj.musicPiece && myObjects[j].layer == 1)
                             {
-                                SceneManaging.scaleToLayerSize(myObjects[j].musicPiece, 1, gameObject, myObjects[j].position.y);
+                                SceneManaging.scaleToLayerSize(myObjects[j].musicPiece, 1, gameObject, myObjects[j].position.y,false);
                                 myObjects[j].layer = 1;
                             }
                         }
@@ -1219,7 +1223,7 @@ public class RailMusicManager : MonoBehaviour
                         // scale all other timelineobjects of layer 0
                         for (int j = 0; j < myObjects.Count; j++)
                         {
-                            SceneManaging.scaleToLayerSize(myObjects[j].musicPiece, 0, gameObject, myObjects[j].position.y);
+                            SceneManaging.scaleToLayerSize(myObjects[j].musicPiece, 0, gameObject, myObjects[j].position.y,false);
                             myObjects[j].layer = 1;
                         }
                     }
@@ -1302,7 +1306,7 @@ public class RailMusicManager : MonoBehaviour
             {
                 figureObjects[currentClickedObjectIndex].GetComponent<RectTransform>().sizeDelta = new Vector2(objectShelfSize.x, objectShelfSize.y);
                 figureObjects[currentClickedObjectIndex].transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(objectShelfSize.x, objectShelfSize.y);
-                Debug.Log("hier?");
+                //Debug.Log("hier?");
                 // scaleObject(figureObjects[currentClickedObjectIndex].transform.GetChild(0).gameObject, objectShelfSize.x, objectShelfSize.y, false);
                 // scale up currentFigure
                 releaseOnTimeline = false;
@@ -1385,7 +1389,7 @@ public class RailMusicManager : MonoBehaviour
                     oP.neighborRight = -1;
                     myObjects.Add(oP);
 
-                    SceneManaging.scaleToLayerSize(newCopyOfFigure, 0, gameObject, tmpLength);
+                    SceneManaging.scaleToLayerSize(newCopyOfFigure, 0, gameObject, tmpLength,false);
                     oP.layer = 1;
 
                     if (sizeLayering == 1)
@@ -1394,13 +1398,13 @@ public class RailMusicManager : MonoBehaviour
                         {
                             sizeLayering = 2;
                             //Debug.Log("something overlapping");
-                            SceneManaging.scaleToLayerSize(newCopyOfFigure, 2, gameObject, tmpLength);
+                            SceneManaging.scaleToLayerSize(newCopyOfFigure, 2, gameObject, tmpLength,false);
                             oP.layer = 2;
                             // others to 1
                             for (int i = 0; i < myObjects.Count; i++)
                             {
                                 if (myObjects[i].layer == 1)
-                                    SceneManaging.scaleToLayerSize(myObjects[i].musicPiece, 1, gameObject, myObjects[i].position.y);
+                                    SceneManaging.scaleToLayerSize(myObjects[i].musicPiece, 1, gameObject, myObjects[i].position.y,false);
                             }
                             //Debug.Log("op: "+oP.position);
                         }
@@ -1430,7 +1434,7 @@ public class RailMusicManager : MonoBehaviour
                     StaticSceneData.StaticData.musicClipElements[currentClickedObjectIndex].musicClipElementInstances.Add(musicClipElementInstance);
 
                     //Debug.Log("figure: " + myObjects[currentPosInList].musicPiece.name);
-                    SceneManaging.highlight(myObjects[currentPosInList].musicPiece, true, "music");
+                    SceneManaging.highlight(myObjects[currentPosInList].musicPiece, true);
 
                     ///////////////////////////////////////////////////////////////////////////////////////////////////////
 

@@ -69,6 +69,7 @@ public static class SceneManaging
             }
             else
             {
+                Debug.Log("hier wird box true, fig: "+fig.name);
                 //scale the collider, if object has one
                 fig.GetComponent<BoxCollider2D>().enabled = true;
                 fig.GetComponent<BoxCollider2D>().size = new Vector2(fig.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta.x, y);
@@ -80,28 +81,28 @@ public static class SceneManaging
         btn.transform.GetChild(1).GetChild(0).GetComponent<RectTransform>().anchoredPosition = new Vector3(30, posY, -1);
         btn.transform.GetChild(1).GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(size, size);
     }
-    public static void scaleToLayerSize(GameObject obj, int layer, GameObject timeline, float rectSize)
+    public static void scaleToLayerSize(GameObject obj, int layer, GameObject timeline, float rectSize, bool boxCollZero)
     {
         switch (layer)
         {
             case 0:                 // only one layer
+                scaleObject(obj, rectSize, timeline.GetComponent<RectTransform>().rect.height, boxCollZero);      //scale the figure-picture in timeline to x: 100 and y: 80px
                 scaleDeleteButton(obj, 20, 40, 45);
-                scaleObject(obj, rectSize, timeline.GetComponent<RectTransform>().rect.height, false);      //scale the figure-picture in timeline to x: 100 and y: 80px
                 obj.transform.GetComponent<RectTransform>().pivot = new Vector3(obj.transform.GetComponent<RectTransform>().pivot.x, 0.5f, -1);
                 obj.GetComponent<BoxCollider2D>().size = new Vector2(rectSize, timeline.GetComponent<RectTransform>().rect.height);
                 obj.GetComponent<BoxCollider2D>().offset = new Vector2(rectSize / 2, 0);
                 break;
             case 1:                 // 2 layers, but object in layer 1
+                scaleObject(obj, rectSize, timeline.GetComponent<RectTransform>().rect.height / 2, boxCollZero);
                 scaleDeleteButton(obj, 0, 35, 40);
-                //Debug.Log("scale to one");
-                scaleObject(obj, rectSize, timeline.GetComponent<RectTransform>().rect.height / 2, false);
                 obj.transform.GetComponent<RectTransform>().pivot = new Vector3(obj.transform.GetComponent<RectTransform>().pivot.x, 0, -1);
                 obj.GetComponent<BoxCollider2D>().size = new Vector2(rectSize, timeline.GetComponent<RectTransform>().rect.height / 2);
                 obj.GetComponent<BoxCollider2D>().offset = new Vector2(rectSize / 2, obj.transform.GetChild(0).GetComponent<RectTransform>().rect.height / 2);
                 break;
             case 2:                 // 2 layers and object in layer 2
+                scaleObject(obj, rectSize, timeline.GetComponent<RectTransform>().rect.height / 2, boxCollZero);
+
                 scaleDeleteButton(obj, 0, 35, 40);
-                scaleObject(obj, rectSize, timeline.GetComponent<RectTransform>().rect.height / 2, false);
                 obj.transform.GetComponent<RectTransform>().pivot = new Vector3(obj.transform.GetComponent<RectTransform>().pivot.x, 1, -1);
                 obj.GetComponent<BoxCollider2D>().size = new Vector2(rectSize, timeline.GetComponent<RectTransform>().rect.height / 2);
                 obj.GetComponent<BoxCollider2D>().offset = new Vector2(rectSize / 2, -obj.transform.GetChild(0).GetComponent<RectTransform>().rect.height / 2);
@@ -216,9 +217,9 @@ public static class SceneManaging
             }
             else
             {
-                obj.GetComponent<Image>().color = col;
-                //obj.transform.GetChild(1).GetChild(0).GetChild(0).gameObject.SetActive(false);  //hide Delete-Button
-                obj.transform.GetChild(0).gameObject.SetActive(true); // border
+                obj.transform.GetChild(0).GetComponent<Image>().color = col;
+                obj.transform.GetChild(1).GetChild(0).gameObject.SetActive(false);  //hide Delete-Button
+                //obj.transform.GetChild(0).gameObject.SetActive(true); // border
 
                 if (obj3D.GetComponent<FigureStats>().isShip)
                     obj3D.GetComponent<cakeslice.Outline>().enabled = false;
@@ -228,7 +229,7 @@ public static class SceneManaging
             }
         }
     }
-    public static void highlight(GameObject obj, bool highlightOn, string type)
+    public static void highlight(GameObject obj, bool highlightOn)
     {
         if (highlightOn)
         {
