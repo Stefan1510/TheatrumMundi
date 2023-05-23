@@ -131,7 +131,7 @@ public class DrawCurve : MonoBehaviour
             float valueEndF = StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds[0].speed;    // holen des "sp�teren" Werts aus der Datenhaltung
             valueEndF = UtilitiesTm.FloatRemap(valueEndF, _minValue, _maxValue, 0, _textureCurve.height - 3);    // mappen des "fr�heren" Moments von zwischen TimeSlider auf zwischen PanelWeite
             valueEnd = (int)valueEndF;
-            Debug.Log("valueEnd: " + valueEnd);
+            //Debug.Log("valueEnd: " + valueEnd);
         }
         _textureRest = new Texture2D(_rectWidth, 80, TextureFormat.RGBA32, false); // wird durch Panel RectTransform stretch automatisch gescaled
         //Debug.Log("momentend: "+momentEnd+", valueEnd: "+valueEnd+", _texturewidth: "+(_textureCurve.width-3));

@@ -697,16 +697,12 @@ public class RailManager : MonoBehaviour
 
         for (int i = 0; i < objects.Count; i++)
         {
-            Debug.Log("pos before: " + objects[i].figure.GetComponent<RectTransform>().anchoredPosition.x);
             objects[i].figure.GetComponent<RectTransform>().anchoredPosition = new Vector3(objects[i].figure.GetComponent<RectTransform>().anchoredPosition.x, -rails[railIndex].GetComponent<RectTransform>().rect.height / 2, -1);
-
-            Debug.Log("pos after: " + objects[i].figure.GetComponent<RectTransform>().anchoredPosition.x);
 
             if (openTimeline)
             {
                 if (railList[railIndex].sizeLayering == 1)
                 {
-                    Debug.Log("open ind: " + railIndex);
                     SceneManaging.scaleToLayerSize(objects[i].figure, 0, rails[railIndex], objects[i].position.y, false);
                 }
                 else if (railList[railIndex].sizeLayering == 2)
@@ -773,10 +769,13 @@ public class RailManager : MonoBehaviour
                     }
                 }
             }
-            railList[currentRailIndex].isTimelineOpen = false;
-            //scale down timeline, collider, scale up objects on timeline
-            rails[currentRailIndex].GetComponent<RectTransform>().sizeDelta = new Vector2(rails[currentRailIndex].GetComponent<RectTransform>().rect.width, 20);
-            rails[currentRailIndex].GetComponent<BoxCollider2D>().size = new Vector2(rails[currentRailIndex].GetComponent<BoxCollider2D>().size.x, 20);
+            if (currentRailIndex != -1)
+            {
+                railList[currentRailIndex].isTimelineOpen = false;
+                //scale down timeline, collider, scale up objects on timeline
+                rails[currentRailIndex].GetComponent<RectTransform>().sizeDelta = new Vector2(rails[currentRailIndex].GetComponent<RectTransform>().rect.width, 20);
+                rails[currentRailIndex].GetComponent<BoxCollider2D>().size = new Vector2(rails[currentRailIndex].GetComponent<BoxCollider2D>().size.x, 20);
+            }
             //scale up hovered timeline
             rails[index].GetComponent<RectTransform>().sizeDelta = new Vector2(rails[index].GetComponent<RectTransform>().rect.width, 80);
             rails[index].GetComponent<BoxCollider2D>().size = new Vector2(rails[index].GetComponent<BoxCollider2D>().size.x, 80);
@@ -935,7 +934,7 @@ public class RailManager : MonoBehaviour
 
             #region calculating Layer Overlap
 
-            SceneManaging.scaleToLayerSize(newCopyOfFigure, 0, rails[currentRailIndex], rectSize, true);
+            SceneManaging.scaleToLayerSize(newCopyOfFigure, 0, rails[currentRailIndex], rectSize, false);
             oP.layer = 1;
             oP.position = new Vector2(tmpRectTransform.anchoredPosition.x, tmpRectTransform.sizeDelta.x);
 
@@ -945,14 +944,14 @@ public class RailManager : MonoBehaviour
                 {
                     //Debug.Log("hier 2");
                     railList[currentRailIndex].sizeLayering = 2;
-                    SceneManaging.scaleToLayerSize(newCopyOfFigure, 2, rails[currentRailIndex], rectSize, true);
+                    SceneManaging.scaleToLayerSize(newCopyOfFigure, 2, rails[currentRailIndex], rectSize, false);
                     oP.layer = 2;
 
                     // others to 1
                     for (int i = 0; i < railList[currentRailIndex].myObjects.Count; i++)
                     {
                         if (railList[currentRailIndex].myObjects[i].layer == 1)
-                            SceneManaging.scaleToLayerSize(railList[currentRailIndex].myObjects[i].figure, 1, rails[currentRailIndex], railList[currentRailIndex].myObjects[i].position.y, true);
+                            SceneManaging.scaleToLayerSize(railList[currentRailIndex].myObjects[i].figure, 1, rails[currentRailIndex], railList[currentRailIndex].myObjects[i].position.y, false);
                     }
                 }
             }
@@ -1187,12 +1186,14 @@ public class RailManager : MonoBehaviour
             #region identifying
             if (!SceneManaging.tutorialActive)  // wenn tutorial gerade ausgeführt wird, soll nichts klickbar sein
             {
+                //Debug.Log("ind: "+currentRailIndex);
+                // if (ImageTimelineSelection.GetRailType() != 2)
+                // {
+                //identify which gameobject you clicked
+                currentClickedObjectIndex = SceneManaging.identifyClickedObject(figureObjects);         //method fills up the current clicked index
                 if (currentRailIndex != -1)
                 {
-                    //identify which gameobject you clicked
-                    currentClickedObjectIndex = SceneManaging.identifyClickedObject(figureObjects);         //method fills up the current clicked index
-                    if (currentRailIndex != -1)
-                        currentClickedInstanceObjectIndex = SceneManaging.identifyClickedObjectByList(railList[currentRailIndex].myObjects);
+                    currentClickedInstanceObjectIndex = SceneManaging.identifyClickedObjectByList(railList[currentRailIndex].myObjects);
                     editTimelineObject = false;                             //flag to prevent closing the timeline if you click an object in timeline
                     releaseOnTimeline = false;                              //because you have not set anything on timeline 
                     releaseObjMousePos = new Vector2(0.0f, 0.0f);
@@ -1217,12 +1218,10 @@ public class RailManager : MonoBehaviour
                         //Debug.Log("i: "+i+", currail: "+currentRailIndex);
                         if (rails[i].GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(getMousePos) && i != currentRailIndex)
                         {
-                            Debug.Log("CURRAIL: " + i);
                             currentRailIndex = i;
                             //open or close timeline
                             if (!railList[i].isTimelineOpen)
                             {
-                                Debug.Log("open");
                                 openTimelineByClick(railList[i].isTimelineOpen, i, false);
                             }
                         }
@@ -1242,7 +1241,6 @@ public class RailManager : MonoBehaviour
                             SceneManaging.flyerSpace[currentSpaceActive] = -1;
                             Destroy(flyerSpaces[currentSpaceActive].transform.GetChild(1).gameObject);
                             // color field
-                            //SceneManaging.highlight(null, flyerSpaces[currentSpaceActive], false, "flyer");
                             flyerSpaces[currentSpaceActive].GetComponent<Image>().color = new Color(.78f, .54f, .44f);
                             flyerSpaces[currentSpaceActive].transform.GetChild(0).gameObject.SetActive(false);
 
@@ -1258,13 +1256,6 @@ public class RailManager : MonoBehaviour
                             SceneManaging.highlight(null, flyerSpaces[i], false, "flyer");
                         }
                         SceneManaging.highlight(null, flyerSpaces[tmpHit], true, "flyer");
-
-                        // delete button
-                        //flyerSpaces[tmpHit].transform.GetChild(1).GetChild(0).GetChild(0).gameObject.SetActive(true);
-                        // if (currentSpaceActive != tmpHit && currentSpaceActive != -1)
-                        // {
-                        //     flyerSpaces[currentSpaceActive].transform.GetChild(1).GetChild(0).GetChild(0).gameObject.SetActive(false);
-                        // }
                         currentSpaceActive = tmpHit;
                     }
 
@@ -1275,10 +1266,6 @@ public class RailManager : MonoBehaviour
                         {
                             SceneManaging.highlight(null, flyerSpaces[currentSpaceActive].gameObject, false, "flyer");// flyerSpaces[currentSpaceActive].transform.GetChild(1).GetChild(0).GetChild(0).gameObject.SetActive(false);
                             currentSpaceActive = -1;
-                            // for (int i = 0; i < flyerSpaces.Length; i++)
-                            // {
-                            //     SceneManaging.highlight(null, flyerSpaces[i], false, "flyer");
-                            // }
                         }
                     }
                 }
@@ -1287,11 +1274,14 @@ public class RailManager : MonoBehaviour
                 //if you click on an object in shelf
                 if (currentClickedObjectIndex != (-1))      //is set in the identify-methods
                 {
-                    //wenn neues objekt genommen wird, soll altes aktuelles objekt unhighlighted werden
-                    for (int j = 0; j < railList[currentRailIndex].myObjects.Count; j++)
+                    if (currentRailIndex != -1)
                     {
-                        Debug.Log("figure: " + railList[currentRailIndex].myObjects[j].objName);
-                        SceneManaging.highlight(railList[currentRailIndex].myObjects[j].figure3D, railList[currentRailIndex].myObjects[j].figure, false, "figure");
+                        //wenn neues objekt genommen wird, soll altes aktuelles objekt unhighlighted werden
+                        for (int j = 0; j < railList[currentRailIndex].myObjects.Count; j++)
+                        {
+                            Debug.Log("figure: " + railList[currentRailIndex].myObjects[j].objName);
+                            SceneManaging.highlight(railList[currentRailIndex].myObjects[j].figure3D, railList[currentRailIndex].myObjects[j].figure, false, "figure");
+                        }
                     }
                     for (int i = 0; i < flyerSpaces.Length; i++)
                     {
@@ -1312,6 +1302,7 @@ public class RailManager : MonoBehaviour
                 //or check if you click an object in timeline
                 else if (currentClickedInstanceObjectIndex != -1 && editTimelineObject && railList[currentRailIndex].isTimelineOpen)
                 {
+                    Debug.Log("hallo? ");
                     // todo: das muss in die button up (wenn was in der szene veraendert wurde)
                     if (!SceneManaging.sceneChanged) SceneManaging.sceneChanged = true;
 
@@ -1592,6 +1583,7 @@ public class RailManager : MonoBehaviour
             {
                 if (hitTimelineOld != hitTimeline)
                 {
+                    Debug.Log("hittimeline: " + hitTimeline);
                     hitTimelineOld = hitTimeline;
                     openTimelineByDrag(hitTimeline);
 
@@ -1695,9 +1687,7 @@ public class RailManager : MonoBehaviour
                         SceneManaging.highlight(null, flyerSpaces[i], false, "flyer");
                     }
                     SceneManaging.highlight(null, flyerSpaces[flyerHit], true, "flyer");
-                    //Debug.Log("highlight: "+flyerSpaces[flyerHit]);
                     currentSpaceActive = flyerHit;
-                    //Debug.Log("deletebutton: "+ flyerSpaces[flyerHit].transform.GetChild(1).gameObject.name);
                 }
 
             }
@@ -1909,12 +1899,6 @@ public class RailManager : MonoBehaviour
                     }
                 }
             }
-
-            // Debug.LogWarning("________________________________________________________________");
-            // for (int i = 0; i < railList[currentRailIndex].myObjects.Count; i++)
-            // {
-            //     Debug.LogWarning("vector " + i + ": " + railList[currentRailIndex].myObjects[i].objName);
-            // }
 
             for (int k = 0; k < railList.Length; k++)
             {

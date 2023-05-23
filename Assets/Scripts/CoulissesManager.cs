@@ -156,10 +156,7 @@ public class CoulissesManager : MonoBehaviour
                         setIndexTabActive(i);
                     }
                 }
-                // if (gameController.GetComponent<UnitySwitchExpertUser>()._isExpert)
-                // {
                 clickInSettingsWindow = isSettingsWindowClicked();
-                // }
                 clickOnDelete = isDeleteButtonClicked();
 
                 // if settingswindow (feineinstellungen) is clicked
@@ -181,11 +178,6 @@ public class CoulissesManager : MonoBehaviour
                 // if a coulisse is clicked
                 if (currentObjectIndex != -1 && clickInSettingsWindow == -1)
                 {
-                    // if (_counterTouched < 2)
-                    //     _counterTouched++;
-                    // else if (_counterTouched == 2)
-                    //     _timerCoulisse = 0.0f;
-
                     if (!SceneManaging.sceneChanged) SceneManaging.sceneChanged = true;
                     scrollViewScenery.GetComponent<ScrollRect>().enabled = false;
                     diff = new Vector2(getMousePos.x - coulisses[currentObjectIndex].transform.position.x, getMousePos.y - coulisses[currentObjectIndex].transform.position.y);
@@ -244,13 +236,17 @@ public class CoulissesManager : MonoBehaviour
             else
             {
                 coulisses[currentObjectIndex].transform.position = new Vector2(getMousePos.x - diff.x, getMousePos.y - diff.y); // diff is difference of mouse position to clicked position on coulisse so that the coulisse doesnt jump to the pivot all the time
-                if (coulisses[currentObjectIndex].GetComponent<CoulisseStats>().isBlende)
+                if (coulisses[currentObjectIndex].GetComponent<CoulisseStats>().typeOfCoulisse == 1)    // kleine blende
+                {
+                    coulisses[currentObjectIndex].GetComponent<RectTransform>().anchoredPosition = new Vector2(coulisses[currentObjectIndex].GetComponent<RectTransform>().anchoredPosition.x, -185);
+                }
+                else if (coulisses[currentObjectIndex].GetComponent<CoulisseStats>().typeOfCoulisse == 2)    // grosse blende
+                {
+                    coulisses[currentObjectIndex].GetComponent<RectTransform>().anchoredPosition = new Vector2(coulisses[currentObjectIndex].GetComponent<RectTransform>().anchoredPosition.x, -150);
+                }
+                else                                                                                     // seitenkulisse
                 {
                     coulisses[currentObjectIndex].GetComponent<RectTransform>().anchoredPosition = new Vector2(coulisses[currentObjectIndex].GetComponent<RectTransform>().anchoredPosition.x, -170);
-                }
-                else
-                {
-                    coulisses[currentObjectIndex].GetComponent<RectTransform>().anchoredPosition = new Vector2(coulisses[currentObjectIndex].GetComponent<RectTransform>().anchoredPosition.x, -135);
                 }
             }
             coulisses[currentObjectIndex].transform.SetParent(mainMenue.transform);
@@ -348,13 +344,17 @@ public class CoulissesManager : MonoBehaviour
                             if (currentTabIndex == i)
                             {
                                 coulisses[currentObjectIndex].transform.SetParent(collections[i].transform);
-                                if (coulisses[currentObjectIndex].GetComponent<CoulisseStats>().isBlende)
+                                if (coulisses[currentObjectIndex].GetComponent<CoulisseStats>().typeOfCoulisse == 1)    // grosse blende
+                                {
+                                    coulisses[currentObjectIndex].GetComponent<RectTransform>().anchoredPosition = new Vector2(coulisses[currentObjectIndex].GetComponent<RectTransform>().anchoredPosition.x, -185);
+                                }
+                                else if (coulisses[currentObjectIndex].GetComponent<CoulisseStats>().typeOfCoulisse == 2)    // seitenkulisse
+                                {
+                                    coulisses[currentObjectIndex].GetComponent<RectTransform>().anchoredPosition = new Vector2(coulisses[currentObjectIndex].GetComponent<RectTransform>().anchoredPosition.x, -150);
+                                }
+                                else                                                                                     // kleine blende
                                 {
                                     coulisses[currentObjectIndex].GetComponent<RectTransform>().anchoredPosition = new Vector2(coulisses[currentObjectIndex].GetComponent<RectTransform>().anchoredPosition.x, -170);
-                                }
-                                else
-                                {
-                                    coulisses[currentObjectIndex].GetComponent<RectTransform>().anchoredPosition = new Vector2(coulisses[currentObjectIndex].GetComponent<RectTransform>().anchoredPosition.x, -135);
                                 }
                             }
                         }
