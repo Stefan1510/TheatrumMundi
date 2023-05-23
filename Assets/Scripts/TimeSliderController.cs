@@ -1,9 +1,3 @@
-//Kris version fuer den UI-Slider als Time Slider
-//
-//
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
@@ -17,10 +11,11 @@ public class TimeSliderController : MonoBehaviour, IPointerUpHandler, IDragHandl
     [SerializeField] private Toggle _toggleKeyConfigControlls;
     [SerializeField] private GameObject _panelControls, _panelRailSpeedControls, _panelLightControls, _panelBackgroundPositionControls, imgTimelineSettingsArea;
     [SerializeField] private GameObject[] _keyButtons;
-     [SerializeField] private Slider _sliderMaxLength;
+    [SerializeField] private Slider _sliderMaxLength;
     [SerializeField] private GameObject _settingsLength;
     [SerializeField] private TMP_InputField _inputSliderLength;
     [SerializeField] private AnimationTimer tmpAnimTimer;
+    [SerializeField] private RailManager tmpRailManager;
 
     private Slider _thisSlider;
     void Start()
@@ -30,13 +25,11 @@ public class TimeSliderController : MonoBehaviour, IPointerUpHandler, IDragHandl
         _thisSlider = GetComponent<Slider>();
         _textTime.text = UtilitiesTm.FloaTTimeToString(_thisSlider.value);
         _textMaxTime.text = UtilitiesTm.FloaTTimeToString(AnimationTimer.GetMaxTime());
-        _textMaxTimeBigLetters.text= UtilitiesTm.FloaTTimeToString(AnimationTimer.GetMaxTime());
+        _textMaxTimeBigLetters.text = UtilitiesTm.FloaTTimeToString(AnimationTimer.GetMaxTime());
         GetComponent<Slider>().maxValue = AnimationTimer.GetMaxTime();
 
-        //_thisSlider.onValueChanged.AddListener(delegate { UpdateTimeSLider(); });
-        _thisSlider.onValueChanged.AddListener((float value) => UpdateTimeSlider(value));
         _toggleKeyConfigControlls.onValueChanged.AddListener((bool value) => SwitchKeyConfigControls(value));
-        UpdateTimeSlider(0);
+        UpdateTimeSlider();
         SwitchKeyConfigControls(false);
         ChangeControlsFromTimelineSelection();
     }
@@ -51,7 +44,6 @@ public class TimeSliderController : MonoBehaviour, IPointerUpHandler, IDragHandl
         }
         _textMaxTime.text = UtilitiesTm.FloaTTimeToString(AnimationTimer.GetMaxTime());
         _textMaxTimeBigLetters.text = UtilitiesTm.FloaTTimeToString(AnimationTimer.GetMaxTime());
-        //Debug.Log("maxtime: "+AnimationTimer.GetMaxTime()+", slider: "+_thisSlider.value);
         if (ImageTimelineSelection.UpdateNecessary())
         {
             ChangeControlsFromTimelineSelection();
@@ -68,13 +60,13 @@ public class TimeSliderController : MonoBehaviour, IPointerUpHandler, IDragHandl
         SceneManaging.updateMusic = true;
     }
 
-    void UpdateTimeSlider(float value)
+    public void UpdateTimeSlider()
     {
-
+        //Debug.Log("value: " + _thisSlider.value);
         if (!SceneManaging.tutorialActive)
         {
             //AnimationTimer.SetTime(_thisSlider.value);
-            AnimationTimer.SetTime(value);
+            AnimationTimer.SetTime(_thisSlider.value);
             //Debug.Log("value: "+value);
         }
     }
@@ -135,7 +127,7 @@ public class TimeSliderController : MonoBehaviour, IPointerUpHandler, IDragHandl
     }
     public void ChangeMaxLength()
     {
-        Debug.Log("value: " + (_sliderMaxLength.value));
+        //Debug.Log("value: " + (_sliderMaxLength.value));
         tmpAnimTimer.SetMaxTime(60 * _sliderMaxLength.value);
         _inputSliderLength.text = _sliderMaxLength.value.ToString("0");
         GetComponent<Slider>().maxValue = (60 * _sliderMaxLength.value);
@@ -152,8 +144,9 @@ public class TimeSliderController : MonoBehaviour, IPointerUpHandler, IDragHandl
     {
         _sliderMaxLength.value = int.Parse(_inputSliderLength.text);
         tmpAnimTimer.SetMaxTime(60 * _sliderMaxLength.value);
-        GetComponent<Slider>().maxValue =(60 * _sliderMaxLength.value);
+        GetComponent<Slider>().maxValue = (60 * _sliderMaxLength.value);
         StaticSceneData.StaticData.pieceLength = 60 * int.Parse(_inputSliderLength.text);
         GetComponent<Slider>().maxValue = 60 * _sliderMaxLength.value;
+        tmpRailManager.recalculateLengthOfFigures();
     }
 }

@@ -784,6 +784,19 @@ public class RailManager : MonoBehaviour
             openCloseObjectInTimeline(true, railList[index].myObjects, index);
         }
     }
+    public void recalculateLengthOfFigures()
+    {
+        for(int i=0;i<railList.Length;i++)
+        {
+            for(int j=0;j<railList[i].myObjects.Count;j++)
+            {
+               // FigureInstanceElement tmpFig = SceneData.
+                //objectAnimationLength = rails3D[currentRailIndex].transform.GetChild(0).GetComponent<RailSpeedController>().GetEndTimeFromStartTime(railList[j].myObjects[i].);
+            rectSize = railwidthAbsolute / (AnimationTimer.GetMaxTime() / objectAnimationLength);
+            SceneManaging.createRectangle(newCopyOfFigure, colFigure, rails[currentRailIndex].GetComponent<RectTransform>().rect.height, Instantiate(prefabRect), rectSize);
+            }
+        }
+    }
     public void updateObjectPosition(Figure obj, Vector2 mousePos)
     {
         obj.figure.transform.position = new Vector3(mousePos.x, mousePos.y, -1.0f);

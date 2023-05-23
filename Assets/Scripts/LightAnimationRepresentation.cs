@@ -17,7 +17,6 @@ public class LightAnimationRepresentation : MonoBehaviour
     private float _maxIntensity;
     private bool _gameObjectStarted = false;
 
-
     private void Awake()
     {
         _maxIntensity = _sliderIntensity.maxValue;
@@ -27,7 +26,6 @@ public class LightAnimationRepresentation : MonoBehaviour
         _lightColorsColumn = new Color32[_textureLightRepresentation.height];
         _imagePositionKnob.gameObject.SetActive(false);
         _imagePositionKnobCollection = new List<Image>();
-
     }
 
     void Start()

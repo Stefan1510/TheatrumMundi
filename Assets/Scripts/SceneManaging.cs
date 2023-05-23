@@ -69,7 +69,6 @@ public static class SceneManaging
             }
             else
             {
-                Debug.Log("hier wird box true, fig: "+fig.name);
                 //scale the collider, if object has one
                 fig.GetComponent<BoxCollider2D>().enabled = true;
                 fig.GetComponent<BoxCollider2D>().size = new Vector2(fig.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta.x, y);

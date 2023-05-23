@@ -32,6 +32,11 @@ public class SetLightColors : MonoBehaviour
         ChangeLiveColor(SliderIntensity.value);
         float intensityValue = SliderIntensity.value;
         float colorMoment = AnimationTimer.GetTime();
+        if(colorMoment == AnimationTimer.GetMaxTime())
+        {
+            Debug.Log("passiert");
+            colorMoment -=1;
+        }
         int momentIndex = StaticSceneData.StaticData.lightingSets.FindIndex(mom => mom.moment == colorMoment);
         //Debug.Log("mommentIndex: " + momentIndex);
         //Debug.Log("sizeDeltsa.x "+_representationPanel.GetComponent<RectTransform>().rect.width);
