@@ -75,8 +75,8 @@ public class RailSpeedController : MonoBehaviour
             Debug.Log("v: "+vt+", v2: "+v2+", t: "+tStart+", t2: "+t2+", a: "+a+", distance: "+distance);
 
             // erst abstand ausrechnen bis 4.1
-            // tRest = -(vt / a) + Mathf.Sqrt((sqrV / sqrA) + (2 * distance / a));
-            tRest = (2*distance)/(v2+vt);
+            tRest = -(vt / a) + Mathf.Sqrt((sqrV / sqrA) + (2 * distance / a));
+            // tRest = (2*distance)/(v2+vt);
             Debug.Log("trest: " + tRest);
 
             if (tStart + tRest > t2)

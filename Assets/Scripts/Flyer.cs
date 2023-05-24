@@ -31,6 +31,7 @@ public class Flyer : MonoBehaviour
     }
     public void OnClickFillScene()
     {
+        Debug.Log("hier");
         StartCoroutine(tmpFileController.LoadFileFromWWW("Musterszene_Kulissen.json", "fromFlyerCreate"));
     }
     public void OnClickWarning(bool cancel)

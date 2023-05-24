@@ -20,7 +20,7 @@ public static class SceneManaging
     public static bool isExpert;
     // flyer
     public static bool flyerActive;
-    public static int[] flyerSpace = new int[9];
+    public static int[] flyerSpace = new int[11];
     public static bool tutorialActive;
     //timeslider
     public static bool fullscreenOn = false;

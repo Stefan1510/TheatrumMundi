@@ -281,7 +281,6 @@ public class PressHelp : MonoBehaviour
             {
                 helpTextLiveView.SetActive(false);
                 pressedLiveView = false;
-                Debug.Log("pressed: " + pressedLiveView);
                 offFromClick = true;
             }
         }
