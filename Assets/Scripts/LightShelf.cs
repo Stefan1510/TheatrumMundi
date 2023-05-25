@@ -15,12 +15,6 @@ public class LightShelf : MonoBehaviour
         ToggleLightBlock(false);
         GetComponent<Toggle>().isOn = false;
     }
-
-    //// Update is called once per frame
-    //void Update()
-    //{
-
-    //}
     public void ToggleLightBlock(bool toggleOnOff)
     {
         _panelElementToDeactivate.SetActive(toggleOnOff);

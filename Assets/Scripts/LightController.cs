@@ -55,9 +55,9 @@ public class LightController : MonoBehaviour
         _lbColors_on = changeColors(_lbColors_on, new Color(1f, 1f, 1f, 1f));
         _lbColors_off = changeColors(_lbColors_off, new Color(0f, 0f, 0f, 0f));
         ChangeHorizontal(256);
-        ChangeIntensity(2f);
-        ChangePosition(0);
-        ChangeHeight(0);
+        ChangeIntensity(sliderLbIntensity.value);
+        ChangePosition(sliderLbPosition.value);
+        ChangeHeight(sliderLbHeight.value);
         PanelLbImage = toggleLb.transform.parent.parent.GetComponent<Image>();
         PanelLbImage.color = new Color(171f / 255f, 171f / 255f, 171f / 255f, 160f / 255f);
     }
@@ -67,10 +67,13 @@ public class LightController : MonoBehaviour
         thisLightElement = StaticSceneData.StaticData.lightElements.Find(le => le.name == gameObject.name);
         //Debug.Log(PanelLbImage);
         LightActivation(false);
+        ChangePosition(sliderLbPosition.value);
+        Debug.Log("pos: " + sliderLbPosition.value);
+
     }
     public void LightActivation(bool onOffSwitch)
     {
-        //lightElements m�ssen erst noch mit der StaticData bekannt gemacht werden --> SceneDataController
+        //lightElements muessen erst noch mit der StaticData bekannt gemacht werden --> SceneDataController
 
         thisLightElement.active = onOffSwitch;
         GetComponent<Light>().enabled = onOffSwitch;
@@ -84,10 +87,16 @@ public class LightController : MonoBehaviour
         {
             PanelLbImage.color = new Color(171f / 255f, 171f / 255f, 171f / 255f, 160f / 255f);
         }
+        //ChangePosition(sliderLbPosition.value);
     }
 
     public void ChangeIntensity(float intensityValue)
     {
+        if (this.name.Contains("Middle"))
+        {
+            Debug.Log("name: " + this.name);
+            intensityValue = intensityValue / 4;
+        }
         thisLightElement.intensity = intensityValue;
         GetComponent<Light>().intensity = intensityValue;
         UiSetting_LB_Image.GetComponent<LightRepresentationController>().setBrightness_UiSetting_LB_Light_angle(intensityValue);
@@ -149,7 +158,7 @@ public class LightController : MonoBehaviour
         _lbCookie.Apply();
         GetComponent<Light>().cookie = _lbCookie;
     }
-    
+
     public void ChangeHorizontalLeft(int HorizontalValue)
     {
         //Debug.Log("PING ChangeHorizontal");

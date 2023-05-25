@@ -8,12 +8,14 @@ public class LightBbController : MonoBehaviour
     public Toggle toggleBb;
     [HideInInspector] public LightElement thisLightElement;
     [HideInInspector] public Image PanelBbImage;
-    // Start is called before the first frame update
     void Start()
     {
-        //Debug.Log(name);
         thisLightElement = StaticSceneData.StaticData.lightElements.Find(le => le.name == gameObject.name);
         LightAmbientChange(0.0f);
+        // if(!SceneManaging.isExpert)
+        // {
+        //     LightActivation(true);
+        // }
         //Debug.Log(thisLightElement.name);
         //LightActivation(toggleBb.isOn);
         PanelBbImage = toggleBb.transform.parent.parent.gameObject.GetComponent<Image>();
@@ -24,6 +26,7 @@ public class LightBbController : MonoBehaviour
     {
         thisLightElement.active = onOffSwitch;
         GetComponent<Light>().enabled = onOffSwitch;
+        Debug.Log("this: "+this.name);
         //gameController.GetComponent<SceneDataController>().LightsApplyToScene(StaticSceneData.StaticData.lightElements);
         //StaticSceneData.Lights3D();
         if (onOffSwitch)
