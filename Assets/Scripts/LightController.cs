@@ -68,8 +68,7 @@ public class LightController : MonoBehaviour
         //Debug.Log(PanelLbImage);
         LightActivation(false);
         ChangePosition(sliderLbPosition.value);
-        Debug.Log("pos: " + sliderLbPosition.value);
-
+        //Debug.Log("pos: " + sliderLbPosition.value);
     }
     public void LightActivation(bool onOffSwitch)
     {
@@ -92,12 +91,13 @@ public class LightController : MonoBehaviour
 
     public void ChangeIntensity(float intensityValue)
     {
-        if (this.name.Contains("Middle"))
+        if (this.name.Contains("Middle"))   // if its the middle candle, it should not be too bright
         {
-            Debug.Log("name: " + this.name);
+            Debug.Log("contains middle: "+this.name);
             intensityValue = intensityValue / 4;
         }
         thisLightElement.intensity = intensityValue;
+        Debug.Log("intensity: "+thisLightElement.intensity+", thislightEl: "+thisLightElement.name);
         GetComponent<Light>().intensity = intensityValue;
         UiSetting_LB_Image.GetComponent<LightRepresentationController>().setBrightness_UiSetting_LB_Light_angle(intensityValue);
     }

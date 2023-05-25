@@ -49,7 +49,7 @@ public class SceneDataController : MonoBehaviour
 
             objectSceneryElement.GetComponent<cakeslice.Outline>().enabled = false;
         }
-        
+
     }
 
     private void GetFileMetaDataFromScene()
@@ -314,21 +314,39 @@ public class SceneDataController : MonoBehaviour
                     {
                         case 0:
                             break;
-                        case 1:
+                        case 1: // left
+                            Debug.Log("_________________________ light: " + gameObjectLe.name);
+                            Debug.Log("int: " + le.intensity);
                             gameObjectLe.GetComponent<LightController>().ChangeHorizontal(le.angle_h);
                             gameObjectLe.GetComponent<LightController>().ChangeVertical(le.angle_v);
                             gameObjectLe.GetComponent<LightController>().ChangePosition(le.z);
                             gameObjectLe.GetComponent<LightController>().ChangeHeight(le.y);
+                            gameObjectLe.GetComponent<LightController>().ChangeIntensity(le.intensity);
+                            if (!gameObjectLe.name.Contains("Middle"))
+                            {
+                                gameObjectLe.GetComponent<LightController>().sliderLbIntensity.value = le.intensity;
+                            }
+                            Debug.Log("int: " + le.intensity);
                             break;
-                        case 2:
+                        case 2: // right
+                            Debug.Log("______________________ light: " + gameObjectLe.name);
+                            Debug.Log("int: " + le.intensity);
                             gameObjectLe.GetComponent<LightController>().ChangeHorizontal(le.angle_h);
                             gameObjectLe.GetComponent<LightController>().ChangeVerticalLeft(le.angle_v);
                             gameObjectLe.GetComponent<LightController>().ChangePosition(le.z);
                             gameObjectLe.GetComponent<LightController>().ChangeHeight(le.y);
+                            gameObjectLe.GetComponent<LightController>().ChangeIntensity(le.intensity);
+                            if (!gameObjectLe.name.Contains("Middle"))
+                            {
+                                gameObjectLe.GetComponent<LightController>().sliderLbIntensity.value = le.intensity;
+                            }
+                            Debug.Log("int: " + le.intensity);
                             break;
                         case 3:
                             countActiveLightElements--;
                             break;
+
+                            // update sliders
                     }
                 }
             }

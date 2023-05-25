@@ -94,7 +94,7 @@ public class LightRepresentationController : MonoBehaviour
         }
         else
         {
-            Debug.Log("name: "+UiSetting_LB.name);
+            //Debug.Log("name: "+UiSetting_LB.name);
             UiSetting_LB.GetComponent<Image>().sprite = UiSetting_LB_off_Sprite;
             UiSetting_LB_Light.GetComponent<Image>().sprite = UiSetting_LB_Light_off_Sprite;
             UiSetting_LB_side.GetComponent<Image>().sprite = UiSetting_LB_side_off_Sprite;

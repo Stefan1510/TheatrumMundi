@@ -613,48 +613,47 @@ public class SaveFileController : MonoBehaviour
             LoadSceneFromTempToStatic();
             if (SceneManaging.flyerSpace[0] != -1)
             {
-                //Debug.Log("1");
-                contentMenueRails.CreateNew2DInstance(SceneManaging.flyerSpace[0], 0, 0, 0, true);
+                contentMenueRails.CreateNew2DInstance(SceneManaging.flyerSpace[0], 10, 0, 0, true);
             }
-            if (SceneManaging.flyerSpace[1] != -1)
+            if (SceneManaging.flyerSpace[1] != -1)  // tier 1
             {
-                //Debug.Log("2");
                 contentMenueRails.CreateNew2DInstance(SceneManaging.flyerSpace[1], 30, 1, 0, true);
             }
-            if (SceneManaging.flyerSpace[2] != -1)
+            if (SceneManaging.flyerSpace[2] != -1)  // tier 2
             {
-                //Debug.Log("3");
-                contentMenueRails.CreateNew2DInstance(SceneManaging.flyerSpace[2], 40, 4, 0, true);
+                contentMenueRails.CreateNew2DInstance(SceneManaging.flyerSpace[2], 35, 3, 0, true);
             }
-            if (SceneManaging.flyerSpace[3] != -1)
+            if (SceneManaging.flyerSpace[3] != -1)  // tier 3
             {
-                //Debug.Log("4");
-                contentMenueRails.CreateNew2DInstance(SceneManaging.flyerSpace[3], 70, 2, 0, true);
+                contentMenueRails.CreateNew2DInstance(SceneManaging.flyerSpace[3], 50, 1, 0, true);
             }
-            if (SceneManaging.flyerSpace[4] != -1)
+            if (SceneManaging.flyerSpace[4] != -1)  // elefant
             {
-                //Debug.Log("5");
-                contentMenueRails.CreateNew2DInstance(SceneManaging.flyerSpace[4], 85, 1, 0, true);
+                contentMenueRails.CreateNew2DInstance(SceneManaging.flyerSpace[4], 65, 4, 0, true);
             }
-            if (SceneManaging.flyerSpace[5] != -1)
+            if (SceneManaging.flyerSpace[5] != -1)  // voruebergehende(r)
             {
-                //Debug.Log("6");
-                contentMenueRails.CreateNew2DInstance(SceneManaging.flyerSpace[5], 90, 0, 0, true);
+                contentMenueRails.CreateNew2DInstance(SceneManaging.flyerSpace[5], 80, 0, 0, true);
             }
-            if (SceneManaging.flyerSpace[6] != -1)
+            if (SceneManaging.flyerSpace[6] != -1)  // andere
             {
-                //Debug.Log("7");
-                contentMenueRails.CreateNew2DInstance(SceneManaging.flyerSpace[6], 100, 3, 0, true);
+                contentMenueRails.CreateNew2DInstance(SceneManaging.flyerSpace[6], 90, 3, 0, true);
             }
-            if (SceneManaging.flyerSpace[7] != -1)
+            if (SceneManaging.flyerSpace[7] != -1)  // tabakpfeife
             {
-                //Debug.Log("8");
-                contentMenueRails.CreateNew2DInstance(SceneManaging.flyerSpace[7], 120, 4, 0, true);
+                contentMenueRails.CreateNew2DInstance(SceneManaging.flyerSpace[7], 105, 3, 0, true);
             }
-            if (SceneManaging.flyerSpace[8] != -1)
+            if (SceneManaging.flyerSpace[8] != -1)  // trauerzug 1
             {
-                //Debug.Log("9");
-                contentMenueRails.CreateNew2DInstance(SceneManaging.flyerSpace[8], 130, 5, 0, true);
+                contentMenueRails.CreateNew2DInstance(SceneManaging.flyerSpace[8], 110, 3, 0, true);
+            }
+            if (SceneManaging.flyerSpace[9] != -1)  // trauerzug 2
+            {
+                contentMenueRails.CreateNew2DInstance(SceneManaging.flyerSpace[9], 120, 3, 0, true);
+            }
+            if (SceneManaging.flyerSpace[10] != -1) // trauerzug 3
+            {
+                contentMenueRails.CreateNew2DInstance(SceneManaging.flyerSpace[10], 130, 3, 0, true);
             }
             // boxcollider ausschalten, damit musikstuecke und figuren nicht gedruekct weren koennen wenn schiene klein
             for (int i = 0; i < tmpMusicManager.myObjects.Count; i++)
