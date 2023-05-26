@@ -7,7 +7,7 @@ using UnityEngine;
 public class objectsLightElement
 {
     public GameObject goLightElement;
-    public int lightStagePosition;   //{ 0- BeforeRail, 1- leftRail, 2- rightRail, 3- BehindRails};
+    public int lightStagePosition;   //{ 0- BeforeRail, 1- leftRail, 2- rightRail, 3- BehindRails, 4- middleLights};
 }
 
 
@@ -95,7 +95,7 @@ public class LightElement
     public float intensity;
     public int angle_h;
     public int angle_v;
-    public int stagePosition;  //{ 0- BeforeRail, 1- leftRail, 2- rightRail};
+    public int stagePosition;  //{ 0- BeforeRail, 1- leftRail, 2- rightRail, 3- behind Rail, 4- middle light};
 }
 
 [System.Serializable]

@@ -34,7 +34,9 @@ public class LbValueUpdate : MonoBehaviour
 
     private void OnSliderChanged(float newValue)
     {
+        //Debug.Log("hier");
         lbInputField.text = newValue.ToString("F");
+        //Debug.Log("value: "+newValue+", tostring: "+newValue.ToString("0.00"));
     }
 
     //// Update is called once per frame

@@ -1315,7 +1315,7 @@ public class RailManager : MonoBehaviour
                 //or check if you click an object in timeline
                 else if (currentClickedInstanceObjectIndex != -1 && editTimelineObject && railList[currentRailIndex].isTimelineOpen)
                 {
-                    Debug.Log("hallo? ");
+                    //Debug.Log("hallo? ");
                     // todo: das muss in die button up (wenn was in der szene veraendert wurde)
                     if (!SceneManaging.sceneChanged) SceneManaging.sceneChanged = true;
 

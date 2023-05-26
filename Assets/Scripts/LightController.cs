@@ -91,13 +91,13 @@ public class LightController : MonoBehaviour
 
     public void ChangeIntensity(float intensityValue)
     {
-        if (this.name.Contains("Middle"))   // if its the middle candle, it should not be too bright
-        {
-            Debug.Log("contains middle: "+this.name);
-            intensityValue = intensityValue / 4;
-        }
+        // if (this.name.Contains("Middle") && thisLightElement.intensity != intensityValue / 4)   // if its the middle candle, it should not be too bright
+        // {
+        //     Debug.Log("contains middle: " + this.name);
+        //     Debug.Log("intensity: " + thisLightElement.intensity + ", value: " + intensityValue);
+        //     intensityValue = intensityValue / 4;
+        // }
         thisLightElement.intensity = intensityValue;
-        Debug.Log("intensity: "+thisLightElement.intensity+", thislightEl: "+thisLightElement.name);
         GetComponent<Light>().intensity = intensityValue;
         UiSetting_LB_Image.GetComponent<LightRepresentationController>().setBrightness_UiSetting_LB_Light_angle(intensityValue);
     }
