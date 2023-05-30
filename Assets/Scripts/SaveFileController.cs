@@ -14,6 +14,8 @@ public class SaveFileController : MonoBehaviour
     public GameObject contentFileSelect, panelCodeInput, panelSaveShowCode, panelWarningInput, panelWarningInputVisitor, panelOverwrite, menuKulissen, flyer;
     public RailManager contentMenueRails;
     [SerializeField] private RailMusicManager tmpMusicManager;
+    [SerializeField] private LightAnimationRepresentation tmpLightAnimRep;
+    [SerializeField] private SetLightColors tmpSetLightCol;
     [SerializeField] private GameObject _dialogSave, _dialogNewScene, _dialogLoadCode;
     [SerializeField] AnimationTimer _animTimer;
     [SerializeField] GameObject _borderWarning, _borderLoad;
@@ -611,7 +613,12 @@ public class SaveFileController : MonoBehaviour
         else if (status == "fromFlyerCreate")
         {
             LoadSceneFromTempToStatic();
-            if (SceneManaging.flyerSpace[0] != -1)
+            
+            // tmpLightAnimRep.ChangeImage();
+            // tmpSetLightCol.ChangeLightColor();
+            // tmpSetLightCol.ChangeAnimationLightIntensity();
+
+            if (SceneManaging.flyerSpace[0] != -1)  // schlange
             {
                 contentMenueRails.CreateNew2DInstance(SceneManaging.flyerSpace[0], 10, 0, 0, true);
             }
@@ -625,7 +632,7 @@ public class SaveFileController : MonoBehaviour
             }
             if (SceneManaging.flyerSpace[3] != -1)  // tier 3
             {
-                contentMenueRails.CreateNew2DInstance(SceneManaging.flyerSpace[3], 45, 5, 0, true);
+                contentMenueRails.CreateNew2DInstance(SceneManaging.flyerSpace[3], 40, 5, 0, true);
             }
             if (SceneManaging.flyerSpace[4] != -1)  // elefant
             {
@@ -646,6 +653,7 @@ public class SaveFileController : MonoBehaviour
             if (SceneManaging.flyerSpace[8] != -1)  // trauerzug 1
             {
                 contentMenueRails.CreateNew2DInstance(SceneManaging.flyerSpace[8], 97, 3, 1, true);
+                //Debug.Log("8: ");
             }
             if (SceneManaging.flyerSpace[9] != -1)  // trauerzug 2
             {
@@ -668,7 +676,7 @@ public class SaveFileController : MonoBehaviour
             flyer.SetActive(false);
             SceneManaging.flyerActive = false;
             contentMenueRails.currentRailIndex = 0;
-            //Debug.Log("aktuelle schiene: "+contentMenueRails.currentRailIndex);
+
         }
         else if (status == "fromFlyerDelete")
         {
@@ -736,7 +744,7 @@ public class SaveFileController : MonoBehaviour
     }
     public void OnClickNewScene()
     {
-        StartCoroutine(LoadFileFromWWW("*Musterszene_leer_Visitor.json", "fromCode"));
+        StartCoroutine(LoadFileFromWWW("Musterszene_Kulissen.json", "fromCode"));
         ClosePanelShowCode(_visitorPanelSave);
     }
     public void OnClickSaveTabs(int loadSaveNew)

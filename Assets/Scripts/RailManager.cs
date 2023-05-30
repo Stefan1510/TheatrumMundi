@@ -694,7 +694,6 @@ public class RailManager : MonoBehaviour
     public void openCloseObjectInTimeline(bool openTimeline, List<Figure> objects, int railIndex)
     {
         float length = rectSize;
-
         for (int i = 0; i < objects.Count; i++)
         {
             objects[i].figure.GetComponent<RectTransform>().anchoredPosition = new Vector3(objects[i].figure.GetComponent<RectTransform>().anchoredPosition.x, -rails[railIndex].GetComponent<RectTransform>().rect.height / 2, -1);
@@ -786,14 +785,14 @@ public class RailManager : MonoBehaviour
     }
     public void recalculateLengthOfFigures()
     {
-        for(int i=0;i<railList.Length;i++)
+        for (int i = 0; i < railList.Length; i++)
         {
-            for(int j=0;j<railList[i].myObjects.Count;j++)
+            for (int j = 0; j < railList[i].myObjects.Count; j++)
             {
-               // FigureInstanceElement tmpFig = SceneData.
+                // FigureInstanceElement tmpFig = SceneData.
                 //objectAnimationLength = rails3D[currentRailIndex].transform.GetChild(0).GetComponent<RailSpeedController>().GetEndTimeFromStartTime(railList[j].myObjects[i].);
-            rectSize = railwidthAbsolute / (AnimationTimer.GetMaxTime() / objectAnimationLength);
-            SceneManaging.createRectangle(newCopyOfFigure, colFigure, rails[currentRailIndex].GetComponent<RectTransform>().rect.height, Instantiate(prefabRect), rectSize);
+                rectSize = railwidthAbsolute / (AnimationTimer.GetMaxTime() / objectAnimationLength);
+                SceneManaging.createRectangle(newCopyOfFigure, colFigure, rails[currentRailIndex].GetComponent<RectTransform>().rect.height, Instantiate(prefabRect), rectSize);
             }
         }
     }
@@ -860,10 +859,8 @@ public class RailManager : MonoBehaviour
         RectTransform tmpRectTransform = newCopyOfFigure.GetComponent<RectTransform>();
 
         //add object to list which objects are on timeline, set placed figures to timelineInstanceObjects-list
-        //parent and position
         newCopyOfFigure.transform.SetParent(rails[currentRailIndex].transform);
         newCopyOfFigure.transform.localScale = Vector3.one;
-        //newCopyOfFigure.transform.GetChild(0).GetComponent<RectTransform>().anchoredPosition = new Vector2(newCopyOfFigure.transform.GetChild(0).GetComponent<RectTransform>().anchoredPosition.x, newCopyOfFigure.transform.GetChild(0).GetComponent<RectTransform>().anchoredPosition.y);
 
         Figure oP = new Figure();
         oP.objName = newCopyOfFigure.name;
@@ -892,7 +889,6 @@ public class RailManager : MonoBehaviour
                     SceneManaging.scaleToLayerSize(newCopyOfFigure, 1, rails[currentRailIndex], rectSize, true);
                     railList[currentRailIndex].sizeLayering = 2;
                     oP.layer = 1;
-
                 }
                 else if (savedLayer == 0)
                 {
@@ -993,16 +989,13 @@ public class RailManager : MonoBehaviour
 
         if (saveToSceneData) // from flyer
         {
-            //tmpRectTransform.anchoredPosition = new Vector2(tmpRectTransform.anchoredPosition.x, -tmpRectTransform.anchoredPosition.y);
-            SceneManaging.scaleToLayerSize(newCopyOfFigure, 0, rails[currentRailIndex], rectSize, false);
             // Save to SceneData:
+            //SceneManaging.scaleToLayerSize(newCopyOfFigure, 0, rails[currentRailIndex], rectSize, false);
             FigureInstanceElement thisFigureInstanceElement = new FigureInstanceElement();
             thisFigureInstanceElement.instanceNr = (countCopiesOfObject(figureObjects[figureNr].name)) - 1; //index
             thisFigureInstanceElement.name = curr3DObject.name + "_" + (countCopiesOfObject(figureObjects[figureNr].name) - 1).ToString("000");
             thisFigureInstanceElement.railStart = (int)Char.GetNumericValue(rails[currentRailIndex].name[17]) - 1; //railIndex
-
             thisFigureInstanceElement.moment = momentOrPosX;
-
             thisFigureInstanceElement.layer = 0;
 
             StaticSceneData.StaticData.figureElements[figureNr].figureInstanceElements.Add(thisFigureInstanceElement);
@@ -1017,7 +1010,7 @@ public class RailManager : MonoBehaviour
             if (oP.objName == railList[currentRailIndex].myObjects[i].objName)
                 currentPosInList = i;
         }
-
+        
         // nachbarn berechnen
         SceneManaging.CalculateNeighbors(railList[currentRailIndex].myObjects);
 
@@ -1038,7 +1031,6 @@ public class RailManager : MonoBehaviour
         {
             Destroy(flyerSpaces[spaceNr].transform.GetChild(1).gameObject);
             flyerSpaces[spaceNr].transform.GetChild(1).SetParent(parentMenue.transform);
-            //Debug.Log("destroy: "+flyerSpaces[spaceNr].transform.GetChild(1).gameObject.name+", child: "+flyerSpaces[spaceNr].transform.GetChild(1).gameObject.name);
         }
 
         // save figure nr 
@@ -1049,7 +1041,6 @@ public class RailManager : MonoBehaviour
 
         RectTransform tmpRectTransform = newCopyOfFigure.GetComponent<RectTransform>();
         newCopyOfFigure.transform.SetParent(flyerSpaces[spaceNr].transform);
-        //Debug.Log("newcopy: " + newCopyOfFigure.name + " ist child von: " + flyerSpaces[spaceNr] + ", child: " + flyerSpaces[spaceNr].transform.GetChild(1).gameObject.name);
         tmpRectTransform.pivot = new Vector2(.5f, .5f);
         tmpRectTransform.anchorMin = new Vector2(.5f, .5f);
         tmpRectTransform.anchorMax = new Vector2(.5f, .5f);
@@ -1057,9 +1048,6 @@ public class RailManager : MonoBehaviour
         tmpRectTransform.anchoredPosition = Vector2.zero;
         newCopyOfFigure.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(39, 39);
         tmpRectTransform.localScale = Vector2.one;
-
-        // color field
-        //flyerSpaces[spaceNr].GetComponent<Image>().color = new Color(.63f, .25f, .1f);
     }
     public void ResetScreenSize()       // this probably has to be called globally, so that every Menue resizes (probably in the UIController). At the moment it is only scaled properly when rail tab is open e.g.
     {
@@ -1832,6 +1820,7 @@ public class RailManager : MonoBehaviour
                     else
                     {
                         GameObject curr3DObject = CreateNew2DInstance(currentClickedObjectIndex, getMousePos.x, -1, -1, false);
+                        //Debug.Log("figure: " + railList[currentRailIndex].myObjects[currentClickedObjectIndex]);
                         ///////////////////////////////////////////////////////////////////////////////////////////////////////
                         // Save to SceneData:
                         FigureInstanceElement thisFigureInstanceElement = new FigureInstanceElement();

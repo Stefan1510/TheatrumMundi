@@ -109,8 +109,6 @@ public class SceneDataController : MonoBehaviour
         sceneData.backgroundPositions = new List<BackgroundPosition>();
         sceneData.musicClipElements = new List<MusicClipElement>();
 
-
-
         //scenery aka kulissen
         foreach (GameObject objectSceneryElement in objectsSceneryElements)
         {
@@ -426,11 +424,5 @@ public class SceneDataController : MonoBehaviour
     {
         SceneData sceneData = JsonUtility.FromJson<SceneData>(JsonData);
         return sceneData;
-    }
-
-    public void TestThisStuff()
-    {
-        //recentSceneData = CreateSceneData();
-        CreateScene(recentSceneData);
     }
 }

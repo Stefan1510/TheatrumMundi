@@ -78,7 +78,7 @@ public class SetLightColors : MonoBehaviour
         ButtonClick(_savedButtonColor);
     }
 
-    void ChangeLightColor()
+    public void ChangeLightColor()
     {
         float TimeNow = AnimationTimer.GetTime();
         int _listLength = StaticSceneData.StaticData.lightingSets.Count;
