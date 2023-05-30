@@ -44,7 +44,7 @@ public class LightAnimationRepresentation : MonoBehaviour
 
     public void ChangeImage()
     {
-        Debug.Log("change image");
+        //Debug.Log("change image");
         if(!SceneManaging.sceneChanged) SceneManaging.sceneChanged = true;
         _maxTime = AnimationTimer.GetMaxTime();
         //Debug.Log("max: "+_maxTime);
@@ -94,7 +94,7 @@ public class LightAnimationRepresentation : MonoBehaviour
 
     public void UpdateKnobPositions()
     {
-        Debug.Log("update knob pos");
+        //Debug.Log("update knob pos");
         foreach (Image image in _imagePositionKnobCollection)
         {
             Destroy(image.gameObject);

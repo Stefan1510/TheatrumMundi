@@ -71,22 +71,17 @@ public class SaveFileController : MonoBehaviour
         loadFromAwake = true;
 
         _directorySaves = "Saves";
-        if (_isWebGl)
-        {
-            StartCoroutine(LoadFileFromWWW("*Musterszene_leer_Visitor.json", "fromCode"));
-            // StartCoroutine(LoadFilesFromServer(false, "", true));
-        }
-        else
-        {
-            StartCoroutine(LoadFilesFromServer(false, "", true));
-            //ShowFilesFromDirectory();
-        }
-        //menuKulissen.SetActive(true);
-        if (!this.GetComponent<UnitySwitchExpertUser>()._isExpert)
+        if (_isWebGl)   // bescucher / web version
         {
             panelWarningInput = panelWarningInputVisitor;
             _loadSaveNew = 0;
-            //textShowCode = text
+            StartCoroutine(LoadFileFromWWW("*Musterszene_leer_Visitor.json", "fromCode"));
+        }
+        else    // expertenversion
+        {
+            Debug.Log("exp");
+            StartCoroutine(LoadFilesFromServer(false, "", true));
+            //ShowFilesFromDirectory();
         }
     }
     private void Update()
@@ -311,7 +306,7 @@ public class SaveFileController : MonoBehaviour
             StartCoroutine(LoadFilesFromServer(false, "", false));
         }
     }
-    public void LoadSceneFromFile(string fileName, bool fromCode)
+    public void LoadSceneFromFile(string fileName, bool fromCode, Button fileButtonInstance)
     {
         SceneManaging.isPreviewLoaded = false;
         if (fileName.Substring(0, fileName.Length - 5) != StaticSceneData.StaticData.fileName)
@@ -326,13 +321,25 @@ public class SaveFileController : MonoBehaviour
 
         if (_isWebGl)
         {
-            if (fromCode) StartCoroutine(LoadFileFromWWW(fileName, "fromCode"));//true, false));
-            else StartCoroutine(LoadFileFromWWW(fileName, ""));
+            if (fromCode)
+                StartCoroutine(LoadFileFromWWW(fileName, "fromCode"));
+            else
+            {
+                StartCoroutine(LoadFileFromWWW(fileName, ""));
+            }
         }
         else
         {
-            if (fromCode) StartCoroutine(LoadFileFromWWW(fileName, "fromCode"));            // LoadFileFromDirectory(fileName);
-            else StartCoroutine(LoadFileFromWWW(fileName, ""));
+            if (fromCode)
+                StartCoroutine(LoadFileFromWWW(fileName, "fromCode"));        // LoadFileFromDirectory(fileName);
+            else
+            {
+                StartCoroutine(LoadFileFromWWW(fileName, ""));
+                if (fileButtonInstance != null)
+                {
+                    fileButtonInstance.GetComponent<Button>().image.color = new Color32(64, 192, 16, 192);
+                }
+            }
 
         }
     }
@@ -353,7 +360,8 @@ public class SaveFileController : MonoBehaviour
                 SceneManaging.isPreviewLoaded = true;
             }
         }
-        if (isPermamentScene) fileButtonInstance.GetComponentInChildren<Text>().text = fileName.Substring(0, fileName.Length - 5);
+        if (isPermamentScene)
+            fileButtonInstance.GetComponentInChildren<Text>().text = fileName.Substring(0, fileName.Length - 5);
         else
         {
             string[] x = fileName.Split('.');
@@ -361,7 +369,7 @@ public class SaveFileController : MonoBehaviour
             fileButtonInstance.GetComponentInChildren<Text>().text = x[0].Substring(6);
         }
         fileButtonInstance.gameObject.SetActive(true);
-        fileButtonInstance.onClick.AddListener(() => LoadSceneFromFile(fileName, false));
+        fileButtonInstance.onClick.AddListener(() => LoadSceneFromFile(fileName, false, fileButtonInstance));
         _buttonsFileList.Add(fileButtonInstance);
     }
     public void ShowInputFieldForCode()
@@ -420,6 +428,7 @@ public class SaveFileController : MonoBehaviour
         string line = www.text;
         string[] arr = line.Split('?');
         bool found = false;
+        Debug.Log("arr: " + line);
 
         //TODO: fuer besucherversion: wenn eintrag gleich eingegebener name
 
@@ -458,7 +467,7 @@ public class SaveFileController : MonoBehaviour
                                     else
                                     {
                                         ClearFileButtons();
-                                        LoadSceneFromFile(fileEntry, true);
+                                        LoadSceneFromFile(fileEntry, true,null);
                                         loadedFiles += fileEntry + ",";
                                     }
                                     found = true;
@@ -468,7 +477,7 @@ public class SaveFileController : MonoBehaviour
                                 else
                                 {
                                     ClearFileButtons();
-                                    LoadSceneFromFile(fileEntry, true);
+                                    LoadSceneFromFile(fileEntry, true,null);
                                     loadedFiles += fileEntry + ",";
                                     found = true;
                                     ClosePanelShowCode(_visitorPanelSave);
@@ -477,7 +486,7 @@ public class SaveFileController : MonoBehaviour
                             else
                             {
                                 ClearFileButtons();
-                                LoadSceneFromFile(fileEntry, true);
+                                LoadSceneFromFile(fileEntry, true,null);
                                 found = true;
                                 ClosePanelShowCode(_visitorPanelSave);
                             }
@@ -492,31 +501,34 @@ public class SaveFileController : MonoBehaviour
                 }
             }
         }
-        else
-        {
-            ClearFileButtons();
-            string[] separators = new string[] { "," };
 
-            foreach (string fileEntry in arr)
+        ClearFileButtons();
+        string[] separators = new string[] { "," };
+
+        foreach (string fileEntry in arr)
+        {
+            if (fileEntry.Length > 4)
             {
-                if (fileEntry.Length > 4)
+                if (fileEntry.Substring(0, 1) == "*")
                 {
-                    if (fileEntry.Substring(0, 1) == "*") GenerateFileButton(fileEntry, true);
-                    else if (!string.IsNullOrEmpty(loadedFiles))
+                    GenerateFileButton(fileEntry, true);
+                }
+                else if (!string.IsNullOrEmpty(loadedFiles))
+                {
+                    string[] x = fileEntry.Split('.');
+                    foreach (var word in loadedFiles.Split(separators, System.StringSplitOptions.RemoveEmptyEntries))
                     {
-                        string[] x = fileEntry.Split('.');
-                        foreach (var word in loadedFiles.Split(separators, System.StringSplitOptions.RemoveEmptyEntries))
+                        if (fileEntry == word)
                         {
-                            if (fileEntry == word)
-                            {
-                                GenerateFileButton(fileEntry, false);
-                            }
+                            Debug.Log("fileentry: " + fileEntry);
+                            GenerateFileButton(fileEntry, false);
                         }
                     }
                 }
-
             }
+
         }
+
         if (fromAwake && !SceneManaging.isExpert)
         {
             StartCoroutine(LoadFileFromWWW("*Musterszene_leer_Visitor.json", "fromCode"));
@@ -613,7 +625,7 @@ public class SaveFileController : MonoBehaviour
         else if (status == "fromFlyerCreate")
         {
             LoadSceneFromTempToStatic();
-            
+
             // tmpLightAnimRep.ChangeImage();
             // tmpSetLightCol.ChangeLightColor();
             // tmpSetLightCol.ChangeAnimationLightIntensity();
