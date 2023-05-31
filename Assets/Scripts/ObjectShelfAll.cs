@@ -239,13 +239,9 @@ public class ObjectShelfAll : MonoBehaviour
         }
         if (panelPreviewNotLoaded.GetComponent<WarningPanelLoad>().buttonClicked == "ignore")
         {
-            Debug.Log("hier?");
-
         }
         else if (panelPreviewNotLoaded.GetComponent<WarningPanelLoad>().buttonClicked == "back")
         {
-            Debug.Log("hier?");
-
             shelfNumber = 4;
         }
 

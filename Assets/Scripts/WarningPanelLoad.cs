@@ -5,8 +5,6 @@ using UnityEngine.UI;
 
 public class WarningPanelLoad : MonoBehaviour
 {
-    // Start is called before the first frame update
-
     [SerializeField] private Button _buttonIgnore;
     [SerializeField] private Button _buttonBack;
     [HideInInspector] public string buttonClicked;
@@ -25,7 +23,6 @@ public class WarningPanelLoad : MonoBehaviour
         gameObject.SetActive(true);
         while (buttonClicked == null)
         {
-            Debug.Log("was ist das?");
             yield return null;
         }
         isButtonClicked = true;
@@ -65,26 +62,10 @@ public class WarningPanelLoad : MonoBehaviour
     {
         gameObject.SetActive(true);
         StartCoroutine(GetIgnoreIEnum());
-        //while (_buttonClicked==null)
-        //{
-
-        //}
         Debug.LogWarning("============== Boink ==============");
     }
-
-    //public void SetIgnore(bool val)
-    //{
-    //    _ignore = val;
-    //}
-
     void Start()
     {
         gameObject.SetActive(false);
     }
-
-    // Update is called once per frame
-    //void Update()
-    //{
-
-    //}
 }

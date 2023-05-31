@@ -655,7 +655,7 @@ public class RailManager : MonoBehaviour
                     {
                         SceneManaging.highlight(railList[i].myObjects[j].figure3D, railList[i].myObjects[j].figure, false, "figure");
                         railList[i].myObjects[j].figure.GetComponent<BoxCollider2D>().enabled = false;
-                        Debug.Log("figur: " + railList[i].myObjects[j].objName);
+                        //Debug.Log("figur: " + railList[i].myObjects[j].objName);
                     }
                 }
             }
@@ -861,7 +861,7 @@ public class RailManager : MonoBehaviour
         //add object to list which objects are on timeline, set placed figures to timelineInstanceObjects-list
         newCopyOfFigure.transform.SetParent(rails[currentRailIndex].transform);
         newCopyOfFigure.transform.localScale = Vector3.one;
-
+        tmpRectTransform.anchoredPosition = new Vector2(tmpRectTransform.anchoredPosition.x/screenDifference.x,tmpRectTransform.anchoredPosition.y);
         Figure oP = new Figure();
         oP.objName = newCopyOfFigure.name;
         oP.position = new Vector2(tmpRectTransform.anchoredPosition.x, tmpRectTransform.sizeDelta.x);
@@ -1010,7 +1010,7 @@ public class RailManager : MonoBehaviour
             if (oP.objName == railList[currentRailIndex].myObjects[i].objName)
                 currentPosInList = i;
         }
-        
+
         // nachbarn berechnen
         SceneManaging.CalculateNeighbors(railList[currentRailIndex].myObjects);
 
@@ -1584,7 +1584,7 @@ public class RailManager : MonoBehaviour
             {
                 if (hitTimelineOld != hitTimeline)
                 {
-                    Debug.Log("hittimeline: " + hitTimeline);
+                    //Debug.Log("hittimeline: " + hitTimeline);
                     hitTimelineOld = hitTimeline;
                     openTimelineByDrag(hitTimeline);
 

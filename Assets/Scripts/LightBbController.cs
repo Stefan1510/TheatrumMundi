@@ -26,7 +26,7 @@ public class LightBbController : MonoBehaviour
     {
         thisLightElement.active = onOffSwitch;
         GetComponent<Light>().enabled = onOffSwitch;
-        Debug.Log("this: "+this.name);
+        //Debug.Log("this: "+this.name);
         //gameController.GetComponent<SceneDataController>().LightsApplyToScene(StaticSceneData.StaticData.lightElements);
         //StaticSceneData.Lights3D();
         if (onOffSwitch)

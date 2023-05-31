@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using TMPro;
+using System;
 
 public class TimeSliderController : MonoBehaviour, IPointerUpHandler, IDragHandler
 {
@@ -33,7 +34,6 @@ public class TimeSliderController : MonoBehaviour, IPointerUpHandler, IDragHandl
         SwitchKeyConfigControls(false);
         ChangeControlsFromTimelineSelection();
     }
-
     void Update()
     {
         _thisSlider.value = AnimationTimer.GetTime();
@@ -49,17 +49,14 @@ public class TimeSliderController : MonoBehaviour, IPointerUpHandler, IDragHandl
             ChangeControlsFromTimelineSelection();
         }
     }
-
     public void OnPointerUp(PointerEventData data)
     {
         SceneManaging.updateMusic = false;
     }
-
     public void OnDrag(PointerEventData data)
     {
         SceneManaging.updateMusic = true;
     }
-
     public void UpdateTimeSlider()
     {
         //Debug.Log("value: " + _thisSlider.value);
@@ -70,13 +67,11 @@ public class TimeSliderController : MonoBehaviour, IPointerUpHandler, IDragHandl
             //Debug.Log("value: "+value);
         }
     }
-
     void SwitchKeyConfigControls(bool value)
     {
         _panelControls.SetActive(value);
         //Debug.LogWarning("_toggleKeyConfigControlls " + value);
     }
-
     void ChangeControlsFromTimelineSelection()
     {
         _panelRailSpeedControls.SetActive(false);
@@ -127,11 +122,33 @@ public class TimeSliderController : MonoBehaviour, IPointerUpHandler, IDragHandl
     }
     public void ChangeMaxLength()
     {
+        //Figuren neu berechnen (moment berechnen)
+        for (int i = 0; i < tmpRailManager.railList.Length; i++)
+        {
+            for (int j = 0; j < tmpRailManager.railList[i].myObjects.Count; j++)
+            {
+                for (int k = 0; k < StaticSceneData.StaticData.figureElements[Int32.Parse(tmpRailManager.railList[i].myObjects[j].figure.name.Substring(6, 2)) - 1].figureInstanceElements.Count; k++)
+                {
+                    //Debug.Log("name: "+StaticSceneData.StaticData.figureElements[Int32.Parse(tmpRailManager.railList[i].myObjects[j].figure.name.Substring(6, 2)) - 1].figureInstanceElements[k].name+", name2: "+tmpRailManager.railList[i].myObjects[j].figure.name);
+                    if (StaticSceneData.StaticData.figureElements[Int32.Parse(tmpRailManager.railList[i].myObjects[j].figure.name.Substring(6, 2)) - 1].figureInstanceElements[k].instanceNr == int.Parse(tmpRailManager.railList[i].myObjects[j].figure.name.Substring(16)))
+                    {
+                        Debug.Log("figure: " + StaticSceneData.StaticData.figureElements[Int32.Parse(tmpRailManager.railList[i].myObjects[j].figure.name.Substring(6, 2)) - 1].figureInstanceElements[k].name + ", moment: " + StaticSceneData.StaticData.figureElements[Int32.Parse(tmpRailManager.railList[i].myObjects[j].figure.name.Substring(6, 2)) - 1].figureInstanceElements[k].moment);
+                        float tmpMoment = StaticSceneData.StaticData.figureElements[Int32.Parse(tmpRailManager.railList[i].myObjects[j].figure.name.Substring(6, 2)) - 1].figureInstanceElements[k].moment;
+                        float posX = UtilitiesTm.FloatRemap(tmpMoment,0,_sliderMaxLength.value*60,0,1670.4f);
+                        tmpRailManager.railList[i].myObjects[j].position = new Vector2(posX,tmpRailManager.railList[i].myObjects[j].position.y);
+                        tmpRailManager.railList[i].myObjects[j].figure.GetComponent<RectTransform>().anchoredPosition = new Vector2(tmpRailManager.railList[i].myObjects[j].position.x,tmpRailManager.railList[i].myObjects[j].figure.GetComponent<RectTransform>().anchoredPosition.y);
+                    }
+                }
+                //Debug.Log("figure: "+tmpRailManager.railList[i].myObjects[j].figure+", moment: "+tmpRailManager.railList[i].myObjects[j].position);
+                //float moment = float moment = UtilitiesTm.FloatRemap((tmpRectTransform.anchoredPosition.x), 0, railwidthAbsolute, 0, AnimationTimer.GetMaxTime());
+            }
+        }
         //Debug.Log("value: " + (_sliderMaxLength.value));
         tmpAnimTimer.SetMaxTime(60 * _sliderMaxLength.value);
         _inputSliderLength.text = _sliderMaxLength.value.ToString("0");
         GetComponent<Slider>().maxValue = (60 * _sliderMaxLength.value);
         StaticSceneData.StaticData.pieceLength = 60 * int.Parse(_inputSliderLength.text);
+
     }
     public void PressInfoButton(bool on)
     {
