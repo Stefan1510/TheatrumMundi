@@ -669,10 +669,6 @@ public class SaveFileController : MonoBehaviour
         {
             LoadSceneFromTempToStatic();
 
-            // tmpLightAnimRep.ChangeImage();
-            // tmpSetLightCol.ChangeLightColor();
-            // tmpSetLightCol.ChangeAnimationLightIntensity();
-
             if (SceneManaging.flyerSpace[0] != -1)  // schlange
             {
                 contentMenueRails.CreateNew2DInstance(SceneManaging.flyerSpace[0], 10, 0, 0, true);
@@ -731,7 +727,8 @@ public class SaveFileController : MonoBehaviour
             flyer.SetActive(false);
             SceneManaging.flyerActive = false;
             contentMenueRails.currentRailIndex = 0;
-
+            contentMenueRails.Update3DFigurePositions();
+            contentMenueRails.openCloseObjectInTimeline(contentMenueRails.railList[0].myObjects,0,false);
         }
         else if (status == "fromFlyerDelete")
         {

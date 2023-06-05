@@ -36,8 +36,6 @@ public static class SceneManaging
     #endregion
     public static void createRectangle(GameObject obj, Color col, double rectHeight, GameObject prefab, double tmpLength)
     {
-        Debug.Log("rect erstellt");
-        //double tmpLength = rectSize;//calcSecondsToPixel(objectAnimationLength, maxTimeInSec) / 2 + 25;
         GameObject imgObject = prefab;
         RectTransform trans = imgObject.GetComponent<RectTransform>();
         trans.SetParent(obj.transform); // setting parent

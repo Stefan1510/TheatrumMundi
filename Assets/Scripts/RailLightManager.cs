@@ -33,7 +33,7 @@ public class RailLightManager : MonoBehaviour
                 contentRailsMenue.rails[i].GetComponent<RectTransform>().sizeDelta = new Vector2(timelineImage.rectTransform.rect.width, heightClosed / gameObject.transform.lossyScale.x);
                 contentRailsMenue.rails[i].GetComponent<BoxCollider2D>().size = new Vector2(timelineImage.GetComponent<BoxCollider2D>().size.x, heightClosed / gameObject.transform.lossyScale.x);
                 contentRailsMenue.railList[i].isTimelineOpen = false;
-                contentRailsMenue.openCloseObjectInTimeline(false, contentRailsMenue.railList[i].myObjects, i);
+                contentRailsMenue.openCloseObjectInTimeline(contentRailsMenue.railList[i].myObjects, i,true);
                 for (int j = 0; j < contentRailsMenue.railList[i].myObjects.Count; j++)
                 {
                     SceneManaging.highlight(contentRailsMenue.railList[i].myObjects[j].figure3D, contentRailsMenue.railList[i].myObjects[j].figure, false, "figure");
