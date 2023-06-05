@@ -17,6 +17,10 @@ public class TimeSliderController : MonoBehaviour, IPointerUpHandler, IDragHandl
     [SerializeField] private TMP_InputField _inputSliderLength;
     [SerializeField] private AnimationTimer tmpAnimTimer;
     [SerializeField] private RailManager tmpRailManager;
+    [SerializeField] private RailSpeedController tmpRailSpeedContr;
+    [SerializeField] private RailMusicManager tmpRailMusicManager;
+    [SerializeField] private LightAnimationRepresentation tmpLightAnim;
+    private float railwidthAbsolute = 1670.4f;
 
     private Slider _thisSlider;
     void Start()
@@ -127,28 +131,30 @@ public class TimeSliderController : MonoBehaviour, IPointerUpHandler, IDragHandl
         {
             for (int j = 0; j < tmpRailManager.railList[i].myObjects.Count; j++)
             {
-                for (int k = 0; k < StaticSceneData.StaticData.figureElements[Int32.Parse(tmpRailManager.railList[i].myObjects[j].figure.name.Substring(6, 2)) - 1].figureInstanceElements.Count; k++)
-                {
-                    //Debug.Log("name: "+StaticSceneData.StaticData.figureElements[Int32.Parse(tmpRailManager.railList[i].myObjects[j].figure.name.Substring(6, 2)) - 1].figureInstanceElements[k].name+", name2: "+tmpRailManager.railList[i].myObjects[j].figure.name);
-                    if (StaticSceneData.StaticData.figureElements[Int32.Parse(tmpRailManager.railList[i].myObjects[j].figure.name.Substring(6, 2)) - 1].figureInstanceElements[k].instanceNr == int.Parse(tmpRailManager.railList[i].myObjects[j].figure.name.Substring(16)))
-                    {
-                        Debug.Log("figure: " + StaticSceneData.StaticData.figureElements[Int32.Parse(tmpRailManager.railList[i].myObjects[j].figure.name.Substring(6, 2)) - 1].figureInstanceElements[k].name + ", moment: " + StaticSceneData.StaticData.figureElements[Int32.Parse(tmpRailManager.railList[i].myObjects[j].figure.name.Substring(6, 2)) - 1].figureInstanceElements[k].moment);
-                        float tmpMoment = StaticSceneData.StaticData.figureElements[Int32.Parse(tmpRailManager.railList[i].myObjects[j].figure.name.Substring(6, 2)) - 1].figureInstanceElements[k].moment;
-                        float posX = UtilitiesTm.FloatRemap(tmpMoment,0,_sliderMaxLength.value*60,0,1670.4f);
-                        tmpRailManager.railList[i].myObjects[j].position = new Vector2(posX,tmpRailManager.railList[i].myObjects[j].position.y);
-                        tmpRailManager.railList[i].myObjects[j].figure.GetComponent<RectTransform>().anchoredPosition = new Vector2(tmpRailManager.railList[i].myObjects[j].position.x,tmpRailManager.railList[i].myObjects[j].figure.GetComponent<RectTransform>().anchoredPosition.y);
-                    }
-                }
-                //Debug.Log("figure: "+tmpRailManager.railList[i].myObjects[j].figure+", moment: "+tmpRailManager.railList[i].myObjects[j].position);
-                //float moment = float moment = UtilitiesTm.FloatRemap((tmpRectTransform.anchoredPosition.x), 0, railwidthAbsolute, 0, AnimationTimer.GetMaxTime());
+                RectTransform tmpRectTransform = tmpRailManager.railList[i].myObjects[j].figure.GetComponent<RectTransform>();
+                float tmpMoment = UtilitiesTm.FloatRemap(tmpRailManager.railList[i].myObjects[j].position.x, 0, railwidthAbsolute, 0, AnimationTimer.GetMaxTime());
+                float objectAnimationLength = tmpRailSpeedContr.GetEndTimeFromStartTime(tmpMoment);
+                float rectSize = objectAnimationLength / (60 * _sliderMaxLength.value) * railwidthAbsolute;
+                float posX = UtilitiesTm.FloatRemap(tmpMoment, 0, _sliderMaxLength.value * 60, 0, railwidthAbsolute);
+
+                tmpRailManager.railList[i].myObjects[j].figure.GetComponent<RectTransform>().sizeDelta = new Vector2(rectSize, tmpRailManager.railList[i].myObjects[j].figure.GetComponent<RectTransform>().sizeDelta.y);
+                tmpRailManager.railList[i].myObjects[j].figure.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(rectSize, tmpRailManager.railList[i].myObjects[j].figure.GetComponent<RectTransform>().sizeDelta.y);
+                tmpRailManager.railList[i].myObjects[j].figure.GetComponent<RectTransform>().anchoredPosition = new Vector2(posX, tmpRailManager.railList[i].myObjects[j].figure.GetComponent<RectTransform>().anchoredPosition.y);
+
+                tmpRailManager.railList[i].myObjects[j].position = new Vector2(posX, rectSize);
             }
         }
-        //Debug.Log("value: " + (_sliderMaxLength.value));
+
         tmpAnimTimer.SetMaxTime(60 * _sliderMaxLength.value);
         _inputSliderLength.text = _sliderMaxLength.value.ToString("0");
         GetComponent<Slider>().maxValue = (60 * _sliderMaxLength.value);
         StaticSceneData.StaticData.pieceLength = 60 * int.Parse(_inputSliderLength.text);
 
+        // update music
+        //tmpRailMusicManager.
+
+        // update light
+        tmpLightAnim.ChangeImage();
     }
     public void PressInfoButton(bool on)
     {
@@ -164,6 +170,5 @@ public class TimeSliderController : MonoBehaviour, IPointerUpHandler, IDragHandl
         GetComponent<Slider>().maxValue = (60 * _sliderMaxLength.value);
         StaticSceneData.StaticData.pieceLength = 60 * int.Parse(_inputSliderLength.text);
         GetComponent<Slider>().maxValue = 60 * _sliderMaxLength.value;
-        tmpRailManager.recalculateLengthOfFigures();
     }
 }
