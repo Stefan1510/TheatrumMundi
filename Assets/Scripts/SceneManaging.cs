@@ -22,6 +22,10 @@ public static class SceneManaging
     public static bool flyerActive;
     public static int[] flyerSpace = new int[11];
     public static bool tutorialActive;
+    public static bool saveDialogActive;
+    public static bool aboutActive;
+    public static bool dialogActive;
+    public static bool railLengthDialogActive;
     //timeslider
     public static bool fullscreenOn = false;
     private static Color _colFigure = new Color(0.06f, 0.66f, .74f, 0.5f);

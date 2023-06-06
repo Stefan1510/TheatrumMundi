@@ -21,8 +21,12 @@ public class Flyer : MonoBehaviour
     }
     public void OnClickStartFlyer()
     {
-        // Warning current scene will be deleted
-        warningPanel.SetActive(true);
+        if (!SceneManaging.tutorialActive && !SceneManaging.saveDialogActive && !SceneManaging.railLengthDialogActive && !SceneManaging.flyerActive)
+        {
+            // Warning current scene will be deleted
+            warningPanel.SetActive(true);
+            SceneManaging.dialogActive = true;
+        }
     }
     public void ClickCancel()
     {
@@ -34,22 +38,26 @@ public class Flyer : MonoBehaviour
         //Debug.Log("hier");
         StartCoroutine(tmpFileController.LoadFileFromWWW("Musterszene_Kulissen.json", "fromFlyerCreate"));
         // StartCoroutine(tmpFileController.LoadFileFromWWW("Musterszene_Kulissen.json", "fromFlyerCreate"));
+        SceneManaging.flyerActive = false;
     }
     public void OnClickWarning(bool cancel)
     {
         //back to normal mode
         if (cancel)
         {
+            SceneManaging.dialogActive = false;
             warningPanel.SetActive(false);
         }
 
         // open flyer
         else
         {
+            SceneManaging.dialogActive = false;
+
             // disable 'figures in schiene ziehen' in Rail Manager
-            SceneManaging.flyerActive = true;
             objShelfAll.ButtonShelf05(false);
             gameObject.SetActive(true);
+            SceneManaging.flyerActive = true;
 
             // load new scene
             StartCoroutine(tmpFileController.LoadFileFromWWW("*Musterszene_leer_Visitor.json", "fromFlyerDelete"));
@@ -65,10 +73,10 @@ public class Flyer : MonoBehaviour
                     _flyerSpaces[i].GetComponent<Image>().color = new Color(.78f, .54f, .44f);
                     SceneManaging.flyerSpace[i] = -1;
                 }
-            //destroy borders
-            _flyerSpaces[i].transform.GetChild(0).gameObject.SetActive(false);
+                //destroy borders
+                _flyerSpaces[i].transform.GetChild(0).gameObject.SetActive(false);
             }
-            
+
         }
     }
 }

@@ -440,6 +440,7 @@ public class SaveFileController : MonoBehaviour
     {
         panel.SetActive(false);
         ResetTabs(0);
+        SceneManaging.saveDialogActive = false;
     }
     private void ClearFileButtons()
     {
@@ -728,7 +729,7 @@ public class SaveFileController : MonoBehaviour
             SceneManaging.flyerActive = false;
             contentMenueRails.currentRailIndex = 0;
             contentMenueRails.Update3DFigurePositions();
-            contentMenueRails.openCloseObjectInTimeline(contentMenueRails.railList[0].myObjects,0,false);
+            contentMenueRails.openCloseObjectInTimeline(contentMenueRails.railList[0].myObjects, 0, false);
         }
         else if (status == "fromFlyerDelete")
         {
@@ -791,8 +792,12 @@ public class SaveFileController : MonoBehaviour
     }
     public void SaveVisitorVersion()
     {
-        _visitorPanelSave.SetActive(true);
-        _loadSaveNew = 0;
+        if (!SceneManaging.tutorialActive && !SceneManaging.aboutActive && !SceneManaging.railLengthDialogActive && !SceneManaging.dialogActive)
+        {
+            _visitorPanelSave.SetActive(true);
+            _loadSaveNew = 0;
+            SceneManaging.saveDialogActive = true;
+        }
     }
     public void OnClickNewScene()
     {
@@ -855,13 +860,8 @@ public class SaveFileController : MonoBehaviour
         _borderLoad.SetActive(false);
         panelWarningInput.SetActive(false);
         _placeholderTextWarning.color = new Color(.2f, .2f, .2f, 0.27f);
-        //_placeholderTextLoadWarning.color = new Color(.2f, .2f, .2f, 0.27f);
 
         _textSaveInputName.text = "Bitte schreibe dir deinen Code auf: ";
-        //_inputFieldSaveName.GetComponent<InputField>().enabled = true;
-        //_inputFieldSaveName.GetComponent<Image>().color = col_white; 
-        //_inputFieldSaveName.transform.GetChild(2).GetComponent<Text>().text = "";
-        //_placeholderTextWarning.text = "Szenen-Name";
 
         _dialogNewScene.SetActive(false);
         _dialogLoadCode.SetActive(false);

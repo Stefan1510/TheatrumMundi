@@ -86,101 +86,112 @@ public class PressHelp : MonoBehaviour
     {
         if (i == 0) // help
         {
-            //Debug.Log("pressed: " + pressed);
-            if (pressed)
+            if (!SceneManaging.aboutActive && !SceneManaging.saveDialogActive && !SceneManaging.railLengthDialogActive && !SceneManaging.dialogActive)
             {
-                helpOverlayMenue1.SetActive(false);
-                helpOverlayMenue2.SetActive(false);
-                helpOverlayMenue3.SetActive(false);
-                helpOverlayMenue4.SetActive(false);
-                helpOverlayMenue5.SetActive(false);
-                helpOverlayMenue6.SetActive(false);
-                helpButtonPressed.SetActive(false);
-                pressed = false;
+                //Debug.Log("pressed: " + pressed);
+                if (pressed)
+                {
+                    helpOverlayMenue1.SetActive(false);
+                    helpOverlayMenue2.SetActive(false);
+                    helpOverlayMenue3.SetActive(false);
+                    helpOverlayMenue4.SetActive(false);
+                    helpOverlayMenue5.SetActive(false);
+                    helpOverlayMenue6.SetActive(false);
+                    helpButtonPressed.SetActive(false);
+                    pressed = false;
 
-                maskTimeSlider.SetActive(false);
-                _tutorialCounter = -1;
-                tutorialCountImage.SetActive(false);
-                SceneManaging.tutorialActive = false;
+                    maskTimeSlider.SetActive(false);
+                    _tutorialCounter = -1;
+                    tutorialCountImage.SetActive(false);
+                    SceneManaging.tutorialActive = false;
+                }
+
+                else
+                {
+                    helpButtonPressed.SetActive(true);
+                    if (SceneManaging.flyerActive)  // theaterzettel
+                    {
+                        helpOverlayFlyer.SetActive(true);
+                        _tutorialCounter = 1;
+                        helpOverlayFlyer.transform.GetChild(0).gameObject.SetActive(true);
+                        _publicHelpMenue = helpOverlayFlyer;
+                    }
+                    else if (SceneManaging.mainMenuActive == 1 && SceneManaging.configMenueActive == 1)  // Buehne
+                    {
+                        helpOverlayMenue1.SetActive(true);
+                        _tutorialCounter = 1;
+                        _publicHelpMenue = helpOverlayMenue1;
+                        helpOverlayMenue1.transform.GetChild(0).gameObject.SetActive(true);
+                    }
+                    else if (SceneManaging.mainMenuActive == 2 && SceneManaging.directorMenueActive == 1)   // Figuren
+                    {
+                        // Debug.Log("hier");
+                        helpOverlayMenue5.SetActive(true);
+                        _tutorialCounter = 1;
+                        helpOverlayMenue5.transform.GetChild(0).gameObject.SetActive(true);
+                        _publicHelpMenue = helpOverlayMenue5;
+                        _timeSliderBubble = timeSliderBubbleFigure;
+                    }
+                    else if (SceneManaging.mainMenuActive == 1 && SceneManaging.configMenueActive == 2)    // kulissen
+                    {
+                        helpOverlayMenue2.SetActive(true);
+                        _publicHelpMenue = helpOverlayMenue2;
+                        _tutorialCounter = 1;
+                        helpOverlayMenue2.transform.GetChild(0).gameObject.SetActive(true);
+
+                    }
+                    /*else if (SceneManaging.mainMenuActive == 2 && SceneManaging.directorMenueActive == 2)    // (light director) verworfen
+                    {
+                        helpOverlayMenue2.SetActive(true);
+                        Debug.Log("overlay 6");
+                    }*/
+                    else if (SceneManaging.mainMenuActive == 1 && SceneManaging.configMenueActive == 3)  // licht
+                    {
+                        helpOverlayMenue3.SetActive(true);
+                        _publicHelpMenue = helpOverlayMenue3;
+                        helpOverlayMenue3.transform.GetChild(0).gameObject.SetActive(true);
+                        _tutorialCounter = 1;
+                    }
+                    else if (SceneManaging.directorMenueActive == 3 && SceneManaging.mainMenuActive == 2)  // musik
+                    {
+                        helpOverlayMenue6.SetActive(true);
+                        _publicHelpMenue = helpOverlayMenue6;
+                        _tutorialCounter = 1;
+                        helpOverlayMenue6.transform.GetChild(0).gameObject.SetActive(true);
+                        _timeSliderBubble = timeSliderBubbleMusic;
+                    }
+                    else if (SceneManaging.configMenueActive == 4)  // speichern
+                    {
+                        helpOverlayMenue4.SetActive(true);
+                        _publicHelpMenue = helpOverlayMenue4;
+                        helpOverlayMenue4.transform.GetChild(0).gameObject.SetActive(true);
+                        _tutorialCounter = 1;
+                    }
+                    tutorialCountImage.SetActive(true);
+                    tutText.text = "Hinweis " + _tutorialCounter + "/" + _publicHelpMenue.transform.childCount;
+                    SceneManaging.tutorialActive = true;
+                    pressed = true;
+                    //Debug.Log("true");
+                }
             }
-
-            else
-            {
-                helpButtonPressed.SetActive(true);
-                if (SceneManaging.flyerActive)  // theaterzettel
-                {
-                    helpOverlayFlyer.SetActive(true);
-                    _tutorialCounter = 1;
-                    helpOverlayFlyer.transform.GetChild(0).gameObject.SetActive(true);
-                    _publicHelpMenue = helpOverlayFlyer;
-                }
-                else if (SceneManaging.mainMenuActive == 1 && SceneManaging.configMenueActive == 1)  // Buehne
-                {
-                    helpOverlayMenue1.SetActive(true);
-                    _tutorialCounter = 1;
-                    _publicHelpMenue = helpOverlayMenue1;
-                    helpOverlayMenue1.transform.GetChild(0).gameObject.SetActive(true);
-                }
-                else if (SceneManaging.mainMenuActive == 2 && SceneManaging.directorMenueActive == 1)   // Figuren
-                {
-                    // Debug.Log("hier");
-                    helpOverlayMenue5.SetActive(true);
-                    _tutorialCounter = 1;
-                    helpOverlayMenue5.transform.GetChild(0).gameObject.SetActive(true);
-                    _publicHelpMenue = helpOverlayMenue5;
-                    _timeSliderBubble = timeSliderBubbleFigure;
-                }
-                else if (SceneManaging.mainMenuActive == 1 && SceneManaging.configMenueActive == 2)    // kulissen
-                {
-                    helpOverlayMenue2.SetActive(true);
-                    _publicHelpMenue = helpOverlayMenue2;
-                    _tutorialCounter = 1;
-                    helpOverlayMenue2.transform.GetChild(0).gameObject.SetActive(true);
-
-                }
-                /*else if (SceneManaging.mainMenuActive == 2 && SceneManaging.directorMenueActive == 2)    // (light director) verworfen
-                {
-                    helpOverlayMenue2.SetActive(true);
-                    Debug.Log("overlay 6");
-                }*/
-                else if (SceneManaging.mainMenuActive == 1 && SceneManaging.configMenueActive == 3)  // licht
-                {
-                    helpOverlayMenue3.SetActive(true);
-                    _publicHelpMenue = helpOverlayMenue3;
-                    helpOverlayMenue3.transform.GetChild(0).gameObject.SetActive(true);
-                    _tutorialCounter = 1;
-                }
-                else if (SceneManaging.directorMenueActive == 3 && SceneManaging.mainMenuActive == 2)  // musik
-                {
-                    helpOverlayMenue6.SetActive(true);
-                    _publicHelpMenue = helpOverlayMenue6;
-                    _tutorialCounter = 1;
-                    helpOverlayMenue6.transform.GetChild(0).gameObject.SetActive(true);
-                    _timeSliderBubble = timeSliderBubbleMusic;
-                }
-                else if (SceneManaging.configMenueActive == 4)  // speichern
-                {
-                    helpOverlayMenue4.SetActive(true);
-                    _publicHelpMenue = helpOverlayMenue4;
-                    helpOverlayMenue4.transform.GetChild(0).gameObject.SetActive(true);
-                    _tutorialCounter = 1;
-                }
-                tutorialCountImage.SetActive(true);
-                tutText.text = "Hinweis " + _tutorialCounter + "/" + _publicHelpMenue.transform.childCount;
-                SceneManaging.tutorialActive = true;
-                pressed = true;
-                //Debug.Log("true");
-            }
-
         }
         else if (i == 1) // open about
         {
-            aboutScreen.SetActive(true);
+            if (!SceneManaging.tutorialActive && !SceneManaging.saveDialogActive && !SceneManaging.railLengthDialogActive && !SceneManaging.dialogActive)
+            {
+                aboutScreen.SetActive(true);
+                SceneManaging.aboutActive = true;
+            }
         }
         else // close about
         {
-            aboutScreen.SetActive(false);
+            if (!SceneManaging.tutorialActive &&!SceneManaging.saveDialogActive && !SceneManaging.railLengthDialogActive && !SceneManaging.dialogActive)
+            {
+                aboutScreen.SetActive(false);
+                SceneManaging.aboutActive = false;
+            }
         }
+
     }
     public void ClickOnLiveView()
     {

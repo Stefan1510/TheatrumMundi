@@ -6,6 +6,7 @@ using System;
 
 public class TimeSliderController : MonoBehaviour, IPointerUpHandler, IDragHandler
 {
+    #region variables
     [SerializeField] private Text _textTime;
     [SerializeField] private Text _textMaxTime, _textMaxTimeBigLetters;
     [SerializeField] private Text _textFullScreen;
@@ -21,8 +22,8 @@ public class TimeSliderController : MonoBehaviour, IPointerUpHandler, IDragHandl
     [SerializeField] private RailMusicManager tmpRailMusicManager;
     [SerializeField] private LightAnimationRepresentation tmpLightAnim;
     private float railwidthAbsolute = 1670.4f;
-
     private Slider _thisSlider;
+    #endregion
     void Start()
     {
         // if (SceneManaging.isExpert)
@@ -69,6 +70,12 @@ public class TimeSliderController : MonoBehaviour, IPointerUpHandler, IDragHandl
             //AnimationTimer.SetTime(_thisSlider.value);
             AnimationTimer.SetTime(_thisSlider.value);
             //Debug.Log("value: "+value);
+        }
+        if (tmpRailMusicManager.playingSample)
+        {
+            Debug.Log("hier");
+            tmpRailMusicManager.playingSample = false;
+            tmpRailMusicManager.sampleImages[tmpRailMusicManager.sampleButtonPressed].color = new Color(1, 1, 1, 0);
         }
     }
     void SwitchKeyConfigControls(bool value)

@@ -136,10 +136,11 @@ public class CoulissesManager : MonoBehaviour
                 coulissesOnRails[j].GetComponent<BoxCollider2D>().offset = new Vector2(0, coulissesOnRails[j].GetComponent<RectTransform>().rect.height / 2);
             }
         }
-        if (Input.GetMouseButtonDown(0)) //left mouse button down
+        if (!SceneManaging.tutorialActive && !SceneManaging.aboutActive && !SceneManaging.saveDialogActive && !SceneManaging.railLengthDialogActive && !SceneManaging.flyerActive&& !SceneManaging.dialogActive)
         {
-            if (!SceneManaging.tutorialActive)
+            if (Input.GetMouseButtonDown(0)) //left mouse button down
             {
+
                 // if indexTab is clicked
                 for (int i = 0; i < indexTabs.Length; i++)
                 {
@@ -219,255 +220,256 @@ public class CoulissesManager : MonoBehaviour
                     }
                     StaticSceneData.Sceneries3D(); //CreateScene der SceneryElements
                 }
-            }
-        }
 
-        if (dragging)
-        {
-            if (coulisses[currentObjectIndex].GetComponent<RectTransform>().rect.width == shelfSizeWidth[currentObjectIndex])
-            {
-                coulisses[currentObjectIndex].GetComponent<RectTransform>().sizeDelta = new Vector2(railWidth / 410 * coulisses[currentObjectIndex].GetComponent<CoulisseStats>().CoulisseWidth / coulisses[currentObjectIndex].transform.lossyScale.x, railWidth / 410 * coulisses[currentObjectIndex].GetComponent<CoulisseStats>().CoulisseHeight / coulisses[currentObjectIndex].transform.lossyScale.y);
             }
 
-            if (gameController.GetComponent<UnitySwitchExpertUser>()._isExpert || (!gameController.GetComponent<UnitySwitchExpertUser>()._isExpert && clickCoulisseFromShelf))
+            if (dragging)
             {
-                coulisses[currentObjectIndex].transform.position = new Vector2(getMousePos.x - diff.x, getMousePos.y - diff.y); // diff is difference of mouse position to clicked position on coulisse so that the coulisse doesnt jump to the pivot all the time
-            }
-            else
-            {
-                coulisses[currentObjectIndex].transform.position = new Vector2(getMousePos.x - diff.x, getMousePos.y - diff.y); // diff is difference of mouse position to clicked position on coulisse so that the coulisse doesnt jump to the pivot all the time
-                if (coulisses[currentObjectIndex].GetComponent<CoulisseStats>().typeOfCoulisse == 1)    // kleine blende
+                if (coulisses[currentObjectIndex].GetComponent<RectTransform>().rect.width == shelfSizeWidth[currentObjectIndex])
                 {
-                    coulisses[currentObjectIndex].GetComponent<RectTransform>().anchoredPosition = new Vector2(coulisses[currentObjectIndex].GetComponent<RectTransform>().anchoredPosition.x, -185);
+                    coulisses[currentObjectIndex].GetComponent<RectTransform>().sizeDelta = new Vector2(railWidth / 410 * coulisses[currentObjectIndex].GetComponent<CoulisseStats>().CoulisseWidth / coulisses[currentObjectIndex].transform.lossyScale.x, railWidth / 410 * coulisses[currentObjectIndex].GetComponent<CoulisseStats>().CoulisseHeight / coulisses[currentObjectIndex].transform.lossyScale.y);
                 }
-                else if (coulisses[currentObjectIndex].GetComponent<CoulisseStats>().typeOfCoulisse == 2)    // grosse blende
-                {
-                    coulisses[currentObjectIndex].GetComponent<RectTransform>().anchoredPosition = new Vector2(coulisses[currentObjectIndex].GetComponent<RectTransform>().anchoredPosition.x, -150);
-                }
-                else                                                                                     // seitenkulisse
-                {
-                    coulisses[currentObjectIndex].GetComponent<RectTransform>().anchoredPosition = new Vector2(coulisses[currentObjectIndex].GetComponent<RectTransform>().anchoredPosition.x, -170);
-                }
-            }
-            coulisses[currentObjectIndex].transform.SetParent(mainMenue.transform);
 
-            // if coulisse is hitting a tab
-            int hitIndexTab = checkHittingIndexTab(indexTabs, getMousePos);
-            if (hitIndexTab != -1)
-            {
-                SceneManaging.objectInIndexTab = hitIndexTab;
-                if (SceneManaging.openUp)
+                if (gameController.GetComponent<UnitySwitchExpertUser>()._isExpert || (!gameController.GetComponent<UnitySwitchExpertUser>()._isExpert && clickCoulisseFromShelf))
                 {
-                    setIndexTabActive(hitIndexTab);
-                }
-            }
-
-            // window or rail tab is hit
-            else if (checkHittingSettings(coulisses[currentObjectIndex]))
-            {
-                if (clickCoulisseFromShelf)
-                {
-                    coulisses[currentObjectIndex].GetComponent<Image>().color = colHighlightedGreen;
+                    coulisses[currentObjectIndex].transform.position = new Vector2(getMousePos.x - diff.x, getMousePos.y - diff.y); // diff is difference of mouse position to clicked position on coulisse so that the coulisse doesnt jump to the pivot all the time
                 }
                 else
                 {
-                    highlight(currentObjectIndex, 2);
-                    showDeleteButton(deleteButton, coulisses[currentObjectIndex], false);
-                    sliderX.GetComponent<Slider>().value = coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.x / 270;
-                    sliderY.GetComponent<Slider>().value = (coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.y / 260) + 0.515f;
-                }
-                justChanging = true;
-                objectInField = true;
-                objectInRail = false;
-                if (checkHitting(colliderRailImage.GetComponent<RectTransform>().anchoredPosition, colliderRailImage.GetComponent<RectTransform>().sizeDelta, coulisses[currentObjectIndex]))
-                {
-                    objectInRail = true;
-                }
-            }
-
-            // nothing is hit
-            else
-            {
-                highlight(currentObjectIndex, 1);
-                objectInField = false;
-                SceneManaging.objectInIndexTab = -1;
-                objectInRail = false;
-            }
-            ////////////////////////////////////////////////////////////////////////////////////////////
-            StaticSceneData.StaticData.sceneryElements[currentObjectIndex].z = coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.x / 270;
-            StaticSceneData.StaticData.sceneryElements[currentObjectIndex].y = coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.y / 260 + 0.515f;
-            StaticSceneData.StaticData.sceneryElements[currentObjectIndex].x = 0.062f;
-            StaticSceneData.Sceneries3D(); //CreateScene der SceneryElements
-            ////////////////////////////////////////////////////////////////////////////////////////////
-        }
-
-        if (Input.GetMouseButtonUp(0)) //left mouse button up
-        {
-            dragging = false;
-            scrollViewScenery.GetComponent<ScrollRect>().enabled = true;
-
-            if (currentObjectIndex != -1)
-            {
-                if (sliding)
-                {
-                    //////////////////////////////////////////////////////////////////////////
-                    // all coulisses need to be organised if one of the siblings changed
-                    for (int i = 0; i < coulisses[currentObjectIndex].transform.parent.transform.childCount; i++)
+                    coulisses[currentObjectIndex].transform.position = new Vector2(getMousePos.x - diff.x, getMousePos.y - diff.y); // diff is difference of mouse position to clicked position on coulisse so that the coulisse doesnt jump to the pivot all the time
+                    if (coulisses[currentObjectIndex].GetComponent<CoulisseStats>().typeOfCoulisse == 1)    // kleine blende
                     {
-                        StaticSceneData.StaticData.sceneryElements[int.Parse(coulisses[currentObjectIndex].transform.parent.transform.GetChild(i).name.Substring(8, 2)) - 1].zPos = coulisses[currentObjectIndex].transform.parent.transform.GetChild(i).GetSiblingIndex();
+                        coulisses[currentObjectIndex].GetComponent<RectTransform>().anchoredPosition = new Vector2(coulisses[currentObjectIndex].GetComponent<RectTransform>().anchoredPosition.x, -185);
                     }
-
-                    //write Text: layer of current coulisse
-                    textPositionZCoulisses.GetComponent<TextMeshProUGUI>().text = (coulisses[currentObjectIndex].transform.parent.transform.childCount - coulisses[currentObjectIndex].transform.GetSiblingIndex()) + "/" + coulisses[currentObjectIndex].transform.parent.transform.childCount;
-                    StaticSceneData.StaticData.sceneryElements[currentObjectIndex].z = coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.x / 270;
-                    StaticSceneData.StaticData.sceneryElements[currentObjectIndex].y = (coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.y) / 260 + .515f;
-                    StaticSceneData.StaticData.sceneryElements[currentObjectIndex].x = 0.062f;
-                    StaticSceneData.Sceneries3D(); //CreateScene der SceneryElements
-
-                    ////////////////////////////////////////////////////////////////////////
-                }
-                // if object is in settingsField
-                else if (objectInField)
-                {
-                    for (int i = 0; i < collections.Length; i++)
+                    else if (coulisses[currentObjectIndex].GetComponent<CoulisseStats>().typeOfCoulisse == 2)    // grosse blende
                     {
-                        // if object is on rail image
-                        if (objectInRail && SceneManaging.isExpert)
-                        {
-                            if (currentTabIndex == i)
-                            {
-                                coulisses[currentObjectIndex].transform.SetParent(collections[i].transform);
-                            }
-                        }
-                        else
-                        {
-                            if (currentTabIndex == i)
-                            {
-                                coulisses[currentObjectIndex].transform.SetParent(collections[i].transform);
-                                if (coulisses[currentObjectIndex].GetComponent<CoulisseStats>().typeOfCoulisse == 1)    // grosse blende
-                                {
-                                    coulisses[currentObjectIndex].GetComponent<RectTransform>().anchoredPosition = new Vector2(coulisses[currentObjectIndex].GetComponent<RectTransform>().anchoredPosition.x, -185);
-                                }
-                                else if (coulisses[currentObjectIndex].GetComponent<CoulisseStats>().typeOfCoulisse == 2)    // seitenkulisse
-                                {
-                                    coulisses[currentObjectIndex].GetComponent<RectTransform>().anchoredPosition = new Vector2(coulisses[currentObjectIndex].GetComponent<RectTransform>().anchoredPosition.x, -150);
-                                }
-                                else                                                                                     // kleine blende
-                                {
-                                    coulisses[currentObjectIndex].GetComponent<RectTransform>().anchoredPosition = new Vector2(coulisses[currentObjectIndex].GetComponent<RectTransform>().anchoredPosition.x, -170);
-                                }
-                            }
-                        }
-                        // limitierungen (snapping if dropped on the left/right of the min/max-value)
-                        if (coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.x < -540)
-                        {
-                            coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition = new Vector2(-540, coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.y);
-                        }
-                        else if (coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.x > 540)
-                        {
-                            coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition = new Vector2(540, coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.y);
-                        }
-                        else if (coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.y < -260)
-                        {
-                            coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition = new Vector2(coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.x, -260);
-                        }
-                        if (!scenerySettings.activeSelf)
-                        {
-                            highlight(currentObjectIndex, 2);
-                        }
+                        coulisses[currentObjectIndex].GetComponent<RectTransform>().anchoredPosition = new Vector2(coulisses[currentObjectIndex].GetComponent<RectTransform>().anchoredPosition.x, -150);
                     }
-                    showDeleteButton(deleteButton, coulisses[currentObjectIndex], true);
+                    else                                                                                     // seitenkulisse
+                    {
+                        coulisses[currentObjectIndex].GetComponent<RectTransform>().anchoredPosition = new Vector2(coulisses[currentObjectIndex].GetComponent<RectTransform>().anchoredPosition.x, -170);
+                    }
+                }
+                coulisses[currentObjectIndex].transform.SetParent(mainMenue.transform);
 
+                // if coulisse is hitting a tab
+                int hitIndexTab = checkHittingIndexTab(indexTabs, getMousePos);
+                if (hitIndexTab != -1)
+                {
+                    SceneManaging.objectInIndexTab = hitIndexTab;
+                    if (SceneManaging.openUp)
+                    {
+                        setIndexTabActive(hitIndexTab);
+                    }
+                }
+
+                // window or rail tab is hit
+                else if (checkHittingSettings(coulisses[currentObjectIndex]))
+                {
                     if (clickCoulisseFromShelf)
                     {
-                        int tmpCount = collections[currentTabIndex].transform.childCount;
-
-                        textPositionZCoulisses.GetComponent<TextMeshProUGUI>().text = "1/" + tmpCount;
-                        coulisses[currentObjectIndex].transform.SetSiblingIndex(tmpCount - 1);
+                        coulisses[currentObjectIndex].GetComponent<Image>().color = colHighlightedGreen;
                     }
                     else
                     {
-                        coulisses[currentObjectIndex].transform.SetSiblingIndex(publicSibling);
-                        textPositionZCoulisses.GetComponent<TextMeshProUGUI>().text = (coulisses[currentObjectIndex].transform.parent.transform.childCount - publicSibling) + "/" + coulisses[currentObjectIndex].transform.parent.childCount;
+                        highlight(currentObjectIndex, 2);
+                        showDeleteButton(deleteButton, coulisses[currentObjectIndex], false);
+                        sliderX.GetComponent<Slider>().value = coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.x / 270;
+                        sliderY.GetComponent<Slider>().value = (coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.y / 260) + 0.515f;
                     }
-                    StaticSceneData.StaticData.sceneryElements[currentObjectIndex].active = true;
-                    StaticSceneData.StaticData.sceneryElements[currentObjectIndex].parent = "Schiene" + (currentTabIndex + 1).ToString();
-                    StaticSceneData.StaticData.sceneryElements[currentObjectIndex].railnumber = currentTabIndex + 1;
-                    sliderX.GetComponent<Slider>().value = coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.x / 270;
-                    sliderY.GetComponent<Slider>().value = coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.y / 260 + 0.515f;
-
-                    if (!coulissesOnRails.Contains(coulisses[currentObjectIndex])) coulissesOnRails.Add(coulisses[currentObjectIndex]);
-
-                    //////////////////////////////////////////////////////////////////////////
-                    // all coulisses need to be organised if one of the siblings changed
-                    for (int i = 0; i < coulisses[currentObjectIndex].transform.parent.transform.childCount; i++)
+                    justChanging = true;
+                    objectInField = true;
+                    objectInRail = false;
+                    if (checkHitting(colliderRailImage.GetComponent<RectTransform>().anchoredPosition, colliderRailImage.GetComponent<RectTransform>().sizeDelta, coulisses[currentObjectIndex]))
                     {
-                        StaticSceneData.StaticData.sceneryElements[int.Parse(coulisses[currentObjectIndex].transform.parent.transform.GetChild(i).name.Substring(8, 2)) - 1].zPos = coulisses[currentObjectIndex].transform.parent.transform.GetChild(i).GetSiblingIndex();
-                        //textPositionZCoulisses.GetComponent<Text>().text = (coulisses[currentObjectIndex].transform.parent.transform.GetChild(i).GetSiblingIndex() + 1) + "/" + coulisses[currentObjectIndex].transform.parent.transform.childCount;
+                        objectInRail = true;
                     }
-                    StaticSceneData.StaticData.sceneryElements[currentObjectIndex].z = coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.x / 270;
-                    StaticSceneData.StaticData.sceneryElements[currentObjectIndex].y = (coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.y) / 260 + .515f;
-                    StaticSceneData.StaticData.sceneryElements[currentObjectIndex].x = 0.062f;
-                    StaticSceneData.Sceneries3D(); //CreateScene der SceneryElements
-                    ////////////////////////////////////////////////////////////////////////
                 }
 
-                // if object is on a tab
-                else if (SceneManaging.objectInIndexTab != -1)
-                {
-                    coulisses[currentObjectIndex].transform.SetParent(collections[SceneManaging.objectInIndexTab].transform);
-                    coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition = new Vector2(0.0f, 0.0f);
-                    StaticSceneData.StaticData.sceneryElements[currentObjectIndex].active = true;
-                    StaticSceneData.StaticData.sceneryElements[currentObjectIndex].parent = "Schiene" + (currentTabIndex + 1).ToString();
-                    StaticSceneData.StaticData.sceneryElements[currentObjectIndex].railnumber = currentTabIndex + 1;
-                    sliderX.GetComponent<Slider>().value = coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.x / 270;
-                    sliderY.GetComponent<Slider>().value = coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.y / 260 + 0.515f;//+ 1;
-                    coulissesOnRails.Add(coulisses[currentObjectIndex]);
-                    showDeleteButton(deleteButton, coulisses[currentObjectIndex], true);
-                    //////////////////////////////////////////////////////////////////////////
-                    // all coulisses need to be organised if one of the siblings changed
-                    for (int i = 0; i < coulisses[currentObjectIndex].transform.parent.transform.childCount; i++)
-                    {
-                        StaticSceneData.StaticData.sceneryElements[int.Parse(coulisses[currentObjectIndex].transform.parent.transform.GetChild(i).name.Substring(8, 2)) - 1].zPos = coulisses[currentObjectIndex].transform.parent.transform.GetChild(i).GetSiblingIndex();
-                        textPositionZCoulisses.GetComponent<TextMeshProUGUI>().text = (coulisses[currentObjectIndex].transform.parent.transform.childCount - coulisses[currentObjectIndex].transform.parent.transform.GetChild(i).GetSiblingIndex()) + "/" + coulisses[currentObjectIndex].transform.parent.transform.childCount;
-
-                    }
-                    StaticSceneData.StaticData.sceneryElements[currentObjectIndex].z = coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.x / 270;
-                    StaticSceneData.StaticData.sceneryElements[currentObjectIndex].y = (coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.y) / 260 - .035f;
-                    StaticSceneData.StaticData.sceneryElements[currentObjectIndex].x = 0.062f;
-                    StaticSceneData.Sceneries3D(); //CreateScene der SceneryElements
-                    ////////////////////////////////////////////////////////////////////////
-                }
-                // if object is outside the window (back to shelf)
+                // nothing is hit
                 else
                 {
-                    // wenn in live view gedroppt
-                    if (coulisses[currentObjectIndex].transform.position.x > liveView.transform.position.x - liveView.GetComponent<RectTransform>().sizeDelta.x / 2
-                    && coulisses[currentObjectIndex].transform.position.x < liveView.transform.position.x + liveView.GetComponent<RectTransform>().sizeDelta.x / 2
-                    && coulisses[currentObjectIndex].transform.position.y > liveView.transform.position.y - liveView.GetComponent<RectTransform>().sizeDelta.y / 2
-                    && coulisses[currentObjectIndex].transform.position.y < liveView.transform.position.y + liveView.GetComponent<RectTransform>().sizeDelta.y / 2)
+                    highlight(currentObjectIndex, 1);
+                    objectInField = false;
+                    SceneManaging.objectInIndexTab = -1;
+                    objectInRail = false;
+                }
+                ////////////////////////////////////////////////////////////////////////////////////////////
+                StaticSceneData.StaticData.sceneryElements[currentObjectIndex].z = coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.x / 270;
+                StaticSceneData.StaticData.sceneryElements[currentObjectIndex].y = coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.y / 260 + 0.515f;
+                StaticSceneData.StaticData.sceneryElements[currentObjectIndex].x = 0.062f;
+                StaticSceneData.Sceneries3D(); //CreateScene der SceneryElements
+                                               ////////////////////////////////////////////////////////////////////////////////////////////
+            }
+
+            if (Input.GetMouseButtonUp(0)) //left mouse button up
+            {
+                dragging = false;
+                scrollViewScenery.GetComponent<ScrollRect>().enabled = true;
+
+                if (currentObjectIndex != -1)
+                {
+                    if (sliding)
                     {
-                        //Debug.Log("hi");
-                        helpButton.GetComponent<PressHelp>().helpTextLiveView.SetActive(true);
+                        //////////////////////////////////////////////////////////////////////////
+                        // all coulisses need to be organised if one of the siblings changed
+                        for (int i = 0; i < coulisses[currentObjectIndex].transform.parent.transform.childCount; i++)
+                        {
+                            StaticSceneData.StaticData.sceneryElements[int.Parse(coulisses[currentObjectIndex].transform.parent.transform.GetChild(i).name.Substring(8, 2)) - 1].zPos = coulisses[currentObjectIndex].transform.parent.transform.GetChild(i).GetSiblingIndex();
+                        }
+
+                        //write Text: layer of current coulisse
+                        textPositionZCoulisses.GetComponent<TextMeshProUGUI>().text = (coulisses[currentObjectIndex].transform.parent.transform.childCount - coulisses[currentObjectIndex].transform.GetSiblingIndex()) + "/" + coulisses[currentObjectIndex].transform.parent.transform.childCount;
+                        StaticSceneData.StaticData.sceneryElements[currentObjectIndex].z = coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.x / 270;
+                        StaticSceneData.StaticData.sceneryElements[currentObjectIndex].y = (coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.y) / 260 + .515f;
+                        StaticSceneData.StaticData.sceneryElements[currentObjectIndex].x = 0.062f;
+                        StaticSceneData.Sceneries3D(); //CreateScene der SceneryElements
+
+                        ////////////////////////////////////////////////////////////////////////
+                    }
+                    // if object is in settingsField
+                    else if (objectInField)
+                    {
+                        for (int i = 0; i < collections.Length; i++)
+                        {
+                            // if object is on rail image
+                            if (objectInRail && SceneManaging.isExpert)
+                            {
+                                if (currentTabIndex == i)
+                                {
+                                    coulisses[currentObjectIndex].transform.SetParent(collections[i].transform);
+                                }
+                            }
+                            else
+                            {
+                                if (currentTabIndex == i)
+                                {
+                                    coulisses[currentObjectIndex].transform.SetParent(collections[i].transform);
+                                    if (coulisses[currentObjectIndex].GetComponent<CoulisseStats>().typeOfCoulisse == 1)    // grosse blende
+                                    {
+                                        coulisses[currentObjectIndex].GetComponent<RectTransform>().anchoredPosition = new Vector2(coulisses[currentObjectIndex].GetComponent<RectTransform>().anchoredPosition.x, -185);
+                                    }
+                                    else if (coulisses[currentObjectIndex].GetComponent<CoulisseStats>().typeOfCoulisse == 2)    // seitenkulisse
+                                    {
+                                        coulisses[currentObjectIndex].GetComponent<RectTransform>().anchoredPosition = new Vector2(coulisses[currentObjectIndex].GetComponent<RectTransform>().anchoredPosition.x, -150);
+                                    }
+                                    else                                                                                     // kleine blende
+                                    {
+                                        coulisses[currentObjectIndex].GetComponent<RectTransform>().anchoredPosition = new Vector2(coulisses[currentObjectIndex].GetComponent<RectTransform>().anchoredPosition.x, -170);
+                                    }
+                                }
+                            }
+                            // limitierungen (snapping if dropped on the left/right of the min/max-value)
+                            if (coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.x < -540)
+                            {
+                                coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition = new Vector2(-540, coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.y);
+                            }
+                            else if (coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.x > 540)
+                            {
+                                coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition = new Vector2(540, coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.y);
+                            }
+                            else if (coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.y < -260)
+                            {
+                                coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition = new Vector2(coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.x, -260);
+                            }
+                            if (!scenerySettings.activeSelf)
+                            {
+                                highlight(currentObjectIndex, 2);
+                            }
+                        }
+                        showDeleteButton(deleteButton, coulisses[currentObjectIndex], true);
+
+                        if (clickCoulisseFromShelf)
+                        {
+                            int tmpCount = collections[currentTabIndex].transform.childCount;
+
+                            textPositionZCoulisses.GetComponent<TextMeshProUGUI>().text = "1/" + tmpCount;
+                            coulisses[currentObjectIndex].transform.SetSiblingIndex(tmpCount - 1);
+                        }
+                        else
+                        {
+                            coulisses[currentObjectIndex].transform.SetSiblingIndex(publicSibling);
+                            textPositionZCoulisses.GetComponent<TextMeshProUGUI>().text = (coulisses[currentObjectIndex].transform.parent.transform.childCount - publicSibling) + "/" + coulisses[currentObjectIndex].transform.parent.childCount;
+                        }
+                        StaticSceneData.StaticData.sceneryElements[currentObjectIndex].active = true;
+                        StaticSceneData.StaticData.sceneryElements[currentObjectIndex].parent = "Schiene" + (currentTabIndex + 1).ToString();
+                        StaticSceneData.StaticData.sceneryElements[currentObjectIndex].railnumber = currentTabIndex + 1;
+                        sliderX.GetComponent<Slider>().value = coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.x / 270;
+                        sliderY.GetComponent<Slider>().value = coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.y / 260 + 0.515f;
+
+                        if (!coulissesOnRails.Contains(coulisses[currentObjectIndex])) coulissesOnRails.Add(coulisses[currentObjectIndex]);
+
+                        //////////////////////////////////////////////////////////////////////////
+                        // all coulisses need to be organised if one of the siblings changed
+                        for (int i = 0; i < coulisses[currentObjectIndex].transform.parent.transform.childCount; i++)
+                        {
+                            StaticSceneData.StaticData.sceneryElements[int.Parse(coulisses[currentObjectIndex].transform.parent.transform.GetChild(i).name.Substring(8, 2)) - 1].zPos = coulisses[currentObjectIndex].transform.parent.transform.GetChild(i).GetSiblingIndex();
+                            //textPositionZCoulisses.GetComponent<Text>().text = (coulisses[currentObjectIndex].transform.parent.transform.GetChild(i).GetSiblingIndex() + 1) + "/" + coulisses[currentObjectIndex].transform.parent.transform.childCount;
+                        }
+                        StaticSceneData.StaticData.sceneryElements[currentObjectIndex].z = coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.x / 270;
+                        StaticSceneData.StaticData.sceneryElements[currentObjectIndex].y = (coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.y) / 260 + .515f;
+                        StaticSceneData.StaticData.sceneryElements[currentObjectIndex].x = 0.062f;
+                        StaticSceneData.Sceneries3D(); //CreateScene der SceneryElements
+                                                       ////////////////////////////////////////////////////////////////////////
                     }
 
-                    placeInShelf(currentObjectIndex);
-                    StaticSceneData.StaticData.sceneryElements[currentObjectIndex].active = false;
-                }
+                    // if object is on a tab
+                    else if (SceneManaging.objectInIndexTab != -1)
+                    {
+                        coulisses[currentObjectIndex].transform.SetParent(collections[SceneManaging.objectInIndexTab].transform);
+                        coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition = new Vector2(0.0f, 0.0f);
+                        StaticSceneData.StaticData.sceneryElements[currentObjectIndex].active = true;
+                        StaticSceneData.StaticData.sceneryElements[currentObjectIndex].parent = "Schiene" + (currentTabIndex + 1).ToString();
+                        StaticSceneData.StaticData.sceneryElements[currentObjectIndex].railnumber = currentTabIndex + 1;
+                        sliderX.GetComponent<Slider>().value = coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.x / 270;
+                        sliderY.GetComponent<Slider>().value = coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.y / 260 + 0.515f;//+ 1;
+                        coulissesOnRails.Add(coulisses[currentObjectIndex]);
+                        showDeleteButton(deleteButton, coulisses[currentObjectIndex], true);
+                        //////////////////////////////////////////////////////////////////////////
+                        // all coulisses need to be organised if one of the siblings changed
+                        for (int i = 0; i < coulisses[currentObjectIndex].transform.parent.transform.childCount; i++)
+                        {
+                            StaticSceneData.StaticData.sceneryElements[int.Parse(coulisses[currentObjectIndex].transform.parent.transform.GetChild(i).name.Substring(8, 2)) - 1].zPos = coulisses[currentObjectIndex].transform.parent.transform.GetChild(i).GetSiblingIndex();
+                            textPositionZCoulisses.GetComponent<TextMeshProUGUI>().text = (coulisses[currentObjectIndex].transform.parent.transform.childCount - coulisses[currentObjectIndex].transform.parent.transform.GetChild(i).GetSiblingIndex()) + "/" + coulisses[currentObjectIndex].transform.parent.transform.childCount;
 
-                for (int i = 0; i < collections.Length; i++)
-                {
-                    coulisseCounter[i].text = collections[i].transform.childCount.ToString();
-                }
+                        }
+                        StaticSceneData.StaticData.sceneryElements[currentObjectIndex].z = coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.x / 270;
+                        StaticSceneData.StaticData.sceneryElements[currentObjectIndex].y = (coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.y) / 260 - .035f;
+                        StaticSceneData.StaticData.sceneryElements[currentObjectIndex].x = 0.062f;
+                        StaticSceneData.Sceneries3D(); //CreateScene der SceneryElements
+                                                       ////////////////////////////////////////////////////////////////////////
+                    }
+                    // if object is outside the window (back to shelf)
+                    else
+                    {
+                        // wenn in live view gedroppt
+                        if (coulisses[currentObjectIndex].transform.position.x > liveView.transform.position.x - liveView.GetComponent<RectTransform>().sizeDelta.x / 2
+                        && coulisses[currentObjectIndex].transform.position.x < liveView.transform.position.x + liveView.GetComponent<RectTransform>().sizeDelta.x / 2
+                        && coulisses[currentObjectIndex].transform.position.y > liveView.transform.position.y - liveView.GetComponent<RectTransform>().sizeDelta.y / 2
+                        && coulisses[currentObjectIndex].transform.position.y < liveView.transform.position.y + liveView.GetComponent<RectTransform>().sizeDelta.y / 2)
+                        {
+                            //Debug.Log("hi");
+                            helpButton.GetComponent<PressHelp>().helpTextLiveView.SetActive(true);
+                        }
 
-                // set default values since nothing is clicked anymore
-                objectInField = false;
-                SceneManaging.objectInIndexTab = -1;
-                objectInRail = false;
+                        placeInShelf(currentObjectIndex);
+                        StaticSceneData.StaticData.sceneryElements[currentObjectIndex].active = false;
+                    }
+
+                    for (int i = 0; i < collections.Length; i++)
+                    {
+                        coulisseCounter[i].text = collections[i].transform.childCount.ToString();
+                    }
+
+                    // set default values since nothing is clicked anymore
+                    objectInField = false;
+                    SceneManaging.objectInIndexTab = -1;
+                    objectInRail = false;
+                }
+                sliding = false;
+                justChanging = false;
+                clickCoulisseFromShelf = false;
             }
-            sliding = false;
-            justChanging = false;
-            clickCoulisseFromShelf = false;
         }
     }
     public void ChangeElementPositionX()

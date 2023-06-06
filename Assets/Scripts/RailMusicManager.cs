@@ -28,7 +28,8 @@ public class RailMusicManager : MonoBehaviour
     AudioSource audioSource;
     Vector2[] objectShelfPosition;
     Vector2 objectShelfSize;
-    bool draggingOnTimeline, draggingObject, editTimelineObject, releaseOnTimeline, playingMusic, isInstance, playingSample, fading;
+    bool draggingOnTimeline, draggingObject, editTimelineObject, releaseOnTimeline, playingMusic, isInstance,  fading;
+    public bool playingSample;
     GameObject[] objectShelfParent;
     GameObject newCopyOfFigure;
     Color colMusic, colMusicHighlighted;
@@ -40,8 +41,9 @@ public class RailMusicManager : MonoBehaviour
     int maxTimeInSec, currentClip;
     GameObject[] figureObjects;
     [SerializeField] TextMeshProUGUI[] figCounterCircle;
-    [SerializeField] Image[] sampleImages;
-    int currentClickedObjectIndex, sampleButtonPressed;
+    public Image[] sampleImages;
+    int currentClickedObjectIndex;
+    public int sampleButtonPressed;
     int currentClickedInstanceObjectIndex;
     private float currentLossyScale, tmpTime;
     private string currentName;
@@ -799,19 +801,22 @@ public class RailMusicManager : MonoBehaviour
     }
     public void PlaySample(int i)
     {
-        if (sampleButtonPressed == (i - 1))
+        if (sampleButtonPressed == i)
         {
             playingSample = false;
-            sampleImages[sampleButtonPressed].color = new Color(1,1,1,0); // = false;
+            sampleImages[sampleButtonPressed].color = new Color(1, 1, 1, 0);
             sampleButtonPressed = -1;
         }
         else
         {
             playingSample = true;
-            audioSource.clip = clip[i - 1];
-            sampleButtonPressed = (i - 1);
-            Debug.Log("samplebutton: "+sampleImages[i]);
-            sampleImages[sampleButtonPressed].color = new Color(1,1,1,1);
+            audioSource.clip = clip[i];
+            sampleButtonPressed = i;
+            for (int j = 0; j < sampleImages.Length; j++)
+            {
+                sampleImages[j].color = new Color(1, 1, 1, 0);
+            }
+            sampleImages[sampleButtonPressed].color = new Color(1, 1, 1, 1);
         }
     }
     private IEnumerator FadeOut(AudioSource audioSource, float FadeTime, GameObject obj, float time)
@@ -856,7 +861,6 @@ public class RailMusicManager : MonoBehaviour
         {
             double startSec = UtilitiesTm.FloatRemap(myObjects[i].position.x, 0, gameObject.GetComponent<RectTransform>().rect.width, 0, AnimationTimer.GetMaxTime());
             double endSec;
-            //Debug.Log("startsec: "+startSec);
             if (!gameController.GetComponent<UnitySwitchExpertUser>()._isExpert)
                 endSec = startSec + 60;
             else
@@ -879,7 +883,6 @@ public class RailMusicManager : MonoBehaviour
         if (GetCurrentMusicCount(out int m, out int n, out int o) == 1)
         {
             double startSec = UtilitiesTm.FloatRemap(myObjects[m].position.x, 0, gameObject.GetComponent<RectTransform>().rect.width, 0, AnimationTimer.GetMaxTime());
-            //Debug.Log("start: " + startSec);
             tmpTime = AnimationTimer.GetTime();
 
             anyInstanceIsPlaying = true;
@@ -924,34 +927,6 @@ public class RailMusicManager : MonoBehaviour
                 playingMusic = false;
             }
         }
-
-        /*else if (GetCurrentMusicCount(out m, out n, out o) == 3)
-        {
-            Debug.Log("3");
-            if (!firstTimeThird)
-            {
-                fading = false;
-                firstTimeThird = true;
-            }
-            double startSec = calculateFigureStartTimeInSec(timelineInstanceObjects[o], timelineInstanceObjects[o].GetComponent<MusicLength>().musicLength, maxTimeInSec);
-            float tmpTime = AnimationTimer.GetTime();
-
-            if (!fading) StartCoroutine(FadeOut(audioSource, 1, timelineInstanceObjects[o], (tmpTime - (float)startSec)));
-            anyInstanceIsPlaying = true;
-
-            if (playingMusic == false || once == true)
-            {
-                playingMusic = true;
-                audioSource.time = tmpTime - (float)startSec;
-                currentClip = ((int)Char.GetNumericValue(timelineInstanceObjects[o].name[07]) - 1); // object index
-                audioSource.clip = clip[currentClip];
-                audioSource.Play();
-            }
-            if (SceneManaging.updateMusic)
-            {
-                playingMusic = false;
-            }
-        }*/
         else
         {
             firstTimeSecond = false;
@@ -1534,6 +1509,7 @@ public class RailMusicManager : MonoBehaviour
                 {
                     playingSample = false;
                     audioSource.Stop();
+                    sampleImages[sampleButtonPressed].color = new Color(1, 1, 1, 0); // = false;
                 }
             }
         }
