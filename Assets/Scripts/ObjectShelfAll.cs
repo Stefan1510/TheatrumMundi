@@ -30,23 +30,12 @@ public class ObjectShelfAll : MonoBehaviour
     public GameObject ButtonMenueDirector;  // Der Button in ObjectMenueConfigMain der zum DirectorMenu leitet
 
     public GameObject panelPreviewNotLoaded;
+    [SerializeField] private RockVR.Video.Demo.PlayerControls playerCtrls;
 
     public GameObject gameController;//, overlayWaiting;
+    [SerializeField] private AnimationTimer animTimer;
 
     #endregion
-    private void Awake()
-    {
-        // MenueButton01.GetComponent<Button>().onClick.AddListener(() => ButtonShelf01());
-        // MenueButton02.GetComponent<Button>().onClick.AddListener(() => ButtonShelf02());
-        // MenueButton03.GetComponent<Button>().onClick.AddListener(() => ButtonShelf03());
-        // MenueButton04.GetComponent<Button>().onClick.AddListener(() => ButtonShelf04());
-        // MenueButton05.GetComponent<Button>().onClick.AddListener(() => ButtonShelf05(false));
-        // MenueButton06.GetComponent<Button>().onClick.AddListener(() => ButtonShelf06());
-        // MenueButton07.GetComponent<Button>().onClick.AddListener(() => ButtonShelf07(false));
-        // MenueButton08.GetComponent<Button>().onClick.AddListener(() => ButtonShelf08());
-        // ButtonMenueDirector.GetComponent<Button>().onClick.AddListener(() => SwitchToMenueDirector());
-        // ButtonMenueConfig.GetComponent<Button>().onClick.AddListener(() => SwitchToMenueConfig());
-    }
     void Start()
     {
         /////////////////////////////////// for VISITOR-Tool
@@ -90,7 +79,7 @@ public class ObjectShelfAll : MonoBehaviour
     }
     public void ButtonShelf01()
     {
-        if (!SceneManaging.tutorialActive && !SceneManaging.saveDialogActive && !SceneManaging.railLengthDialogActive && !SceneManaging.flyerActive&& !SceneManaging.dialogActive)
+        if (!SceneManaging.tutorialActive && !SceneManaging.saveDialogActive && !SceneManaging.railLengthDialogActive && !SceneManaging.flyerActive && !SceneManaging.dialogActive)
         {
             //overlayWaiting.SetActive(true);
             if (SceneManaging.mainMenuActive == 1 && SceneManaging.configMenueActive == 4 && !SceneManaging.isPreviewLoaded)
@@ -106,7 +95,7 @@ public class ObjectShelfAll : MonoBehaviour
     }
     public void ButtonShelf02()
     {
-        if (!SceneManaging.tutorialActive && !SceneManaging.saveDialogActive && !SceneManaging.railLengthDialogActive && !SceneManaging.flyerActive&& !SceneManaging.dialogActive)
+        if (!SceneManaging.tutorialActive && !SceneManaging.saveDialogActive && !SceneManaging.railLengthDialogActive && !SceneManaging.flyerActive && !SceneManaging.dialogActive)
         {
             if (SceneManaging.mainMenuActive == 1 && SceneManaging.configMenueActive == 4 && !SceneManaging.isPreviewLoaded)
             {
@@ -121,7 +110,7 @@ public class ObjectShelfAll : MonoBehaviour
     }
     public void ButtonShelf03()
     {
-        if (!SceneManaging.tutorialActive && !SceneManaging.saveDialogActive && !SceneManaging.railLengthDialogActive && !SceneManaging.flyerActive&& !SceneManaging.dialogActive)
+        if (!SceneManaging.tutorialActive && !SceneManaging.saveDialogActive && !SceneManaging.railLengthDialogActive && !SceneManaging.flyerActive && !SceneManaging.dialogActive)
         {
             //overlayWaiting.SetActive(true);
             //show menue of lichtkonfiguration or musik
@@ -135,7 +124,7 @@ public class ObjectShelfAll : MonoBehaviour
     }
     public void ButtonShelf04()
     {
-        if (!SceneManaging.tutorialActive && !SceneManaging.saveDialogActive && !SceneManaging.railLengthDialogActive && !SceneManaging.flyerActive&& !SceneManaging.dialogActive)
+        if (!SceneManaging.tutorialActive && !SceneManaging.saveDialogActive && !SceneManaging.railLengthDialogActive && !SceneManaging.flyerActive && !SceneManaging.dialogActive)
         {
             // overlayWaiting.SetActive(true);
             //show menue of ladenspeichern
@@ -188,7 +177,7 @@ public class ObjectShelfAll : MonoBehaviour
     }
     public void ButtonShelf07(bool fromRail)
     {
-        if (!SceneManaging.tutorialActive && !SceneManaging.saveDialogActive && !SceneManaging.railLengthDialogActive && !SceneManaging.flyerActive&& !SceneManaging.dialogActive)
+        if (!SceneManaging.tutorialActive && !SceneManaging.saveDialogActive && !SceneManaging.railLengthDialogActive && !SceneManaging.flyerActive && !SceneManaging.dialogActive)
         {
             // overlayWaiting.SetActive(true);
             //show menue of lichtkonfiguration or musik
@@ -270,7 +259,7 @@ public class ObjectShelfAll : MonoBehaviour
         MenueShelf05.SetActive(false);
         MenueShelf06.SetActive(false);
         MenueShelf07.SetActive(false);
-        MenueShelf08.SetActive(false);
+        //MenueShelf08.SetActive(false);
 
         MenueButton01.SetActive(false);
         MenueButton02.SetActive(true);
@@ -289,7 +278,7 @@ public class ObjectShelfAll : MonoBehaviour
             MenueButton02.SetActive(true);
             MenueButton03.SetActive(true);
             MenueButton06.SetActive(true);
-            MenueButton08.SetActive(true);
+            //MenueButton08.SetActive(true);
         }
 
         switch (shelfNumber)
@@ -307,8 +296,12 @@ public class ObjectShelfAll : MonoBehaviour
                 ObjectMenueDirectorMain.SetActive(false);
                 SceneManaging.mainMenuActive = 1;
                 SceneManaging.configMenueActive = 2;
+                if (AnimationTimer.GetTimerState() == AnimationTimer.TimerState.playing)
+                {
+                    playerCtrls.ButtonPlay();
+                }
                 break;
-            case 3:         // MenueLicht
+            case 3:         // MenueLichtConfig
                 MenueShelf03.SetActive(true);
                 MenueButton03.SetActive(false);
                 SceneManaging.mainMenuActive = 1;
@@ -330,7 +323,7 @@ public class ObjectShelfAll : MonoBehaviour
                 SceneManaging.mainMenuActive = 2;
                 SceneManaging.directorMenueActive = 1;
                 break;
-            case 6:         // MenueLightShelf
+            case 6:         // MenueLightRegieShelf
                 MenueShelf06.SetActive(true);
                 MenueButton06.SetActive(false);
                 SceneManaging.mainMenuActive = 2;
@@ -344,13 +337,13 @@ public class ObjectShelfAll : MonoBehaviour
                 SceneManaging.mainMenuActive = 2;
                 SceneManaging.directorMenueActive = 3;
                 break;
-            case 8:         // MenueAboutShelf
+            /*case 8:         // MenueAboutShelf
                 MenueShelf08.SetActive(true);
                 MenueButton08.SetActive(false);
                 SceneManaging.mainMenuActive = 2;
                 SceneManaging.directorMenueActive = 2;
                 Debug.Log("shelf 8");
-                break;
+                break;*/
 
             case 9:         // MenueConfigMain
                 ObjectMenueConfigMain.SetActive(true);
@@ -363,6 +356,10 @@ public class ObjectShelfAll : MonoBehaviour
                 SceneManaging.configMenueActive = 2;
 
                 ObjectMenueDirectorMain.SetActive(false);
+                if (AnimationTimer.GetTimerState() == AnimationTimer.TimerState.playing)
+                {
+                    playerCtrls.ButtonPlay();
+                }
                 break;
             case 10:         // MenueDirectorMain
                 ObjectMenueDirectorMain.SetActive(true);

@@ -21,6 +21,7 @@ public class TimeSliderController : MonoBehaviour, IPointerUpHandler, IDragHandl
     [SerializeField] private RailSpeedController tmpRailSpeedContr;
     [SerializeField] private RailMusicManager tmpRailMusicManager;
     [SerializeField] private LightAnimationRepresentation tmpLightAnim;
+    [SerializeField] private RockVR.Video.Demo.PlayerControls playerCtrls;
     private float railwidthAbsolute = 1670.4f;
     private Slider _thisSlider;
     #endregion
@@ -53,6 +54,12 @@ public class TimeSliderController : MonoBehaviour, IPointerUpHandler, IDragHandl
         {
             ChangeControlsFromTimelineSelection();
         }
+        if (_thisSlider.value == AnimationTimer.GetMaxTime())
+        {
+            Debug.Log("hier");
+            AnimationTimer.StopTimer();
+            playerCtrls.ButtonStop();
+        }
     }
     public void OnPointerUp(PointerEventData data)
     {
@@ -73,7 +80,6 @@ public class TimeSliderController : MonoBehaviour, IPointerUpHandler, IDragHandl
         }
         if (tmpRailMusicManager.playingSample)
         {
-            Debug.Log("hier");
             tmpRailMusicManager.playingSample = false;
             tmpRailMusicManager.sampleImages[tmpRailMusicManager.sampleButtonPressed].color = new Color(1, 1, 1, 0);
         }

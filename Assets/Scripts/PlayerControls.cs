@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -27,7 +25,6 @@ namespace RockVR.Video.Demo
                 aStopButtons[i].transform.GetComponent<Image>().sprite = aStopSprites[i];
             }
         }
-
         void Update()
         {
             _f += Time.deltaTime;
@@ -38,12 +35,10 @@ namespace RockVR.Video.Demo
             }
             //TimerText.text = AnimationTimer.GetTime().ToString("0.00") + "\n - \nfps: " + _fps.ToString("0");
         }
-
         public void ButtonReset()
         {
             AnimationTimer.ResetTime();
         }
-
         public void ButtonPlay()
         {
             switch (AnimationTimer.GetTimerState())
@@ -94,7 +89,6 @@ namespace RockVR.Video.Demo
                     break;
             }
         }
-
         public void ButtonRender()
         {
             if (renderButtonPressed)
@@ -112,7 +106,6 @@ namespace RockVR.Video.Demo
                 SceneManaging.playing = true;
             }
         }
-
         //unused. for showing the use of SetTime()
         public void ChangeTime(float newTime)
         {
