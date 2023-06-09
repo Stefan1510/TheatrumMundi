@@ -43,15 +43,15 @@ public class UnitySwitchExpertUser : MonoBehaviour
 
             _buttonKulissen.transform.SetParent(_buttonKulissen.transform.parent.parent);
             _buttonKulissen.GetComponent<RectTransform>().anchoredPosition = new Vector2(_buttonKulissen.GetComponent<RectTransform>().anchoredPosition.x, 465);
-            _buttonKulissen.transform.SetSiblingIndex(3);
+            _buttonKulissen.transform.SetSiblingIndex(2);
 
             _buttonFigures.transform.SetParent(_buttonFigures.transform.parent.parent);
             _buttonFigures.GetComponent<RectTransform>().anchoredPosition = new Vector2(_buttonKulissen.GetComponent<RectTransform>().anchoredPosition.x, 315);
-            _buttonFigures.transform.SetSiblingIndex(3);
+            _buttonFigures.transform.SetSiblingIndex(2);
 
             _buttonMusic.transform.SetParent(_buttonMusic.transform.parent.parent);
             _buttonMusic.GetComponent<RectTransform>().anchoredPosition = new Vector2(_buttonKulissen.GetComponent<RectTransform>().anchoredPosition.x, 165);
-            _buttonMusic.transform.SetSiblingIndex(3);
+            _buttonMusic.transform.SetSiblingIndex(2);
 
             _buttonLadenSpeichern.SetActive(false);
 
@@ -86,6 +86,10 @@ public class UnitySwitchExpertUser : MonoBehaviour
             {
                 _timesLettersBig[i].SetActive(false);
             }
+        }
+        else
+        {
+            _buttonHelp.GetComponent<PressHelp>().ClickOkayOnStartOverlay();
         }
     }
 

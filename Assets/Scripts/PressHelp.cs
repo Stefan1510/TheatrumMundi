@@ -14,6 +14,7 @@ public class PressHelp : MonoBehaviour
     public GameObject _arrowHelp;
     GameObject _timeSliderBubble;
     [SerializeField] GameObject _countdown;
+    [SerializeField] GameObject imageOkayStartOverlay;
     GameObject _publicHelpMenue;
     [HideInInspector] public bool pressed = false, arrowPressed = false;
     private bool _newScene = true, _isClicked = false;
@@ -185,7 +186,7 @@ public class PressHelp : MonoBehaviour
         }
         else // close about
         {
-            if (!SceneManaging.tutorialActive &&!SceneManaging.saveDialogActive && !SceneManaging.railLengthDialogActive && !SceneManaging.dialogActive)
+            if (!SceneManaging.tutorialActive && !SceneManaging.saveDialogActive && !SceneManaging.railLengthDialogActive && !SceneManaging.dialogActive)
             {
                 aboutScreen.SetActive(false);
                 SceneManaging.aboutActive = false;
@@ -236,6 +237,10 @@ public class PressHelp : MonoBehaviour
                 Debug.Log("pressed: " + pressedLiveView);
             }
         }
+    }
+    public void ClickOkayOnStartOverlay()
+    {
+        imageOkayStartOverlay.SetActive(false);
     }
     private void LateUpdate()
     {
