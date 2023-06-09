@@ -20,7 +20,7 @@ public class RailManager : MonoBehaviour
     public GameObject objectLibrary, UICanvas, parentMenue; // mainMenue
     #endregion
     #region private variables
-    [SerializeField] GameObject scrollRect, areaFiguresPut;
+    [SerializeField] GameObject scrollRect;
     [SerializeField] GameObject prefabRect;
     [SerializeField] TextMeshProUGUI spaceWarning;
     [SerializeField] Image spaceWarningBorder;
@@ -33,21 +33,20 @@ public class RailManager : MonoBehaviour
     Vector2 releaseObjMousePos, screenDifference;
     double minX, maxX;
     float railWidth, railwidthAbsolute;
-    Color colFigureAlpha = new Color(0.06f, 0.66f, .74f, 0.38f);
     Color colFigure = new Color(0.06f, 0.66f, .74f, 0.5f);
     Color colFigureHighlighted = new Color(0f, 0.87f, 1.0f, 0.5f);
     Color colSpaceWarning;
     //Color colFigureRed = new Color(1, 0, 0, 0.5f);
     private GameObject[] figureObjects, figureObjects3D;
     private int currentClickedObjectIndex, currentClickedInstanceObjectIndex, hitTimeline = -1, flyerHit = -1;
-    private int count, maxTimeInSec, currentPosInList;
+    private int maxTimeInSec, currentPosInList;
     private float currentLossyScale;
     private float _timerFigure = 1;
-    int newHitTimeline, currentSpaceActive = -1;
+    int currentSpaceActive = -1;
     private Vector2 diff;
     // private FigureElement ThisFigureElement;    //element to set 3d object
     private float heightOpened, heightClosed, _spaceMax, _spaceMax3D;
-    bool draggingOnTimeline, draggingObject, editTimelineObject, releaseOnTimeline, isInstance, changedRail, _toBeRemoved, _toBeRemovedFromTimeline;
+    bool draggingOnTimeline, draggingObject, editTimelineObject, releaseOnTimeline, isInstance, _toBeRemoved, _toBeRemovedFromTimeline;
     //private bool figureOnLiveView;
     int hitTimelineOld;
     //private int _counterTouched = 0;
@@ -225,23 +224,23 @@ public class RailManager : MonoBehaviour
         // maus ist LINKS vom bereich der figuren
         if (Input.mousePosition.x < listWithoutCurrentFigure[middleIdx].figure.transform.position.x + (listWithoutCurrentFigure[middleIdx].position.y / 2) - 100)
         {
-            Debug.Log("_________________MAUS LINKS__________________");
+            //Debug.Log("_________________MAUS LINKS__________________");
             int idx = isCurrentFigureOverlapping(currentRailIndex, fig, "left", out countOverlaps, listWithoutCurrentFigure);
             if (countOverlaps == 1)
             {
 
-                Debug.Log("hier kann das element frei verschoben werden");
+                //Debug.Log("hier kann das element frei verschoben werden");
                 // overlapping obj is layer 1, obj needs to be layer 2
                 if (listWithoutCurrentFigure[idx].layer == 1)
                 {
-                    Debug.Log("layer 1");
+                    //Debug.Log("layer 1");
                     fig.layer = 2;
                     SceneManaging.scaleToLayerSize(fig.figure, 2, rails[currentRailIndex], rectSize, false);
                 }
                 // overlapping obj is layer 2, obj needs to be layer 1
                 else
                 {
-                    Debug.Log("layer 2");
+                    //Debug.Log("layer 2");
                     fig.layer = 1;
                     SceneManaging.scaleToLayerSize(fig.figure, 1, rails[currentRailIndex], rectSize, false);
                 }
@@ -250,18 +249,18 @@ public class RailManager : MonoBehaviour
             {
                 if (idx != -1)
                 {
-                    Debug.Log("idx: " + idx);
+                    //Debug.Log("idx: " + idx);
                     // gibt es ein idx + 1 mit unterschiedlicher Layer?
                     if (idx < listWithoutCurrentFigure.Count - 1 && listWithoutCurrentFigure[idx + 1].layer != listWithoutCurrentFigure[idx].layer
                     && listWithoutCurrentFigure[idx + 1].objName != fig.objName)
                     {
-                        Debug.Log("es gibt ein idx+1: " + listWithoutCurrentFigure[idx + 1].objName);
+                        //Debug.Log("es gibt ein idx+1: " + listWithoutCurrentFigure[idx + 1].objName);
                         // hat es einen linken nachbarn? 
                         LoopLeft(railIndex, idx + 1, fig, false);
                     }
                     else
                     {
-                        Debug.Log("es gibt kein idx+1");
+                        //Debug.Log("es gibt kein idx+1");
 
                         LoopLeft(railIndex, idx, fig, false);
                     }
@@ -269,34 +268,34 @@ public class RailManager : MonoBehaviour
                 // nichts ueberlappt
                 else
                 {
-                    Debug.Log("not overlapping");
-                    if (fig.layer != 1)
-                    {
-                        SceneManaging.scaleToLayerSize(fig.figure, 1, rails[currentRailIndex], rectSize, false);
-                        fig.layer = 1;
-                    }
+                    //Debug.Log("not overlapping");
+                    // if (fig.layer != 1)
+                    // {
+                    SceneManaging.scaleToLayerSize(fig.figure, 1, rails[currentRailIndex], rectSize, false);
+                    fig.layer = 1;
+                    // }
                 }
             }
         }
         // maus ist RECHTS vom bereich der figuren
         else
         {
-            Debug.Log("_________________MAUS RECHTS__________________");
+            //Debug.Log("_________________MAUS RECHTS__________________");
             int idx = isCurrentFigureOverlapping(currentRailIndex, fig, "right", out countOverlaps, listWithoutCurrentFigure);
             if (countOverlaps == 1)
             {
-                Debug.Log("hier kann das element frei verschoben werden");
+                //Debug.Log("hier kann das element frei verschoben werden");
                 // overlapping obj is layer 1, obj needs to be layer 2
                 if (listWithoutCurrentFigure[idx].layer == 1)
                 {
-                    Debug.Log("layer 1");
+                    //Debug.Log("layer 1");
                     fig.layer = 2;
                     SceneManaging.scaleToLayerSize(fig.figure, 2, rails[currentRailIndex], rectSize, false);
                 }
                 // overlapping obj is layer 2, obj needs to be layer 1
                 else
                 {
-                    Debug.Log("layer 2");
+                    // Debug.Log("layer 2");
                     fig.layer = 1;
                     SceneManaging.scaleToLayerSize(fig.figure, 1, rails[currentRailIndex], rectSize, false);
                 }
@@ -305,25 +304,28 @@ public class RailManager : MonoBehaviour
             {
                 if (idx != -1)
                 {
-                    Debug.Log("idx: " + idx);
+                    //Debug.Log("idx: " + idx);
                     // gibt es ein idx - 1 mit unterschiedlicher Layer?
                     if (idx > 0 && listWithoutCurrentFigure[idx - 1].layer != listWithoutCurrentFigure[idx].layer)
                     {
-                        Debug.Log("es gibt ein idx-1: " + listWithoutCurrentFigure[idx - 1].objName);
+                        //Debug.Log("es gibt ein idx-1: " + listWithoutCurrentFigure[idx - 1].objName);
                         // hat es einen rechten nachbarn? 
                         LoopRight(railIndex, idx - 1, fig, false);
                     }
                     else
                     {
-                        Debug.Log("es gibt kein idx-1");
+                        //Debug.Log("es gibt kein idx-1");
                         LoopRight(railIndex, idx, fig, false);
                     }
                 }
                 else
                 {
-                    Debug.Log("not overlapping");
+                    //Debug.Log("not overlapping");
+                    // if (fig.layer != 1)
+                    // {
                     SceneManaging.scaleToLayerSize(fig.figure, 1, rails[currentRailIndex], rectSize, false);
                     fig.layer = 1;
+                    // }
                 }
             }
         }
@@ -414,7 +416,7 @@ public class RailManager : MonoBehaviour
     private bool isRailAreaHit(Vector2 mousePos)
     {
         bool val = false;
-        if (mousePos.x <= maxX && mousePos.x > minX && mousePos.y <= areaFiguresPut.transform.position.y + areaFiguresPut.GetComponent<RectTransform>().sizeDelta.y / 2 && mousePos.y > areaFiguresPut.transform.position.y - areaFiguresPut.GetComponent<RectTransform>().sizeDelta.y / 2)
+        if (mousePos.x <= maxX && mousePos.x > minX && mousePos.y <= Screen.height * 0.36f && mousePos.y > 0)
             val = true;
         return val;
     }
@@ -484,13 +486,13 @@ public class RailManager : MonoBehaviour
                 {
                     if (listWithoutCurrentFigure[i].layer == 1)
                     {
-                       // Debug.Log("layer 1");
+                        // Debug.Log("layer 1");
                         SceneManaging.scaleToLayerSize(fig.figure, 1, rails[railIndex], rectSize, false);
                         fig.layer = 1;
                     }
                     else
                     {
-                       // Debug.Log("layer 2");
+                        // Debug.Log("layer 2");
                         SceneManaging.scaleToLayerSize(fig.figure, 2, rails[railIndex], rectSize, false);
                         fig.layer = 2;
                     }
@@ -504,12 +506,12 @@ public class RailManager : MonoBehaviour
                     if (!fromLeft)
                     {
                         // hier muss links weitergesucht werden
-                       // Debug.Log("kein platz bis zum rand, es muss links weitergesucht werden");
+                        // Debug.Log("kein platz bis zum rand, es muss links weitergesucht werden");
                         LoopLeft(currentRailIndex, listWithoutCurrentFigure.Count - 1, fig, true);
                     }
                     else
                     {
-                       // Debug.Log("alles voll!");
+                        // Debug.Log("alles voll!");
                         if (currentClickedInstanceObjectIndex != -1)
                         {
                             // Debug.Log("in der timeline");
@@ -654,9 +656,10 @@ public class RailManager : MonoBehaviour
         {
             Debug.Log("schon offen");
             // if timeline is already open, unhighlight all
-            for (int i = 0; i < railList[currentRailIndex].myObjects.Count; i++)
+            for (int i = 0; i < railList[index].myObjects.Count; i++)
             {
-                SceneManaging.highlight(railList[currentRailIndex].myObjects[i].figure3D, railList[currentRailIndex].myObjects[i].figure, false, "figure");
+                Debug.Log("figure: " + railList[index].myObjects[i].objName);
+                SceneManaging.highlight(railList[index].myObjects[i].figure3D, railList[index].myObjects[i].figure, false, "figure");
             }
         }
         else
@@ -851,9 +854,9 @@ public class RailManager : MonoBehaviour
         RectTransform tmpRectTransform = newCopyOfFigure.GetComponent<RectTransform>();
 
         //add object to list which objects are on timeline, set placed figures to timelineInstanceObjects-list
+        newCopyOfFigure.transform.position = new Vector2(momentOrPosX, newCopyOfFigure.transform.position.y);
         newCopyOfFigure.transform.SetParent(rails[currentRailIndex].transform);
         newCopyOfFigure.transform.localScale = Vector3.one;
-        tmpRectTransform.anchoredPosition = new Vector2(tmpRectTransform.anchoredPosition.x / screenDifference.x, tmpRectTransform.anchoredPosition.y);
         Figure oP = new Figure();
         oP.objName = newCopyOfFigure.name;
         oP.position = new Vector2(tmpRectTransform.anchoredPosition.x, tmpRectTransform.sizeDelta.x);
@@ -1319,11 +1322,9 @@ public class RailManager : MonoBehaviour
             #region identifying
             if (!SceneManaging.tutorialActive)  // wenn tutorial gerade ausgeführt wird, soll nichts klickbar sein
             {
-                //Debug.Log("ind: "+currentRailIndex);
-                // if (ImageTimelineSelection.GetRailType() != 2)
-                // {
                 //identify which gameobject you clicked
-                currentClickedObjectIndex = SceneManaging.identifyClickedObject(figureObjects);         //method fills up the current clicked index
+                if (Input.mousePosition.y > Screen.height * 0.45f)
+                    currentClickedObjectIndex = SceneManaging.identifyClickedObject(figureObjects);         //method fills up the current clicked index
                 if (currentRailIndex != -1)
                 {
                     currentClickedInstanceObjectIndex = SceneManaging.identifyClickedObjectByList(railList[currentRailIndex].myObjects);
@@ -1348,15 +1349,11 @@ public class RailManager : MonoBehaviour
                 {
                     for (int i = 0; i < rails.Length; i++)
                     {
-                        //Debug.Log("i: "+i+", currail: "+currentRailIndex);
-                        if (rails[i].GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(getMousePos) && i != currentRailIndex)
+                        if (rails[i].GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(getMousePos))
                         {
                             currentRailIndex = i;
                             //open or close timeline
-                            if (!railList[i].isTimelineOpen)
-                            {
-                                openTimelineByClick(railList[i].isTimelineOpen, i, false);
-                            }
+                            openTimelineByClick(railList[i].isTimelineOpen, i, false);
                         }
                     }
                 }
@@ -1700,6 +1697,7 @@ public class RailManager : MonoBehaviour
             // wenn zwischenraum zwischen schienen getroffen wird
             else if (isRailAreaHit(getMousePos) && !SceneManaging.flyerActive)
             {
+                //Debug.Log("hier");
                 //snapping/lock y-axis
                 setObjectOnTimeline(figureObjects[currentClickedObjectIndex], rails[currentRailIndex].transform.position.y);
 

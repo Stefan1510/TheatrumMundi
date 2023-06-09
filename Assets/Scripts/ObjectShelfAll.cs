@@ -33,7 +33,6 @@ public class ObjectShelfAll : MonoBehaviour
     [SerializeField] private RockVR.Video.Demo.PlayerControls playerCtrls;
 
     public GameObject gameController;//, overlayWaiting;
-    [SerializeField] private AnimationTimer animTimer;
 
     #endregion
     void Start()

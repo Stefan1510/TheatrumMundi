@@ -28,7 +28,7 @@ public class RailMusicManager : MonoBehaviour
     AudioSource audioSource;
     Vector2[] objectShelfPosition;
     Vector2 objectShelfSize;
-    bool draggingOnTimeline, draggingObject, editTimelineObject, releaseOnTimeline, playingMusic, isInstance,  fading;
+    bool draggingOnTimeline, draggingObject, editTimelineObject, releaseOnTimeline, playingMusic, isInstance, fading;
     public bool playingSample;
     GameObject[] objectShelfParent;
     GameObject newCopyOfFigure;
@@ -456,7 +456,8 @@ public class RailMusicManager : MonoBehaviour
                             spaceWarning.transform.position = new Vector2(spaceWarning.transform.position.x, gameObject.transform.position.y);
                             _toBeRemoved = true;
                             spaceWarning.enabled = true;
-                            //Debug.Log("vom shelf");
+                            spaceWarningBorder.enabled = true;
+                            spaceWarningBorder.transform.position = new Vector2(spaceWarning.transform.position.x, gameObject.transform.position.y);
                             _idleTimer = 0;
                         }
                     }
@@ -557,7 +558,8 @@ public class RailMusicManager : MonoBehaviour
                             spaceWarning.transform.position = new Vector2(spaceWarning.transform.position.x, transform.position.y);
                             _toBeRemoved = true;
                             spaceWarning.enabled = true;
-                            _idleTimer = 0;
+                            spaceWarningBorder.enabled = true;
+                            spaceWarningBorder.transform.position = new Vector2(spaceWarning.transform.position.x, gameObject.transform.position.y);_idleTimer = 0;
                             //Debug.Log("vom shelf");
                             //WarningAnimation();
                         }
@@ -693,7 +695,6 @@ public class RailMusicManager : MonoBehaviour
     }
     public void CreateNew2DInstance(int musObjNr, float moment, float savedLayer)
     {
-        //Debug.Log("moment: " + moment);
         //create a copy of this timelineObject and keep the original one
         newCopyOfFigure = Instantiate(figureObjects[musObjNr]);
 
@@ -713,7 +714,6 @@ public class RailMusicManager : MonoBehaviour
 
         //parent and position
         float posX = UtilitiesTm.FloatRemap(moment, 0, AnimationTimer.GetMaxTime(), 0, railWidthAbsolute);
-        // Debug.Log("posX: " + posX);
         newCopyOfFigure.transform.SetParent(gameObject.transform);
         newCopyOfFigure.transform.localPosition = new Vector3(posX, 0, -1);
 
@@ -736,9 +736,6 @@ public class RailMusicManager : MonoBehaviour
         oP.neighborRight = -1;
         myObjects.Add(oP);
 
-        // tmpRectTransform.anchoredPosition = new Vector3(posX, GetComponent<RectTransform>().rect.height / 2, -1);
-        // oP.position = new Vector2(tmpRectTransform.anchoredPosition.x, rectSize);
-
         if (savedLayer == 1)
         {
             SceneManaging.scaleToLayerSize(newCopyOfFigure, 1, gameObject, tmpLength, true);
@@ -756,8 +753,6 @@ public class RailMusicManager : MonoBehaviour
             sizeLayering = 2;
             oP.layer = 2;
         }
-
-        // box collider ausschalten? 
     }
     private void createRectangle(GameObject obj, float height, double animLength)
     {
@@ -1018,6 +1013,8 @@ public class RailMusicManager : MonoBehaviour
             colSpaceWarning = new Color(1, 0, 0, 1);
             spaceWarning.color = colSpaceWarning;
             spaceWarning.enabled = false;
+            spaceWarningBorder.color = colSpaceWarning;
+            spaceWarningBorder.enabled = false;
         }
         if (Input.GetMouseButtonDown(0)) //left mouse button down
         {
@@ -1156,9 +1153,7 @@ public class RailMusicManager : MonoBehaviour
                     {
                         if (myObjects[i].objName == currentName)
                         {
-                            //Debug.Log("tauschen");
                             currentClickedInstanceObjectIndex = i;
-                            //currentObj = currentObj;
                         }
                     }
                 }
@@ -1166,7 +1161,28 @@ public class RailMusicManager : MonoBehaviour
                 //if you click an object in timeline (for dragging) //move object
                 updateObjectPosition(currentObj, getMousePos - diff);
                 setObjectOnTimeline(currentObj.musicPiece, transform.position.y); //snapping/lock y-axis
+                
+                #region limits front and back of rail
+                // limit front of rail
+                if (currentPos.anchoredPosition.x <= 0)
+                {
+                    currentPos.anchoredPosition = new Vector2(0, currentPos.anchoredPosition.y);    // tendenziell muesste das eher in buttonUp
+                    currentObj.position = new Vector2(0, currentObj.position.y);
+                }
+                // limit back of rail
+                else if ((currentPos.anchoredPosition.x + currentPos.sizeDelta.x) > railWidthAbsolute)
+                {
+                    currentPos.anchoredPosition = new Vector2(railWidthAbsolute - currentPos.sizeDelta.x, currentPos.anchoredPosition.y);
+                    currentObj.position = new Vector2(railWidthAbsolute - currentPos.sizeDelta.x, currentObj.position.y);
+                }
 
+                // if (Physics2D.OverlapPoint(getMousePos) == false)       // mouse outside
+                // {
+                //     //SceneManaging.objectsTimeline = ((int)Char.GetNumericValue(timelineImage.name[17]) - 1);  // save old timeline to remove instance of this timeline
+                //     draggingObject = true;
+                //     draggingOnTimeline = false;
+                // }
+                #endregion
                 #region Stapeln von Ebenen
                 // if there is only one layer on Rail
                 if (sizeLayering == 1)
@@ -1211,32 +1227,6 @@ public class RailMusicManager : MonoBehaviour
                 }
                 #endregion
 
-
-                #region limits front and back of rail
-                // limit front of rail
-                if (currentPos.anchoredPosition.x <= 0)
-                {
-                    currentPos.anchoredPosition = new Vector2(0, currentPos.anchoredPosition.y);    // tendenziell muesste das eher in buttonUp
-                    currentObj.position = new Vector2(0, currentObj.position.y);
-                }
-
-                // limit back of rail
-                else if ((currentPos.anchoredPosition.x + currentPos.sizeDelta.x) > railWidthAbsolute)
-                {
-                    //currentObj.GetComponent<RectTransform>().anchoredPosition = new Vector3((GetComponent<RectTransform>().rect.width + (0.03f * Screen.width) - currentObj.transform.GetComponent<BoxCollider2D>().size.x), currentObj.GetComponent<RectTransform>().anchoredPosition.y, -1);
-                    //currentObj.GetComponent<RectTransform>().anchoredPosition = new Vector2(GetComponent<RectTransform>().rect.width - currentSize, currentObj.GetComponent<RectTransform>().anchoredPosition.y);
-
-                    currentPos.anchoredPosition = new Vector2(railWidthAbsolute - currentPos.sizeDelta.x, currentPos.anchoredPosition.y);
-                    currentObj.position = new Vector2(railWidthAbsolute - currentPos.sizeDelta.x, currentObj.position.y);
-                }
-
-                // if (Physics2D.OverlapPoint(getMousePos) == false)       // mouse outside
-                // {
-                //     //SceneManaging.objectsTimeline = ((int)Char.GetNumericValue(timelineImage.name[17]) - 1);  // save old timeline to remove instance of this timeline
-                //     draggingObject = true;
-                //     draggingOnTimeline = false;
-                // }
-                #endregion
             }
             releaseOnTimeline = true;
         }
@@ -1302,17 +1292,9 @@ public class RailMusicManager : MonoBehaviour
                     else
                         tmpLength = UtilitiesTm.FloatRemap(newCopyOfFigure.GetComponent<MusicLength>().musicLength, 0, AnimationTimer.GetMaxTime(), 0, (float)gameObject.GetComponent<RectTransform>().rect.width);
 
-                    createRectangle(newCopyOfFigure, tmpLength, gameObject.GetComponent<RectTransform>().rect.height);
-
-                    figCounterCircle[currentClickedObjectIndex].text = (countName + 1).ToString();
-
-                    //parent and position
-                    newCopyOfFigure.transform.SetParent(gameObject.transform);
-                    newCopyOfFigure.transform.localScale = Vector3.one;
-
                     #region limit front and end of rail
                     //------------------------------------------limit front of rail---------------------------------------------//
-                    if (figureObjects[currentClickedObjectIndex].GetComponent<RectTransform>().position.x < minX)  // 50 is half the box Collider width (mouse pos is in the middle of the figure)
+                    if (tmpRectTransform.position.x < minX)  // 50 is half the box Collider width (mouse pos is in the middle of the figure)
                     {
                         tmpRectTransform.position = new Vector3((float)minX, figureObjects[currentClickedObjectIndex].transform.position.y, -1);
                     }
@@ -1325,11 +1307,16 @@ public class RailMusicManager : MonoBehaviour
                     else
                     {
                         newCopyOfFigure.transform.position = new Vector3(figureObjects[currentClickedObjectIndex].transform.position.x, figureObjects[currentClickedObjectIndex].transform.position.y, -1);
-                        //Debug.Log("anch pos: "+tmpRectTransform.anchoredPosition.x+", pos: "+newCopyOfFigure.transform.position.x);
-                        // pos to mouse pos
-                        //tmpRectTransform.transform.position = new Vector2(getMousePos.x, tmpRectTransform.transform.position.y);
                     }
                     #endregion
+
+                    createRectangle(newCopyOfFigure, tmpLength, gameObject.GetComponent<RectTransform>().rect.height);
+
+                    figCounterCircle[currentClickedObjectIndex].text = (countName + 1).ToString();
+
+                    //parent and position
+                    newCopyOfFigure.transform.SetParent(gameObject.transform);
+                    newCopyOfFigure.transform.localScale = Vector3.one;
 
                     // size of rectangle becomes size for figure that is clickable (bring in front)
                     tmpRectTransform.localPosition = new Vector3(tmpRectTransform.localPosition.x, tmpRectTransform.localPosition.y, -1.0f);
@@ -1342,7 +1329,6 @@ public class RailMusicManager : MonoBehaviour
                     figureObjects[currentClickedObjectIndex].transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = objectShelfSize;
                     figureObjects[currentClickedObjectIndex].GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -75);
                     figureObjects[currentClickedObjectIndex].transform.SetSiblingIndex(1);
-                    //figureObjects[currentClickedObjectIndex].transform.GetChild(1).gameObject.SetActive(false);
 
                     #region calculating Layer Overlap
 
@@ -1362,7 +1348,6 @@ public class RailMusicManager : MonoBehaviour
                         if (isCurrentFigureOverlapping(oP, "", out countOverlaps, myObjects) != -1)
                         {
                             sizeLayering = 2;
-                            //Debug.Log("something overlapping");
                             SceneManaging.scaleToLayerSize(newCopyOfFigure, 2, gameObject, tmpLength, false);
                             oP.layer = 2;
                             // others to 1
@@ -1371,7 +1356,6 @@ public class RailMusicManager : MonoBehaviour
                                 if (myObjects[i].layer == 1)
                                     SceneManaging.scaleToLayerSize(myObjects[i].musicPiece, 1, gameObject, myObjects[i].position.y, false);
                             }
-                            //Debug.Log("op: "+oP.position);
                         }
 
                     }
@@ -1398,7 +1382,6 @@ public class RailMusicManager : MonoBehaviour
                     musicClipElementInstance.name = figureObjects[currentClickedObjectIndex].name + "_instance" + countName.ToString("000");
                     StaticSceneData.StaticData.musicClipElements[currentClickedObjectIndex].musicClipElementInstances.Add(musicClipElementInstance);
 
-                    //Debug.Log("figure: " + myObjects[currentPosInList].musicPiece.name);
                     SceneManaging.highlight(myObjects[currentPosInList].musicPiece, true);
 
                     ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1431,7 +1414,6 @@ public class RailMusicManager : MonoBehaviour
                         {
                             if (myObjects[i].objName == currentName)
                             {
-                                Debug.Log("remove: " + myObjects[i].objName);
                                 removeObjectFromTimeline(myObjects[i]);
                             }
                         }

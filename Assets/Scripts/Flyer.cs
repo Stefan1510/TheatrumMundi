@@ -7,7 +7,7 @@ public class Flyer : MonoBehaviour
     [SerializeField] GameObject warningPanel;
     [SerializeField] SaveFileController tmpFileController;
     [SerializeField] GameObject[] _flyerSpaces;
-
+    [SerializeField] private RockVR.Video.Demo.PlayerControls playerCtrls;
     void Awake()
     {
         gameObject.SetActive(false);
@@ -48,10 +48,11 @@ public class Flyer : MonoBehaviour
             SceneManaging.dialogActive = false;
             warningPanel.SetActive(false);
         }
-
         // open flyer
         else
         {
+            // slider soll ganz am anfang sein
+            playerCtrls.ButtonStop();
             SceneManaging.dialogActive = false;
 
             // disable 'figures in schiene ziehen' in Rail Manager

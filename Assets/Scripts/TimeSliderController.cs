@@ -56,8 +56,6 @@ public class TimeSliderController : MonoBehaviour, IPointerUpHandler, IDragHandl
         }
         if (_thisSlider.value == AnimationTimer.GetMaxTime())
         {
-            Debug.Log("hier");
-            AnimationTimer.StopTimer();
             playerCtrls.ButtonStop();
         }
     }
@@ -158,23 +156,40 @@ public class TimeSliderController : MonoBehaviour, IPointerUpHandler, IDragHandl
             }
         }
 
+        // update music
+        for (int j = 0; j < tmpRailMusicManager.myObjects.Count; j++)
+        {
+            RectTransform tmpRectTransform = tmpRailMusicManager.myObjects[j].musicPiece.GetComponent<RectTransform>();
+            float tmpMoment = UtilitiesTm.FloatRemap(tmpRailMusicManager.myObjects[j].position.x, 0, railwidthAbsolute, 0, AnimationTimer.GetMaxTime());
+            float objectAnimationLength = tmpRailMusicManager.myObjects[j].musicPiece.GetComponent<MusicLength>().musicLength;
+            float rectSize = objectAnimationLength / (60 * _sliderMaxLength.value) * railwidthAbsolute;
+            float posX = UtilitiesTm.FloatRemap(tmpMoment, 0, _sliderMaxLength.value * 60, 0, railwidthAbsolute);
+
+            tmpRailMusicManager.myObjects[j].musicPiece.GetComponent<RectTransform>().sizeDelta = new Vector2(rectSize, tmpRailMusicManager.myObjects[j].musicPiece.GetComponent<RectTransform>().sizeDelta.y);
+            tmpRailMusicManager.myObjects[j].musicPiece.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(rectSize, tmpRailMusicManager.myObjects[j].musicPiece.GetComponent<RectTransform>().sizeDelta.y);
+            tmpRailMusicManager.myObjects[j].musicPiece.GetComponent<RectTransform>().anchoredPosition = new Vector2(posX, tmpRailMusicManager.myObjects[j].musicPiece.GetComponent<RectTransform>().anchoredPosition.y);
+
+            tmpRailMusicManager.myObjects[j].position = new Vector2(posX, rectSize);
+        }
+
         tmpAnimTimer.SetMaxTime(60 * _sliderMaxLength.value);
         _inputSliderLength.text = _sliderMaxLength.value.ToString("0");
         GetComponent<Slider>().maxValue = (60 * _sliderMaxLength.value);
         StaticSceneData.StaticData.pieceLength = 60 * int.Parse(_inputSliderLength.text);
-
-        // update music
-        //tmpRailMusicManager.
-
         // update light
         tmpLightAnim.ChangeImage();
     }
     public void PressInfoButton(bool on)
     {
         if (on)
-            _settingsLength.SetActive(true);
+        {
+            if (!SceneManaging.tutorialActive && !SceneManaging.aboutActive)
+                _settingsLength.SetActive(true);
+        }
         else
+        {
             _settingsLength.SetActive(false);
+        }
     }
     public void ChangeSliderValue()
     {
