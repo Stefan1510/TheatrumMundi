@@ -23,6 +23,7 @@ public class RailManager : MonoBehaviour
     [SerializeField] GameObject scrollRect;
     [SerializeField] GameObject prefabRect;
     [SerializeField] TextMeshProUGUI spaceWarning;
+    [SerializeField] RailMusicManager tmpRailMusicMan;
     [SerializeField] Image spaceWarningBorder;
     Vector2 objectShelfSize;
     GameObject[] objectShelfParent;
@@ -269,11 +270,8 @@ public class RailManager : MonoBehaviour
                 else
                 {
                     //Debug.Log("not overlapping");
-                    // if (fig.layer != 1)
-                    // {
                     SceneManaging.scaleToLayerSize(fig.figure, 1, rails[currentRailIndex], rectSize, false);
                     fig.layer = 1;
-                    // }
                 }
             }
         }
@@ -654,11 +652,9 @@ public class RailManager : MonoBehaviour
         }
         if (thisTimelineOpen)
         {
-            Debug.Log("schon offen");
             // if timeline is already open, unhighlight all
             for (int i = 0; i < railList[index].myObjects.Count; i++)
             {
-                Debug.Log("figure: " + railList[index].myObjects[i].objName);
                 SceneManaging.highlight(railList[index].myObjects[i].figure3D, railList[index].myObjects[i].figure, false, "figure");
             }
         }
@@ -693,15 +689,15 @@ public class RailManager : MonoBehaviour
                 }
             }
             // wenn music-rail offen ist
-            if (tmpUIController.RailMusic.GetComponent<RailMusicManager>().isTimelineOpen)
+            if (tmpRailMusicMan.isTimelineOpen)
             {
                 SceneManaging.closeRail(tmpUIController.RailMusic.gameObject, railwidthAbsolute);
-                tmpUIController.RailMusic.GetComponent<RailMusicManager>().openCloseObjectInTimeline(false);
-                tmpUIController.RailMusic.GetComponent<RailMusicManager>().isTimelineOpen = false;
+                tmpRailMusicMan.openCloseObjectInTimeline(false);
+                tmpRailMusicMan.isTimelineOpen = false;
 
-                for (int j = 0; j < tmpUIController.RailMusic.GetComponent<RailMusicManager>().myObjects.Count; j++)
+                for (int k = 0; k < tmpRailMusicMan.myObjects.Count; k++)
                 {
-                    SceneManaging.highlight(tmpUIController.RailMusic.GetComponent<RailMusicManager>().myObjects[j].musicPiece, false);
+                    SceneManaging.highlight(tmpRailMusicMan.myObjects[k].musicPiece, false);
                 }
             }
 
@@ -984,8 +980,8 @@ public class RailManager : MonoBehaviour
         {
             // Save to SceneData:
             FigureInstanceElement thisFigureInstanceElement = new FigureInstanceElement();
-            thisFigureInstanceElement.instanceNr = (countCopiesOfObject(figureObjects[figureNr].name)) - 1; //index
-            thisFigureInstanceElement.name = curr3DObject.name + "_" + (countCopiesOfObject(figureObjects[figureNr].name) - 1).ToString("000");
+            thisFigureInstanceElement.instanceNr = countName; //index
+            thisFigureInstanceElement.name = curr3DObject.name + "_" +countName.ToString("000");
             thisFigureInstanceElement.railStart = (int)Char.GetNumericValue(rails[currentRailIndex].name[17]) - 1; //railIndex
             thisFigureInstanceElement.moment = momentOrPosX;
             thisFigureInstanceElement.layer = 0;

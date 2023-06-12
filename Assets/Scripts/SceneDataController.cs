@@ -228,6 +228,7 @@ public class SceneDataController : MonoBehaviour
 
         //music title elements (Musik)
         MusicApplyToScene(sceneData.musicClipElements);
+        Debug.Log("hi");
     }
 
     public void RailsApplyToScene(List<RailElement> railElements)

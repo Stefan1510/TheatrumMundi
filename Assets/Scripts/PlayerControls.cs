@@ -11,6 +11,7 @@ namespace RockVR.Video.Demo
         public Sprite[] aPlaySprites;
         public Sprite[] aPauseSprites;
         public Sprite[] aStopSprites;
+        [SerializeField] private RailMusicManager tmpRailMusicMan;
         private float _f = 0.0f;
         private float _fps = 0.0f;
         private bool renderButtonPressed = false;
@@ -61,6 +62,8 @@ namespace RockVR.Video.Demo
                     break;
                 case AnimationTimer.TimerState.paused:
                     AnimationTimer.StartTimer();
+                    //start music
+                    //tmpRailMusicMan.PlayLatestPiece(true);
                     SceneManaging.playing = true;
                     for (int i = 0; i < aPlayButtons.Length; i++)
                     {

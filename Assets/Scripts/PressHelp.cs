@@ -14,6 +14,7 @@ public class PressHelp : MonoBehaviour
     public GameObject _arrowHelp;
     GameObject _timeSliderBubble;
     [SerializeField] GameObject _countdown;
+    [SerializeField] GameObject _introOverlay;
     [SerializeField] GameObject imageOkayStartOverlay;
     GameObject _publicHelpMenue;
     [HideInInspector] public bool pressed = false, arrowPressed = false;
@@ -234,7 +235,7 @@ public class PressHelp : MonoBehaviour
                 }
                 //pressed = true;
                 pressedLiveView = true;
-                Debug.Log("pressed: " + pressedLiveView);
+                //Debug.Log("pressed: " + pressedLiveView);
             }
         }
     }
@@ -320,8 +321,8 @@ public class PressHelp : MonoBehaviour
         if (_tutorialCounter == -1 && !_isClicked)
         {
             _idleTimer += Time.deltaTime;
-            // if (!_newScene && !SceneManaging.playing)
-            //_timerOverlay += Time.deltaTime;
+            if (!_newScene && !SceneManaging.playing)
+            _timerOverlay += Time.deltaTime;
         }
         if (_idleTimer > _helpAnimWaitTime && !SceneManaging.playing)
         {
@@ -356,6 +357,7 @@ public class PressHelp : MonoBehaviour
                 _timerOverlay = 0;
                 StartCoroutine(gameController.GetComponent<SaveFileController>().LoadFileFromWWW("*Musterszene_leer.json", "fromCode"));
                 _newScene = true;
+                _introOverlay.SetActive(true);
             }
         }
     }

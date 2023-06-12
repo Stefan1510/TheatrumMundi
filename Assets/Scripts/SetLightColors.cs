@@ -88,7 +88,7 @@ public class SetLightColors : MonoBehaviour
                 {
                     if (element.lightStagePosition != 0) //(element.lightStagePosition == 1 || element.lightStagePosition == 2 || element.lightStagePosition == 3)
                     {
-                        Debug.Log("element: " + element.goLightElement.name);
+                        //Debug.Log("element: " + element.goLightElement.name);
                         element.goLightElement.GetComponent<Light>().color = new Color32(colorNow.r, colorNow.g, colorNow.b, 255);
                     }
                     int lightIndex = StaticSceneData.StaticData.lightElements.FindIndex(le => le.name == element.goLightElement.name);

@@ -6,9 +6,10 @@ using UnityEngine.UI;
 public class SwitchLiveView : MonoBehaviour
 {
     public GameObject liveViewFullscreenObj;
-    public Button PlayBtn;
+    public Button PlayBtn, StopBtn;
     public Sprite PlayIcon;
     public Sprite PauseIcon;
+    [SerializeField] private GameObject configMenue;
 
     void Start()
     {
@@ -18,6 +19,16 @@ public class SwitchLiveView : MonoBehaviour
     {
         liveViewFullscreenObj.SetActive(true);
         SceneManaging.fullscreenOn = true;
+        if(configMenue.activeSelf)
+        {
+            PlayBtn.interactable = false;
+            StopBtn.interactable = false;
+        }
+        else
+        {
+            PlayBtn.interactable = true;
+            StopBtn.interactable = true;
+        }
     }
     public void SwitchToNormalsceen()
     {

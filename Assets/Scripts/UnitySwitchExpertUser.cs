@@ -92,8 +92,6 @@ public class UnitySwitchExpertUser : MonoBehaviour
             _buttonHelp.GetComponent<PressHelp>().ClickOkayOnStartOverlay();
         }
     }
-
-
     void Start()
     {
         _gameControllerStarted = true;
@@ -102,7 +100,6 @@ public class UnitySwitchExpertUser : MonoBehaviour
             _buttonKulissen.transform.GetChild(1).gameObject.SetActive(false);
         }
     }
-
     void Update()
     {
         if (_gameControllerStarted)
@@ -115,7 +112,6 @@ public class UnitySwitchExpertUser : MonoBehaviour
             }
         }
     }
-
     public void DeactivateExpertTools()
     {
         if (!_isExpert)
