@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class UnitySwitchExpertUser : MonoBehaviour
 {
-    public bool _isExpert = true;
+    public bool _isExpert;
     [SerializeField] private GameObject _buttonTimelineLength;
 
     #region Config Menue

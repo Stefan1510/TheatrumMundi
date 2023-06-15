@@ -377,6 +377,5 @@ public class ObjectShelfAll : MonoBehaviour
         StaticSceneData.Everything3D();
         MenueContentRails.PublicUpdate();
         SceneManaging.isPreviewLoaded = true;
-        //overlayWaiting.SetActive(false);
     }
 }

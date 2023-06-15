@@ -88,6 +88,7 @@ public class PressHelp : MonoBehaviour
     {
         if (i == 0) // help
         {
+            //Debug.Log("hier");
             if (!SceneManaging.aboutActive && !SceneManaging.saveDialogActive && !SceneManaging.railLengthDialogActive && !SceneManaging.dialogActive)
             {
                 //Debug.Log("pressed: " + pressed);
@@ -99,7 +100,7 @@ public class PressHelp : MonoBehaviour
                     helpOverlayMenue4.SetActive(false);
                     helpOverlayMenue5.SetActive(false);
                     helpOverlayMenue6.SetActive(false);
-                    helpButtonPressed.SetActive(false);
+                    //helpButtonPressed.SetActive(false);
                     pressed = false;
 
                     maskTimeSlider.SetActive(false);
@@ -110,18 +111,18 @@ public class PressHelp : MonoBehaviour
 
                 else
                 {
-                    helpButtonPressed.SetActive(true);
+                    //helpButtonPressed.SetActive(true);
                     if (SceneManaging.flyerActive)  // theaterzettel
                     {
                         helpOverlayFlyer.SetActive(true);
-                        _tutorialCounter = 1;
+                        _tutorialCounter = 0;
                         helpOverlayFlyer.transform.GetChild(0).gameObject.SetActive(true);
                         _publicHelpMenue = helpOverlayFlyer;
                     }
                     else if (SceneManaging.mainMenuActive == 1 && SceneManaging.configMenueActive == 1)  // Buehne
                     {
                         helpOverlayMenue1.SetActive(true);
-                        _tutorialCounter = 1;
+                        _tutorialCounter = 0;
                         _publicHelpMenue = helpOverlayMenue1;
                         helpOverlayMenue1.transform.GetChild(0).gameObject.SetActive(true);
                     }
@@ -129,7 +130,7 @@ public class PressHelp : MonoBehaviour
                     {
                         // Debug.Log("hier");
                         helpOverlayMenue5.SetActive(true);
-                        _tutorialCounter = 1;
+                        _tutorialCounter = 0;
                         helpOverlayMenue5.transform.GetChild(0).gameObject.SetActive(true);
                         _publicHelpMenue = helpOverlayMenue5;
                         _timeSliderBubble = timeSliderBubbleFigure;
@@ -138,9 +139,8 @@ public class PressHelp : MonoBehaviour
                     {
                         helpOverlayMenue2.SetActive(true);
                         _publicHelpMenue = helpOverlayMenue2;
-                        _tutorialCounter = 1;
+                        _tutorialCounter = 0;
                         helpOverlayMenue2.transform.GetChild(0).gameObject.SetActive(true);
-
                     }
                     /*else if (SceneManaging.mainMenuActive == 2 && SceneManaging.directorMenueActive == 2)    // (light director) verworfen
                     {
@@ -152,13 +152,13 @@ public class PressHelp : MonoBehaviour
                         helpOverlayMenue3.SetActive(true);
                         _publicHelpMenue = helpOverlayMenue3;
                         helpOverlayMenue3.transform.GetChild(0).gameObject.SetActive(true);
-                        _tutorialCounter = 1;
+                        _tutorialCounter = 0;
                     }
                     else if (SceneManaging.directorMenueActive == 3 && SceneManaging.mainMenuActive == 2)  // musik
                     {
                         helpOverlayMenue6.SetActive(true);
                         _publicHelpMenue = helpOverlayMenue6;
-                        _tutorialCounter = 1;
+                        _tutorialCounter = 0;
                         helpOverlayMenue6.transform.GetChild(0).gameObject.SetActive(true);
                         _timeSliderBubble = timeSliderBubbleMusic;
                     }
@@ -167,7 +167,7 @@ public class PressHelp : MonoBehaviour
                         helpOverlayMenue4.SetActive(true);
                         _publicHelpMenue = helpOverlayMenue4;
                         helpOverlayMenue4.transform.GetChild(0).gameObject.SetActive(true);
-                        _tutorialCounter = 1;
+                        _tutorialCounter = 0;
                     }
                     tutorialCountImage.SetActive(true);
                     tutText.text = "Hinweis " + _tutorialCounter + "/" + _publicHelpMenue.transform.childCount;
@@ -194,6 +194,10 @@ public class PressHelp : MonoBehaviour
             }
         }
 
+    }
+    public void OnClickBack()
+    {
+        _tutorialCounter -= 2;
     }
     public void ClickOnLiveView()
     {
@@ -245,13 +249,21 @@ public class PressHelp : MonoBehaviour
     }
     private void LateUpdate()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.anyKeyDown)
         {
-            _isClicked = true;
+            StopHelpAnimation();
+            StopOverlay();
+            _newScene = false;
+
+            if (_countdown.activeSelf)
+                _countdown.SetActive(false);
+        }
+        if (Input.GetMouseButtonUp(0))
+        {
+           _isClicked = true;
             // tutorial
             if (_tutorialCounter != -1 && _tutorialCounter < _publicHelpMenue.transform.childCount)
             {
-                //Debug.Log("counter: " + _tutorialCounter);
                 for (int i = 0; i < _publicHelpMenue.transform.childCount; i++)
                 {
                     _publicHelpMenue.transform.GetChild(i).gameObject.SetActive(false);
@@ -300,20 +312,8 @@ public class PressHelp : MonoBehaviour
                 pressedLiveView = false;
                 offFromClick = true;
             }
-        }
-
-        if (Input.anyKeyDown)
-        {
-            StopHelpAnimation();
-            StopOverlay();
-            _newScene = false;
-
-            if (_countdown.activeSelf)
-                _countdown.SetActive(false);
-        }
-        if (Input.GetMouseButtonUp(0))
-        {
-            _isClicked = false;
+            
+             _isClicked = false;
             _timerOverlay = 0;
             _idleTimer = 0;
             offFromClick = false;
@@ -322,7 +322,7 @@ public class PressHelp : MonoBehaviour
         {
             _idleTimer += Time.deltaTime;
             if (!_newScene && !SceneManaging.playing)
-            _timerOverlay += Time.deltaTime;
+                _timerOverlay += Time.deltaTime;
         }
         if (_idleTimer > _helpAnimWaitTime && !SceneManaging.playing)
         {

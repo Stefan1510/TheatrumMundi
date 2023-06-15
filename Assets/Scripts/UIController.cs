@@ -80,6 +80,7 @@ public class UIController : MonoBehaviour
 
     public void LightsApplyToUI()
     {
+        Debug.Log("apply light");
         // if (SceneManaging.isExpert)
         // {
         foreach (LightElement le in StaticSceneData.StaticData.lightElements)
@@ -119,6 +120,7 @@ public class UIController : MonoBehaviour
                             break;
                         case 4:
                             gameObjectLe.GetComponent<LightMiddleController>().thisLightElement = StaticSceneData.StaticData.lightElements.Find(DataLe => DataLe.name == le.name);
+                            //Debug.Log("licht: "+gameObjectLe.name);
                             break;
                     }
                 }

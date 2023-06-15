@@ -11,16 +11,17 @@ public class SaveFileController : MonoBehaviour
     #region variables
     //private string[] _fileList;
     private string _jsonString, loadedFiles, tmpCode;
-    public GameObject contentFileSelect, panelCodeInput, panelSaveShowCode, panelWarningInput, panelWarningInputVisitor, panelOverwrite, menuKulissen, flyer;
+    public GameObject contentFileSelect, panelCodeInput, panelWarningInput, panelWarningInputVisitor, panelOverwrite, menuKulissen, flyer;
     public RailManager contentMenueRails;
     private Button tmpFileButtonScene;
     [SerializeField] private RailMusicManager tmpMusicManager;
-    [SerializeField] private LightAnimationRepresentation tmpLightAnimRep;
-    [SerializeField] private SetLightColors tmpSetLightCol;
+    //[SerializeField] private SceneDataController tmpSceneDataController;
+    //[SerializeField] private LightAnimationRepresentation tmpLightAnimRep;
+    //[SerializeField] private SetLightColors tmpSetLightCol;
     [SerializeField] private GameObject _dialogSave, _dialogNewScene, _dialogLoadCode;
     [SerializeField] AnimationTimer _animTimer;
     [SerializeField] GameObject _borderWarning, _borderLoad;
-    [SerializeField] Text _placeholderTextWarning, _textSaveInputName;
+    [SerializeField] Text _placeholderTextWarning;
     [SerializeField] GameObject warningPanel;
     [SerializeField] private GameObject _canvas;
     [SerializeField] private GameObject _visitorPanelSave;
@@ -246,6 +247,7 @@ public class SaveFileController : MonoBehaviour
     {
         if (tempSceneData != null)
         {
+            //Debug.Log("tempsenedata: " + tempSceneData.lightElements);
             CoulissesManager tmpCoulMan = menuKulissen.GetComponent<CoulissesManager>();
 
             for (int i = 0; i < this.GetComponent<UIController>().goButtonSceneryElements.Length; i++)
@@ -642,6 +644,7 @@ public class SaveFileController : MonoBehaviour
         yield return www;
         _jsonString = www.text;
         tempSceneData = tmpSceneDataController.CreateSceneDataFromJSON(_jsonString);
+        //Debug.Log("json: "+_jsonString);
 
         this.GetComponent<SceneDataController>().CreateScene(tempSceneData);
         string sceneMetaData = "";
@@ -657,6 +660,7 @@ public class SaveFileController : MonoBehaviour
         sceneContentData += "Länge: " + "\n\n";
         sceneContentData += "Lichter: " + tmpSceneDataController.countActiveLightElements.ToString() + "\n\n";
         sceneContentData += "Musik: " + tmpSceneDataController.countActiveMusicClips.ToString() + "\n\n";
+
         textFileContentData.text = sceneContentData;
         _animTimer.SetMaxTime(tmpSceneDataController.pieceLength);
 
@@ -730,6 +734,8 @@ public class SaveFileController : MonoBehaviour
             contentMenueRails.currentRailIndex = 0;
             contentMenueRails.Update3DFigurePositions();
             contentMenueRails.openCloseObjectInTimeline(contentMenueRails.railList[0].myObjects, 0, false);
+
+            this.GetComponent<SceneDataController>().CreateScene(tempSceneData);
         }
         else if (status == "fromFlyerDelete")
         {
@@ -860,8 +866,6 @@ public class SaveFileController : MonoBehaviour
         _borderLoad.SetActive(false);
         panelWarningInput.SetActive(false);
         _placeholderTextWarning.color = new Color(.2f, .2f, .2f, 0.27f);
-
-        _textSaveInputName.text = "Bitte schreibe dir deinen Code auf: ";
 
         _dialogNewScene.SetActive(false);
         _dialogLoadCode.SetActive(false);

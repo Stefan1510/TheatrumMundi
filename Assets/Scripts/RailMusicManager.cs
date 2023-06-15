@@ -37,7 +37,7 @@ public class RailMusicManager : MonoBehaviour
     bool onlyPiecefinished = true, _toBeRemoved, _toBeRemovedFromTimeline;
     Vector2 releaseObjMousePos, diff;
     double minX, maxX;
-    private float railWidthAbsolute = 1670.4f;
+    private float railWidthAbsolute = 1670.4f, railWidth;
     int maxTimeInSec, currentClip;
     GameObject[] figureObjects;
     [SerializeField] TextMeshProUGUI[] figCounterCircle;
@@ -69,8 +69,9 @@ public class RailMusicManager : MonoBehaviour
     #endregion
     void Awake()
     {
+        railWidth = 0.87f * Screen.width;
         minX = timelineImage.transform.position.x;
-        maxX = minX + timelineImage.GetComponent<RectTransform>().sizeDelta.x;
+        maxX = minX + railWidth;
         clip = gameController.GetComponent<SceneDataController>().objectsMusicClips;
         draggingOnTimeline = false;
         draggingObject = false;
@@ -182,9 +183,9 @@ public class RailMusicManager : MonoBehaviour
         bool hit = false;
         Vector2 colSize = new Vector2(GetComponent<BoxCollider2D>().size.x, GetComponent<BoxCollider2D>().size.y);
         //if mouse hits the timeline while dragging an object
-        if (mousePos.x <= maxX && mousePos.x > minX && mousePos.y <= timelineImage.transform.position.y + (colSize.y / 2.0f) && mousePos.y > timelineImage.transform.position.y - (colSize.y / 2.0f))
+        if (mousePos.x <= maxX && mousePos.x > minX && mousePos.y <= gameObject.transform.position.y + (colSize.y / 2.0f) && mousePos.y > gameObject.transform.position.y - (colSize.y / 2.0f))
         {
-            hit = true; ;
+            hit = true;
         }
         return hit;
     }
@@ -1405,11 +1406,6 @@ public class RailMusicManager : MonoBehaviour
                     SceneManaging.highlight(myObjects[currentPosInList].musicPiece, true);
 
                     ///////////////////////////////////////////////////////////////////////////////////////////////////////
-                    Debug.Log("reihenfolge ____________________________");
-                    for (int i = 0; i < myObjects.Count; i++)
-                    {
-                        Debug.Log(" obj: " + myObjects[i].objName);
-                    }
                     if (_toBeRemoved)
                     {
                         //Debug.Log("remove: " + myObjects[currentPosInList].objName);

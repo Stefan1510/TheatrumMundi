@@ -20,8 +20,10 @@ public class LightMiddleController : MonoBehaviour
     }
     public void ChangeIntensity(float intensityValue)
     {
+        //Debug.Log("sliderintensity: "+sliderIntensity.value);
         spotLight.intensity = sliderIntensity.value / 3;
         thisLightElement.intensity = spotLight.intensity;
+       //Debug.Log("intens after: "+spotLight.intensity);
     }
     public void LightActivation(bool on)
     {

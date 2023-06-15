@@ -91,11 +91,6 @@ public class LightController : MonoBehaviour
 
     public void ChangeIntensity(float intensityValue)
     {
-        // if (this.name.Contains("Middle"))   // if its the middle candle, it should not be too bright
-        // {
-        //     Debug.Log("contains middle: "+this.name);
-        //     intensityValue = intensityValue / 4;
-        // }
         thisLightElement.intensity = intensityValue;
         //Debug.Log("intensity: "+thisLightElement.intensity+", thislightEl: "+thisLightElement.name);
         GetComponent<Light>().intensity = intensityValue;

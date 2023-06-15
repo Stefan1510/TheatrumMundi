@@ -17,7 +17,7 @@ public class SetLightColors : MonoBehaviour
         objectsLight = GameController.GetComponent<SceneDataController>().objectsLightElements;
         _savedButtonColor = 0;
         ButtonClick(0);
-        ChangeLightColor();
+        //ChangeLightColor();
         SliderIntensity.onValueChanged.AddListener((float value) => ChangeLiveColor(value));
     }
 
@@ -86,15 +86,13 @@ public class SetLightColors : MonoBehaviour
 
                 foreach (objectsLightElement element in objectsLight)
                 {
-                    if (element.lightStagePosition != 0) //(element.lightStagePosition == 1 || element.lightStagePosition == 2 || element.lightStagePosition == 3)
-                    {
-                        //Debug.Log("element: " + element.goLightElement.name);
-                        element.goLightElement.GetComponent<Light>().color = new Color32(colorNow.r, colorNow.g, colorNow.b, 255);
-                    }
                     int lightIndex = StaticSceneData.StaticData.lightElements.FindIndex(le => le.name == element.goLightElement.name);
                     _lightSpotIntensity = StaticSceneData.StaticData.lightElements[lightIndex].intensity;
                     element.goLightElement.GetComponent<Light>().intensity = _lightAnimationIntensity * _lightSpotIntensity;
-                    // }
+                    if (element.lightStagePosition != 0) //(element.lightStagePosition == 1 || element.lightStagePosition == 2 || element.lightStagePosition == 3)
+                    {
+                        element.goLightElement.GetComponent<Light>().color = new Color32(colorNow.r, colorNow.g, colorNow.b, 255);
+                    }
                 }
             }
         }
@@ -122,11 +120,9 @@ public class SetLightColors : MonoBehaviour
             int lightIndex = StaticSceneData.StaticData.lightElements.FindIndex(le => le.name == element.goLightElement.name);
             float _lightSpotIntensity = StaticSceneData.StaticData.lightElements[lightIndex].intensity;
             element.goLightElement.GetComponent<Light>().intensity = lightAnimationIntensityValue * _lightSpotIntensity;
-            // }
         }
     }
 
-    // Update is called once per frame
     void Update()
     {
         //ChangeLightColor();

@@ -228,7 +228,6 @@ public class SceneDataController : MonoBehaviour
 
         //music title elements (Musik)
         MusicApplyToScene(sceneData.musicClipElements);
-        Debug.Log("hi");
     }
 
     public void RailsApplyToScene(List<RailElement> railElements)
@@ -315,28 +314,22 @@ public class SceneDataController : MonoBehaviour
                             break;
                         case 1: // left
                                 //Debug.Log("_________________________ light: " + gameObjectLe.name);
-                                // if (!gameObjectLe.name.Contains("Middle"))
-                                // {
                             gameObjectLe.GetComponent<LightController>().ChangeHorizontal(le.angle_h);
                             gameObjectLe.GetComponent<LightController>().ChangeVertical(le.angle_v);
                             gameObjectLe.GetComponent<LightController>().ChangePosition(le.z);
                             gameObjectLe.GetComponent<LightController>().ChangeHeight(le.y);
                             gameObjectLe.GetComponent<LightController>().ChangeIntensity(le.intensity);
                             gameObjectLe.GetComponent<LightController>().sliderLbIntensity.value = le.intensity;
-                            // }
                             //Debug.Log("int: " + le.intensity);
                             break;
                         case 2: // right
                                 //Debug.Log("______________________ light: " + gameObjectLe.name);
-                                // if (!gameObjectLe.name.Contains("Middle"))
-                                // {
                             gameObjectLe.GetComponent<LightController>().ChangeHorizontal(le.angle_h);
                             gameObjectLe.GetComponent<LightController>().ChangeVerticalLeft(le.angle_v);
                             gameObjectLe.GetComponent<LightController>().ChangePosition(le.z);
                             gameObjectLe.GetComponent<LightController>().ChangeHeight(le.y);
                             gameObjectLe.GetComponent<LightController>().ChangeIntensity(le.intensity);
                             gameObjectLe.GetComponent<LightController>().sliderLbIntensity.value = le.intensity;
-                            // }
                             //Debug.Log("int: " + le.intensity);
                             break;
                         case 3:
