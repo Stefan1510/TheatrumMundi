@@ -141,6 +141,7 @@ public class SaveFileController : MonoBehaviour
             }
             else
             {
+                Debug.Log("speichern");
                 StaticSceneData.StaticData.fileName = sceneDataSave.fileName;
                 StaticSceneData.StaticData.fileAuthor = sceneDataSave.fileAuthor;
                 StaticSceneData.StaticData.fileComment = sceneDataSave.fileComment;
@@ -179,6 +180,7 @@ public class SaveFileController : MonoBehaviour
                                 {
                                     //StartCoroutine(WriteToServer(sceneDataSaveString, filePath, isExpert));
                                     WriteFileToDirectory(sceneDataSaveString, filePath);
+                                    Debug.Log("speichern 2");
 
                                     GenerateFileButton(filePath, true);
                                 }
@@ -226,17 +228,9 @@ public class SaveFileController : MonoBehaviour
 
                 else    // overwrite
                 {
-                    // if (_isWebGl)
-                    // {
                     filePath = tmpCode + sceneDataSave.fileName + ".json";
                     DeleteFileFromDirectory(filePath);
-                    //     StartCoroutine(WriteToServer(sceneDataSaveString, filePath, true));
-                    // }
-                    // else
-                    // {
-                    //StartCoroutine(WriteToServer(sceneDataSaveString, filePath, true));
                     WriteFileToDirectory(sceneDataSaveString, filePath);
-                    // }
                     GenerateFileButton(filePath, true);
                     panelOverwrite.SetActive(false);
                 }

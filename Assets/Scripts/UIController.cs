@@ -80,7 +80,7 @@ public class UIController : MonoBehaviour
 
     public void LightsApplyToUI()
     {
-        Debug.Log("apply light");
+        //Debug.Log("apply light");
         // if (SceneManaging.isExpert)
         // {
         foreach (LightElement le in StaticSceneData.StaticData.lightElements)

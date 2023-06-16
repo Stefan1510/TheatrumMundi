@@ -69,9 +69,8 @@ public class RailMusicManager : MonoBehaviour
     #endregion
     void Awake()
     {
-        railWidth = 0.87f * Screen.width;
-        minX = timelineImage.transform.position.x;
-        maxX = minX + railWidth;
+        //minX = timelineImage.transform.position.x;
+        //maxX = minX + railWidth;
         clip = gameController.GetComponent<SceneDataController>().objectsMusicClips;
         draggingOnTimeline = false;
         draggingObject = false;
@@ -791,9 +790,9 @@ public class RailMusicManager : MonoBehaviour
     }
     public void ResetScreenSize()
     {
-        //minX = 0.087f * Screen.width;// / gameObject.transform.lossyScale.x; //301.0f;  //timeline-minX
-        //railWidth = 0.87f * Screen.width;           //railwidth=1670.4px; / gameObject.transform.lossyScale.x;
-        //maxX = minX + railWidth;  //timeline-maxX
+        minX = 0.087f * Screen.width;               //timeline-rail-minX
+        railWidth = 0.87f * Screen.width;           //railwidth=1670.4px
+        maxX = minX + railWidth;
         if (isTimelineOpen)
         {
             timelineImage.GetComponent<RectTransform>().sizeDelta = gameObject.GetComponent<BoxCollider2D>().size = new Vector2(railWidthAbsolute, 80);
@@ -896,13 +895,13 @@ public class RailMusicManager : MonoBehaviour
     {
         if (GetCurrentMusicCount(out int m, out int n) == 1)
         {
-            //Debug.Log("count 1");
+            // Debug.Log("count 1");
             double startSec = UtilitiesTm.FloatRemap(myObjects[m].position.x, 0, gameObject.GetComponent<RectTransform>().rect.width, 0, AnimationTimer.GetMaxTime());
             tmpTime = AnimationTimer.GetTime();
 
             anyInstanceIsPlaying = true;
 
-            if (playingMusic == false || once == true)
+            if (playingMusic == false || once == true || currentClip != ((int)Char.GetNumericValue(myObjects[m].musicPiece.name[07]) - 1))
             {
                 playingMusic = true;
                 audioSource.time = tmpTime - (float)startSec;
@@ -920,7 +919,7 @@ public class RailMusicManager : MonoBehaviour
         }
         else if (GetCurrentMusicCount(out m, out n) == 2)
         {
-            //Debug.Log("count 2, obj: " + myObjects[n].musicPiece.name);
+            Debug.Log("count 2, obj: " + myObjects[n].musicPiece.name);
             double startSec = UtilitiesTm.FloatRemap(myObjects[n].position.x, 0, gameObject.GetComponent<RectTransform>().rect.width, 0, AnimationTimer.GetMaxTime());
             float tmpTime = AnimationTimer.GetTime();
             if (!firstTimeSecond || currentClip != ((int)Char.GetNumericValue(myObjects[n].musicPiece.name[07]) - 1)) // es switcht von 1 auf 2 musikstuecke gleichzeitig
