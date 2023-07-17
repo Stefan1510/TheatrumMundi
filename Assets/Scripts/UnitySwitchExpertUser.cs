@@ -73,6 +73,8 @@ public class UnitySwitchExpertUser : MonoBehaviour
             _buttonDummy.SetActive(false);
             bgBrownImage.SetActive(true);
             _imageTimelineBg.enabled = false;
+
+            SceneManaging.configMenueActive = 2;
             
             _imageTimelineRailMusic.transform.SetSiblingIndex(6);
 

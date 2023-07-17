@@ -136,11 +136,10 @@ public class CoulissesManager : MonoBehaviour
                 coulissesOnRails[j].GetComponent<BoxCollider2D>().offset = new Vector2(0, coulissesOnRails[j].GetComponent<RectTransform>().rect.height / 2);
             }
         }
-        if (!SceneManaging.tutorialActive && !SceneManaging.aboutActive && !SceneManaging.saveDialogActive && !SceneManaging.railLengthDialogActive && !SceneManaging.flyerActive&& !SceneManaging.dialogActive)
+        if (!SceneManaging.tutorialActive && !SceneManaging.aboutActive && !SceneManaging.saveDialogActive && !SceneManaging.railLengthDialogActive && !SceneManaging.flyerActive && !SceneManaging.dialogActive)
         {
             if (Input.GetMouseButtonDown(0)) //left mouse button down
             {
-
                 // if indexTab is clicked
                 for (int i = 0; i < indexTabs.Length; i++)
                 {
@@ -165,11 +164,6 @@ public class CoulissesManager : MonoBehaviour
                 {
                     if (!SceneManaging.sceneChanged) SceneManaging.sceneChanged = true;
                     sliding = true;
-                }
-                // if delete button is clicked
-                else if (clickOnDelete)
-                {
-                    removeCoulisse();
                 }
                 else
                 {
@@ -307,7 +301,12 @@ public class CoulissesManager : MonoBehaviour
                 dragging = false;
                 scrollViewScenery.GetComponent<ScrollRect>().enabled = true;
 
-                if (currentObjectIndex != -1)
+                // if delete button is clicked
+                if (clickOnDelete)
+                {
+                    removeCoulisse();
+                }
+                else if (currentObjectIndex != -1)
                 {
                     if (sliding)
                     {

@@ -6,11 +6,11 @@ using TMPro;
 public class PressHelp : MonoBehaviour
 {
     #region variables
-    [SerializeField] GameObject helpButtonPressed, helpOverlayMenue2, helpOverlayMenue1, helpOverlayMenue3, helpOverlayMenue4, helpOverlayMenue5, helpOverlayMenue6, helpOverlayFlyer, aboutScreen;
-    [SerializeField] GameObject timeSliderBubbleFigure, timeSliderBubbleMusic, gameController;
-    [SerializeField] GameObject maskTimeSlider, _timeSliderPlayButton;
-    [SerializeField] TextMeshProUGUI tutText;
-    [SerializeField] GameObject tutorialCountImage;
+    [SerializeField] private GameObject helpButtonPressed, helpOverlayMenue2, helpOverlayMenue1, helpOverlayMenue3, helpOverlayMenue4, helpOverlayMenue5, helpOverlayMenue6, helpOverlayFlyer, aboutScreen;
+    [SerializeField] private GameObject timeSliderBubbleFigure, timeSliderBubbleMusic, gameController, loadSaveDialog, panelWarningInput;
+    [SerializeField] private GameObject maskTimeSlider, _timeSliderPlayButton;
+    [SerializeField] private TextMeshProUGUI tutText;
+    [SerializeField] private GameObject tutorialCountImage;
     public GameObject _arrowHelp;
     GameObject _timeSliderBubble;
     [SerializeField] GameObject _countdown;
@@ -100,7 +100,6 @@ public class PressHelp : MonoBehaviour
                     helpOverlayMenue4.SetActive(false);
                     helpOverlayMenue5.SetActive(false);
                     helpOverlayMenue6.SetActive(false);
-                    //helpButtonPressed.SetActive(false);
                     pressed = false;
 
                     maskTimeSlider.SetActive(false);
@@ -111,7 +110,6 @@ public class PressHelp : MonoBehaviour
 
                 else
                 {
-                    //helpButtonPressed.SetActive(true);
                     if (SceneManaging.flyerActive)  // theaterzettel
                     {
                         helpOverlayFlyer.SetActive(true);
@@ -128,7 +126,6 @@ public class PressHelp : MonoBehaviour
                     }
                     else if (SceneManaging.mainMenuActive == 2 && SceneManaging.directorMenueActive == 1)   // Figuren
                     {
-                        // Debug.Log("hier");
                         helpOverlayMenue5.SetActive(true);
                         _tutorialCounter = 0;
                         helpOverlayMenue5.transform.GetChild(0).gameObject.SetActive(true);
@@ -193,11 +190,29 @@ public class PressHelp : MonoBehaviour
                 SceneManaging.aboutActive = false;
             }
         }
-
     }
     public void OnClickBack()
     {
-        _tutorialCounter -= 2;
+        if (_tutorialCounter == 1)
+        {
+            helpOverlayMenue1.SetActive(false);
+            helpOverlayMenue2.SetActive(false);
+            helpOverlayMenue3.SetActive(false);
+            helpOverlayMenue4.SetActive(false);
+            helpOverlayMenue5.SetActive(false);
+            helpOverlayMenue6.SetActive(false);
+            pressed = false;
+
+            maskTimeSlider.SetActive(false);
+            _tutorialCounter = -1;
+            tutorialCountImage.SetActive(false);
+            SceneManaging.tutorialActive = false;
+        }
+        else
+        {
+            _tutorialCounter -= 2;
+
+        }
     }
     public void ClickOnLiveView()
     {
@@ -260,7 +275,7 @@ public class PressHelp : MonoBehaviour
         }
         if (Input.GetMouseButtonUp(0))
         {
-           _isClicked = true;
+            _isClicked = true;
             // tutorial
             if (_tutorialCounter != -1 && _tutorialCounter < _publicHelpMenue.transform.childCount)
             {
@@ -312,8 +327,8 @@ public class PressHelp : MonoBehaviour
                 pressedLiveView = false;
                 offFromClick = true;
             }
-            
-             _isClicked = false;
+
+            _isClicked = false;
             _timerOverlay = 0;
             _idleTimer = 0;
             offFromClick = false;
@@ -355,8 +370,17 @@ public class PressHelp : MonoBehaviour
             {
                 _countdown.SetActive(false);
                 _timerOverlay = 0;
-                StartCoroutine(gameController.GetComponent<SaveFileController>().LoadFileFromWWW("*Musterszene_leer.json", "fromCode"));
+                StartCoroutine(gameController.GetComponent<SaveFileController>().LoadFileFromWWW("*Musterszene_leer_Visitor.json", "fromCode"));
                 _newScene = true;
+
+                if(SceneManaging.saveDialogActive)
+                {
+                    loadSaveDialog.SetActive(false);
+                    SceneManaging.saveDialogActive = false;
+                    panelWarningInput.SetActive(false);
+                    gameController.GetComponent<SaveFileController>().ResetTabs(0);
+                }
+
                 _introOverlay.SetActive(true);
             }
         }

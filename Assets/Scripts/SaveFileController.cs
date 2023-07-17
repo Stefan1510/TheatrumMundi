@@ -43,7 +43,7 @@ public class SaveFileController : MonoBehaviour
     private Color col_white = new Color(0.843f, 0.843f, 0.843f, 1);
     private string characters = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ";
     #endregion
-    private void Awake()
+    private void Start()
     {
 #if UNITY_WEBGL
         _isWebGl = true;
@@ -51,7 +51,7 @@ public class SaveFileController : MonoBehaviour
         //Debug.LogWarning("any other");
 #endif
 
-        if (_isWebGl)
+        if (!SceneManaging.isExpert)
         {
             //Debug.LogError("WEBGL!!!");
             if (Application.absoluteURL == "tm.skd.museum")
@@ -62,29 +62,21 @@ public class SaveFileController : MonoBehaviour
             {
                 _basepath = "https://lightframefx.de/extras/theatrum-mundi/";
             }
+           
+            panelWarningInput = panelWarningInputVisitor;
+            _loadSaveNew = 0;
+            StartCoroutine(LoadFileFromWWW("*Musterszene_leer_Visitor.json", "fromCode"));
         }
         else
         {
             _basepath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments);
             _basepath += "\\theatrum mundi";
-            //_basepath = "https://lightframefx.de/extras/theatrum-mundi/";
-        }
-        //Debug.LogError(Application.absoluteURL);
-        SceneManaging.isPreviewLoaded = true;
-        loadFromAwake = true;
 
-        _directorySaves = "Saves";
-        if (_isWebGl)   // bescucher / web version
-        {
-            panelWarningInput = panelWarningInputVisitor;
-            _loadSaveNew = 0;
-            StartCoroutine(LoadFileFromWWW("*Musterszene_leer_Visitor.json", "fromCode"));
-        }
-        else    // expertenversion
-        {
-            //StartCoroutine(LoadFilesFromServer(false, "", true));
             ShowFilesFromDirectory();
         }
+        SceneManaging.isPreviewLoaded = true;
+        loadFromAwake = true;
+        _directorySaves = "Saves";
     }
     private void Update()
     {
@@ -262,13 +254,10 @@ public class SaveFileController : MonoBehaviour
             GetComponent<UIController>().SceneriesApplyToUI();
             GetComponent<UIController>().LightsApplyToUI();
             GetComponent<UIController>().RailsApplyToUI();
-            //GetComponent<SceneDataController>().SetFileMetaDataToScene();
-            if (_isWebGl)
+
+            if (!SceneManaging.isExpert)
             {
-                // if (GetComponent<UnitySwitchExpertUser>()._isExpert)
-                // {
                 StartCoroutine(LoadFilesFromServer(false, "", false));
-                // }
             }
             else
             {
@@ -282,13 +271,8 @@ public class SaveFileController : MonoBehaviour
                 }
                 else
                 {
-                    Debug.Log("kein file selected");
+                    //Debug.Log("kein file selected");
                 }
-                // if (GetComponent<UnitySwitchExpertUser>()._isExpert)
-                // {
-                //     StartCoroutine(LoadFilesFromServer(false, "", false));
-                // }
-                //ShowFilesFromDirectory();
             }
 
             // when scene is truly loaded then buttons shouldnt be green anymore and dateiinforamtionen ist leer
@@ -351,10 +335,13 @@ public class SaveFileController : MonoBehaviour
         }
         _selectedFile = fileName;
 
-        if (_isWebGl)
+        if (!SceneManaging.isExpert)
         {
             if (fromCode)
+            {
+                Debug.Log("name: "+fileName);
                 StartCoroutine(LoadFileFromWWW(fileName, "fromCode"));
+            }
             else
             {
                 StartCoroutine(LoadFileFromWWW(fileName, ""));
@@ -419,7 +406,7 @@ public class SaveFileController : MonoBehaviour
     public void LoadCodeNow()
     {
         panelCodeInput.SetActive(false);
-        if (GetComponent<UnitySwitchExpertUser>()._isExpert)
+        if (SceneManaging.isExpert)
         {
             StartCoroutine(LoadFilesFromServer(true, inputFieldShowCode.text, false));
             inputFieldShowCode.text = "";
@@ -486,12 +473,12 @@ public class SaveFileController : MonoBehaviour
             {
                 foreach (string fileEntry in arr)
                 {
-                    if (fileEntry.Length > 6)
+                    if (fileEntry.Length == 11)
                     {
                         // wenn die ersten 6 zeichen mit denen des eingegebenen codes uebereinstimmen
                         if (fileEntry.ToLower().Substring(0, 6) == code.ToLower())
                         {
-                            if (this.GetComponent<UnitySwitchExpertUser>()._isExpert)
+                            if (SceneManaging.isExpert)
                             {
                                 // wenn schon szenen geladen wurden
                                 if (!string.IsNullOrEmpty(loadedFiles))
@@ -573,7 +560,6 @@ public class SaveFileController : MonoBehaviour
         {
             StartCoroutine(LoadFileFromWWW("*Musterszene_leer_Visitor.json", "fromCode"));
         }
-
     }
     private void ShowFilesFromDirectory()
     {
@@ -638,9 +624,8 @@ public class SaveFileController : MonoBehaviour
         yield return www;
         _jsonString = www.text;
         tempSceneData = tmpSceneDataController.CreateSceneDataFromJSON(_jsonString);
-        //Debug.Log("json: "+_jsonString);
 
-        this.GetComponent<SceneDataController>().CreateScene(tempSceneData);
+        tmpSceneDataController.CreateScene(tempSceneData);
         string sceneMetaData = "";
         sceneMetaData += tempSceneData.fileName + "\n\n";
         sceneMetaData += "erstellt: " + tempSceneData.fileDate + "\n\n";
@@ -821,7 +806,7 @@ public class SaveFileController : MonoBehaviour
                     int a = UnityEngine.Random.Range(0, characters.Length);
                     code += characters[a].ToString();
                 }
-                _showSavedCode.transform.GetChild(0).GetComponent<Text>().text = code;//filePath.Substring(0, 6);
+                _showSavedCode.transform.GetChild(1).GetComponent<Text>().text = code;//filePath.Substring(0, 6);
                 _loadSaveNew = 2;
                 break;
         }
@@ -854,7 +839,7 @@ public class SaveFileController : MonoBehaviour
         }
         warningPanel.SetActive(false);
     }
-    private void ResetTabs(int tab)
+    public void ResetTabs(int tab)
     {
         _borderWarning.SetActive(false);
         _borderLoad.SetActive(false);
