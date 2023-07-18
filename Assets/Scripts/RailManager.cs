@@ -981,7 +981,7 @@ public class RailManager : MonoBehaviour
             // Save to SceneData:
             FigureInstanceElement thisFigureInstanceElement = new FigureInstanceElement();
             thisFigureInstanceElement.instanceNr = countName; //index
-            thisFigureInstanceElement.name = curr3DObject.name + "_" +countName.ToString("000");
+            thisFigureInstanceElement.name = curr3DObject.name + "_" + countName.ToString("000");
             thisFigureInstanceElement.railStart = (int)Char.GetNumericValue(rails[currentRailIndex].name[17]) - 1; //railIndex
             thisFigureInstanceElement.moment = momentOrPosX;
             thisFigureInstanceElement.layer = 0;
@@ -1285,6 +1285,7 @@ public class RailManager : MonoBehaviour
     }
     void Update()
     {
+        #region eachCycle
         if (currentLossyScale != transform.lossyScale.x)    // Abfrage, ob sich lossyScale geaendert hat dann werden die Schienen rescaled
         {
             currentLossyScale = transform.lossyScale.x;
@@ -1313,6 +1314,8 @@ public class RailManager : MonoBehaviour
             spaceWarningBorder.color = colSpaceWarning;
             spaceWarningBorder.enabled = false;
         }
+        #endregion
+
         if (Input.GetMouseButtonDown(0)) //left mouse button down
         {
             #region identifying
@@ -1653,18 +1656,15 @@ public class RailManager : MonoBehaviour
             }
             scrollRect.GetComponent<ScrollRect>().enabled = false;
 
-            //move object
-            figureObjects[currentClickedObjectIndex].transform.position = new Vector3(getMousePos.x - diff.x, getMousePos.y - diff.y, -1.0f);
+
 
             if (!SceneManaging.flyerActive)
             {
                 hitTimeline = checkHittingTimeline(getMousePos);
-                //Debug.Log("hitimeline: " + hitTimeline);
             }
             else
             {
                 flyerHit = checkHittingFlyerSpace(getMousePos);
-                //Debug.Log("hit: "+flyerHit);
             }
 
             //if you hit the timeline > object snap to timeline and is locked in y-movement-direction
@@ -1672,7 +1672,6 @@ public class RailManager : MonoBehaviour
             {
                 if (hitTimelineOld != hitTimeline)
                 {
-                    //Debug.Log("hittimeline: " + hitTimeline);
                     hitTimelineOld = hitTimeline;
                     openTimelineByDrag(hitTimeline);
 
@@ -1684,7 +1683,7 @@ public class RailManager : MonoBehaviour
                 }
 
                 //snapping/lock y-axis
-                setObjectOnTimeline(figureObjects[currentClickedObjectIndex], rails[currentRailIndex].transform.position.y);
+                figureObjects[currentClickedObjectIndex].transform.position = new Vector2(getMousePos.x-(25/screenDifference.x), rails[currentRailIndex].transform.position.y);
 
                 //save position, where object on timeline is released + set flag
                 releaseOnTimeline = true;
@@ -1693,9 +1692,8 @@ public class RailManager : MonoBehaviour
             // wenn zwischenraum zwischen schienen getroffen wird
             else if (isRailAreaHit(getMousePos) && !SceneManaging.flyerActive)
             {
-                //Debug.Log("hier");
                 //snapping/lock y-axis
-                setObjectOnTimeline(figureObjects[currentClickedObjectIndex], rails[currentRailIndex].transform.position.y);
+                figureObjects[currentClickedObjectIndex].transform.position = new Vector2(getMousePos.x-(25/screenDifference.x), rails[currentRailIndex].transform.position.y);
 
                 figureObjects[currentClickedObjectIndex].transform.GetChild(1).GetComponent<RectTransform>().sizeDelta = new Vector2(figPictureSize, rails[currentRailIndex].GetComponent<RectTransform>().rect.height);
                 figureObjects[currentClickedObjectIndex].transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(figPictureSize, rails[currentRailIndex].GetComponent<RectTransform>().rect.height);
@@ -1734,6 +1732,8 @@ public class RailManager : MonoBehaviour
 
             else
             {
+                //move object
+                figureObjects[currentClickedObjectIndex].transform.position = new Vector3(getMousePos.x - diff.x, getMousePos.y - diff.y, -1.0f);
                 //rect unsichtbar machen
                 figureObjects[currentClickedObjectIndex].transform.GetChild(1).gameObject.SetActive(false);
                 figureObjects[currentClickedObjectIndex].transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = objectShelfSize;
