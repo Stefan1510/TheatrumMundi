@@ -704,6 +704,8 @@ public class CoulissesManager : MonoBehaviour
     {
         int i = int.Parse(deleteButton.transform.parent.name.Substring(8, 2)) - 1;
         placeInShelf(i);
+        StaticSceneData.StaticData.sceneryElements[i].active = false;
+        StaticSceneData.Sceneries3D();
     }
     private void showDeleteButton(GameObject deleteButton, GameObject parent, bool show)
     {
@@ -731,7 +733,6 @@ public class CoulissesManager : MonoBehaviour
     }
     public void PublicUpdate()
     {
-        Debug.Log("hello");
         for (int i = 0; i < coulisses.Length; i++)
         {
             if (!isWide[i])

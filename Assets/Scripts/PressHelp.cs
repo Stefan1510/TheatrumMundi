@@ -42,8 +42,8 @@ public class PressHelp : MonoBehaviour
         aboutScreen.SetActive(false);
         _buttonColorStart = new Color(255, 255, 255, 0);
         _buttonColorAttention = new Color32(255, 255, 255, 70);
-        _maxTimeArrow = 20;
-        _maxTimeCountdown = 40;
+        _maxTimeArrow = 40;
+        _maxTimeCountdown = 60;
 
         try
         {
