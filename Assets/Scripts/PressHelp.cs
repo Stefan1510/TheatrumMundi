@@ -11,6 +11,9 @@ public class PressHelp : MonoBehaviour
     [SerializeField] private GameObject maskTimeSlider, _timeSliderPlayButton;
     [SerializeField] private TextMeshProUGUI tutText;
     [SerializeField] private GameObject tutorialCountImage;
+    [SerializeField] private GameObject flyer;
+    [SerializeField] private GameObject liveView;
+
     public GameObject _arrowHelp;
     GameObject _timeSliderBubble;
     [SerializeField] GameObject _countdown;
@@ -333,10 +336,10 @@ public class PressHelp : MonoBehaviour
             _idleTimer = 0;
             offFromClick = false;
         }
-        if (_tutorialCounter == -1 && !_isClicked)
+        if (_tutorialCounter == -1 && !_isClicked && !SceneManaging.playing && !SceneManaging.isExpert)
         {
             _idleTimer += Time.deltaTime;
-            if (!_newScene && !SceneManaging.playing)
+            if (!_newScene)
                 _timerOverlay += Time.deltaTime;
         }
         if (_idleTimer > _helpAnimWaitTime && !SceneManaging.playing)
@@ -373,12 +376,24 @@ public class PressHelp : MonoBehaviour
                 StartCoroutine(gameController.GetComponent<SaveFileController>().LoadFileFromWWW("*Musterszene_leer_Visitor.json", "fromCode"));
                 _newScene = true;
 
-                if(SceneManaging.saveDialogActive)
+
+                if (SceneManaging.saveDialogActive)
                 {
                     loadSaveDialog.SetActive(false);
                     SceneManaging.saveDialogActive = false;
                     panelWarningInput.SetActive(false);
                     gameController.GetComponent<SaveFileController>().ResetTabs(0);
+                }
+                else if (SceneManaging.flyerActive)
+                {
+                    flyer.SetActive(false);
+                    SceneManaging.flyerActive=false;
+                }
+                else if (SceneManaging.fullscreenOn)
+                {
+                    Debug.Log("hi");
+                    liveView.SetActive(false);
+                    SceneManaging.fullscreenOn=false;
                 }
 
                 _introOverlay.SetActive(true);

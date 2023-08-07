@@ -36,6 +36,7 @@ public class LightController : MonoBehaviour
 
     private void Awake()
     {
+        Debug.Log("value: "+UiSetting_LB_Image.transform.GetChild(0).eulerAngles);
         _startPosition = transform.localPosition.z;
         _startYAngle = transform.localEulerAngles.y;
         _startHeight = transform.localPosition.y;
@@ -56,12 +57,13 @@ public class LightController : MonoBehaviour
         _lbColors_off = changeColors(_lbColors_off, new Color(0f, 0f, 0f, 0f));
         ChangeHorizontal(256);
         ChangeIntensity(sliderLbIntensity.value);
-        ChangePosition(sliderLbPosition.value);
+        // ChangePosition(sliderLbPosition.value);
         ChangeHeight(sliderLbHeight.value);
         PanelLbImage = toggleLb.transform.parent.parent.GetComponent<Image>();
         PanelLbImage.color = new Color(171f / 255f, 171f / 255f, 171f / 255f, 160f / 255f);
-    }
+        Debug.Log("value nach awake: "+UiSetting_LB_Image.transform.GetChild(0).eulerAngles);
 
+    }
     void Start()
     {
         thisLightElement = StaticSceneData.StaticData.lightElements.Find(le => le.name == gameObject.name);
@@ -88,7 +90,6 @@ public class LightController : MonoBehaviour
         }
         //ChangePosition(sliderLbPosition.value);
     }
-
     public void ChangeIntensity(float intensityValue)
     {
         thisLightElement.intensity = intensityValue;
@@ -96,7 +97,6 @@ public class LightController : MonoBehaviour
         GetComponent<Light>().intensity = intensityValue;
         UiSetting_LB_Image.GetComponent<LightRepresentationController>().setBrightness_UiSetting_LB_Light_angle(intensityValue);
     }
-
     public void ChangePosition(float PositionValue)
     {
         //Debug.Log(name + " YAngle: " + _startYAngle);
@@ -106,7 +106,6 @@ public class LightController : MonoBehaviour
         transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, _startYAngle - angleYValue, transform.localEulerAngles.z);
         UiSetting_LB_Image.GetComponent<LightRepresentationController>().setPosition_UiSetting_LB_Light(PositionValue);
     }
-
     public void ChangeHeight(float HeightValue)
     {
         thisLightElement.y = HeightValue;
@@ -115,16 +114,21 @@ public class LightController : MonoBehaviour
         transform.localEulerAngles = new Vector3(_startXAngle + angleXValue, transform.localEulerAngles.y, transform.localEulerAngles.z);
         UiSetting_LB_Image.GetComponent<LightRepresentationController>().setHeight_UiSetting_LB_side_Light(HeightValue);
     }
-
     public void ChangeHorizontalValue(float HorizontalValue)
     {
         //ChangeVertical(VerticalValue);
         thisLightElement.angle_v = (int)HorizontalValue;
 
         if (thisLightElement.stagePosition == 1)
+        {
             ChangeVertical(thisLightElement.angle_v);
+            Debug.Log("pos: "+thisLightElement.stagePosition+", this: "+thisLightElement.name+thisLightElement.angle_v);
+        }
         else
+        {
             ChangeVerticalLeft(thisLightElement.angle_v);
+            Debug.Log("pos: "+thisLightElement.stagePosition+", this: "+thisLightElement.name);
+        }
         UiSetting_LB_Image.GetComponent<LightRepresentationController>().RotateVertical(HorizontalValue);
     }
 
@@ -250,5 +254,4 @@ public class LightController : MonoBehaviour
         texture.SetPixels32(pixels);
         texture.Apply();
     }
-
 }

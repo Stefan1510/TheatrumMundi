@@ -1656,7 +1656,8 @@ public class RailManager : MonoBehaviour
             }
             scrollRect.GetComponent<ScrollRect>().enabled = false;
 
-
+            //move object
+            figureObjects[currentClickedObjectIndex].transform.position = new Vector3(getMousePos.x - diff.x, getMousePos.y - diff.y, -1.0f);
 
             if (!SceneManaging.flyerActive)
             {
@@ -1683,7 +1684,7 @@ public class RailManager : MonoBehaviour
                 }
 
                 //snapping/lock y-axis
-                figureObjects[currentClickedObjectIndex].transform.position = new Vector2(getMousePos.x-(25/screenDifference.x), rails[currentRailIndex].transform.position.y);
+                figureObjects[currentClickedObjectIndex].transform.position = new Vector2(getMousePos.x - (25 / screenDifference.x), rails[currentRailIndex].transform.position.y);
 
                 //save position, where object on timeline is released + set flag
                 releaseOnTimeline = true;
@@ -1693,7 +1694,7 @@ public class RailManager : MonoBehaviour
             else if (isRailAreaHit(getMousePos) && !SceneManaging.flyerActive)
             {
                 //snapping/lock y-axis
-                figureObjects[currentClickedObjectIndex].transform.position = new Vector2(getMousePos.x-(25/screenDifference.x), rails[currentRailIndex].transform.position.y);
+                figureObjects[currentClickedObjectIndex].transform.position = new Vector2(getMousePos.x - (25 / screenDifference.x), rails[currentRailIndex].transform.position.y);
 
                 figureObjects[currentClickedObjectIndex].transform.GetChild(1).GetComponent<RectTransform>().sizeDelta = new Vector2(figPictureSize, rails[currentRailIndex].GetComponent<RectTransform>().rect.height);
                 figureObjects[currentClickedObjectIndex].transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(figPictureSize, rails[currentRailIndex].GetComponent<RectTransform>().rect.height);

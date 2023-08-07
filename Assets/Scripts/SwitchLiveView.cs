@@ -15,9 +15,15 @@ public class SwitchLiveView : MonoBehaviour
     {
         SwitchToNormalsceen();
     }
+    void Update()
+    {
+        Debug.Log("update: "+liveViewFullscreenObj.activeSelf);
+    }
     public void SwitchToFullscreen()
     {
+        Debug.Log("h''_");
         liveViewFullscreenObj.SetActive(true);
+        Debug.Log("active: "+liveViewFullscreenObj.activeSelf);
         SceneManaging.fullscreenOn = true;
         if(configMenue.activeSelf)
         {
@@ -34,6 +40,7 @@ public class SwitchLiveView : MonoBehaviour
     {
         SceneManaging.fullscreenOn = false;
         liveViewFullscreenObj.SetActive(false);
+        Debug.Log("und hier ");
     }
     public void changePlayIcon()
     {

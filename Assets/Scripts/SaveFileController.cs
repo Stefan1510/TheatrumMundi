@@ -238,7 +238,7 @@ public class SaveFileController : MonoBehaviour
 
             for (int i = 0; i < this.GetComponent<UIController>().goButtonSceneryElements.Length; i++)
             {
-                tmpCoulMan.placeInShelf(i);   // alle kulissen zurueck ins shelf
+                tmpCoulMan.PlaceInShelf(i);   // alle kulissen zurueck ins shelf
             }
             // alle counter zurueck
             for (int j = 0; j < contentMenueRails.figCounterCircle.Length; j++)

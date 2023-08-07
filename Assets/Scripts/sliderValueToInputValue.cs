@@ -8,7 +8,7 @@ public class sliderValueToInputValue : MonoBehaviour
 {
 	Slider slider;	//the slider this script is attached to
 	public InputField attachedInputValue;
-	public Image attachedRailSide;
+	public GameObject attachedRailSide;
 	public Image attachedRailTop;
 	public GameObject rail3D;
 	//-----for sideview
@@ -21,7 +21,7 @@ public class sliderValueToInputValue : MonoBehaviour
 	Vector3 v3=new Vector3(0.0f,0.0f,0.0f);
 	float currSliderVal3=0.0f;
 	
-	float shiftScaleFac=50.0f;
+	float shiftScaleFac=40.0f;
 	float shiftScaleFac3d=0.5f;
     RailElement thisRailElement;
     // Start is called before the first frame update
