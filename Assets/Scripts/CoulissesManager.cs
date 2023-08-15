@@ -87,11 +87,6 @@ public class CoulissesManager : MonoBehaviour
         {
             coulisseCounter[i].text = "0";
         }
-        //outline
-        foreach (GameObject rail in rails)
-        {
-            rail.GetComponent<cakeslice.Outline>().enabled = false;
-        }
 
         ResetScreenSize();
         StaticSceneData.Sceneries3D(); //CreateScene der SceneryElements
@@ -161,7 +156,7 @@ public class CoulissesManager : MonoBehaviour
                             }
                         }
                         SetIndexTabActive(i);
-                        HighlightRail(i);
+                        HighlightRail(true);
                     }
                 }
                 clickInSettingsWindow = IsSettingsWindowClicked();
@@ -262,7 +257,7 @@ public class CoulissesManager : MonoBehaviour
                     if (SceneManaging.openUp)
                     {
                         SetIndexTabActive(hitIndexTab);
-                        HighlightRail(hitIndexTab);
+                        HighlightRail(true);
                     }
                 }
 
@@ -480,14 +475,19 @@ public class CoulissesManager : MonoBehaviour
             }
         }
     }
-    public void HighlightRail(int nr)
+    public void HighlightRail(bool coulisseMenueActive)
     {
         foreach (GameObject rail in rails)
         {
             rail.GetComponent<cakeslice.Outline>().enabled = false;
+            // Debug.Log("schiene: "+rail.transform.parent.name);
         }
-        if (nr != -1)
-            rails[nr].GetComponent<cakeslice.Outline>().enabled = true;
+        
+        if (coulisseMenueActive)
+        {
+            rails[currentTabIndex].GetComponent<cakeslice.Outline>().enabled = true;
+            // Debug.Log("rail: "+nr);
+        }
     }
     public void ChangeElementPositionX()
     {

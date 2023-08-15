@@ -250,7 +250,7 @@ public class ObjectShelfAll : MonoBehaviour
         {
             shelfNumber = 4;
         }
-        MenueShelf02.GetComponent<CoulissesManager>().HighlightRail(-1);
+        MenueShelf02.GetComponent<CoulissesManager>().HighlightRail(false);
 
         MenueShelf01.SetActive(false);
         MenueShelf02.SetActive(false);
@@ -300,7 +300,7 @@ public class ObjectShelfAll : MonoBehaviour
                 {
                     playerCtrls.ButtonPlay();
                 }
-                MenueShelf02.GetComponent<CoulissesManager>().HighlightRail(0);
+                MenueShelf02.GetComponent<CoulissesManager>().HighlightRail(true);
                 break;
             case 3:         // MenueLichtConfig
                 MenueShelf03.SetActive(true);

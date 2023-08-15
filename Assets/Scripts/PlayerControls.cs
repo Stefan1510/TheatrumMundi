@@ -96,17 +96,17 @@ namespace RockVR.Video.Demo
         {
             if (start)
             {
-                VideoCaptureCtrl.instance.StopCapture();
-                renderButtonPressed = false;
-                AnimationTimer.ResetTime();
-            }
-            else
-            {
                 AnimationTimer.ResetTime();
                 VideoCaptureCtrl.instance.StartCapture();
                 renderButtonPressed = true;
                 AnimationTimer.StartTimer();
                 SceneManaging.playing = true;
+            }
+            else
+            {
+                VideoCaptureCtrl.instance.StopCapture();
+                renderButtonPressed = false;
+                AnimationTimer.ResetTime();
             }
         }
         //unused. for showing the use of SetTime()

@@ -1114,7 +1114,7 @@ public class RailManager : MonoBehaviour
             for (int i = 0; i < railList[k].myObjects.Count; i++)
             {
                 float moment = UtilitiesTm.FloatRemap(railList[k].myObjects[i].position.x, 0, railwidthAbsolute, 0, AnimationTimer.GetMaxTime());
-                float zPosFigure = (rails3D[k].transform.GetChild(0).GetComponent<RailSpeedController>().GetDistanceAtTime(moment));
+                float zPosFigure = rails3D[k].transform.GetChild(0).GetComponent<RailSpeedController>().GetDistanceAtTime(moment);
                 //Debug.Log("fig: " + railList[k].myObjects[i].objName + ", pos: " + railList[k].myObjects[i].position.x + ", moment: " + moment + ", zpos: " + zPosFigure + ", maxtime: " + AnimationTimer.GetMaxTime());
 
                 if (zPosFigure < 0) // wenn die Figur auf eine Position noch vor dem empty gesetzt werden würde, würde sie erscheinen bevor sie auf den rails da ist
