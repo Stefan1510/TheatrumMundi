@@ -149,7 +149,7 @@ public class RailMusicManager : MonoBehaviour
                     contentRailsMenue.rails[i].GetComponent<RectTransform>().sizeDelta = new Vector2(timelineImage.rectTransform.rect.width, 20);
                     contentRailsMenue.rails[i].GetComponent<BoxCollider2D>().size = new Vector2(timelineImage.GetComponent<BoxCollider2D>().size.x, 20);
                     contentRailsMenue.railList[i].isTimelineOpen = false;
-                    contentRailsMenue.openCloseObjectInTimeline(contentRailsMenue.railList[i].myObjects, i, true);
+                    contentRailsMenue.OpenCloseObjectInTimeline(contentRailsMenue.railList[i].myObjects, i, true);
 
                     // for (int j = 0; j < contentRailsMenue.railList[i].myObjects.Count; j++)
                     // {

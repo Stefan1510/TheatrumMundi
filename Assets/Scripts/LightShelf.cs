@@ -7,6 +7,7 @@ public class LightShelf : MonoBehaviour
 {
     [SerializeField] private GameObject _panelElementToDeactivate;
     [SerializeField] private Graphic _graphicToggleLbBackground;
+    
     private float _startHeight;
     public Image UiSetting_LB_Image;
     // Start is called before the first frame update
@@ -19,7 +20,7 @@ public class LightShelf : MonoBehaviour
     {
         _panelElementToDeactivate.SetActive(toggleOnOff);
         _graphicToggleLbBackground.enabled = !toggleOnOff;
-        LayoutRebuilder.ForceRebuildLayoutImmediate(_panelElementToDeactivate.transform.parent.GetComponentInParent<RectTransform>());
+        //LayoutRebuilder.ForceRebuildLayoutImmediate(_panelElementToDeactivate.transform.parent.GetComponentInParent<RectTransform>());
         UiSetting_LB_Image.GetComponent<LightRepresentationController>().SetSelected(toggleOnOff);
         UiSetting_LB_Image.GetComponent<LightRepresentationController>().ToggleLightCone(toggleOnOff);
     }

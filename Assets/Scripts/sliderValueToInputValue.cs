@@ -6,45 +6,55 @@ using System;
 
 public class sliderValueToInputValue : MonoBehaviour
 {
-	Slider slider;	//the slider this script is attached to
+	Slider slider;  //the slider this script is attached to
 	public InputField attachedInputValue;
 	public GameObject attachedRailSide;
 	public Image attachedRailTop;
 	public GameObject rail3D;
 	//-----for sideview
-	Vector3 v=new Vector3(0.0f,0.0f,0.0f);
-	float currSliderVal=0.0f;
+	Vector3 v = new Vector3(0.0f, 0.0f, 0.0f);
+	float currSliderVal = 0.0f;
 	//-----for topview
-	Vector3 v2=new Vector3(0.0f,0.0f,0.0f);
-	float currSliderVal2=0.0f;
+	Vector3 v2 = new Vector3(0.0f, 0.0f, 0.0f);
+	float currSliderVal2 = 0.0f;
 	//-----for 3Dview
-	Vector3 v3=new Vector3(0.0f,0.0f,0.0f);
-	float currSliderVal3=0.0f;
-	
-	float shiftScaleFac=40.0f;
-	float shiftScaleFac3d=0.5f;
-    RailElement thisRailElement;
-    // Start is called before the first frame update
+	Vector3 v3 = new Vector3(0.0f, 0.0f, 0.0f);
+	float currSliderVal3 = 0.0f;
 
-    void Start()
+	float yLight;
+
+	float shiftScaleFacVert = 100.0f;
+	float shiftScaleFacHor = 40.0f;
+	float shiftScaleFac3d = 0.5f;
+	RailElement thisRailElement;
+
+	[SerializeField] private GameObject imgLight;
+
+	void Start()
 	{
-		slider =this.GetComponent<Slider>();
+		slider = this.GetComponent<Slider>();
 		//Debug.Log("+++Name of Slider: " +slider.ToString());
 		//Debug.Log("===START: " +slider.value);
-		currSliderVal=slider.value;
-		currSliderVal2=slider.value;
-		currSliderVal3=slider.value;
+		currSliderVal = slider.value;
+		currSliderVal2 = slider.value;
+		currSliderVal3 = slider.value;
 		try
 		{
-			v.x=attachedRailSide.transform.localPosition.x;
-			v.y=attachedRailSide.transform.localPosition.y;
-			v.z=attachedRailSide.transform.localPosition.z;
-			v2.x=attachedRailTop.transform.localPosition.x;
-			v2.y=attachedRailTop.transform.localPosition.y;
-			v2.z=attachedRailTop.transform.localPosition.z;
-			v3.x=rail3D.transform.localPosition.x;
-			v3.y=rail3D.transform.localPosition.y;
-			v3.z=rail3D.transform.localPosition.z;
+			yLight = imgLight.transform.localPosition.y;
+		}
+		catch (UnassignedReferenceException)
+		{ }
+		try
+		{
+			v.x = attachedRailSide.transform.localPosition.x;
+			v.y = attachedRailSide.transform.localPosition.y;
+			v.z = attachedRailSide.transform.localPosition.z;
+			v2.x = attachedRailTop.transform.localPosition.x;
+			v2.y = attachedRailTop.transform.localPosition.y;
+			v2.z = attachedRailTop.transform.localPosition.z;
+			v3.x = rail3D.transform.localPosition.x;
+			v3.y = rail3D.transform.localPosition.y;
+			v3.z = rail3D.transform.localPosition.z;
 		}
 		catch (NullReferenceException)
 		{
@@ -55,98 +65,75 @@ public class sliderValueToInputValue : MonoBehaviour
 		try
 		{
 			//Debug.Log("+++START: " +attachedInputValue.text);
-			attachedInputValue.text=slider.value.ToString("0.00");
+			attachedInputValue.text = slider.value.ToString("0.00");
 			//Debug.Log("+++++++START: " +attachedInputValue.text);
-			
+
 		}
 		catch (NullReferenceException)
 		{
 			Debug.Log("attachedInputValue was not set in the inspector");
 		}
-    }
-
+	}
 	public void OnSliderChange()
 	{
-		attachedInputValue.text=slider.value.ToString("0.00");
+		attachedInputValue.text = slider.value.ToString("0.00");
 		//------transform rails in schematic view		
-		//Debug.Log("+++Name of Slider: " +slider.ToString());
-		//Debug.Log(">>>curr RailPos.x: "+attachedRailSide.transform.localPosition.x.ToString());
-		//Debug.Log(">>>curr SlideVal: "+currSliderVal.ToString());
-		//Debug.Log("+++Name of Slider: " +slider.ToString());
-		//Debug.Log("---before sidePosObj: "+attachedRailSide.transform.localPosition);
-			//Debug.Log("---before sidePosVec: "+v);
+
 		//seperate the height-slider from horizontal slider by name
-		string [] returnedArray = slider.ToString().Split(' ');
-		if ((returnedArray[0]=="SliderHeight12to34") || (returnedArray[0]=="SliderHeight34to56") || (returnedArray[0]=="SliderHeight56to78") || (returnedArray[0]=="SliderStageHeight"))
+		string[] returnedArray = slider.ToString().Split(' ');
+		if ((returnedArray[0] == "SliderHeight12to34") || (returnedArray[0] == "SliderHeight34to56") || (returnedArray[0] == "SliderHeight56to78") || (returnedArray[0] == "SliderStageHeight"))
 		{
-			//Debug.Log("----->its an height slider<-------");
-			//Debug.Log("---if height sidePosObj: "+attachedRailSide.transform.localPosition);
-			//Debug.Log("---if height sidePosVec: "+v);
-			if ((currSliderVal)<(slider.value))
+			if (currSliderVal < slider.value)
 			{
-				v.y=v.y+((slider.value-currSliderVal)*shiftScaleFac);
+				yLight += (slider.value - currSliderVal3) * shiftScaleFacVert;
+				v.y = v.y + ((slider.value - currSliderVal) * shiftScaleFacVert);
 				//3d
-				v3.y=v3.y+((slider.value-currSliderVal3)*shiftScaleFac3d);
+				v3.y = v3.y + ((slider.value - currSliderVal3) * shiftScaleFac3d);
 			}
 			else
 			{
-				v.y=v.y-((currSliderVal-slider.value)*shiftScaleFac);
+				yLight -= (currSliderVal - slider.value) * shiftScaleFacVert;
+				v.y = v.y - ((currSliderVal - slider.value) * shiftScaleFacVert);
 				//3d
-				v3.y=v3.y-((currSliderVal3-slider.value)*shiftScaleFac3d);
+				v3.y = v3.y - ((currSliderVal3 - slider.value) * shiftScaleFac3d);
 			}
-			//Debug.Log("---if height sidePosObj: "+attachedRailSide.transform.localPosition);
-			//Debug.Log("---if height sidePosVec: "+v);
 			//write back last x-value
-			v.x=attachedRailSide.transform.localPosition.x;
-			v3.x=rail3D.transform.localPosition.x;
+			v.x = attachedRailSide.transform.localPosition.x;
+			v3.x = rail3D.transform.localPosition.x;
 		}
 		else
 		{
-			//Debug.Log("---else sidePosObj: "+attachedRailSide.transform.localPosition);
-			//Debug.Log("---else sidePosVec: "+v);
-			//Debug.Log("----->its an horizontal slider<-------");
-			if ((currSliderVal)<(slider.value))
+			if (currSliderVal < slider.value)
 			{
 				//sideview
-				v.x=v.x+((slider.value-currSliderVal)*shiftScaleFac);
-				v.y=attachedRailSide.transform.localPosition.y;
+				v.x = v.x + ((slider.value - currSliderVal) * shiftScaleFacHor);
+				v.y = attachedRailSide.transform.localPosition.y;
 				//topview
-				v2.y=v2.y+((slider.value-currSliderVal2)*shiftScaleFac);
+				v2.y = v2.y + ((slider.value - currSliderVal2) * shiftScaleFacHor/1.5f);
 				//3d, switch direction because of the coordinate-system in 3d instead of 2d
-				v3.x=v3.x+((slider.value-currSliderVal3)*shiftScaleFac3d*-1.0f);
-				v3.y=rail3D.transform.localPosition.y;
+				v3.x = v3.x + ((slider.value - currSliderVal3) * shiftScaleFac3d * -1.0f);
+				v3.y = rail3D.transform.localPosition.y;
 			}
 			else
 			{
 				//sideview
-				v.x=v.x-((currSliderVal-slider.value)*shiftScaleFac);
-				v.y=attachedRailSide.transform.localPosition.y;
+				v.x = v.x - ((currSliderVal - slider.value) * shiftScaleFacHor);
+				v.y = attachedRailSide.transform.localPosition.y;
 				//topview
-				v2.y=v2.y-((currSliderVal2-slider.value)*shiftScaleFac);
+				v2.y = v2.y - ((currSliderVal2 - slider.value) * shiftScaleFacHor);
 				//3d, switch direction because of the coordinate-system in 3d instead of 2d
-				v3.x=v3.x-((currSliderVal3-slider.value)*shiftScaleFac3d*-1.0f);
-				v3.y=rail3D.transform.localPosition.y;
+				v3.x = v3.x - ((currSliderVal3 - slider.value) * shiftScaleFac3d * -1.0f);
+				v3.y = rail3D.transform.localPosition.y;
 			}
-			//Debug.Log("---else sidePosObj: "+attachedRailSide.transform.localPosition);
-			//Debug.Log("---else sidePosVec: "+v);
-			//write back the value and save the current value for x
-			//attachedRailSide.transform.localPosition=new Vector3(v.x,attachedRailSide.transform.localPosition.y,v.z);
 		}
-		//attachedRail.transform.position.x=new Vector3(v.x,v.z,v.z);
-		currSliderVal=slider.value;
-		currSliderVal2=slider.value;
-		currSliderVal3=slider.value;
-		//Debug.Log(">>>new SlideVal: "+currSliderVal.ToString());
-		//Debug.Log(">>>new RailPos.x: "+v.x.ToString());
-		//Debug.Log("+++Name of Slider: " +slider.ToString());
-		//Debug.Log("---update sidePosObj: "+attachedRailSide.transform.localPosition);
-		//Debug.Log("---update sidePosVec: "+v);
-		//Debug.Log("---update 3dPosObj: "+rail3D.transform.localPosition);
-		//Debug.Log("---update 3dPosVec: "+v3);
+		currSliderVal = slider.value;
+		currSliderVal2 = slider.value;
+		currSliderVal3 = slider.value;
+
 		//update the objects in scene/write back values
 		try
 		{
-			attachedRailSide.transform.localPosition=v;
+			attachedRailSide.transform.localPosition = v;
 		}
 		catch (NullReferenceException)
 		{
@@ -154,7 +141,13 @@ public class sliderValueToInputValue : MonoBehaviour
 		}
 		try
 		{
-			attachedRailTop.transform.localPosition=v2;
+			imgLight.transform.localPosition = new Vector2(imgLight.transform.localPosition.x, yLight);
+		}
+		catch (UnassignedReferenceException)
+		{ }
+		try
+		{
+			attachedRailTop.transform.localPosition = v2;
 		}
 		catch (NullReferenceException)
 		{
@@ -162,33 +155,16 @@ public class sliderValueToInputValue : MonoBehaviour
 		}
 		try
 		{
-            //rail3D.transform.localPosition = v3;
+			//rail3D.transform.localPosition = v3;
 			thisRailElement = StaticSceneData.StaticData.railElements.Find(re => re.name == rail3D.name);
 			thisRailElement.x = v3.x;
 			thisRailElement.y = v3.y;
 			thisRailElement.z = v3.z;
 			StaticSceneData.Rails3D();
-        }
+		}
 		catch (NullReferenceException)
 		{
 			Debug.Log("rail3D was not set in the inspector");
 		}
-		
 	}
-
-    // Update is called once per frame
-    void Update()
-    {
-		//attachedInputValue.text=slider.value.ToString;
-		//Debug.Log(">>>updateRail.x: " +v.x.ToString());
-		//attachedRailSide.transform.localPosition=v;
-		try
-		{
-			//attachedRailTop.transform.localPosition=v2;
-		}
-		catch (NullReferenceException)
-		{
-			
-		}
-    }
 }

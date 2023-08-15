@@ -39,6 +39,7 @@ public class SceneDataController : MonoBehaviour
     [HideInInspector] public SceneData tempSceneData;
     #endregion
 
+
     void Awake()
     {
         StaticSceneData.StaticData = CreateSceneData();

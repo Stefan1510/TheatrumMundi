@@ -36,7 +36,6 @@ public class LightController : MonoBehaviour
 
     private void Awake()
     {
-        Debug.Log("value: "+UiSetting_LB_Image.transform.GetChild(0).eulerAngles);
         _startPosition = transform.localPosition.z;
         _startYAngle = transform.localEulerAngles.y;
         _startHeight = transform.localPosition.y;
@@ -61,7 +60,6 @@ public class LightController : MonoBehaviour
         ChangeHeight(sliderLbHeight.value);
         PanelLbImage = toggleLb.transform.parent.parent.GetComponent<Image>();
         PanelLbImage.color = new Color(171f / 255f, 171f / 255f, 171f / 255f, 160f / 255f);
-        Debug.Log("value nach awake: "+UiSetting_LB_Image.transform.GetChild(0).eulerAngles);
 
     }
     void Start()

@@ -1,10 +1,12 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.IO;
+using System.Collections.Generic;
 using System.Collections;
 using UnityEngine.Networking;
 
-public class SettingController : MonoBehaviour {
+public class SettingController : MonoBehaviour
+{
     public Slider SliderRail1x;
     public Slider SliderRail1y;
     public Slider SliderRail2x;
@@ -24,13 +26,30 @@ public class SettingController : MonoBehaviour {
     //public Button fileSelectButton;
     //public Text fileSelectButtonText;
 
+    [System.Serializable]
+    public class StageElement
+    {
+        public string description;
+        public float x;
+        public float y;
+        public float z;
+        public string parent;
+        public bool active;
+    }
+
+    public class StageElementList
+    {
+        public List<StageElement> stageElements;
+    }
+
     private StageElementList myStageElements = new StageElementList();
     private bool sceneLoaded = false;
     private string _jsonString;
 
     private string _fileName;
 
-    private void Start() {
+    private void Start()
+    {
         //LoadFilesFromFolder();
         StartCoroutine(LoadFilesFromServer());
         StartCoroutine(GetJsonString());
@@ -54,8 +73,10 @@ public class SettingController : MonoBehaviour {
         string[] arr = line.Split('?');
         DropdownFileSelection.options.Clear();
 
-        foreach (string str in arr) {
-            if (str.Length > 4) {
+        foreach (string str in arr)
+        {
+            if (str.Length > 4)
+            {
                 DropdownFileSelection.options.Add(new Dropdown.OptionData(str));
             }
         }
@@ -70,8 +91,10 @@ public class SettingController : MonoBehaviour {
 
         myStageElements = JsonUtility.FromJson<StageElementList>(jsonString);
 
-        for (int i = 0; i < myStageElements.stageElements.Count; i++) {
-            switch (myStageElements.stageElements[i].description) {
+        for (int i = 0; i < myStageElements.stageElements.Count; i++)
+        {
+            switch (myStageElements.stageElements[i].description)
+            {
                 case "Schiene1":
                     SliderRail1x.value = myStageElements.stageElements[i].x;
                     SliderRail1y.value = myStageElements.stageElements[i].y;
@@ -99,7 +122,7 @@ public class SettingController : MonoBehaviour {
                     break;
                 case "Nagelbrett2":
                     SliderRail8x.value = myStageElements.stageElements[i].x;
-                    break; 
+                    break;
             }
 
             foreach (GameObject saveKulisse in saveKulissen)
@@ -117,21 +140,24 @@ public class SettingController : MonoBehaviour {
         }
     }
 
-    private void LoadFilesFromFolder() {
+    private void LoadFilesFromFolder()
+    {
         DirectoryInfo directoryInfo = new DirectoryInfo(Application.dataPath + "/Resources/JSON/");
         //DirectoryInfo directoryInfo = new DirectoryInfo(Application.persistentDataPath);
         FileInfo[] fileInfo = directoryInfo.GetFiles("*.json", SearchOption.AllDirectories);
         DropdownFileSelection.options.Clear();
         DropdownFileSelection.options.Add(new Dropdown.OptionData("new"));
 
-        foreach (FileInfo file in fileInfo) {
+        foreach (FileInfo file in fileInfo)
+        {
             Dropdown.OptionData optionData = new Dropdown.OptionData(file.Name);
             DropdownFileSelection.options.Add(optionData);
             DropdownFileSelection.value = 1;
         }
     }
 
-    public void LoadFile() {
+    public void LoadFile()
+    {
         string selectedFilename = DropdownFileSelection.options[DropdownFileSelection.value].text;
         Debug.Log(selectedFilename);
 
@@ -139,7 +165,8 @@ public class SettingController : MonoBehaviour {
         string path = Application.dataPath + "/Resources/JSON/" + selectedFilename;
         //string path = Application.persistentDataPath + selectedFilename;
 
-        if (path.Length != 0) {
+        if (path.Length != 0)
+        {
             sceneLoaded = true;
 
             StreamReader reader = new StreamReader(path);
@@ -148,8 +175,10 @@ public class SettingController : MonoBehaviour {
 
             myStageElements = JsonUtility.FromJson<StageElementList>(jsonString);
 
-            for (int i = 0; i < myStageElements.stageElements.Count; i++) {
-                switch (myStageElements.stageElements[i].description) {
+            for (int i = 0; i < myStageElements.stageElements.Count; i++)
+            {
+                switch (myStageElements.stageElements[i].description)
+                {
                     case "Schiene1":
                         SliderRail1x.value = myStageElements.stageElements[i].z;
                         break;
@@ -172,9 +201,11 @@ public class SettingController : MonoBehaviour {
         _jsonString = www.downloadHandler.text;
     }
 
-    public void SaveFile() {
+    public void SaveFile()
+    {
         //if no File was loaded - init myStageElements Class with init .json 
-        if (!sceneLoaded) {
+        if (!sceneLoaded)
+        {
             //string tempPath = Resources.Load("JSON/Init.json")
             //string tempPath = Application.dataPath + "/Resources/JSON/InitScene.json";
             //string tempPath = Application.persistentDataPath;
@@ -238,13 +269,15 @@ public class SettingController : MonoBehaviour {
         string json = JsonUtility.ToJson(myStageElements);
         //var path = EditorUtility.SaveFilePanel("Save Settings as JSON", "", ".json", "json");
         var path = Application.dataPath + "/Resources/thisScene.json";
-        if (path.Length != 0) {
+        if (path.Length != 0)
+        {
             //File.WriteAllText(path, json);
             StartCoroutine(WriteToServer(json));
         }
     }
 
-    private IEnumerator WriteToServer(string json) {
+    private IEnumerator WriteToServer(string json)
+    {
         WWWForm form = new WWWForm();
         string filePath = System.DateTime.Now.ToString("yyMMdd-HHmmss") + ".json";
         form.AddField("pathFile", filePath);
@@ -253,7 +286,7 @@ public class SettingController : MonoBehaviour {
         UnityWebRequest www = UnityWebRequest.Post("https://lightframefx.de/extras/theatrum-mundi/WriteFile.php", form);
         yield return www;
 
-        Debug.Log("www: " +www.downloadHandler.text);
+        Debug.Log("www: " + www.downloadHandler.text);
 
         yield return StartCoroutine(LoadFilesFromServer());
     }

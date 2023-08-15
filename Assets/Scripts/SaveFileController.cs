@@ -712,7 +712,7 @@ public class SaveFileController : MonoBehaviour
             SceneManaging.flyerActive = false;
             contentMenueRails.currentRailIndex = 0;
             contentMenueRails.Update3DFigurePositions();
-            contentMenueRails.openCloseObjectInTimeline(contentMenueRails.railList[0].myObjects, 0, false);
+            contentMenueRails.OpenCloseObjectInTimeline(contentMenueRails.railList[0].myObjects, 0, false);
 
             this.GetComponent<SceneDataController>().CreateScene(tempSceneData);
         }

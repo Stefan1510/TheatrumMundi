@@ -92,9 +92,9 @@ namespace RockVR.Video.Demo
                     break;
             }
         }
-        public void ButtonRender()
+        public void ButtonRender(bool start)
         {
-            if (renderButtonPressed)
+            if (start)
             {
                 VideoCaptureCtrl.instance.StopCapture();
                 renderButtonPressed = false;

@@ -10,14 +10,17 @@ public class SwitchMenues : MonoBehaviour
 
     void Start()
     {
-        SwitchToMenueConfig();
+         SceneManaging.mainMenuActive = 1;
+        ObjectMenueDirectorMain.SetActive(false);
+        ObjectMenueConfigMain.SetActive(true);
+        _canvas.GetComponent<ObjectShelfAll>().ButtonShelf01();
     }
 
     public void SwitchToMenueDirector()
     {
         ObjectMenueConfigMain.SetActive(false);
         ObjectMenueDirectorMain.SetActive(true);
-        StaticSceneData.Everything3D();
+        //StaticSceneData.Everything3D();
         GetComponent<UIController>().menueFiguresContent.GetComponent<RailManager>().PublicUpdate();
 
         /////////////////////////////////// for VISITOR-Tool
@@ -36,7 +39,7 @@ public class SwitchMenues : MonoBehaviour
         ObjectMenueDirectorMain.SetActive(false);
         ObjectMenueConfigMain.SetActive(true);
         _canvas.GetComponent<ObjectShelfAll>().ButtonShelf01();
-        StaticSceneData.Everything3D();
+        //StaticSceneData.Everything3D();
         //GetComponent<UnitySwitchExpertUser>().DeactivateExpertTools();
     }
 }

@@ -18,9 +18,10 @@ public class CoulissesManager : MonoBehaviour
     [HideInInspector] public float[] shelfSizeWidth, shelfSizeHeight;
     [HideInInspector] public bool[] isWide, isHighlighted, isMirrored;
     public TextMeshProUGUI[] coulisseCounter;
-
     #endregion
+
     #region private variables
+    [SerializeField] private GameObject[] rails;
     [SerializeField] GameObject scrollViewScenery, liveView;
     [SerializeField] PressHelp helpButton;
 
@@ -66,7 +67,6 @@ public class CoulissesManager : MonoBehaviour
                 shelfSizeHeight[i] = Screen.height * 0.185f / coulisses[i].transform.lossyScale.y;
                 coulisses[i].GetComponent<RectTransform>().sizeDelta = new Vector2(Screen.width * 0.104f / coulisses[i].GetComponent<CoulisseStats>().CoulisseHeight * coulisses[i].GetComponent<CoulisseStats>().CoulisseWidth / coulisses[i].transform.lossyScale.x, Screen.height * 0.185f / coulisses[i].transform.lossyScale.x);
                 coulisses[i].transform.parent.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(shelfSizeWidth[i], Screen.height * 0.185f / coulisses[i].transform.lossyScale.x);
-
             }
             else
             {
@@ -86,6 +86,11 @@ public class CoulissesManager : MonoBehaviour
         for (int i = 0; i < collections.Length; i++)
         {
             coulisseCounter[i].text = "0";
+        }
+        //outline
+        foreach (GameObject rail in rails)
+        {
+            rail.GetComponent<cakeslice.Outline>().enabled = false;
         }
 
         ResetScreenSize();
@@ -110,7 +115,7 @@ public class CoulissesManager : MonoBehaviour
                     shelfSizeWidth[i] = Screen.width * 0.104f / coulisses[i].GetComponent<CoulisseStats>().CoulisseHeight * coulisses[i].GetComponent<CoulisseStats>().CoulisseWidth / coulisses[i].transform.lossyScale.x;
                     shelfSizeHeight[i] = shelfSizeWidth[i] * coulisses[i].GetComponent<CoulisseStats>().CoulisseHeight / coulisses[i].GetComponent<CoulisseStats>().CoulisseWidth;
 
-                    coulisses[i].GetComponent<RectTransform>().sizeDelta= coulisses[i].transform.parent.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(shelfSizeWidth[i], shelfSizeHeight[i]);
+                    coulisses[i].GetComponent<RectTransform>().sizeDelta = coulisses[i].transform.parent.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(shelfSizeWidth[i], shelfSizeHeight[i]);
                     if (!coulissesOnRails.Contains(coulisses[i]))
                     {
                         coulisses[i].transform.GetComponent<RectTransform>().anchoredPosition = new Vector2(coulisses[i].transform.GetComponent<RectTransform>().anchoredPosition.x, -100);
@@ -127,7 +132,7 @@ public class CoulissesManager : MonoBehaviour
                         coulisses[i].transform.GetComponent<RectTransform>().anchoredPosition = new Vector2(coulisses[i].transform.GetComponent<RectTransform>().anchoredPosition.x, -shelfSizeHeight[i] / 2);
                     }
                 }
-            Debug.Log("box size: "+coulisses[i].GetComponent<BoxCollider2D>().size);
+                Debug.Log("box size: " + coulisses[i].GetComponent<BoxCollider2D>().size);
 
             }
             for (int j = 0; j < coulissesOnRails.Count; j++)
@@ -156,6 +161,7 @@ public class CoulissesManager : MonoBehaviour
                             }
                         }
                         SetIndexTabActive(i);
+                        HighlightRail(i);
                     }
                 }
                 clickInSettingsWindow = IsSettingsWindowClicked();
@@ -233,15 +239,15 @@ public class CoulissesManager : MonoBehaviour
                 else
                 {
                     coulisses[currentObjectIndex].transform.position = new Vector2(getMousePos.x - diff.x, getMousePos.y - diff.y); // diff is difference of mouse position to clicked position on coulisse so that the coulisse doesnt jump to the pivot all the time
-                    if (coulisses[currentObjectIndex].GetComponent<CoulisseStats>().typeOfCoulisse == 1)    // kleine blende
+                    if (coulisses[currentObjectIndex].GetComponent<CoulisseStats>().typeOfCoulisse == 1)    // grosse blende
                     {
-                        coulisses[currentObjectIndex].GetComponent<RectTransform>().anchoredPosition = new Vector2(coulisses[currentObjectIndex].GetComponent<RectTransform>().anchoredPosition.x, -185);
+                        coulisses[currentObjectIndex].GetComponent<RectTransform>().anchoredPosition = new Vector2(coulisses[currentObjectIndex].GetComponent<RectTransform>().anchoredPosition.x, -175);
                     }
-                    else if (coulisses[currentObjectIndex].GetComponent<CoulisseStats>().typeOfCoulisse == 2)    // grosse blende
+                    else if (coulisses[currentObjectIndex].GetComponent<CoulisseStats>().typeOfCoulisse == 2)    // seitenkulisse
                     {
-                        coulisses[currentObjectIndex].GetComponent<RectTransform>().anchoredPosition = new Vector2(coulisses[currentObjectIndex].GetComponent<RectTransform>().anchoredPosition.x, -150);
+                        coulisses[currentObjectIndex].GetComponent<RectTransform>().anchoredPosition = new Vector2(coulisses[currentObjectIndex].GetComponent<RectTransform>().anchoredPosition.x, -160);
                     }
-                    else                                                                                     // seitenkulisse
+                    else                                                                                     // kleine Blende
                     {
                         coulisses[currentObjectIndex].GetComponent<RectTransform>().anchoredPosition = new Vector2(coulisses[currentObjectIndex].GetComponent<RectTransform>().anchoredPosition.x, -165);
                     }
@@ -256,6 +262,7 @@ public class CoulissesManager : MonoBehaviour
                     if (SceneManaging.openUp)
                     {
                         SetIndexTabActive(hitIndexTab);
+                        HighlightRail(hitIndexTab);
                     }
                 }
 
@@ -348,15 +355,15 @@ public class CoulissesManager : MonoBehaviour
                                     coulisses[currentObjectIndex].transform.SetParent(collections[i].transform);
                                     if (coulisses[currentObjectIndex].GetComponent<CoulisseStats>().typeOfCoulisse == 1)    // grosse blende
                                     {
-                                        coulisses[currentObjectIndex].GetComponent<RectTransform>().anchoredPosition = new Vector2(coulisses[currentObjectIndex].GetComponent<RectTransform>().anchoredPosition.x, -185);
+                                        coulisses[currentObjectIndex].GetComponent<RectTransform>().anchoredPosition = new Vector2(coulisses[currentObjectIndex].GetComponent<RectTransform>().anchoredPosition.x, -175);
                                     }
                                     else if (coulisses[currentObjectIndex].GetComponent<CoulisseStats>().typeOfCoulisse == 2)    // seitenkulisse
                                     {
-                                        coulisses[currentObjectIndex].GetComponent<RectTransform>().anchoredPosition = new Vector2(coulisses[currentObjectIndex].GetComponent<RectTransform>().anchoredPosition.x, -150);
+                                        coulisses[currentObjectIndex].GetComponent<RectTransform>().anchoredPosition = new Vector2(coulisses[currentObjectIndex].GetComponent<RectTransform>().anchoredPosition.x, -160);
                                     }
                                     else                                                                                     // kleine blende
                                     {
-                                        coulisses[currentObjectIndex].GetComponent<RectTransform>().anchoredPosition = new Vector2(coulisses[currentObjectIndex].GetComponent<RectTransform>().anchoredPosition.x, -170);
+                                        coulisses[currentObjectIndex].GetComponent<RectTransform>().anchoredPosition = new Vector2(coulisses[currentObjectIndex].GetComponent<RectTransform>().anchoredPosition.x, -165);
                                     }
                                 }
                             }
@@ -472,6 +479,15 @@ public class CoulissesManager : MonoBehaviour
                 clickCoulisseFromShelf = false;
             }
         }
+    }
+    public void HighlightRail(int nr)
+    {
+        foreach (GameObject rail in rails)
+        {
+            rail.GetComponent<cakeslice.Outline>().enabled = false;
+        }
+        if (nr != -1)
+            rails[nr].GetComponent<cakeslice.Outline>().enabled = true;
     }
     public void ChangeElementPositionX()
     {
@@ -642,7 +658,7 @@ public class CoulissesManager : MonoBehaviour
             index = -1;
         return index;
     }
-    private void MirrorObject()
+    public void MirrorObject()
     {
         if (isMirrored[currentObjectIndex])
         {
@@ -687,7 +703,7 @@ public class CoulissesManager : MonoBehaviour
         coulisses[i].GetComponent<RectTransform>().sizeDelta = new Vector2(shelfSizeWidth[i], shelfSizeHeight[i]);
         coulisses[i].GetComponent<RectTransform>().localPosition = new Vector2(0.0f, -(coulisses[i].GetComponent<RectTransform>().rect.height / 2));
         coulisses[i].GetComponent<BoxCollider2D>().offset = new Vector2(0, -coulisses[i].GetComponent<RectTransform>().localPosition.y);
-        coulisses[i].GetComponent<BoxCollider2D>().size = new Vector2(240,240);
+        coulisses[i].GetComponent<BoxCollider2D>().size = new Vector2(240, 240);
         Highlight(i, 0);
         if (coulissesOnRails.Contains(coulisses[i]))
         {
@@ -735,7 +751,6 @@ public class CoulissesManager : MonoBehaviour
     }
     public void PublicUpdate()
     {
-        Debug.Log("public update");
         for (int i = 0; i < coulisses.Length; i++)
         {
             if (!isWide[i])
@@ -744,7 +759,7 @@ public class CoulissesManager : MonoBehaviour
                 shelfSizeHeight[i] = shelfSizeWidth[i] * coulisses[i].GetComponent<CoulisseStats>().CoulisseHeight / coulisses[i].GetComponent<CoulisseStats>().CoulisseWidth;
 
                 coulisses[i].GetComponent<RectTransform>().sizeDelta = coulisses[i].transform.parent.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(shelfSizeWidth[i], shelfSizeHeight[i]);
-                coulisses[i].GetComponent<BoxCollider2D>().size = new Vector2(240,240);
+                coulisses[i].GetComponent<BoxCollider2D>().size = new Vector2(240, 240);
                 if (!coulissesOnRails.Contains(coulisses[i]))
                 {
                     coulisses[i].transform.GetComponent<RectTransform>().anchoredPosition = new Vector2(coulisses[i].transform.GetComponent<RectTransform>().anchoredPosition.x, -100);
@@ -755,7 +770,7 @@ public class CoulissesManager : MonoBehaviour
                 shelfSizeWidth[i] = Screen.width * 0.104f / coulisses[i].transform.lossyScale.x;
                 shelfSizeHeight[i] = shelfSizeWidth[i] / coulisses[i].GetComponent<CoulisseStats>().CoulisseWidth * coulisses[i].GetComponent<CoulisseStats>().CoulisseHeight;
 
-                coulisses[i].GetComponent<BoxCollider2D>().size = new Vector2(240,240);
+                coulisses[i].GetComponent<BoxCollider2D>().size = new Vector2(240, 240);
                 coulisses[i].GetComponent<RectTransform>().sizeDelta = coulisses[i].transform.parent.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(shelfSizeWidth[i], shelfSizeHeight[i]);
                 if (!coulissesOnRails.Contains(coulisses[i]))
                 {

@@ -152,7 +152,7 @@ public class ObjectShelfAll : MonoBehaviour
                 StartCoroutine(ButtonShelfI(5));
                 if (fromRail == false)
                 {
-                    MenueContentRails.openTimelineByClick(false, 0, true);
+                    MenueContentRails.OpenTimelineByClick(false, 0, true);
                 }
             }
         }
@@ -250,6 +250,7 @@ public class ObjectShelfAll : MonoBehaviour
         {
             shelfNumber = 4;
         }
+        MenueShelf02.GetComponent<CoulissesManager>().HighlightRail(-1);
 
         MenueShelf01.SetActive(false);
         MenueShelf02.SetActive(false);
@@ -299,6 +300,7 @@ public class ObjectShelfAll : MonoBehaviour
                 {
                     playerCtrls.ButtonPlay();
                 }
+                MenueShelf02.GetComponent<CoulissesManager>().HighlightRail(0);
                 break;
             case 3:         // MenueLichtConfig
                 MenueShelf03.SetActive(true);
