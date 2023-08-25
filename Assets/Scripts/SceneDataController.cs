@@ -29,7 +29,7 @@ public class SceneDataController : MonoBehaviour
     [HideInInspector] public int countActiveFigureElements = 0;
     [HideInInspector] public int countActiveMusicClips = 0;
     // [HideInInspector] public int currentTime;
-    [HideInInspector] public int pieceLength;
+    [HideInInspector] public int scenePieceLength;
     //[HideInInspector] public Material[] matCoulisse;
 
     [HideInInspector] public List<GameObject> objects3dFigureInstances;
@@ -37,12 +37,15 @@ public class SceneDataController : MonoBehaviour
 
     [HideInInspector] public SceneData recentSceneData;
     [HideInInspector] public SceneData tempSceneData;
+
+    [SerializeField] private Slider sliderMaxLength;
+    [SerializeField] private TimeSliderController timeSliderController;
     #endregion
 
 
     void Awake()
     {
-        StaticSceneData.StaticData = CreateSceneData();
+        StaticSceneData.StaticData = CreateSceneData(true);
         foreach (GameObject objectSceneryElement in objectsSceneryElements)
         {
             objectSceneryElement.transform.SetParent(GameObject.Find("Schiene1").transform);
@@ -53,7 +56,7 @@ public class SceneDataController : MonoBehaviour
 
     }
 
-    private void GetFileMetaDataFromScene()
+    private void GetFileMetaDataFromScene(bool fromAwake)
     {
         if (GetComponent<UnitySwitchExpertUser>()._isExpert)
         {
@@ -67,6 +70,10 @@ public class SceneDataController : MonoBehaviour
         // }
 
         sceneFileDate = DateTime.Now.ToString();
+        if (fromAwake)
+            scenePieceLength = 10;
+        else
+            scenePieceLength = AnimationTimer._maxTime / 60;
     }
 
     public void SetFileMetaDataToScene()
@@ -76,7 +83,7 @@ public class SceneDataController : MonoBehaviour
         inputFieldFileComment.text = sceneFileComment;
     }
 
-    public SceneData CreateSceneData()  // only in awake
+    public SceneData CreateSceneData(bool fromAwake)  // only in awake
     {
         SceneData sceneData = new SceneData();
 
@@ -97,11 +104,13 @@ public class SceneDataController : MonoBehaviour
             sceneData.railElements.Add(sceneRailElement);
         }
 
-        GetFileMetaDataFromScene();
+        GetFileMetaDataFromScene(fromAwake);
         sceneData.fileName = sceneFileName;
         sceneData.fileAuthor = sceneFileAuthor;
         sceneData.fileComment = sceneFileComment;
         sceneData.fileDate = sceneFileDate;
+        sceneData.pieceLength = scenePieceLength;
+        Debug.Log("length: " + scenePieceLength);
 
         sceneData.sceneryElements = new List<SceneryElement>();
         sceneData.figureElements = new List<FigureElement>();
@@ -213,7 +222,9 @@ public class SceneDataController : MonoBehaviour
         sceneFileDate = sceneData.fileDate;
         sceneFileComment = sceneData.fileComment;
 
-        pieceLength = sceneData.pieceLength;
+        scenePieceLength = sceneData.pieceLength;
+        Debug.Log("length: " + scenePieceLength);
+        SetPieceLength(scenePieceLength);
 
         //rail elements
         RailsApplyToScene(sceneData.railElements);
@@ -231,6 +242,14 @@ public class SceneDataController : MonoBehaviour
         MusicApplyToScene(sceneData.musicClipElements);
     }
 
+    public void SetPieceLength(int pieceLength)
+    {
+        AnimationTimer._maxTime = pieceLength * 60;
+        sliderMaxLength.value = pieceLength / 60;
+        Debug.Log("slider max length: " + sliderMaxLength.value);
+        timeSliderController.ChangeMaxLength();
+        Debug.Log("time: " + pieceLength + ", slider: " + sliderMaxLength.value);
+    }
     public void RailsApplyToScene(List<RailElement> railElements)
     {
         foreach (RailElement re in railElements)
@@ -418,6 +437,7 @@ public class SceneDataController : MonoBehaviour
     public SceneData CreateSceneDataFromJSON(string JsonData)
     {
         SceneData sceneData = JsonUtility.FromJson<SceneData>(JsonData);
+        Debug.Log("piece length in json: " + sceneData.pieceLength);
         return sceneData;
     }
 }

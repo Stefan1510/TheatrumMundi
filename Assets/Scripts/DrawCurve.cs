@@ -120,7 +120,8 @@ public class DrawCurve : MonoBehaviour
                 valueEndF = UtilitiesTm.FloatRemap(valueEndF, _minValue, _maxValue, 0, _textureCurve.height - 3);    // mappen des "fr�heren" Moments von zwischen TimeSlider auf zwischen PanelWeite
                 valueEnd = (int)valueEndF;
 
-                _textureCurve = UtilitiesTm.Bresenham(_textureCurve, momentStart, valueStart, momentEnd, valueEnd, _curveColors);
+                _textureCurve = UtilitiesTm.Bresenham(_textureCurve, momentStart, valueStart, momentEnd, valueStart, _curveColors);
+                _textureCurve = UtilitiesTm.Bresenham(_textureCurve, momentEnd, valueStart, momentEnd, valueEnd, _curveColors);
 
                 float deltaMoment = momentEndF - momentStartF;  // deltaX
                 float deltaValue = valueEndF - valueStartF;     // deltaY

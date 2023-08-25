@@ -37,6 +37,8 @@ public static class SceneManaging
     private static Color _colFlyerSpace = new Color(.78f, .54f, .44f);
     private static float _idleTimer = -1;
     public static float alpha = 1;
+
+    public static bool recording = false;
     #endregion
     public static void createRectangle(GameObject obj, Color col, double rectHeight, GameObject prefab, double tmpLength)
     {

@@ -30,7 +30,7 @@ public class ObjectShelfAll : MonoBehaviour
     public GameObject ButtonMenueDirector;  // Der Button in ObjectMenueConfigMain der zum DirectorMenu leitet
 
     public GameObject panelPreviewNotLoaded;
-    [SerializeField] private RockVR.Video.Demo.PlayerControls playerCtrls;
+    [SerializeField] private UTJ.FrameCapturer.PlayerControls playerCtrls;
 
     public GameObject gameController;//, overlayWaiting;
 

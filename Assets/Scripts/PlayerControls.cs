@@ -1,10 +1,17 @@
 using UnityEngine;
 using UnityEngine.UI;
+// using UnityEditor.Recorder;
+using UnityEditor;
+using TMPro;
 
-namespace RockVR.Video.Demo
+// namespace RockVR.Video.Demo
+namespace UTJ.FrameCapturer
 {
     public class PlayerControls : MonoBehaviour
     {
+        private bool pointAnimation;
+        private float t = 0.0f;
+        private int i;
         public GameObject gameController;
         public Button[] aPlayButtons;
         public Button[] aStopButtons;
@@ -14,7 +21,12 @@ namespace RockVR.Video.Demo
         [SerializeField] private RailMusicManager tmpRailMusicMan;
         private float _f = 0.0f;
         private float _fps = 0.0f;
-        private bool renderButtonPressed = false;
+        [SerializeField] private GameObject overlayRendering;
+        [SerializeField] private MovieRecorder rec;
+
+        // var controllerSettings = ScriptableObject.CreateInstance<RecorderControllerSettings>();
+        // var TestRecorderController = new RecorderController(controllerSettings);
+
         void Start()
         {
             for (int i = 0; i < aPlayButtons.Length; i++)
@@ -28,6 +40,48 @@ namespace RockVR.Video.Demo
         }
         void Update()
         {
+            if (pointAnimation)
+            {
+                /*if (t == 0)
+                {
+                    if (i < 2)
+                        i++;
+                    else
+                        i = 0;
+                    switch (i)
+                    {
+                        case 0: 
+                        overlayRendering.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Dein Film wird erstellt.";
+                        break;
+                        case 1: 
+                        overlayRendering.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Dein Film wird erstellt..";
+                        break;
+                        case 2: 
+                        overlayRendering.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Dein Film wird erstellt...";
+                        break;
+                    }
+                }
+                t += Time.deltaTime;
+                if (t >= 0.1f)
+                {
+                    t = 0;
+                }*/
+                overlayRendering.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = (AnimationTimer.GetTime()/AnimationTimer._maxTime).ToString("000")+"%";
+                // Debug.Log("t: "+t*100+"t%2: "+t*100%2);
+            }
+
+            if (Input.GetMouseButtonDown(0))
+            {
+                if (SceneManaging.recording && overlayRendering.activeSelf)
+                {
+                    SceneManaging.recording = false;
+                    rec.EndRecording();
+                    overlayRendering.SetActive(false);
+                    pointAnimation = false;
+                    t = 0;
+                }
+            }
+
             _f += Time.deltaTime;
             if (_f >= 1.0f)
             {
@@ -97,22 +151,11 @@ namespace RockVR.Video.Demo
             if (start)
             {
                 AnimationTimer.ResetTime();
-                VideoCaptureCtrl.instance.StartCapture();
-                renderButtonPressed = true;
-                AnimationTimer.StartTimer();
-                SceneManaging.playing = true;
+                ButtonPlay();
+                overlayRendering.SetActive(true);
+                pointAnimation = true;
+                rec.BeginRecording();
             }
-            else
-            {
-                VideoCaptureCtrl.instance.StopCapture();
-                renderButtonPressed = false;
-                AnimationTimer.ResetTime();
-            }
-        }
-        //unused. for showing the use of SetTime()
-        public void ChangeTime(float newTime)
-        {
-            AnimationTimer.SetTime(newTime);
         }
     }
 }

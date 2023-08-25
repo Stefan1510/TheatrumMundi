@@ -12,7 +12,7 @@ public class UIController : MonoBehaviour
     public GameObject[] goIndexTabs;
     public GameObject[] goRailDistSliders;
     public GameObject[] goRailHeightSliders;
-    public RailManager[] Rails;
+    //public RailManager[] Rails;
     public GameObject menueFiguresContent;
     public RailLightManager[] RailLightBG;
     public RailMusicManager RailMusic;

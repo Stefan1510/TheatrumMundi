@@ -12,7 +12,7 @@ public class CoulissesManager : MonoBehaviour
     public GameObject deleteButton, sliderX, sliderY, sliderPosX, sliderPosY;
     [SerializeField] TextMeshProUGUI sceneryName;
     [HideInInspector] public List<GameObject> coulissesOnRails;
-    [HideInInspector] public GameObject[] coulisses;
+    public GameObject[] coulisses = new GameObject[21];
     [HideInInspector] public float railWidth, railHeight;
     [HideInInspector] public GameObject[] parentStart;
     [HideInInspector] public float[] shelfSizeWidth, shelfSizeHeight;
@@ -38,10 +38,9 @@ public class CoulissesManager : MonoBehaviour
     private float railMinY, currentLossyScale;
     //private int _counterTouched;
     #endregion
-    void Awake()
+    public void Awake()
     {
         SceneManaging.objectInIndexTab = -1;
-        coulisses = gameController.GetComponent<UIController>().goButtonSceneryElements;
         currentObjectIndex = -1;
         scenerySettings.SetActive(false);
         deleteButton.SetActive(false);

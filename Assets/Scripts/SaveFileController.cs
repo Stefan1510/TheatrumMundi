@@ -15,6 +15,7 @@ public class SaveFileController : MonoBehaviour
     public RailManager contentMenueRails;
     private Button tmpFileButtonScene;
     [SerializeField] private RailMusicManager tmpMusicManager;
+    [SerializeField] private CoulissesManager tmpCoulissesManager;
     //[SerializeField] private SceneDataController tmpSceneDataController;
     //[SerializeField] private LightAnimationRepresentation tmpLightAnimRep;
     //[SerializeField] private SetLightColors tmpSetLightCol;
@@ -77,6 +78,8 @@ public class SaveFileController : MonoBehaviour
         SceneManaging.isPreviewLoaded = true;
         loadFromAwake = true;
         _directorySaves = "Saves";
+
+        tmpCoulissesManager.Awake();
     }
     private void Update()
     {
@@ -97,7 +100,7 @@ public class SaveFileController : MonoBehaviour
     {
         bool foundName = false;
         string filePath = "";
-        SceneData sceneDataSave = this.GetComponent<SceneDataController>().CreateSceneData();
+        SceneData sceneDataSave = this.GetComponent<SceneDataController>().CreateSceneData(false);
         bool isExpert = this.GetComponent<UnitySwitchExpertUser>()._isExpert;
 
         if (!isExpert)
@@ -138,6 +141,7 @@ public class SaveFileController : MonoBehaviour
                 StaticSceneData.StaticData.fileAuthor = sceneDataSave.fileAuthor;
                 StaticSceneData.StaticData.fileComment = sceneDataSave.fileComment;
                 StaticSceneData.StaticData.fileDate = sceneDataSave.fileDate;
+                StaticSceneData.StaticData.pieceLength = sceneDataSave.pieceLength;
                 string sceneDataSaveString = this.GetComponent<SceneDataController>().CreateJsonFromSceneData(StaticSceneData.StaticData);
 
                 if (overwrite == 0) // auf speichern geklickt
@@ -205,7 +209,7 @@ public class SaveFileController : MonoBehaviour
                         }
                         tmpVal++;
 
-                        Debug.Log("tmpcounter: " + tmpCounter + ", filelist: " + _buttonsFileList.Count);
+                        //Debug.Log("tmpcounter: " + tmpCounter + ", filelist: " + _buttonsFileList.Count);
                         if (tmpCounter == _buttonsFileList.Count)
                         {
                             foundName = false;
@@ -236,7 +240,7 @@ public class SaveFileController : MonoBehaviour
             //Debug.Log("tempsenedata: " + tempSceneData.lightElements);
             CoulissesManager tmpCoulMan = menuKulissen.GetComponent<CoulissesManager>();
 
-            for (int i = 0; i < this.GetComponent<UIController>().goButtonSceneryElements.Length; i++)
+            for (int i = 0; i < tmpCoulMan.GetComponent<CoulissesManager>().coulisses.Length; i++)
             {
                 tmpCoulMan.PlaceInShelf(i);   // alle kulissen zurueck ins shelf
             }
@@ -287,6 +291,7 @@ public class SaveFileController : MonoBehaviour
                 StaticSceneData.StaticData.fileName = "Besucher";
                 loadFromAwake = false;
             }
+
             //Debug.Log("hi2");
 
             // for (int i = 0; i < contentRailsMenue.railList.Length; i++)
@@ -339,7 +344,6 @@ public class SaveFileController : MonoBehaviour
         {
             if (fromCode)
             {
-                Debug.Log("name: "+fileName);
                 StartCoroutine(LoadFileFromWWW(fileName, "fromCode"));
             }
             else
@@ -616,6 +620,7 @@ public class SaveFileController : MonoBehaviour
     }
     public IEnumerator LoadFileFromWWW(string fileName, string status) //bool fromCode, bool fromFlyer)
     {
+        Debug.Log("hier wird geladen! ");
         SceneDataController tmpSceneDataController = this.GetComponent<SceneDataController>();
         // UnityWebRequest uwr = UnityWebRequest.Get(_basepath + "Saves/" + fileName);
         // yield return uwr;
@@ -626,6 +631,8 @@ public class SaveFileController : MonoBehaviour
         tempSceneData = tmpSceneDataController.CreateSceneDataFromJSON(_jsonString);
 
         tmpSceneDataController.CreateScene(tempSceneData);
+        Debug.Log("piece lengtH : " +tempSceneData.pieceLength);
+
         string sceneMetaData = "";
         sceneMetaData += tempSceneData.fileName + "\n\n";
         sceneMetaData += "erstellt: " + tempSceneData.fileDate + "\n\n";
@@ -641,7 +648,7 @@ public class SaveFileController : MonoBehaviour
         sceneContentData += "Musik: " + tmpSceneDataController.countActiveMusicClips.ToString() + "\n\n";
 
         textFileContentData.text = sceneContentData;
-        _animTimer.SetMaxTime(tmpSceneDataController.pieceLength);
+        _animTimer.SetMaxTime(tmpSceneDataController.scenePieceLength);
 
         if (status == "fromCode" && !SceneManaging.isExpert)
         {
@@ -688,7 +695,6 @@ public class SaveFileController : MonoBehaviour
             if (SceneManaging.flyerSpace[8] != -1)  // trauerzug 1
             {
                 contentMenueRails.CreateNew2DInstance(SceneManaging.flyerSpace[8], 97, 3, 1, true);
-                //Debug.Log("8: ");
             }
             if (SceneManaging.flyerSpace[9] != -1)  // trauerzug 2
             {
@@ -719,8 +725,6 @@ public class SaveFileController : MonoBehaviour
         else if (status == "fromFlyerDelete")
         {
             LoadSceneFromTempToStatic();
-            //_canvas.GetComponent<ObjectShelfAll>().ButtonShelf02();
-            // _canvas.GetComponent<ObjectShelfAll>().ButtonShelf05(false);
         }
     }
     private void LoadFileFromDirectory(string fileName)
@@ -733,7 +737,7 @@ public class SaveFileController : MonoBehaviour
         //Debug.Log("jsonstring: " + _jsonString);
         reader.Close();
         tempSceneData = this.GetComponent<SceneDataController>().CreateSceneDataFromJSON(_jsonString);
-        //Debug.Log("tmp scene date: " + tempSceneData);
+        Debug.Log("piece length: " + tempSceneData.pieceLength);
         this.GetComponent<SceneDataController>().CreateScene(tempSceneData);
         string sceneMetaData = "";
         sceneMetaData += tempSceneData.fileName + "\n\n";
@@ -745,7 +749,7 @@ public class SaveFileController : MonoBehaviour
         sceneContentData += "Dateiinformationen:\n\n";
         sceneContentData += "Kulissen: " + this.GetComponent<SceneDataController>().countActiveSceneryElements.ToString() + "\n\n";
         sceneContentData += "Figuren: " + this.GetComponent<SceneDataController>().countActiveFigureElements.ToString() + "\n\n";
-        sceneContentData += "Länge: " + "\n\n";
+        sceneContentData += "Länge: " + tempSceneData.pieceLength+" \n\n";
         sceneContentData += "Lichter: " + this.GetComponent<SceneDataController>().countActiveLightElements.ToString() + "\n\n";
         sceneContentData += "Musik: " + this.GetComponent<SceneDataController>().countActiveMusicClips.ToString() + "\n\n";
         textFileContentData.text = sceneContentData;

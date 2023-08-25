@@ -7,7 +7,7 @@ public class Flyer : MonoBehaviour
     [SerializeField] GameObject warningPanel;
     [SerializeField] SaveFileController tmpFileController;
     [SerializeField] GameObject[] _flyerSpaces;
-    [SerializeField] private RockVR.Video.Demo.PlayerControls playerCtrls;
+    [SerializeField] private UTJ.FrameCapturer.PlayerControls playerCtrls;
     void Awake()
     {
         gameObject.SetActive(false);

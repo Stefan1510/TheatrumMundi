@@ -9,7 +9,7 @@ public class AnimationTimer : MonoBehaviour
     private static bool _runTimer = false;
     private static float _timer = 0.0f;
     private static float _minTime = 0.0f;
-    public static float _maxTime = 3 * 60;
+    public static int _maxTime = 3 * 60;
    
     public enum TimerState { stopped, playing, paused };
     private static TimerState _timerState = TimerState.stopped;
@@ -31,7 +31,7 @@ public class AnimationTimer : MonoBehaviour
     {
         return _minTime;
     }
-    public void SetMaxTime(float maxTime)
+    public void SetMaxTime(int maxTime)
     {
         _maxTime = maxTime;
     }

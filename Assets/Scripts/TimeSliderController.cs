@@ -21,7 +21,7 @@ public class TimeSliderController : MonoBehaviour, IPointerUpHandler, IDragHandl
     [SerializeField] private RailSpeedController tmpRailSpeedContr;
     [SerializeField] private RailMusicManager tmpRailMusicManager;
     [SerializeField] private LightAnimationRepresentation tmpLightAnim;
-    [SerializeField] private RockVR.Video.Demo.PlayerControls playerCtrls;
+    [SerializeField] private UTJ.FrameCapturer.PlayerControls playerCtrls;
     private float railwidthAbsolute = 1670.4f;
     private Slider _thisSlider;
     #endregion
@@ -172,10 +172,12 @@ public class TimeSliderController : MonoBehaviour, IPointerUpHandler, IDragHandl
             tmpRailMusicManager.myObjects[j].position = new Vector2(posX, rectSize);
         }
 
-        tmpAnimTimer.SetMaxTime(60 * _sliderMaxLength.value);
+        tmpAnimTimer.SetMaxTime(60 * (int)_sliderMaxLength.value);
+        Debug.Log("value: "+(int)_sliderMaxLength.value);
         _inputSliderLength.text = _sliderMaxLength.value.ToString("0");
         GetComponent<Slider>().maxValue = (60 * _sliderMaxLength.value);
-        StaticSceneData.StaticData.pieceLength = 60 * int.Parse(_inputSliderLength.text);
+        StaticSceneData.StaticData.pieceLength = int.Parse(_inputSliderLength.text);
+        Debug.Log("length "+StaticSceneData.StaticData.pieceLength);
         // update light
         tmpLightAnim.ChangeImage();
     }
@@ -194,7 +196,8 @@ public class TimeSliderController : MonoBehaviour, IPointerUpHandler, IDragHandl
     public void ChangeSliderValue()
     {
         _sliderMaxLength.value = int.Parse(_inputSliderLength.text);
-        tmpAnimTimer.SetMaxTime(60 * _sliderMaxLength.value);
+        Debug.Log("change slider max length");
+        tmpAnimTimer.SetMaxTime(60 * (int)_sliderMaxLength.value);
         GetComponent<Slider>().maxValue = (60 * _sliderMaxLength.value);
         StaticSceneData.StaticData.pieceLength = 60 * int.Parse(_inputSliderLength.text);
         GetComponent<Slider>().maxValue = 60 * _sliderMaxLength.value;
