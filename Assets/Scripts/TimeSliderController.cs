@@ -173,11 +173,11 @@ public class TimeSliderController : MonoBehaviour, IPointerUpHandler, IDragHandl
         }
 
         tmpAnimTimer.SetMaxTime(60 * (int)_sliderMaxLength.value);
-        Debug.Log("value: "+(int)_sliderMaxLength.value);
+        // Debug.Log("value: "+(int)_sliderMaxLength.value);
         _inputSliderLength.text = _sliderMaxLength.value.ToString("0");
         GetComponent<Slider>().maxValue = (60 * _sliderMaxLength.value);
         StaticSceneData.StaticData.pieceLength = int.Parse(_inputSliderLength.text);
-        Debug.Log("length "+StaticSceneData.StaticData.pieceLength);
+        // Debug.Log("length "+StaticSceneData.StaticData.pieceLength);
         // update light
         tmpLightAnim.ChangeImage();
     }
@@ -196,7 +196,7 @@ public class TimeSliderController : MonoBehaviour, IPointerUpHandler, IDragHandl
     public void ChangeSliderValue()
     {
         _sliderMaxLength.value = int.Parse(_inputSliderLength.text);
-        Debug.Log("change slider max length");
+        // Debug.Log("change slider max length");
         tmpAnimTimer.SetMaxTime(60 * (int)_sliderMaxLength.value);
         GetComponent<Slider>().maxValue = (60 * _sliderMaxLength.value);
         StaticSceneData.StaticData.pieceLength = 60 * int.Parse(_inputSliderLength.text);

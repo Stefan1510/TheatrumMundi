@@ -620,7 +620,7 @@ public class SaveFileController : MonoBehaviour
     }
     public IEnumerator LoadFileFromWWW(string fileName, string status) //bool fromCode, bool fromFlyer)
     {
-        Debug.Log("hier wird geladen! ");
+        // Debug.Log("hier wird geladen! ");
         SceneDataController tmpSceneDataController = this.GetComponent<SceneDataController>();
         // UnityWebRequest uwr = UnityWebRequest.Get(_basepath + "Saves/" + fileName);
         // yield return uwr;
@@ -628,10 +628,11 @@ public class SaveFileController : MonoBehaviour
         WWW www = new WWW(_basepath + "Saves/" + fileName);
         yield return www;
         _jsonString = www.text;
+        // Debug.Log("json: "+_jsonString);
         tempSceneData = tmpSceneDataController.CreateSceneDataFromJSON(_jsonString);
+        // Debug.Log("piece lengtH : " +tempSceneData.pieceLength);
 
         tmpSceneDataController.CreateScene(tempSceneData);
-        Debug.Log("piece lengtH : " +tempSceneData.pieceLength);
 
         string sceneMetaData = "";
         sceneMetaData += tempSceneData.fileName + "\n\n";

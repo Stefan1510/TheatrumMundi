@@ -109,8 +109,8 @@ public class SceneDataController : MonoBehaviour
         sceneData.fileAuthor = sceneFileAuthor;
         sceneData.fileComment = sceneFileComment;
         sceneData.fileDate = sceneFileDate;
-        sceneData.pieceLength = scenePieceLength;
-        Debug.Log("length: " + scenePieceLength);
+        // sceneData.pieceLength = scenePieceLength;
+        // Debug.Log("length: " + scenePieceLength);
 
         sceneData.sceneryElements = new List<SceneryElement>();
         sceneData.figureElements = new List<FigureElement>();
@@ -223,7 +223,7 @@ public class SceneDataController : MonoBehaviour
         sceneFileComment = sceneData.fileComment;
 
         scenePieceLength = sceneData.pieceLength;
-        Debug.Log("length: " + scenePieceLength);
+        // Debug.Log("length: " + scenePieceLength);
         SetPieceLength(scenePieceLength);
 
         //rail elements
@@ -244,11 +244,13 @@ public class SceneDataController : MonoBehaviour
 
     public void SetPieceLength(int pieceLength)
     {
-        AnimationTimer._maxTime = pieceLength * 60;
+        // Debug.Log("maxtime before: "+AnimationTimer._maxTime);
+    //    AnimationTimer._maxTime = pieceLength * 60;
+        // Debug.Log("maxtime after: "+AnimationTimer._maxTime);
         sliderMaxLength.value = pieceLength / 60;
-        Debug.Log("slider max length: " + sliderMaxLength.value);
+        // Debug.Log("slider max length: " + sliderMaxLength.value);
         timeSliderController.ChangeMaxLength();
-        Debug.Log("time: " + pieceLength + ", slider: " + sliderMaxLength.value);
+        // Debug.Log("time: " + pieceLength + ", slider: " + sliderMaxLength.value);
     }
     public void RailsApplyToScene(List<RailElement> railElements)
     {
@@ -437,7 +439,7 @@ public class SceneDataController : MonoBehaviour
     public SceneData CreateSceneDataFromJSON(string JsonData)
     {
         SceneData sceneData = JsonUtility.FromJson<SceneData>(JsonData);
-        Debug.Log("piece length in json: " + sceneData.pieceLength);
+        // Debug.Log("piece length in json: " + sceneData.pieceLength);
         return sceneData;
     }
 }

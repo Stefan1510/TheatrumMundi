@@ -33,7 +33,7 @@ public class RailMusicManager : MonoBehaviour
     GameObject[] objectShelfParent;
     GameObject newCopyOfFigure;
     Color colMusic, colMusicHighlighted;
-    bool anyInstanceIsPlaying = false, firstTimeSecond = false;
+    bool anyInstanceIsPlaying = false, firstTimeSecond = true;
     bool onlyPiecefinished = true, _toBeRemoved, _toBeRemovedFromTimeline;
     Vector2 releaseObjMousePos, diff;
     double minX, maxX;
@@ -824,6 +824,7 @@ public class RailMusicManager : MonoBehaviour
     }
     private IEnumerator FadeOut(float FadeTime, GameObject obj, float time, int clipNr)
     {
+        Debug.Log("fading");
         fading = true;
         while (audioSource.volume > 0.1f)
         {
@@ -832,6 +833,7 @@ public class RailMusicManager : MonoBehaviour
         }
         currentClip = ((int)Char.GetNumericValue(obj.name[07]) - 1); // object index
         audioSource.clip = clip[currentClip];
+            // firstTimeSecond = false;
 
         if (time != -1)
         {
@@ -845,20 +847,20 @@ public class RailMusicManager : MonoBehaviour
         }
         if (clipNr != -1)
         {
-            firstTimeSecond = true;
+            Debug.Log("tirst time second false");
             audioSource.clip = clip[clipNr];
         }
     }
     private IEnumerator FadeIn(float FadeTime, float time)
     {
         audioSource.time = time;
-        float startVolume = 0.2f;
+        // float startVolume = 0.2f;
 
         audioSource.Play();
 
         while (audioSource.volume < 0.9f)
         {
-            audioSource.volume += startVolume * Time.deltaTime / FadeTime;
+            audioSource.volume += Time.deltaTime / FadeTime;
             yield return null;
         }
         audioSource.volume = 1f;
@@ -901,11 +903,11 @@ public class RailMusicManager : MonoBehaviour
 
             anyInstanceIsPlaying = true;
 
-            if (playingMusic == false || once == true || currentClip != ((int)Char.GetNumericValue(myObjects[m].musicPiece.name[07]) - 1))
+            if (playingMusic == false || once == true || currentClip != ((int)char.GetNumericValue(myObjects[m].musicPiece.name[07]) - 1))
             {
                 playingMusic = true;
                 audioSource.time = tmpTime - (float)startSec;
-                currentClip = ((int)Char.GetNumericValue(myObjects[m].musicPiece.name[07]) - 1); // object index
+                currentClip = (int)Char.GetNumericValue(myObjects[m].musicPiece.name[07]) - 1; // object index
                 // Debug.LogWarning("current: " + currentClip);
                 audioSource.clip = clip[currentClip];
                 audioSource.Play();
@@ -914,19 +916,20 @@ public class RailMusicManager : MonoBehaviour
             {
                 playingMusic = false;
             }
-            firstTimeSecond = false;
-            // Debug.LogWarning("first timesecond false");
+            firstTimeSecond = true;
+            Debug.LogWarning("first time second true");
         }
         else if (GetCurrentMusicCount(out m, out n) == 2)
         {
-            Debug.Log("count 2, obj: " + myObjects[n].musicPiece.name);
+            //Debug.Log("count 2, obj: " + myObjects[n].musicPiece.name);
             double startSec = UtilitiesTm.FloatRemap(myObjects[n].position.x, 0, gameObject.GetComponent<RectTransform>().rect.width, 0, AnimationTimer.GetMaxTime());
             float tmpTime = AnimationTimer.GetTime();
-            if (!firstTimeSecond || currentClip != ((int)Char.GetNumericValue(myObjects[n].musicPiece.name[07]) - 1)) // es switcht von 1 auf 2 musikstuecke gleichzeitig
+            if (firstTimeSecond &&playingMusic) // es switcht von 1 auf 2 musikstuecke gleichzeitig    //|| currentClip != ((int)char.GetNumericValue(myObjects[n].musicPiece.name[07]) - 1))
             {
+                firstTimeSecond=false;
+                Debug.Log("fade");
                 fading = false;
-                StartCoroutine(FadeOut(1, myObjects[n].musicPiece, (tmpTime - (float)startSec), ((int)Char.GetNumericValue(myObjects[n].musicPiece.name[07]) - 1)));
-
+                StartCoroutine(FadeOut(1, myObjects[n].musicPiece, tmpTime - (float)startSec, (int)char.GetNumericValue(myObjects[n].musicPiece.name[07]) - 1));
             }
 
             anyInstanceIsPlaying = true;
@@ -944,9 +947,7 @@ public class RailMusicManager : MonoBehaviour
         }
         else
         {
-            firstTimeSecond = false;
-            playingMusic = false;
-            if (onlyPiecefinished)
+            if (onlyPiecefinished && playingMusic)
             {
                 try
                 {
@@ -955,6 +956,9 @@ public class RailMusicManager : MonoBehaviour
                 }
                 catch (ArgumentOutOfRangeException) { }
             }
+            firstTimeSecond = false;
+            playingMusic = false;
+
         }
     }
     private bool isSomethingOverlapping()

@@ -93,6 +93,9 @@ public class CoulissesManager : MonoBehaviour
     void Start()
     {
         SetIndexTabActive(0);
+        for(int i =0;i<coulisses.Length;i++)
+        { Debug.Log("coulisse: "+i+" name: "+coulisses[i].name);
+        }
     }
     void Update()
     {
@@ -394,6 +397,7 @@ public class CoulissesManager : MonoBehaviour
                             textPositionZCoulisses.GetComponent<TextMeshProUGUI>().text = (coulisses[currentObjectIndex].transform.parent.transform.childCount - publicSibling) + "/" + coulisses[currentObjectIndex].transform.parent.childCount;
                         }
                         StaticSceneData.StaticData.sceneryElements[currentObjectIndex].active = true;
+                        Debug.Log("index: "+currentObjectIndex+", coulisse 3d: "+StaticSceneData.StaticData.sceneryElements[currentObjectIndex].name+", coulisse: "+coulisses[currentObjectIndex].name);
                         StaticSceneData.StaticData.sceneryElements[currentObjectIndex].parent = "Schiene" + (currentTabIndex + 1).ToString();
                         StaticSceneData.StaticData.sceneryElements[currentObjectIndex].railnumber = currentTabIndex + 1;
                         sliderX.GetComponent<Slider>().value = coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.x / 270;
@@ -409,7 +413,7 @@ public class CoulissesManager : MonoBehaviour
                             //textPositionZCoulisses.GetComponent<Text>().text = (coulisses[currentObjectIndex].transform.parent.transform.GetChild(i).GetSiblingIndex() + 1) + "/" + coulisses[currentObjectIndex].transform.parent.transform.childCount;
                         }
                         StaticSceneData.StaticData.sceneryElements[currentObjectIndex].z = coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.x / 270;
-                        StaticSceneData.StaticData.sceneryElements[currentObjectIndex].y = (coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.y) / 260 + .515f;
+                        StaticSceneData.StaticData.sceneryElements[currentObjectIndex].y = coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.y / 260 + .515f;
                         StaticSceneData.StaticData.sceneryElements[currentObjectIndex].x = 0.062f;
                         StaticSceneData.Sceneries3D(); //CreateScene der SceneryElements
                                                        ////////////////////////////////////////////////////////////////////////
