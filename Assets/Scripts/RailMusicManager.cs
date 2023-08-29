@@ -824,7 +824,6 @@ public class RailMusicManager : MonoBehaviour
     }
     private IEnumerator FadeOut(float FadeTime, GameObject obj, float time, int clipNr)
     {
-        Debug.Log("fading");
         fading = true;
         while (audioSource.volume > 0.1f)
         {
@@ -847,7 +846,6 @@ public class RailMusicManager : MonoBehaviour
         }
         if (clipNr != -1)
         {
-            Debug.Log("tirst time second false");
             audioSource.clip = clip[clipNr];
         }
     }
@@ -917,7 +915,6 @@ public class RailMusicManager : MonoBehaviour
                 playingMusic = false;
             }
             firstTimeSecond = true;
-            Debug.LogWarning("first time second true");
         }
         else if (GetCurrentMusicCount(out m, out n) == 2)
         {

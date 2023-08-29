@@ -34,7 +34,7 @@ public static class SceneManaging
     private static Color _colMusicHighlighted = new Color(0.21f, 0.81f, 0.267f, 0.5f);
     private static Color _colFlyerHighlighted = new Color(1, .5f, .25f);
     private static Color _colFlyer = new Color(.78f, .46f, .31f);
-    private static Color _colFlyerSpace = new Color(.78f, .54f, .44f);
+    private static Color _colFlyerSpace = new Color(.78f, .54f, .44f, .0f);
     private static float _idleTimer = -1;
     public static float alpha = 1;
 

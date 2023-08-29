@@ -93,9 +93,6 @@ public class CoulissesManager : MonoBehaviour
     void Start()
     {
         SetIndexTabActive(0);
-        for(int i =0;i<coulisses.Length;i++)
-        { Debug.Log("coulisse: "+i+" name: "+coulisses[i].name);
-        }
     }
     void Update()
     {

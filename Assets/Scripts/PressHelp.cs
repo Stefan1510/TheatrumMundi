@@ -290,13 +290,13 @@ public class PressHelp : MonoBehaviour
 
                 if (_publicHelpMenue == helpOverlayMenue5 || _publicHelpMenue == helpOverlayMenue6)
                 {
-                    if (_tutorialCounter == 2) // timeslider
+                    if (_tutorialCounter == 4) // timeslider
                     {
                         _timeSliderBubble.transform.position = _timeSliderPlayButton.transform.position;
                         maskTimeSlider.SetActive(true);
                         _timeSliderBubble.GetComponent<RectTransform>().anchoredPosition = new Vector2(_timeSliderBubble.GetComponent<RectTransform>().anchoredPosition.x, 13);
                     }
-                    else if (_tutorialCounter == 3) // nach timeslider
+                    else if (_tutorialCounter == 5) // nach timeslider
                     {
                         maskTimeSlider.SetActive(false);
                     }

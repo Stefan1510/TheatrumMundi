@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UTJ.FrameCapturer;
 
 public class UnitySwitchExpertUser : MonoBehaviour
 {
@@ -23,6 +24,7 @@ public class UnitySwitchExpertUser : MonoBehaviour
 
     [SerializeField] private GameObject _buttonMenueDirector, _buttonMenueConfig, _buttonHelp, _buttonHelpPressed, _buttonAboutWebGL, _buttonFlyer, _buttonMovie;
     [SerializeField] private GameObject bgBrownImage;
+    [SerializeField] private MovieRecorder mov;
     #endregion
 
     #region Director Menue
@@ -38,6 +40,8 @@ public class UnitySwitchExpertUser : MonoBehaviour
         SceneManaging.isExpert = _isExpert;
         if (!_isExpert)
         {
+            mov.enabled = false;
+            
             _buttonTimelineLength.SetActive(false);
             _buttonAboutWebGL.gameObject.SetActive(false);
 
@@ -75,7 +79,7 @@ public class UnitySwitchExpertUser : MonoBehaviour
             _imageTimelineBg.enabled = false;
 
             SceneManaging.configMenueActive = 2;
-            
+
             _imageTimelineRailMusic.transform.SetSiblingIndex(6);
 
             // counter ausblenden (figures + music)

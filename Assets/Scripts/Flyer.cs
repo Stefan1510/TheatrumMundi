@@ -71,7 +71,7 @@ public class Flyer : MonoBehaviour
                 {
                     Destroy(_flyerSpaces[i].transform.GetChild(1).gameObject);
                     // color field
-                    _flyerSpaces[i].GetComponent<Image>().color = new Color(.78f, .54f, .44f);
+                    _flyerSpaces[i].GetComponent<Image>().color = new Color(.78f, .54f, .44f, 0f);
                     SceneManaging.flyerSpace[i] = -1;
                 }
                 //destroy borders

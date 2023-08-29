@@ -1359,19 +1359,19 @@ public class RailManager : MonoBehaviour
                 }
 
                 // wenn theaterzettel aktiv ist    
-                else //if (SceneManaging.flyerActive)
+                else
                 {
                     if (currentSpaceActive != -1)
                     {
                         // click delete
                         Vector2 pos = flyerSpaces[currentSpaceActive].transform.GetChild(1).GetChild(0).GetChild(0).position;
                         RectTransform rect = flyerSpaces[currentSpaceActive].transform.GetChild(1).GetChild(0).GetChild(0).GetComponent<RectTransform>();
+                            flyerSpaces[currentSpaceActive].GetComponent<Image>().color = new Color(.78f, .54f, .44f, 0f);
                         if (getMousePos.x >= pos.x - rect.sizeDelta.x / 2.5f && getMousePos.x <= pos.x + rect.sizeDelta.x / 2.5f && getMousePos.y >= pos.y - rect.sizeDelta.y / 2.5f && getMousePos.y <= pos.y + rect.sizeDelta.y / 2.5f)
                         {
                             SceneManaging.flyerSpace[currentSpaceActive] = -1;
                             Destroy(flyerSpaces[currentSpaceActive].transform.GetChild(1).gameObject);
                             // color field
-                            flyerSpaces[currentSpaceActive].GetComponent<Image>().color = new Color(.78f, .54f, .44f);
                             flyerSpaces[currentSpaceActive].transform.GetChild(0).gameObject.SetActive(false);
 
                         }
@@ -1432,7 +1432,6 @@ public class RailManager : MonoBehaviour
                 //or check if you click an object in timeline
                 else if (currentClickedInstanceObjectIndex != -1 && editTimelineObject && railList[currentRailIndex].isTimelineOpen)
                 {
-                    //Debug.Log("hallo? ");
                     // todo: das muss in die button up (wenn was in der szene veraendert wurde)
                     if (!SceneManaging.sceneChanged) SceneManaging.sceneChanged = true;
 

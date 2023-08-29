@@ -10,10 +10,11 @@ public class SwitchMenues : MonoBehaviour
 
     void Start()
     {
-         SceneManaging.mainMenuActive = 1;
+        SceneManaging.mainMenuActive = 1;
         ObjectMenueDirectorMain.SetActive(false);
         ObjectMenueConfigMain.SetActive(true);
-    //    _canvas.GetComponent<ObjectShelfAll>().ButtonShelf01();
+        if (SceneManaging.isExpert)
+            _canvas.GetComponent<ObjectShelfAll>().ButtonShelf01();
     }
 
     public void SwitchToMenueDirector()

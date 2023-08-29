@@ -19,10 +19,12 @@ namespace UTJ.FrameCapturer
         public Sprite[] aPauseSprites;
         public Sprite[] aStopSprites;
         [SerializeField] private RailMusicManager tmpRailMusicMan;
-        private float _f = 0.0f;
+        //private float _f = 0.0f;
         private float _fps = 0.0f;
         [SerializeField] private GameObject overlayRendering;
+        [SerializeField] private TextMeshProUGUI textPercent, textContent, textTitle;
         [SerializeField] private MovieRecorder rec;
+        [SerializeField] private GameObject buttonOkay;
 
         // var controllerSettings = ScriptableObject.CreateInstance<RecorderControllerSettings>();
         // var TestRecorderController = new RecorderController(controllerSettings);
@@ -42,32 +44,16 @@ namespace UTJ.FrameCapturer
         {
             if (pointAnimation)
             {
-                /*if (t == 0)
+                textPercent.text = (AnimationTimer.GetTime()/AnimationTimer._maxTime*100).ToString("0.0")+"%";
+                if(rec.endFrame==rec.m_frame)
                 {
-                    if (i < 2)
-                        i++;
-                    else
-                        i = 0;
-                    switch (i)
-                    {
-                        case 0: 
-                        overlayRendering.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Dein Film wird erstellt.";
-                        break;
-                        case 1: 
-                        overlayRendering.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Dein Film wird erstellt..";
-                        break;
-                        case 2: 
-                        overlayRendering.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Dein Film wird erstellt...";
-                        break;
-                    }
+                    Debug.Log("fertig!");
+                    buttonOkay.SetActive(true);
+                    rec.EndRecording();
+                    textTitle.text="Dein Film ist fertig.";
+                    textContent.text="Du kannst ihn dir im Windows Explorer unter 'C:/tmp/TheatrumMundi' anschauen.";
+                    textPercent.gameObject.SetActive(false);
                 }
-                t += Time.deltaTime;
-                if (t >= 0.1f)
-                {
-                    t = 0;
-                }*/
-                overlayRendering.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = (AnimationTimer.GetTime()/AnimationTimer._maxTime).ToString("000")+"%";
-                // Debug.Log("t: "+t*100+"t%2: "+t*100%2);
             }
 
             if (Input.GetMouseButtonDown(0))
@@ -81,14 +67,14 @@ namespace UTJ.FrameCapturer
                     t = 0;
                 }
             }
-
-            _f += Time.deltaTime;
-            if (_f >= 1.0f)
-            {
-                _fps = 1 / Time.deltaTime;
-                _f -= 1.0f;
-            }
-            //TimerText.text = AnimationTimer.GetTime().ToString("0.00") + "\n - \nfps: " + _fps.ToString("0");
+        }
+        public void PressOkayOnFinish()
+        {
+            overlayRendering.SetActive(false);
+            textContent.text="Das kann einige Minuten dauern.\nUm abzubrechen, bitte klicken.";
+            textPercent.gameObject.SetActive(true);
+            textTitle.text="Dein Film wird erstellt. ";
+            buttonOkay.SetActive(false);
         }
         public void ButtonReset()
         {

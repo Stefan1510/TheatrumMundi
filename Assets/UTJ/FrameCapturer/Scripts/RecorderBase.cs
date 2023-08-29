@@ -1,8 +1,6 @@
 using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.Rendering;
-using UnityEditor.Animations;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -37,7 +35,7 @@ namespace UTJ.FrameCapturer
 
         [SerializeField] protected ResolutionUnit m_resolution = ResolutionUnit.Percent;
         [SerializeField][Range(1, 100)] protected int m_resolutionPercent = 100;
-        [SerializeField] protected int m_resolutionWidth = 1920;
+        [SerializeField] protected int m_resolutionWidth = 3840;
 
         [SerializeField] protected FrameRateMode m_framerateMode = FrameRateMode.Constant;
         [SerializeField] protected int m_targetFramerate = 30;
@@ -47,7 +45,7 @@ namespace UTJ.FrameCapturer
 
         [SerializeField] protected CaptureControl m_captureControl = CaptureControl.FrameRange;
         [SerializeField] protected int m_startFrame = 0;
-        [SerializeField] protected int m_endFrame = 100;
+        [SerializeField] public int m_endFrame = 100;
         [SerializeField] protected float m_startTime = 0.0f;
         [SerializeField] protected float m_endTime = 10.0f;
         [SerializeField] bool m_recordOnStart = false;
@@ -57,7 +55,7 @@ namespace UTJ.FrameCapturer
         protected int m_initialFrame = 0;
         protected float m_initialTime = 0.0f;
         protected float m_initialRealTime = 0.0f;
-        protected int m_frame = 0;
+        public int m_frame = 0;
         protected int m_recordedFrames = 0;
         protected int m_recordedSamples = 0;
 
@@ -149,9 +147,9 @@ namespace UTJ.FrameCapturer
         public virtual void BeginRecording()
         {
             m_startFrame = 0;
-            m_endFrame = AnimationTimer._maxTime*30;
+            m_endFrame = AnimationTimer._maxTime*25;
             m_frame = 0;
-            Debug.Log("frames: "+endFrame);
+            //Debug.Log("frames: "+endFrame);
             // if(m_recording) { return false; }
 
             // delta time control
