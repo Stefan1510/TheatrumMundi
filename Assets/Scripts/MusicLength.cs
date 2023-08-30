@@ -5,5 +5,5 @@ using UnityEngine;
 public class MusicLength : MonoBehaviour
 {
     public int musicLength;
-
+    public int nr;
 }

@@ -80,7 +80,7 @@ public static class SceneManaging
             }
         }
     }
-    public static void scaleDeleteButton(GameObject btn, float posY, float size, float colSize)
+    public static void scaleDeleteButton(GameObject btn, float posY, float size)
     {
         btn.transform.GetChild(1).GetChild(0).GetComponent<RectTransform>().anchoredPosition = new Vector3(30, posY, -1);
         btn.transform.GetChild(1).GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(size, size);
@@ -91,14 +91,14 @@ public static class SceneManaging
         {
             case 0:                 // only one layer
                 scaleObject(obj, rectSize, timeline.GetComponent<RectTransform>().rect.height, boxCollZero);      //scale the figure-picture in timeline to x: 100 and y: 80px
-                scaleDeleteButton(obj, 20, 40, 45);
+                scaleDeleteButton(obj, 20, 40);
                 obj.transform.GetComponent<RectTransform>().pivot = new Vector3(obj.transform.GetComponent<RectTransform>().pivot.x, 0.5f, -1);
                 obj.GetComponent<BoxCollider2D>().size = new Vector2(rectSize, timeline.GetComponent<RectTransform>().rect.height);
                 obj.GetComponent<BoxCollider2D>().offset = new Vector2(rectSize / 2, 0);
                 break;
             case 1:                 // 2 layers, but object in layer 1
                 scaleObject(obj, rectSize, timeline.GetComponent<RectTransform>().rect.height / 2, boxCollZero);
-                scaleDeleteButton(obj, 0, 35, 40);
+                scaleDeleteButton(obj, 0, 35);
                 obj.transform.GetComponent<RectTransform>().pivot = new Vector3(obj.transform.GetComponent<RectTransform>().pivot.x, 0, -1);
                 obj.GetComponent<BoxCollider2D>().size = new Vector2(rectSize, timeline.GetComponent<RectTransform>().rect.height / 2);
                 obj.GetComponent<BoxCollider2D>().offset = new Vector2(rectSize / 2, obj.transform.GetChild(0).GetComponent<RectTransform>().rect.height / 2);
@@ -106,7 +106,7 @@ public static class SceneManaging
             case 2:                 // 2 layers and object in layer 2
                 scaleObject(obj, rectSize, timeline.GetComponent<RectTransform>().rect.height / 2, boxCollZero);
 
-                scaleDeleteButton(obj, 0, 35, 40);
+                scaleDeleteButton(obj, 0, 35);
                 obj.transform.GetComponent<RectTransform>().pivot = new Vector3(obj.transform.GetComponent<RectTransform>().pivot.x, 1, -1);
                 obj.GetComponent<BoxCollider2D>().size = new Vector2(rectSize, timeline.GetComponent<RectTransform>().rect.height / 2);
                 obj.GetComponent<BoxCollider2D>().offset = new Vector2(rectSize / 2, -obj.transform.GetChild(0).GetComponent<RectTransform>().rect.height / 2);

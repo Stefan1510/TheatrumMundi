@@ -24,12 +24,14 @@ public class RailMusicManager : MonoBehaviour
     [SerializeField] private GameObject prefabRect;
     [SerializeField] private TextMeshProUGUI spaceWarning;
     [SerializeField] private Image spaceWarningBorder;
+    [SerializeField] private GameObject musicPieceLengthDialog;
     Vector2 sizeDeltaAsFactor;
     AudioSource audioSource;
-    Vector2[] objectShelfPosition;
     Vector2 objectShelfSize;
+    int[] initialPieceLength = new int[6];
     bool draggingOnTimeline, draggingObject, editTimelineObject, releaseOnTimeline, playingMusic, isInstance, fading;
     public bool playingSample;
+    private bool musicLengthClicked;
     GameObject[] objectShelfParent;
     GameObject newCopyOfFigure;
     Color colMusic, colMusicHighlighted;
@@ -43,6 +45,7 @@ public class RailMusicManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI[] figCounterCircle;
     public Image[] sampleImages;
     int currentClickedObjectIndex;
+    int saveIndexForChangePieceLength;
     public int sampleButtonPressed;
     int currentClickedInstanceObjectIndex;
     private float currentLossyScale, tmpTime;
@@ -86,9 +89,7 @@ public class RailMusicManager : MonoBehaviour
 
         //load all objects given in the figuresShelf
         figureObjects = new GameObject[objectLibrary.transform.childCount];
-        objectShelfPosition = new Vector2[figureObjects.Length];
         objectShelfParent = new GameObject[figureObjects.Length];
-        //figCounterCircle = new GameObject[figureObjects.Length];
 
         colMusic = new Color(0.21f, 0.51f, 0.267f, 0.5f);
         colMusicHighlighted = new Color(0.21f, 0.81f, 0.267f, 0.5f);
@@ -96,8 +97,9 @@ public class RailMusicManager : MonoBehaviour
         for (int i = 0; i < objectLibrary.transform.childCount; i++)
         {
             //collect objects
-            figureObjects[i] = (objectLibrary.transform.GetChild(i).transform.GetChild(1).gameObject);
+            figureObjects[i] = objectLibrary.transform.GetChild(i).transform.GetChild(1).gameObject;
             objectShelfParent[i] = figureObjects[i].transform.parent.gameObject;
+            initialPieceLength[i] = figureObjects[i].GetComponent<MusicLength>().musicLength;
         }
         objectShelfSize = new Vector2(190, 146);
 
@@ -117,11 +119,6 @@ public class RailMusicManager : MonoBehaviour
                 figCounterCircle[i].text = "0";
             }
         }
-
-        List<GameObject> timelineObjects = new List<GameObject>();
-        List<GameObject> timelineInstanceObjects = new List<GameObject>();
-        List<GameObject> figuresLayer1 = new List<GameObject>();
-        List<GameObject> figuresLayer2 = new List<GameObject>();
 
         maxTimeInSec = (int)AnimationTimer.GetMaxTime();
         sizeDeltaAsFactor = new Vector2(1.0f, 1.0f);
@@ -735,12 +732,14 @@ public class RailMusicManager : MonoBehaviour
         newCopyOfFigure.transform.GetComponent<BoxCollider2D>().size = newCopyOfFigure.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta;
         newCopyOfFigure.transform.GetComponent<BoxCollider2D>().offset = new Vector2(newCopyOfFigure.transform.GetComponent<BoxCollider2D>().size.x / 2, newCopyOfFigure.transform.GetComponent<BoxCollider2D>().offset.y);
 
-        MusicPiece oP = new MusicPiece();
-        oP.objName = newCopyOfFigure.name;
-        oP.position = new Vector2(tmpRectTransform.anchoredPosition.x, tmpRectTransform.sizeDelta.x);
-        oP.musicPiece = newCopyOfFigure;
-        oP.neighborLeft = -1;
-        oP.neighborRight = -1;
+        MusicPiece oP = new MusicPiece()
+        {
+            objName = newCopyOfFigure.name,
+            position = new Vector2(tmpRectTransform.anchoredPosition.x, tmpRectTransform.sizeDelta.x),
+            musicPiece = newCopyOfFigure,
+            neighborLeft = -1,
+            neighborRight = -1
+        };
         myObjects.Add(oP);
 
         if (savedLayer == 1)
@@ -832,7 +831,7 @@ public class RailMusicManager : MonoBehaviour
         }
         currentClip = ((int)Char.GetNumericValue(obj.name[07]) - 1); // object index
         audioSource.clip = clip[currentClip];
-            // firstTimeSecond = false;
+        // firstTimeSecond = false;
 
         if (time != -1)
         {
@@ -921,9 +920,9 @@ public class RailMusicManager : MonoBehaviour
             //Debug.Log("count 2, obj: " + myObjects[n].musicPiece.name);
             double startSec = UtilitiesTm.FloatRemap(myObjects[n].position.x, 0, gameObject.GetComponent<RectTransform>().rect.width, 0, AnimationTimer.GetMaxTime());
             float tmpTime = AnimationTimer.GetTime();
-            if (firstTimeSecond &&playingMusic) // es switcht von 1 auf 2 musikstuecke gleichzeitig    //|| currentClip != ((int)char.GetNumericValue(myObjects[n].musicPiece.name[07]) - 1))
+            if (firstTimeSecond && playingMusic) // es switcht von 1 auf 2 musikstuecke gleichzeitig    //|| currentClip != ((int)char.GetNumericValue(myObjects[n].musicPiece.name[07]) - 1))
             {
-                firstTimeSecond=false;
+                firstTimeSecond = false;
                 Debug.Log("fade");
                 fading = false;
                 StartCoroutine(FadeOut(1, myObjects[n].musicPiece, tmpTime - (float)startSec, (int)char.GetNumericValue(myObjects[n].musicPiece.name[07]) - 1));
@@ -950,8 +949,11 @@ public class RailMusicManager : MonoBehaviour
                 {
                     StartCoroutine(FadeOut(1, myObjects[m].musicPiece, -1, -1));
                     onlyPiecefinished = false;
+                    Debug.Log("onlypece finished");
                 }
-                catch (ArgumentOutOfRangeException) { }
+                catch (ArgumentOutOfRangeException)
+                {
+                }
             }
             firstTimeSecond = false;
             playingMusic = false;
@@ -990,22 +992,44 @@ public class RailMusicManager : MonoBehaviour
         }
         catch (NullReferenceException) { }
     }
+    public void ClickSetMusicPieceLength(bool longer)
+    {
+        int newLength = 0;
+        int nr = myObjects[saveIndexForChangePieceLength].musicPiece.GetComponent<MusicLength>().nr;
+        Debug.Log("length+30: " + (myObjects[saveIndexForChangePieceLength].musicPiece.GetComponent<MusicLength>().musicLength + 30) + ", initial: " + initialPieceLength[nr]);
+        musicLengthClicked = true;
+
+        if ((longer && myObjects[saveIndexForChangePieceLength].musicPiece.GetComponent<MusicLength>().musicLength + 30 <= initialPieceLength[nr]) || (!longer && myObjects[saveIndexForChangePieceLength].musicPiece.GetComponent<MusicLength>().musicLength - 30 >= 30))
+        {
+            if (longer && myObjects[saveIndexForChangePieceLength].musicPiece.GetComponent<MusicLength>().musicLength + 30 <= initialPieceLength[nr])
+            {
+                newLength = 30;
+                // myObjects[currentClickedInstanceObjectIndex].musicPiece.GetComponent<RectTransform>().sizeDelta = new Vector2(, );
+            }
+            else if (!longer && myObjects[saveIndexForChangePieceLength].musicPiece.GetComponent<MusicLength>().musicLength - 30 >= 30)
+            {
+                newLength = -30;
+            }
+
+            myObjects[saveIndexForChangePieceLength].musicPiece.GetComponent<MusicLength>().musicLength += newLength;
+
+            myObjects[saveIndexForChangePieceLength].position.y = UtilitiesTm.FloatRemap(myObjects[saveIndexForChangePieceLength].musicPiece.GetComponent<MusicLength>().musicLength, 0, (float)AnimationTimer.GetMaxTime(), 0, (float)gameObject.GetComponent<RectTransform>().rect.width);
+
+            //  = new Vector2(myObjects[saveIndexForChangePieceLength].position.x, myObjects[saveIndexForChangePieceLength].musicPiece.GetComponent<RectTransform>().sizeDelta.x + newLength);
+            SceneManaging.scaleObject(myObjects[saveIndexForChangePieceLength].musicPiece, myObjects[saveIndexForChangePieceLength].position.y, myObjects[saveIndexForChangePieceLength].musicPiece.GetComponent<RectTransform>().sizeDelta.y, false);
+            Debug.Log(myObjects[saveIndexForChangePieceLength].musicPiece.GetComponent<MusicLength>().musicLength);
+            myObjects = myObjects.OrderBy(w => w.position.x).ToList();
+            SceneManaging.CalculateNeighbors(myObjects);
+        }
+        else
+        {
+            Debug.Log("groesser oder kleiner geht nicht");
+        }
+    }
     private void updateObjectPosition(MusicPiece obj, Vector2 mousePos)
     {
         obj.musicPiece.transform.position = new Vector3(mousePos.x, mousePos.y, -1.0f);
         obj.position = new Vector2(obj.musicPiece.GetComponent<RectTransform>().anchoredPosition.x, obj.musicPiece.GetComponent<RectTransform>().sizeDelta.x);
-    }
-    void UpdatePositionVectorInformation(GameObject currentObj, List<MusicPiece> listFrom, List<MusicPiece> listTo)
-    {
-        for (int i = 0; i < listFrom.Count; i++)
-        {
-            if (listFrom[i].objName == currentObj.name)
-            {
-                listFrom[i].position = new Vector2(currentObj.GetComponent<RectTransform>().anchoredPosition.x, currentObj.GetComponent<RectTransform>().sizeDelta.x);
-                listTo.Add(listFrom[i]);
-                listFrom.Remove(listFrom[i]);
-            }
-        }
     }
     void Update()
     {
@@ -1067,14 +1091,14 @@ public class RailMusicManager : MonoBehaviour
                 if (_backgroundBoxCollider == Physics2D.OverlapPoint(getMousePos))
                 {
                     PlayLatestPiece(true);
-                    // for (int i = 0; i < myObjects.Count; i++)
-                    //     Debug.Log("myobj: " + myObjects[i].musicPiece.name);
                 }
                 //if you click the timeline with the mouse
                 if (this.GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(getMousePos))
                 {
                     //open or close timeline
                     openTimelineByClick(isTimelineOpen, false);
+                    musicPieceLengthDialog.SetActive(false);
+                    musicLengthClicked = false;
                 }
 
                 //if you click on an object in shelf
@@ -1105,6 +1129,7 @@ public class RailMusicManager : MonoBehaviour
 
                     if (myObjects[currentClickedInstanceObjectIndex].musicPiece.GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(getMousePos))
                     {
+                        Debug.Log("obj geklickt");
                         // aktuellen namen speichern, um spaeter die aktuelle position nach dem sortieren rauszubekommen
                         currentName = myObjects[currentClickedInstanceObjectIndex].objName;
 
@@ -1152,6 +1177,8 @@ public class RailMusicManager : MonoBehaviour
                 //if you hit/clicked nothing with mouse
                 else if (Physics2D.OverlapPoint(getMousePos) == false)
                 {
+                    musicPieceLengthDialog.SetActive(false);
+                    musicLengthClicked = false;
                     for (int i = 0; i < myObjects.Count; i++)
                     {
                         SceneManaging.highlight(myObjects[i].musicPiece, false);
@@ -1324,7 +1351,7 @@ public class RailMusicManager : MonoBehaviour
                     else if ((tmpRectTransform.anchoredPosition.x + tmpLength) > railWidthAbsolute)
                     {
                         tmpRectTransform.position = new Vector2(tmpRectTransform.position.x, figureObjects[currentClickedObjectIndex].transform.position.y);
-                        tmpRectTransform.anchoredPosition = new Vector3((railWidthAbsolute - tmpLength), tmpRectTransform.anchoredPosition.y, -1);
+                        tmpRectTransform.anchoredPosition = new Vector3(railWidthAbsolute - tmpLength, tmpRectTransform.anchoredPosition.y, -1);
                     }
                     else
                     {
@@ -1354,12 +1381,14 @@ public class RailMusicManager : MonoBehaviour
 
                     #region calculating Layer Overlap
 
-                    MusicPiece oP = new MusicPiece();
-                    oP.objName = newCopyOfFigure.name;
-                    oP.position = new Vector2(tmpRectTransform.anchoredPosition.x, tmpLength);
-                    oP.musicPiece = newCopyOfFigure;
-                    oP.neighborLeft = -1;
-                    oP.neighborRight = -1;
+                    MusicPiece oP = new MusicPiece
+                    {
+                        objName = newCopyOfFigure.name,
+                        position = new Vector2(tmpRectTransform.anchoredPosition.x, tmpLength),
+                        musicPiece = newCopyOfFigure,
+                        neighborLeft = -1,
+                        neighborRight = -1
+                    };
                     myObjects.Add(oP);
 
                     SceneManaging.scaleToLayerSize(newCopyOfFigure, 0, gameObject, tmpLength, false);
@@ -1412,11 +1441,27 @@ public class RailMusicManager : MonoBehaviour
                         removeObjectFromTimeline(myObjects[currentPosInList]);
                     }
 
+                    if (!musicLengthClicked)
+                    {
+                        musicPieceLengthDialog.SetActive(true);
+                        musicPieceLengthDialog.transform.position = new Vector2(getMousePos.x, musicPieceLengthDialog.transform.position.y);
+                        musicPieceLengthDialog.transform.SetAsLastSibling();
+                        saveIndexForChangePieceLength = currentPosInList;
+                    }
+
                     // set index back to -1 because nothing is being clicked anymore
                     currentClickedObjectIndex = -1;
                 }
                 else
                 {
+                    if (!musicLengthClicked)
+                    {
+                        musicPieceLengthDialog.SetActive(true);
+                        musicPieceLengthDialog.transform.position = new Vector2(getMousePos.x, musicPieceLengthDialog.transform.position.y);
+                        musicPieceLengthDialog.transform.SetAsLastSibling();
+                        saveIndexForChangePieceLength = currentClickedInstanceObjectIndex;
+                    }
+
                     // change position of vector in each case
                     for (int i = 0; i < myObjects.Count; i++)
                     {
@@ -1460,8 +1505,8 @@ public class RailMusicManager : MonoBehaviour
             //Save musictitle.moment to SceneData:
             for (int i = 0; i < myObjects.Count; i++)
             {
-                int musObjIndex = Int32.Parse(myObjects[i].objName.Substring(6, 2)) - 1;
-                int musInsIndex = Int32.Parse(myObjects[i].objName.Substring(17));
+                int musObjIndex = int.Parse(myObjects[i].objName.Substring(6, 2)) - 1;
+                int musInsIndex = int.Parse(myObjects[i].objName.Substring(17));
                 float moment = UtilitiesTm.FloatRemap(myObjects[i].position.x, 0, gameObject.GetComponent<RectTransform>().rect.width, 0, AnimationTimer.GetMaxTime());
 
                 StaticSceneData.StaticData.musicClipElements[musObjIndex].musicClipElementInstances[musInsIndex].moment = moment;
@@ -1491,6 +1536,8 @@ public class RailMusicManager : MonoBehaviour
             onlyPiecefinished = true;
             _toBeRemoved = false;
             _toBeRemovedFromTimeline = false;
+            musicLengthClicked = false;
+
         }
 
         // turning music on and off in playmode
