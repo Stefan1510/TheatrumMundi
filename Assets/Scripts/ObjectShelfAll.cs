@@ -33,6 +33,7 @@ public class ObjectShelfAll : MonoBehaviour
     [SerializeField] private UTJ.FrameCapturer.PlayerControls playerCtrls;
 
     public GameObject gameController;//, overlayWaiting;
+    [SerializeField] private TimeSliderController tmpSlider;
 
     #endregion
     void Start()
@@ -237,6 +238,7 @@ public class ObjectShelfAll : MonoBehaviour
 
     IEnumerator ButtonShelfI(int shelfNumber)
     {
+tmpSlider.CloseLengthDialog();
         //overlayWaiting.SetActive(true);
         //yield return new WaitForEndOfFrame();
         while (panelPreviewNotLoaded.GetComponent<WarningPanelLoad>().buttonClicked == null)

@@ -269,8 +269,8 @@ namespace UTJ.FrameCapturer
                     }
                     else if (m_recording)
                     {
-                        Debug.Log("hier stop");
-                        EndRecording();
+                        // Debug.Log("hier stop");
+                        // EndRecording();
                     }
                 }
                 else if (m_captureControl == CaptureControl.TimeRange)

@@ -62,6 +62,7 @@ namespace UTJ.FrameCapturer
                 {
                     SceneManaging.recording = false;
                     rec.EndRecording();
+                    ButtonPlay();
                     overlayRendering.SetActive(false);
                     pointAnimation = false;
                     t = 0;

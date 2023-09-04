@@ -25,6 +25,7 @@ public class RailManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI spaceWarning;
     [SerializeField] RailMusicManager tmpRailMusicMan;
     [SerializeField] Image spaceWarningBorder;
+    [SerializeField] TimeSliderController tmpSlider;
     Vector2 objectShelfSize;
     GameObject[] objectShelfParent;
     GameObject newCopyOfFigure;
@@ -646,6 +647,7 @@ public class RailManager : MonoBehaviour
     }
     public void OpenTimelineByClick(bool thisTimelineOpen, int index, bool fromShelf)
     {
+        tmpSlider.CloseLengthDialog();
         if (fromShelf == false && SceneManaging.mainMenuActive == 2 && SceneManaging.directorMenueActive != 1)
         {
             UICanvas.GetComponent<ObjectShelfAll>().ButtonShelf05(true);
@@ -1095,18 +1097,6 @@ public class RailManager : MonoBehaviour
         }
         return val;
     }
-    void UpdatePositionVectorInformation(Figure currentObj, List<Figure> listFrom, List<Figure> listTo)
-    {
-        for (int i = 0; i < listFrom.Count; i++)
-        {
-            if (listFrom[i].objName == currentObj.objName)
-            {
-                listFrom[i].position = currentObj.position;
-                listTo.Add(listFrom[i]);
-                listFrom.Remove(listFrom[i]);
-            }
-        }
-    }
     public void Update3DFigurePositions()
     {
         for (int k = 0; k < railList.Length; k++)
@@ -1366,7 +1356,7 @@ public class RailManager : MonoBehaviour
                         // click delete
                         Vector2 pos = flyerSpaces[currentSpaceActive].transform.GetChild(1).GetChild(0).GetChild(0).position;
                         RectTransform rect = flyerSpaces[currentSpaceActive].transform.GetChild(1).GetChild(0).GetChild(0).GetComponent<RectTransform>();
-                            flyerSpaces[currentSpaceActive].GetComponent<Image>().color = new Color(.78f, .54f, .44f, 0f);
+                        flyerSpaces[currentSpaceActive].GetComponent<Image>().color = new Color(.78f, .54f, .44f, 0f);
                         if (getMousePos.x >= pos.x - rect.sizeDelta.x / 2.5f && getMousePos.x <= pos.x + rect.sizeDelta.x / 2.5f && getMousePos.y >= pos.y - rect.sizeDelta.y / 2.5f && getMousePos.y <= pos.y + rect.sizeDelta.y / 2.5f)
                         {
                             SceneManaging.flyerSpace[currentSpaceActive] = -1;

@@ -135,6 +135,10 @@ public class TimeSliderController : MonoBehaviour, IPointerUpHandler, IDragHandl
         }
 
     }
+    public void CloseLengthDialog()
+    {
+        _settingsLength.SetActive(false);
+    }
     public void ChangeMaxLength()
     {
         //Figuren neu berechnen (moment berechnen)
