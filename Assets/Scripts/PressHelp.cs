@@ -173,7 +173,6 @@ public class PressHelp : MonoBehaviour
                     tutText.text = "Hinweis " + _tutorialCounter + "/" + _publicHelpMenue.transform.childCount;
                     SceneManaging.tutorialActive = true;
                     pressed = true;
-                    //Debug.Log("true");
                 }
             }
         }
@@ -219,13 +218,13 @@ public class PressHelp : MonoBehaviour
     }
     public void ClickOnLiveView()
     {
-        // if (pressedLiveView)
-        // {
-        //     helpTextLiveView.SetActive(false);
-        //     pressedLiveView = false;
-        //     Debug.Log("pressed: " + pressedLiveView);
-        //     //offFromClick = true;
-        // }
+        if (pressedLiveView)
+        {
+            helpTextLiveView.SetActive(false);
+            pressedLiveView = false;
+            Debug.Log("pressed: " + pressedLiveView);
+            //offFromClick = true;
+        }
         if (!pressedLiveView)
         {
             if (!offFromClick)
@@ -287,8 +286,8 @@ public class PressHelp : MonoBehaviour
                     _publicHelpMenue.transform.GetChild(i).gameObject.SetActive(false);
                 }
                 _publicHelpMenue.transform.GetChild(_tutorialCounter).gameObject.SetActive(true);
-
-                if (_publicHelpMenue == helpOverlayMenue5 || _publicHelpMenue == helpOverlayMenue6)
+                // timeslider tutorial for object menu
+                if (_publicHelpMenue == helpOverlayMenue5)
                 {
                     if (_tutorialCounter == 4) // timeslider
                     {
@@ -297,6 +296,20 @@ public class PressHelp : MonoBehaviour
                         _timeSliderBubble.GetComponent<RectTransform>().anchoredPosition = new Vector2(_timeSliderBubble.GetComponent<RectTransform>().anchoredPosition.x, 13);
                     }
                     else if (_tutorialCounter == 5) // nach timeslider
+                    {
+                        maskTimeSlider.SetActive(false);
+                    }
+                }
+                // timeslider tutorial for music menu
+                else if (_publicHelpMenue == helpOverlayMenue6)
+                {
+                    if (_tutorialCounter == 2) // timeslider
+                    {
+                        _timeSliderBubble.transform.position = _timeSliderPlayButton.transform.position;
+                        maskTimeSlider.SetActive(true);
+                        _timeSliderBubble.GetComponent<RectTransform>().anchoredPosition = new Vector2(_timeSliderBubble.GetComponent<RectTransform>().anchoredPosition.x, 13);
+                    }
+                    else if (_tutorialCounter == 3) // nach timeslider
                     {
                         maskTimeSlider.SetActive(false);
                     }
@@ -387,13 +400,13 @@ public class PressHelp : MonoBehaviour
                 else if (SceneManaging.flyerActive)
                 {
                     flyer.SetActive(false);
-                    SceneManaging.flyerActive=false;
+                    SceneManaging.flyerActive = false;
                 }
                 else if (SceneManaging.fullscreenOn)
                 {
                     Debug.Log("hi");
                     liveView.SetActive(false);
-                    SceneManaging.fullscreenOn=false;
+                    SceneManaging.fullscreenOn = false;
                 }
 
                 _introOverlay.SetActive(true);

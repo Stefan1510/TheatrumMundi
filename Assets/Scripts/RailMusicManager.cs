@@ -14,6 +14,7 @@ public class RailMusicManager : MonoBehaviour
     public GameObject objectLibrary, parentMenue; // mainMenue
     [HideInInspector] public int sizeLayering = 1;
     public AudioClip[] clip;         // ought to be 6 audioclips
+    public int sampleButtonPressed;
     #endregion
     #region private variables
     [SerializeField] Image timelineImage;
@@ -25,17 +26,17 @@ public class RailMusicManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI spaceWarning;
     [SerializeField] private Image spaceWarningBorder;
     [SerializeField] private GameObject musicPieceLengthDialog;
-    Vector2 sizeDeltaAsFactor;
     AudioSource audioSource;
     Vector2 objectShelfSize;
+    Vector2 screenDifference;
     int[] initialPieceLength = new int[6];
     bool draggingOnTimeline, draggingObject, editTimelineObject, releaseOnTimeline, playingMusic, isInstance, fading;
     public bool playingSample;
     private bool musicLengthClicked;
     GameObject[] objectShelfParent;
     GameObject newCopyOfFigure;
-    Color colMusic, colMusicHighlighted;
-    bool anyInstanceIsPlaying = false, firstTimeSecond = true;
+    Color colMusic;
+    bool anyInstanceIsPlaying = false, firstTimeSecond = true, newPiece = false;
     bool onlyPiecefinished = true, _toBeRemoved, _toBeRemovedFromTimeline;
     Vector2 releaseObjMousePos, diff;
     double minX, maxX;
@@ -46,7 +47,6 @@ public class RailMusicManager : MonoBehaviour
     public Image[] sampleImages;
     int currentClickedObjectIndex;
     int saveIndexForChangePieceLength;
-    public int sampleButtonPressed;
     int currentClickedInstanceObjectIndex;
     private float currentLossyScale, tmpTime;
     private string currentName;
@@ -54,7 +54,6 @@ public class RailMusicManager : MonoBehaviour
     private List<MusicPiece> listWithoutCurrentFigure = new List<MusicPiece>();
     private int currentPosInList;
     float _idleTimer = -1;
-    // public float alpha = 1;
     Color colSpaceWarning;
     #endregion
     #region Lists
@@ -92,7 +91,6 @@ public class RailMusicManager : MonoBehaviour
         objectShelfParent = new GameObject[figureObjects.Length];
 
         colMusic = new Color(0.21f, 0.51f, 0.267f, 0.5f);
-        colMusicHighlighted = new Color(0.21f, 0.81f, 0.267f, 0.5f);
 
         for (int i = 0; i < objectLibrary.transform.childCount; i++)
         {
@@ -121,9 +119,8 @@ public class RailMusicManager : MonoBehaviour
         }
 
         maxTimeInSec = (int)AnimationTimer.GetMaxTime();
-        sizeDeltaAsFactor = new Vector2(1.0f, 1.0f);
     }
-    public void openTimelineByClick(bool thisTimelineOpen, bool fromShelf)
+    public void OpenTimelineByClick(bool thisTimelineOpen, bool fromShelf)
     {
         if (fromShelf == false && SceneManaging.mainMenuActive == 2 && SceneManaging.directorMenueActive != 3)
         {
@@ -168,24 +165,22 @@ public class RailMusicManager : MonoBehaviour
             timelineImage.rectTransform.sizeDelta = new Vector2(timelineImage.rectTransform.rect.width, 80);
             //scale up the collider
             timelineImage.GetComponent<BoxCollider2D>().size = new Vector2(timelineImage.GetComponent<BoxCollider2D>().size.x, 80);
-            openCloseObjectInTimeline(true);
+            OpenCloseObjectInTimeline(true);
             isTimelineOpen = true;
             ImageTimelineSelection.SetRailNumber(6);
             ImageTimelineSelection.SetRailType(2);  // for rail-rails
         }
     }
-    private bool checkHittingTimeline(Vector2 mousePos)
+    private bool CheckHittingTimeline(Vector2 mousePos)
     {
         bool hit = false;
         Vector2 colSize = new Vector2(GetComponent<BoxCollider2D>().size.x, GetComponent<BoxCollider2D>().size.y);
         //if mouse hits the timeline while dragging an object
-        if (mousePos.x <= maxX && mousePos.x > minX && mousePos.y <= gameObject.transform.position.y + (colSize.y / 2.0f) && mousePos.y > gameObject.transform.position.y - (colSize.y / 2.0f))
-        {
+        if (mousePos.x <= maxX && mousePos.x > minX && mousePos.y <= gameObject.transform.position.y + colSize.y * 2 && mousePos.y > gameObject.transform.position.y - colSize.y * 2)
             hit = true;
-        }
         return hit;
     }
-    private int isCurrentFigureOverlapping(MusicPiece obj, string dir, out int count, List<MusicPiece> musicList)
+    private int IsCurrentFigureOverlapping(MusicPiece obj, string dir, out int count, List<MusicPiece> musicList)
     {
         int val = -1;
         int val2 = -1;
@@ -264,7 +259,7 @@ public class RailMusicManager : MonoBehaviour
 
         return val;
     }
-    public void openCloseObjectInTimeline(bool openTimeline)
+    public void OpenCloseObjectInTimeline(bool openTimeline)
     {
         for (int i = 0; i < myObjects.Count; i++)
         {
@@ -305,11 +300,7 @@ public class RailMusicManager : MonoBehaviour
             }
         }
     }
-    private void setObjectOnTimeline(GameObject fig, float y)
-    {
-        fig.transform.position = new Vector3(fig.transform.position.x, y, -1.0f);
-    }
-    private int countCopiesOfObject(GameObject fig, List<MusicPiece> tlObjs)
+    private int CountCopiesOfObject(GameObject fig, List<MusicPiece> tlObjs)
     {
         int c = 0;
         //count object with the same name as fig
@@ -335,7 +326,7 @@ public class RailMusicManager : MonoBehaviour
         }
         //Debug.Log("liste ohne current figure: " + listWithoutCurrentFigure.Count);
     }
-    public void removeObjectFromTimeline(MusicPiece obj)
+    public void RemoveObjectFromTimeline(MusicPiece obj)
     {
         int tmpNr = int.Parse(obj.musicPiece.transform.GetChild(1).name.Substring(12));
         int currentCounterNr = int.Parse(figCounterCircle[tmpNr - 1].text);
@@ -356,7 +347,7 @@ public class RailMusicManager : MonoBehaviour
 
         // erase from layer list
         myObjects.Remove(obj);
-        if (!isSomethingOverlapping())
+        if (!IsSomethingOverlapping())
         {
             sizeLayering = 1;
             for (int i = 0; i < myObjects.Count; i++)
@@ -593,7 +584,7 @@ public class RailMusicManager : MonoBehaviour
         if (Input.mousePosition.x < listWithoutCurrentFigure[middleIdx].musicPiece.transform.position.x + (listWithoutCurrentFigure[middleIdx].position.y / 2) - 100)
         {
             //Debug.Log("_________________MAUS LINKS__________________");
-            int idx = isCurrentFigureOverlapping(mus, "left", out countOverlaps, listWithoutCurrentFigure);
+            int idx = IsCurrentFigureOverlapping(mus, "left", out countOverlaps, listWithoutCurrentFigure);
             if (countOverlaps == 1)
             {
                 //Debug.Log("hier kann das element frei verschoben werden");
@@ -648,7 +639,7 @@ public class RailMusicManager : MonoBehaviour
         else
         {
             //Debug.Log("_________________MAUS RECHTS__________________");
-            int idx = isCurrentFigureOverlapping(mus, "right", out countOverlaps, listWithoutCurrentFigure);
+            int idx = IsCurrentFigureOverlapping(mus, "right", out countOverlaps, listWithoutCurrentFigure);
             if (countOverlaps == 1)
             {
                 //Debug.Log("hier kann das element frei verschoben werden");
@@ -704,7 +695,7 @@ public class RailMusicManager : MonoBehaviour
 
         //count objects from same kind
         int countName = 0;
-        countName = countCopiesOfObject(figureObjects[musObjNr], myObjects);
+        countName = CountCopiesOfObject(figureObjects[musObjNr], myObjects);
         figCounterCircle[musObjNr].text = (countName + 1).ToString();
         newCopyOfFigure.name = figureObjects[musObjNr].name + "_instance" + countName.ToString("000");
         RectTransform tmpRectTransform = newCopyOfFigure.GetComponent<RectTransform>();
@@ -721,7 +712,7 @@ public class RailMusicManager : MonoBehaviour
         newCopyOfFigure.transform.SetParent(gameObject.transform);
         newCopyOfFigure.transform.localPosition = new Vector3(posX, 0, -1);
 
-        createRectangle(newCopyOfFigure, gameObject.GetComponent<RectTransform>().rect.height, tmpLength);
+        CreateRectangle(newCopyOfFigure, gameObject.GetComponent<RectTransform>().rect.height, tmpLength);
         SceneManaging.scaleObject(newCopyOfFigure, tmpLength, gameObject.GetComponent<RectTransform>().rect.height, true);
         newCopyOfFigure.transform.GetChild(0).GetComponent<RectTransform>().position = new Vector3(newCopyOfFigure.transform.GetChild(0).gameObject.GetComponent<RectTransform>().position.x, newCopyOfFigure.transform.GetChild(0).gameObject.GetComponent<RectTransform>().position.y, -1);
 
@@ -761,7 +752,7 @@ public class RailMusicManager : MonoBehaviour
         }
         myObjects = myObjects.OrderBy(w => w.position.x).ToList();
     }
-    private void createRectangle(GameObject obj, float height, double animLength)
+    private void CreateRectangle(GameObject obj, float height, double animLength)
     {
         //double tmpLength = (maxX - minX) / 614.0f * animLength;
         //animLength -= 25;
@@ -792,6 +783,8 @@ public class RailMusicManager : MonoBehaviour
         minX = 0.087f * Screen.width;               //timeline-rail-minX
         railWidth = 0.87f * Screen.width;           //railwidth=1670.4px
         maxX = minX + railWidth;
+        screenDifference = new Vector2(1920.0f / Screen.width, 1080.0f / Screen.height);
+
         if (isTimelineOpen)
         {
             timelineImage.GetComponent<RectTransform>().sizeDelta = gameObject.GetComponent<BoxCollider2D>().size = new Vector2(railWidthAbsolute, 80);
@@ -821,7 +814,7 @@ public class RailMusicManager : MonoBehaviour
             sampleImages[sampleButtonPressed].color = new Color(1, 1, 1, 1);
         }
     }
-    private IEnumerator FadeOut(float FadeTime, GameObject obj, float time, int clipNr)
+    private IEnumerator FadeOut(float FadeTime, GameObject obj, float time, int clipNr, bool newPiece)
     {
         fading = true;
         while (audioSource.volume > 0.1f)
@@ -829,14 +822,11 @@ public class RailMusicManager : MonoBehaviour
             audioSource.volume -= 1 * Time.deltaTime / FadeTime;
             yield return null;
         }
-        currentClip = ((int)Char.GetNumericValue(obj.name[07]) - 1); // object index
+        currentClip = (int)char.GetNumericValue(obj.name[07]) - 1; // object index
         audioSource.clip = clip[currentClip];
-        // firstTimeSecond = false;
 
         if (time != -1)
-        {
             StartCoroutine(FadeIn(1, time));
-        }
         else
         {
             audioSource.Stop();
@@ -844,15 +834,13 @@ public class RailMusicManager : MonoBehaviour
             audioSource.volume = 1;
         }
         if (clipNr != -1)
-        {
             audioSource.clip = clip[clipNr];
-        }
+        if (newPiece)
+            this.newPiece = true;
     }
     private IEnumerator FadeIn(float FadeTime, float time)
     {
         audioSource.time = time;
-        // float startVolume = 0.2f;
-
         audioSource.Play();
 
         while (audioSource.volume < 0.9f)
@@ -890,11 +878,10 @@ public class RailMusicManager : MonoBehaviour
         }
         return musicCount;
     }
-    public void PlayLatestPiece(bool once)
+    public void PlayLatestPiece(bool once, bool fade)
     {
-        if (GetCurrentMusicCount(out int m, out int n) == 1)
+        if (GetCurrentMusicCount(out int m, out _) == 1)
         {
-            // Debug.Log("count 1");
             double startSec = UtilitiesTm.FloatRemap(myObjects[m].position.x, 0, gameObject.GetComponent<RectTransform>().rect.width, 0, AnimationTimer.GetMaxTime());
             tmpTime = AnimationTimer.GetTime();
 
@@ -904,8 +891,7 @@ public class RailMusicManager : MonoBehaviour
             {
                 playingMusic = true;
                 audioSource.time = tmpTime - (float)startSec;
-                currentClip = (int)Char.GetNumericValue(myObjects[m].musicPiece.name[07]) - 1; // object index
-                // Debug.LogWarning("current: " + currentClip);
+                currentClip = (int)char.GetNumericValue(myObjects[m].musicPiece.name[07]) - 1; // object index
                 audioSource.clip = clip[currentClip];
                 audioSource.Play();
             }
@@ -914,18 +900,51 @@ public class RailMusicManager : MonoBehaviour
                 playingMusic = false;
             }
             firstTimeSecond = true;
+            audioSource.volume = 1.0f;
         }
-        else if (GetCurrentMusicCount(out m, out n) == 2)
+        else if (GetCurrentMusicCount(out m, out int n) == 2)
         {
-            //Debug.Log("count 2, obj: " + myObjects[n].musicPiece.name);
             double startSec = UtilitiesTm.FloatRemap(myObjects[n].position.x, 0, gameObject.GetComponent<RectTransform>().rect.width, 0, AnimationTimer.GetMaxTime());
             float tmpTime = AnimationTimer.GetTime();
-            if (firstTimeSecond && playingMusic) // es switcht von 1 auf 2 musikstuecke gleichzeitig    //|| currentClip != ((int)char.GetNumericValue(myObjects[n].musicPiece.name[07]) - 1))
+            if (firstTimeSecond && playingMusic) // es switcht von 1 auf 2 musikstuecke gleichzeitig
             {
                 firstTimeSecond = false;
-                Debug.Log("fade");
                 fading = false;
-                StartCoroutine(FadeOut(1, myObjects[n].musicPiece, tmpTime - (float)startSec, (int)char.GetNumericValue(myObjects[n].musicPiece.name[07]) - 1));
+                if (fade)
+                {
+                    Debug.Log("fade out 1");
+                    StartCoroutine(FadeOut(1, myObjects[n].musicPiece, tmpTime - (float)startSec, (int)char.GetNumericValue(myObjects[n].musicPiece.name[07]) - 1, true));
+                }
+                else
+                {
+                    Debug.Log("ohne fadeout 1");
+                    currentClip = (int)char.GetNumericValue(myObjects[n].musicPiece.name[07]) - 1; // object index
+                    audioSource.clip = clip[currentClip];
+                    audioSource.time = tmpTime - (float)startSec;
+                    audioSource.volume = 1.0f;
+                    newPiece=true;
+                    audioSource.Play();
+                }
+            }
+            else if (newPiece && currentClip != ((int)char.GetNumericValue(myObjects[n].musicPiece.name[07]) - 1))
+            {
+                newPiece = false;
+                fading = false;
+                if (fade)
+                {
+                    Debug.Log("fade out 2");
+                    StartCoroutine(FadeOut(1, myObjects[n].musicPiece, tmpTime - (float)startSec, (int)char.GetNumericValue(myObjects[n].musicPiece.name[07]) - 1, true));
+                }
+                else
+                {
+                    Debug.Log("ohne fadeout 2");
+                    currentClip = (int)char.GetNumericValue(myObjects[n].musicPiece.name[07]) - 1; // object index
+                    audioSource.clip = clip[currentClip];
+                    audioSource.time = tmpTime - (float)startSec;
+                    audioSource.volume = 1.0f;
+                    audioSource.Play();
+                    newPiece=true;
+                }
             }
 
             anyInstanceIsPlaying = true;
@@ -947,20 +966,16 @@ public class RailMusicManager : MonoBehaviour
             {
                 try
                 {
-                    StartCoroutine(FadeOut(1, myObjects[m].musicPiece, -1, -1));
+                    StartCoroutine(FadeOut(1, myObjects[m].musicPiece, -1, -1, false));
                     onlyPiecefinished = false;
-                    Debug.Log("onlypece finished");
                 }
-                catch (ArgumentOutOfRangeException)
-                {
-                }
+                catch (ArgumentOutOfRangeException) { }
             }
             firstTimeSecond = false;
             playingMusic = false;
-
         }
     }
-    private bool isSomethingOverlapping()
+    private bool IsSomethingOverlapping()
     {
         bool val = false;
         for (int i = 0; i < myObjects.Count; i++)
@@ -979,7 +994,7 @@ public class RailMusicManager : MonoBehaviour
         }
         return val;
     }
-    private void setParent(GameObject obj, GameObject parentToSet)
+    private void SetParent(GameObject obj, GameObject parentToSet)
     {
         try
         {
@@ -996,7 +1011,6 @@ public class RailMusicManager : MonoBehaviour
     {
         int newLength = 0;
         int nr = myObjects[saveIndexForChangePieceLength].musicPiece.GetComponent<MusicLength>().nr;
-        Debug.Log("length+30: " + (myObjects[saveIndexForChangePieceLength].musicPiece.GetComponent<MusicLength>().musicLength + 30) + ", initial: " + initialPieceLength[nr]);
         musicLengthClicked = true;
 
         if ((longer && myObjects[saveIndexForChangePieceLength].musicPiece.GetComponent<MusicLength>().musicLength + 30 <= initialPieceLength[nr]) || (!longer && myObjects[saveIndexForChangePieceLength].musicPiece.GetComponent<MusicLength>().musicLength - 30 >= 30))
@@ -1017,16 +1031,11 @@ public class RailMusicManager : MonoBehaviour
 
             //  = new Vector2(myObjects[saveIndexForChangePieceLength].position.x, myObjects[saveIndexForChangePieceLength].musicPiece.GetComponent<RectTransform>().sizeDelta.x + newLength);
             SceneManaging.scaleObject(myObjects[saveIndexForChangePieceLength].musicPiece, myObjects[saveIndexForChangePieceLength].position.y, myObjects[saveIndexForChangePieceLength].musicPiece.GetComponent<RectTransform>().sizeDelta.y, false);
-            Debug.Log(myObjects[saveIndexForChangePieceLength].musicPiece.GetComponent<MusicLength>().musicLength);
             myObjects = myObjects.OrderBy(w => w.position.x).ToList();
             SceneManaging.CalculateNeighbors(myObjects);
         }
-        else
-        {
-            Debug.Log("groesser oder kleiner geht nicht");
-        }
     }
-    private void updateObjectPosition(MusicPiece obj, Vector2 mousePos)
+    private void UpdateObjectPosition(MusicPiece obj, Vector2 mousePos)
     {
         obj.musicPiece.transform.position = new Vector3(mousePos.x, mousePos.y, -1.0f);
         obj.position = new Vector2(obj.musicPiece.GetComponent<RectTransform>().anchoredPosition.x, obj.musicPiece.GetComponent<RectTransform>().sizeDelta.x);
@@ -1075,28 +1084,23 @@ public class RailMusicManager : MonoBehaviour
                 for (int i = 0; i < myObjects.Count; i++)
                 {
                     if (myObjects[i].musicPiece.GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(getMousePos))
-                    {
                         tmpI = i;
-                    }
                 }
                 if (tmpI >= 0)
-                {
                     editTimelineObject = true;
-                }
                 else
-                {
                     editTimelineObject = false;
-                }
                 // if you click in slider window
                 if (_backgroundBoxCollider == Physics2D.OverlapPoint(getMousePos))
                 {
-                    PlayLatestPiece(true);
+                    firstTimeSecond = true;
+                    PlayLatestPiece(true, false);
                 }
                 //if you click the timeline with the mouse
-                if (this.GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(getMousePos))
+                if (GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(getMousePos))
                 {
                     //open or close timeline
-                    openTimelineByClick(isTimelineOpen, false);
+                    OpenTimelineByClick(isTimelineOpen, false);
                     musicPieceLengthDialog.SetActive(false);
                     musicLengthClicked = false;
                 }
@@ -1106,9 +1110,7 @@ public class RailMusicManager : MonoBehaviour
                 {
                     //wenn neues objekt genommen wird, soll altes aktuelles objekt unhighlighted werden
                     for (int j = 0; j < myObjects.Count; j++)
-                    {
                         SceneManaging.highlight(myObjects[j].musicPiece, false);
-                    }
 
                     if (!SceneManaging.sceneChanged)
                         SceneManaging.sceneChanged = true;
@@ -1116,10 +1118,7 @@ public class RailMusicManager : MonoBehaviour
                     diff = new Vector2(getMousePos.x - figureObjects[currentClickedObjectIndex].transform.position.x, getMousePos.y - figureObjects[currentClickedObjectIndex].transform.position.y);
 
                     if (figureObjects[currentClickedObjectIndex].GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(getMousePos))
-                    {
-                        //set up some flags
                         draggingObject = true;
-                    }
                 }
                 //or check if you click an object in timeline
                 else if (currentClickedInstanceObjectIndex != -1 && editTimelineObject)
@@ -1129,7 +1128,6 @@ public class RailMusicManager : MonoBehaviour
 
                     if (myObjects[currentClickedInstanceObjectIndex].musicPiece.GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(getMousePos))
                     {
-                        Debug.Log("obj geklickt");
                         // aktuellen namen speichern, um spaeter die aktuelle position nach dem sortieren rauszubekommen
                         currentName = myObjects[currentClickedInstanceObjectIndex].objName;
 
@@ -1155,23 +1153,14 @@ public class RailMusicManager : MonoBehaviour
 
                         //highlighting objects and showing delete button when clicked
                         if (SceneManaging.highlighted == false)
-                        {
                             SceneManaging.highlight(myObjects[currentClickedInstanceObjectIndex].musicPiece, true);
-                        }
-                        else if (SceneManaging.highlighted && myObjects[currentClickedInstanceObjectIndex].musicPiece.transform.GetChild(0).GetComponent<Image>().color == colMusicHighlighted) // checkFigureHighlighted(timelineInstanceObjects3D[currentClickedInstanceObjectIndex].transform.GetChild(1).gameObject))  // check if second child (which is never the armature) has emission enabled (=is highlighted)
-                        {
-                            // highlight(timelineInstanceObjects3D[currentClickedInstanceObjectIndex], timelineInstanceObjects[currentClickedInstanceObjectIndex], false);
-                        }
                         else
                         {
                             for (int i = 0; i < myObjects.Count; i++)
-                            {
                                 SceneManaging.highlight(myObjects[i].musicPiece, false);
-                            }
                             SceneManaging.highlight(myObjects[currentClickedInstanceObjectIndex].musicPiece, true);
                         }
                     }
-
                 }
 
                 //if you hit/clicked nothing with mouse
@@ -1180,9 +1169,7 @@ public class RailMusicManager : MonoBehaviour
                     musicPieceLengthDialog.SetActive(false);
                     musicLengthClicked = false;
                     for (int i = 0; i < myObjects.Count; i++)
-                    {
                         SceneManaging.highlight(myObjects[i].musicPiece, false);
-                    }
                 }
             }
         }
@@ -1192,10 +1179,10 @@ public class RailMusicManager : MonoBehaviour
             if (currentClickedInstanceObjectIndex != (-1))  //is set in the identify-methods
             {
                 MusicPiece currentObj = myObjects[currentClickedInstanceObjectIndex];
-                RectTransform currentPos = currentObj.musicPiece.GetComponent<RectTransform>();
+                RectTransform currentRect = currentObj.musicPiece.GetComponent<RectTransform>();
                 isInstance = true;
 
-                // abfrage, ob reihenfolge sich getauscht hat
+                // abfrage, ob reihenfolge sich geaendert hat
                 if (currentName != currentObj.objName)
                 {
                     for (int i = 0; i < myObjects.Count; i++)
@@ -1208,35 +1195,29 @@ public class RailMusicManager : MonoBehaviour
                 }
 
                 //if you click an object in timeline (for dragging) //move object
-                updateObjectPosition(currentObj, getMousePos - diff);
-                setObjectOnTimeline(currentObj.musicPiece, transform.position.y); //snapping/lock y-axis
+                UpdateObjectPosition(currentObj, getMousePos - diff);
+                currentObj.musicPiece.transform.position = new Vector2(currentObj.musicPiece.transform.position.x, transform.position.y); //snapping/lock y-axis
 
                 #region limits front and back of rail
                 // limit front of rail
-                if (currentPos.anchoredPosition.x <= 0)
+                if (currentRect.anchoredPosition.x < 0)
                 {
-                    currentPos.anchoredPosition = new Vector2(0, currentPos.anchoredPosition.y);    // tendenziell muesste das eher in buttonUp
+                    currentRect.anchoredPosition = new Vector2(0, currentRect.anchoredPosition.y);
                     currentObj.position = new Vector2(0, currentObj.position.y);
                 }
                 // limit back of rail
-                else if ((currentPos.anchoredPosition.x + currentPos.sizeDelta.x) > railWidthAbsolute)
+                else if ((currentRect.anchoredPosition.x + currentRect.sizeDelta.x) > railWidthAbsolute)
                 {
-                    currentPos.anchoredPosition = new Vector2(railWidthAbsolute - currentPos.sizeDelta.x, currentPos.anchoredPosition.y);
-                    currentObj.position = new Vector2(railWidthAbsolute - currentPos.sizeDelta.x, currentObj.position.y);
+                    currentRect.anchoredPosition = new Vector2(railWidthAbsolute - currentRect.sizeDelta.x, currentRect.anchoredPosition.y);
+                    currentObj.position = new Vector2(railWidthAbsolute - currentRect.sizeDelta.x, currentObj.position.y);
                 }
 
-                // if (Physics2D.OverlapPoint(getMousePos) == false)       // mouse outside
-                // {
-                //     //SceneManaging.objectsTimeline = ((int)Char.GetNumericValue(timelineImage.name[17]) - 1);  // save old timeline to remove instance of this timeline
-                //     draggingObject = true;
-                //     draggingOnTimeline = false;
-                // }
                 #endregion
                 #region Stapeln von Ebenen
                 // if there is only one layer on Rail
                 if (sizeLayering == 1)
                 {
-                    if (isCurrentFigureOverlapping(currentObj, "", out countOverlaps, myObjects) != -1)
+                    if (IsCurrentFigureOverlapping(currentObj, "", out countOverlaps, myObjects) != -1)
                     {
                         SceneManaging.scaleToLayerSize(currentObj.musicPiece, 2, gameObject, currentObj.position.y, false);
                         sizeLayering = 2;
@@ -1259,7 +1240,7 @@ public class RailMusicManager : MonoBehaviour
                 else
                 {
                     // wenn nichts mehr überlappt
-                    if (!isSomethingOverlapping())
+                    if (!IsSomethingOverlapping())
                     {
                         sizeLayering = 1;
                         // scale all other timelineobjects of layer 0
@@ -1290,18 +1271,17 @@ public class RailMusicManager : MonoBehaviour
 
             //if you hit the timeline > object snap to timeline and is locked in y-movement-direction
             bool hitTimeline = false;
-            hitTimeline = checkHittingTimeline(getMousePos);
+            hitTimeline = CheckHittingTimeline(getMousePos);
 
             if (hitTimeline)
             {
                 // change parent back and snap
-                setParent(figureObjects[currentClickedObjectIndex], gameObject);
-                setObjectOnTimeline(figureObjects[currentClickedObjectIndex], this.transform.position.y);
+                SetParent(figureObjects[currentClickedObjectIndex], gameObject);
+
+                // snapping/lock y-axis
+                figureObjects[currentClickedObjectIndex].transform.position = new Vector2(getMousePos.x - (50 / screenDifference.x), transform.position.y);
 
                 figureObjects[currentClickedObjectIndex].transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(100, timelineImage.GetComponent<RectTransform>().sizeDelta.y);
-
-                //set placed figures to timelineobjects-list
-                //updateObjectList(timelineObjects, figureObjects[currentClickedObjectIndex]);
 
                 releaseOnTimeline = true;
                 releaseObjMousePos = new Vector2(getMousePos.x, getMousePos.y);
@@ -1310,9 +1290,6 @@ public class RailMusicManager : MonoBehaviour
             {
                 figureObjects[currentClickedObjectIndex].GetComponent<RectTransform>().sizeDelta = new Vector2(objectShelfSize.x, objectShelfSize.y);
                 figureObjects[currentClickedObjectIndex].transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(objectShelfSize.x, objectShelfSize.y);
-                //Debug.Log("hier?");
-                // scaleObject(figureObjects[currentClickedObjectIndex].transform.GetChild(0).gameObject, objectShelfSize.x, objectShelfSize.y, false);
-                // scale up currentFigure
                 releaseOnTimeline = false;
             }
         }
@@ -1330,45 +1307,37 @@ public class RailMusicManager : MonoBehaviour
                     newCopyOfFigure = Instantiate(figureObjects[currentClickedObjectIndex]);
                     //count objects from same kind
                     int countName = 0;
-                    countName = countCopiesOfObject(figureObjects[currentClickedObjectIndex], myObjects);
+                    countName = CountCopiesOfObject(figureObjects[currentClickedObjectIndex], myObjects);
                     newCopyOfFigure.name = figureObjects[currentClickedObjectIndex].name + "_instance" + countName.ToString("000");
                     RectTransform tmpRectTransform = newCopyOfFigure.GetComponent<RectTransform>();
+                    newCopyOfFigure.transform.position = new Vector3(newCopyOfFigure.transform.position.x + 50, figureObjects[currentClickedObjectIndex].transform.position.y, -1);
+                    float tmpPos = tmpRectTransform.anchoredPosition.x;
 
                     // in der Besucherversion auf 60 sek kuerzen, weil gesamtes stueck nur 3 min lang ist
                     float tmpLength;
-                    if (!gameController.GetComponent<UnitySwitchExpertUser>()._isExpert)
+                    if (!SceneManaging.isExpert)
                         tmpLength = UtilitiesTm.FloatRemap(60, 0, AnimationTimer.GetMaxTime(), 0, (float)gameObject.GetComponent<RectTransform>().rect.width);
                     else
                         tmpLength = UtilitiesTm.FloatRemap(newCopyOfFigure.GetComponent<MusicLength>().musicLength, 0, AnimationTimer.GetMaxTime(), 0, (float)gameObject.GetComponent<RectTransform>().rect.width);
 
-                    #region limit front and end of rail
-                    //------------------------------------------limit front of rail---------------------------------------------//
-                    if (tmpRectTransform.position.x < minX)  // 50 is half the box Collider width (mouse pos is in the middle of the figure)
-                    {
-                        tmpRectTransform.position = new Vector3((float)minX, figureObjects[currentClickedObjectIndex].transform.position.y, -1);
-                    }
-                    //------------------------------------------limit back of rail---------------------------------------------//
-                    else if ((tmpRectTransform.anchoredPosition.x + tmpLength) > railWidthAbsolute)
-                    {
-                        tmpRectTransform.position = new Vector2(tmpRectTransform.position.x, figureObjects[currentClickedObjectIndex].transform.position.y);
-                        tmpRectTransform.anchoredPosition = new Vector3(railWidthAbsolute - tmpLength, tmpRectTransform.anchoredPosition.y, -1);
-                    }
-                    else
-                    {
-                        newCopyOfFigure.transform.position = new Vector3(figureObjects[currentClickedObjectIndex].transform.position.x, figureObjects[currentClickedObjectIndex].transform.position.y, -1);
-                    }
-                    #endregion
-
-                    createRectangle(newCopyOfFigure, tmpLength, gameObject.GetComponent<RectTransform>().rect.height);
-
+                    CreateRectangle(newCopyOfFigure, tmpLength, gameObject.GetComponent<RectTransform>().rect.height);
                     figCounterCircle[currentClickedObjectIndex].text = (countName + 1).ToString();
 
                     //parent and position
                     newCopyOfFigure.transform.SetParent(gameObject.transform);
                     newCopyOfFigure.transform.localScale = Vector3.one;
+                    tmpRectTransform.anchoredPosition = new Vector2(tmpPos, tmpRectTransform.anchoredPosition.y);
+
+                    #region limit front and end of rail
+                    //------------------------------------------limit front of rail---------------------------------------------//
+                    if (tmpRectTransform.anchoredPosition.x < 0)
+                        tmpRectTransform.anchoredPosition = new Vector2(0, tmpRectTransform.anchoredPosition.y);
+                    //------------------------------------------limit back of rail---------------------------------------------//
+                    else if ((tmpRectTransform.anchoredPosition.x + tmpLength) > railWidthAbsolute)
+                        tmpRectTransform.anchoredPosition = new Vector2(railWidthAbsolute - tmpLength, tmpRectTransform.anchoredPosition.y);
+                    #endregion
 
                     // size of rectangle becomes size for figure that is clickable (bring in front)
-                    tmpRectTransform.localPosition = new Vector3(tmpRectTransform.localPosition.x, tmpRectTransform.localPosition.y, -1.0f);
                     newCopyOfFigure.transform.GetComponent<BoxCollider2D>().size = newCopyOfFigure.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta;
                     newCopyOfFigure.transform.GetComponent<BoxCollider2D>().offset = new Vector2(newCopyOfFigure.transform.GetComponent<BoxCollider2D>().size.x / 2, newCopyOfFigure.transform.GetComponent<BoxCollider2D>().offset.y);
                     newCopyOfFigure.transform.GetChild(1).GetComponent<RectTransform>().anchoredPosition = new Vector2(0, newCopyOfFigure.transform.GetChild(1).GetComponent<RectTransform>().anchoredPosition.y);
@@ -1380,7 +1349,6 @@ public class RailMusicManager : MonoBehaviour
                     figureObjects[currentClickedObjectIndex].transform.SetSiblingIndex(1);
 
                     #region calculating Layer Overlap
-
                     MusicPiece oP = new MusicPiece
                     {
                         objName = newCopyOfFigure.name,
@@ -1393,10 +1361,9 @@ public class RailMusicManager : MonoBehaviour
 
                     SceneManaging.scaleToLayerSize(newCopyOfFigure, 0, gameObject, tmpLength, false);
                     oP.layer = 1;
-
                     if (sizeLayering == 1)
                     {
-                        if (isCurrentFigureOverlapping(oP, "", out countOverlaps, myObjects) != -1)
+                        if (IsCurrentFigureOverlapping(oP, "", out countOverlaps, myObjects) != -1)
                         {
                             sizeLayering = 2;
                             SceneManaging.scaleToLayerSize(newCopyOfFigure, 2, gameObject, tmpLength, false);
@@ -1408,7 +1375,6 @@ public class RailMusicManager : MonoBehaviour
                                     SceneManaging.scaleToLayerSize(myObjects[i].musicPiece, 1, gameObject, myObjects[i].position.y, false);
                             }
                         }
-
                     }
                     else
                     {
@@ -1427,9 +1393,11 @@ public class RailMusicManager : MonoBehaviour
                     SceneManaging.CalculateNeighbors(myObjects);
                     ///////////////////////////////////////////////////////////////////////////////////////////////////////
                     // Save to SceneData:
-                    MusicClipElementInstance musicClipElementInstance = new MusicClipElementInstance();
-                    musicClipElementInstance.instanceNr = countName;
-                    musicClipElementInstance.name = figureObjects[currentClickedObjectIndex].name + "_instance" + countName.ToString("000");
+                    MusicClipElementInstance musicClipElementInstance = new MusicClipElementInstance
+                    {
+                        instanceNr = countName,
+                        name = figureObjects[currentClickedObjectIndex].name + "_instance" + countName.ToString("000")
+                    };
                     StaticSceneData.StaticData.musicClipElements[currentClickedObjectIndex].musicClipElementInstances.Add(musicClipElementInstance);
 
                     SceneManaging.highlight(myObjects[currentPosInList].musicPiece, true);
@@ -1438,28 +1406,34 @@ public class RailMusicManager : MonoBehaviour
                     if (_toBeRemoved)
                     {
                         //Debug.Log("remove: " + myObjects[currentPosInList].objName);
-                        removeObjectFromTimeline(myObjects[currentPosInList]);
+                        RemoveObjectFromTimeline(myObjects[currentPosInList]);
                     }
-
-                    if (!musicLengthClicked)
+                    if (SceneManaging.isExpert)
                     {
-                        musicPieceLengthDialog.SetActive(true);
-                        musicPieceLengthDialog.transform.position = new Vector2(getMousePos.x, musicPieceLengthDialog.transform.position.y);
-                        musicPieceLengthDialog.transform.SetAsLastSibling();
-                        saveIndexForChangePieceLength = currentPosInList;
-                    }
+                        if (!musicLengthClicked)
+                        {
+                            musicPieceLengthDialog.SetActive(true);
+                            musicPieceLengthDialog.transform.position = new Vector2(getMousePos.x, musicPieceLengthDialog.transform.position.y);
+                            musicPieceLengthDialog.transform.SetAsLastSibling();
+                            saveIndexForChangePieceLength = currentPosInList;
+                        }
 
-                    // set index back to -1 because nothing is being clicked anymore
-                    currentClickedObjectIndex = -1;
+                        // set index back to -1 because nothing is being clicked anymore
+                        currentClickedObjectIndex = -1;
+                    }
                 }
+
                 else
                 {
-                    if (!musicLengthClicked)
+                    if (SceneManaging.isExpert)
                     {
-                        musicPieceLengthDialog.SetActive(true);
-                        musicPieceLengthDialog.transform.position = new Vector2(getMousePos.x, musicPieceLengthDialog.transform.position.y);
-                        musicPieceLengthDialog.transform.SetAsLastSibling();
-                        saveIndexForChangePieceLength = currentClickedInstanceObjectIndex;
+                        if (!musicLengthClicked)
+                        {
+                            musicPieceLengthDialog.SetActive(true);
+                            musicPieceLengthDialog.transform.position = new Vector2(getMousePos.x, musicPieceLengthDialog.transform.position.y);
+                            musicPieceLengthDialog.transform.SetAsLastSibling();
+                            saveIndexForChangePieceLength = currentClickedInstanceObjectIndex;
+                        }
                     }
 
                     // change position of vector in each case
@@ -1481,7 +1455,7 @@ public class RailMusicManager : MonoBehaviour
                             if (myObjects[i].objName == currentName)
                             {
                                 //Debug.Log("delete : "+myObjects[i].objName);
-                                removeObjectFromTimeline(myObjects[i]);
+                                RemoveObjectFromTimeline(myObjects[i]);
                             }
                         }
                     }
@@ -1491,14 +1465,14 @@ public class RailMusicManager : MonoBehaviour
             // if dropped somewhere else than timeline: bring figure back to shelf
             else if (releaseOnTimeline == false && currentClickedObjectIndex != -1 && isInstance == false)
             {
-                setParent(figureObjects[currentClickedObjectIndex], objectShelfParent[currentClickedObjectIndex]);
+                SetParent(figureObjects[currentClickedObjectIndex], objectShelfParent[currentClickedObjectIndex]);
                 // bring object back to position two, so that its visible and change position back to default
                 figureObjects[currentClickedObjectIndex].transform.SetSiblingIndex(1);
                 figureObjects[currentClickedObjectIndex].GetComponent<RectTransform>().anchoredPosition = new Vector2(0.0f, -73.0f);
             }
             else if (releaseOnTimeline == false && currentClickedInstanceObjectIndex != -1 && isInstance)
             {
-                removeObjectFromTimeline(myObjects[currentClickedInstanceObjectIndex]);
+                RemoveObjectFromTimeline(myObjects[currentClickedInstanceObjectIndex]);
             }
 
             ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1543,7 +1517,7 @@ public class RailMusicManager : MonoBehaviour
         // turning music on and off in playmode
         if (SceneManaging.playing)
         {
-            PlayLatestPiece(false);
+            PlayLatestPiece(false, false);
         }
 
         ///////////////////////////playing Sample/////////////////////////
@@ -1565,7 +1539,6 @@ public class RailMusicManager : MonoBehaviour
             }
         }
         /////////////////////////////////////////////////////////////////////
-
         else
         {
             audioSource.Stop();

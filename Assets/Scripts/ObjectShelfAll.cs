@@ -191,7 +191,7 @@ public class ObjectShelfAll : MonoBehaviour
                 StartCoroutine(ButtonShelfI(7));
                 if (fromRail == false)
                 {
-                    gameController.GetComponent<UIController>().RailMusic.GetComponent<RailMusicManager>().openTimelineByClick(false, true);
+                    gameController.GetComponent<UIController>().RailMusic.GetComponent<RailMusicManager>().OpenTimelineByClick(false, true);
                 }
             }
         }

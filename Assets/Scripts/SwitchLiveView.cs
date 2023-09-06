@@ -10,6 +10,7 @@ public class SwitchLiveView : MonoBehaviour
     public Sprite PlayIcon;
     public Sprite PauseIcon;
     [SerializeField] private GameObject configMenue;
+    [SerializeField] private AudioSource audioSource;
 
     void Start()
     {
@@ -19,6 +20,7 @@ public class SwitchLiveView : MonoBehaviour
     {
         liveViewFullscreenObj.SetActive(true);
         SceneManaging.fullscreenOn = true;
+        audioSource.volume = 1.0f;
         if(configMenue.activeSelf)
         {
             PlayBtn.interactable = false;

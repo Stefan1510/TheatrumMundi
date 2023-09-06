@@ -51,7 +51,7 @@ public class RailLightManager : MonoBehaviour
             gameController.RailMusic.GetComponent<RectTransform>().sizeDelta = new Vector2(timelineImage.rectTransform.rect.width, heightClosed / gameObject.transform.lossyScale.x);
             gameController.RailMusic.GetComponent<BoxCollider2D>().size = new Vector2(timelineImage.GetComponent<BoxCollider2D>().size.x, heightClosed / gameObject.transform.lossyScale.x);
             gameController.RailMusic.GetComponent<RailMusicManager>().isTimelineOpen = false;
-            gameController.RailMusic.GetComponent<RailMusicManager>().openCloseObjectInTimeline(false);
+            gameController.RailMusic.GetComponent<RailMusicManager>().OpenCloseObjectInTimeline(false);
 
             for (int j = 0; j < gameController.RailMusic.GetComponent<RailMusicManager>().myObjects.Count; j++)
             {

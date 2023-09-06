@@ -694,7 +694,7 @@ public class RailManager : MonoBehaviour
             if (tmpRailMusicMan.isTimelineOpen)
             {
                 SceneManaging.closeRail(tmpUIController.RailMusic.gameObject, railwidthAbsolute);
-                tmpRailMusicMan.openCloseObjectInTimeline(false);
+                tmpRailMusicMan.OpenCloseObjectInTimeline(false);
                 tmpRailMusicMan.isTimelineOpen = false;
 
                 for (int k = 0; k < tmpRailMusicMan.myObjects.Count; k++)
@@ -758,7 +758,7 @@ public class RailManager : MonoBehaviour
             {
                 SceneManaging.closeRail(tmpUIController.RailMusic.gameObject, railwidthAbsolute);
                 tmpUIController.RailMusic.GetComponent<RailMusicManager>().isTimelineOpen = false;
-                tmpUIController.RailMusic.GetComponent<RailMusicManager>().openCloseObjectInTimeline(false);
+                tmpUIController.RailMusic.GetComponent<RailMusicManager>().OpenCloseObjectInTimeline(false);
             }
             for (int i = 0; i < rails.Length; i++)  // alle schienen schliessen
             {
@@ -793,10 +793,6 @@ public class RailManager : MonoBehaviour
     {
         obj.figure.transform.position = new Vector3(mousePos.x, mousePos.y, -1.0f);
         obj.position = new Vector2(obj.figure.GetComponent<RectTransform>().anchoredPosition.x, obj.figure.GetComponent<RectTransform>().sizeDelta.x);
-    }
-    public void SetObjectOnTimeline(GameObject fig, float y)
-    {
-        fig.transform.position = new Vector3(fig.transform.position.x, y, -1.0f);
     }
     public void RemoveObjectFromTimeline(Figure obj)
     {
@@ -855,12 +851,14 @@ public class RailManager : MonoBehaviour
         newCopyOfFigure.transform.position = new Vector2(momentOrPosX, newCopyOfFigure.transform.position.y);
         newCopyOfFigure.transform.SetParent(rails[currentRailIndex].transform);
         newCopyOfFigure.transform.localScale = Vector3.one;
-        Figure oP = new Figure();
-        oP.objName = newCopyOfFigure.name;
-        oP.position = new Vector2(tmpRectTransform.anchoredPosition.x, tmpRectTransform.sizeDelta.x);
-        oP.figure = newCopyOfFigure;
-        oP.neighborLeft = -1;
-        oP.neighborRight = -1;
+        Figure oP = new Figure
+        {
+            objName = newCopyOfFigure.name,
+            position = new Vector2(tmpRectTransform.anchoredPosition.x, tmpRectTransform.sizeDelta.x),
+            figure = newCopyOfFigure,
+            neighborLeft = -1,
+            neighborRight = -1
+        };
 
         railList[currentRailIndex].myObjects.Add(oP);
 
@@ -868,7 +866,7 @@ public class RailManager : MonoBehaviour
         if (loadFromFile != -1)
         {
             //Debug.Log("create");
-            float posX = (UtilitiesTm.FloatRemap(momentOrPosX, 0, AnimationTimer.GetMaxTime(), 0, railwidthAbsolute));
+            float posX = UtilitiesTm.FloatRemap(momentOrPosX, 0, AnimationTimer.GetMaxTime(), 0, railwidthAbsolute);
 
             objectAnimationLength = rails3D[currentRailIndex].transform.GetChild(0).GetComponent<RailSpeedController>().GetEndTimeFromStartTime(momentOrPosX);
             rectSize = railwidthAbsolute / (AnimationTimer.GetMaxTime() / objectAnimationLength);
@@ -1042,16 +1040,14 @@ public class RailManager : MonoBehaviour
     }
     public void ResetScreenSize()       // this probably has to be called globally, so that every Menue resizes (probably in the UIController). At the moment it is only scaled properly when rail tab is open e.g.
     {
-        // // I used the values that were put in FullHD (global: position.x) and calculated the percentage so that it works for all resolutions
+        // I used the values that were put in FullHD (global: position.x) and calculated the percentage so that it works for all resolutions
         minX = 0.087f * Screen.width;               //timeline-rail-minX
         railWidth = 0.87f * Screen.width;           //railwidth=1670.4px
         heightClosed = heightRailPercent * Screen.height;
         heightOpened = 0.074f * Screen.height;
         maxX = minX + railWidth;
         //timeline-rail-maxX
-        screenDifference = new Vector2(1920.0f / (float)Screen.width, 1080.0f / (float)Screen.height);
-        //Debug.Log("screen: "+Screen.width+" x "+Screen.height);
-        //liveView.GetComponent<BoxCollider2D>().size = liveView.GetComponent<RectTransform>().sizeDelta;
+        screenDifference = new Vector2(1920.0f / Screen.width, 1080.0f / Screen.height);
 
         for (int i = 0; i < railList.Length; i++)
         {
@@ -1065,7 +1061,6 @@ public class RailManager : MonoBehaviour
                 rails[i].GetComponent<BoxCollider2D>().size = new Vector2(1670.4f, 20);
             }
         }
-        // Debug.Log("laenge rail absolute: "+railwidthAbsolute+", width: "+railWidth+", sizedelta: "+rails[currentRailIndex].GetComponent<RectTransform>().sizeDelta.x);
 
     }
     public bool IsSomethingOverlapping(int index)
@@ -1433,7 +1428,6 @@ public class RailManager : MonoBehaviour
                         CreateListWithoutCurrentFigure(railList[currentRailIndex].myObjects[currentClickedInstanceObjectIndex]);
                         SceneManaging.CalculateNeighbors(listWithoutCurrentFigure);
 
-
                         // click on delete-Button
                         if (railList[currentRailIndex].myObjects[currentClickedInstanceObjectIndex].figure.transform.GetChild(1).GetChild(0).gameObject.activeSelf
                             && getMousePos.x >= railList[currentRailIndex].myObjects[currentClickedInstanceObjectIndex].figure.transform.GetChild(1).GetChild(0).position.x - railList[currentRailIndex].myObjects[currentClickedInstanceObjectIndex].figure.transform.GetChild(1).GetChild(0).GetComponent<RectTransform>().sizeDelta.x / 2.5f && getMousePos.x <= railList[currentRailIndex].myObjects[currentClickedInstanceObjectIndex].figure.transform.GetChild(1).GetChild(0).position.x + railList[currentRailIndex].myObjects[currentClickedInstanceObjectIndex].figure.transform.GetChild(1).GetChild(0).GetComponent<RectTransform>().sizeDelta.x / 2.5f
@@ -1467,7 +1461,6 @@ public class RailManager : MonoBehaviour
                     }
 
                 }
-
                 //if you hit/clicked nothing with mouse
                 else if (Physics2D.OverlapPoint(getMousePos) == false)
                 {
@@ -1495,24 +1488,22 @@ public class RailManager : MonoBehaviour
                 RectTransform currentPos = currentObj.figure.GetComponent<RectTransform>();
                 isInstance = true;
 
-                // abfrage, ob reihenfolge sich getauscht hat
+                // abfrage, ob reihenfolge sich geaendert hat
                 if (currentName != currentObj.objName)
                 {
                     for (int i = 0; i < railList[currentRailIndex].myObjects.Count; i++)
                     {
                         if (railList[currentRailIndex].myObjects[i].objName == currentName)
                         {
-                            //Debug.Log("tauschen");
                             currentClickedInstanceObjectIndex = i;
                             currentObj = railList[currentRailIndex].myObjects[i];
-                            //currentObj = currentObj;
                         }
                     }
                 }
 
                 //if you click an object in timeline (for dragging)
                 UpdateObjectPosition(currentObj, getMousePos - diff);
-                SetObjectOnTimeline(currentObj.figure, rails[currentRailIndex].transform.position.y); //snapping/lock y-axis
+                currentObj.figure.transform.position = new Vector3(currentObj.figure.transform.position.x, rails[currentRailIndex].transform.position.y, -1.0f);
 
                 #region limits front and back of rail
                 // limit front of rail
@@ -1903,17 +1894,18 @@ public class RailManager : MonoBehaviour
 
                     ///////////////////////////////////////////////////////////////////////////////////////////////////////
                     // Save to SceneData:
-                    FigureInstanceElement thisFigureInstanceElement = new FigureInstanceElement();
-                    thisFigureInstanceElement.instanceNr = CountCopiesOfObject(figureObjects[currentClickedObjectIndex].name) - 1; //index
-                    thisFigureInstanceElement.name = curr3DObject.name + "_" + (CountCopiesOfObject(figureObjects[currentClickedObjectIndex].name) - 1).ToString("000");
-                    thisFigureInstanceElement.railStart = (int)Char.GetNumericValue(rails[currentRailIndex].name[17]) - 1; //railIndex
+                    FigureInstanceElement thisFigureInstanceElement = new FigureInstanceElement
+                    {
+                        instanceNr = CountCopiesOfObject(figureObjects[currentClickedObjectIndex].name) - 1, //index
+                        name = curr3DObject.name + "_" + (CountCopiesOfObject(figureObjects[currentClickedObjectIndex].name) - 1).ToString("000"),
+                        railStart = (int)Char.GetNumericValue(rails[currentRailIndex].name[17]) - 1 //railIndex
+                    };
 
                     StaticSceneData.StaticData.figureElements[currentClickedObjectIndex].figureInstanceElements.Add(thisFigureInstanceElement);
                     gameController.GetComponent<SceneDataController>().objects3dFigureInstances.Add(curr3DObject);
                     SceneManaging.highlight(railList[currentRailIndex].myObjects[currentPosInList].figure3D, railList[currentRailIndex].myObjects[currentPosInList].figure, true, "figure");
                     if (_toBeRemoved)
                     {
-                        //Debug.Log("delete : " + railList[currentRailIndex].myObjects[currentPosInList].objName);
                         RemoveObjectFromTimeline(railList[currentRailIndex].myObjects[currentPosInList]);
                     }
                     ///////////////////////////////////////////////////////////////////////////////////////////////////////
