@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -45,9 +46,9 @@ public class LightAnimationRepresentation : MonoBehaviour
     public void ChangeImage()
     {
         //Debug.Log("change image");
-        if(!SceneManaging.sceneChanged) SceneManaging.sceneChanged = true;
+        if (!SceneManaging.sceneChanged) SceneManaging.sceneChanged = true;
         _maxTime = AnimationTimer.GetMaxTime();
-//        Debug.Log("max: "+_maxTime);
+        //        Debug.Log("max: "+_maxTime);
         //Debug.Log("max: "+_maxTime);
         _lightColors = ChangeColors(_lightColors, new Color32(255, 255, 255, 255));
         _textureLightRepresentation.SetPixels32(_lightColors);
@@ -73,24 +74,38 @@ public class LightAnimationRepresentation : MonoBehaviour
             momentEnd = (int)UtilitiesTm.FloatRemap(momentEndF, 0, _maxTime, 0, _textureLightRepresentation.width); // mappen des "spaeteren" Moments von zwischen TimeSlider auf zwischen PanelWeite
             intensityStart = StaticSceneData.StaticData.lightingSets[lightStates].intensity;  // holen der "frueheren" Lichtstaerke aus der Datenhaltung
             intensityEnd = StaticSceneData.StaticData.lightingSets[lightStates + 1].intensity;    // holen der "spaeteren" Lichtstaerke aus der Datenhaltung
-            //Debug.Log("momentStart: " + momentStart + " - momentEnd: " + momentEnd + " - intensityStart: " + intensityStart + " - intensityEnd: " + intensityEnd);
+                                                                                                  //Debug.Log("momentStart: " + momentStart + " - momentEnd: " + momentEnd + " - intensityStart: " + intensityStart + " - intensityEnd: " + intensityEnd);
             for (secondCount = momentStart; secondCount <= momentEnd; secondCount++)
             {
-                float _interpolationStep = UtilitiesTm.FloatRemap((float)secondCount, (float)momentStart, (float)momentEnd, 0f, 1f);    //mappen der aktuellen Sekunde zwischen des "frueheren" und "spaeteren" Moments auf einen Wert zwischen 0 und 1 --> Lerp braucht so einen Wert
+                float _interpolationStep = UtilitiesTm.FloatRemap(secondCount, momentStart, momentEnd, 0f, 1f);    //mappen der aktuellen Sekunde zwischen des "frueheren" und "spaeteren" Moments auf einen Wert zwischen 0 und 1 --> Lerp braucht so einen Wert
                 colorGradient = Color32.Lerp(colorStart, colorEnd, _interpolationStep);
                 float intensityGradientF = Mathf.Lerp(intensityStart, intensityEnd, _interpolationStep);
                 intensityGradient = UtilitiesTm.FloatRemap(intensityGradientF, 0, _maxIntensity, 0, _textureLightRepresentation.height);
                 _lightColorsColumn = ChangeColors(_lightColorsColumn, colorGradient);
                 _textureLightRepresentation.SetPixels32(secondCount, 0, 1, (int)intensityGradient, _lightColorsColumn);
             }
+
         }
         colorEnd = new Color32(StaticSceneData.StaticData.lightingSets[listLength - 1].r, StaticSceneData.StaticData.lightingSets[listLength - 1].g, StaticSceneData.StaticData.lightingSets[listLength - 1].b, 255);
         Color32[] lastColorBlock = new Color32[(_textureLightRepresentation.width - momentEnd - 1) * (int)intensityGradient];
         lastColorBlock = ChangeColors(lastColorBlock, colorEnd);
-        _textureLightRepresentation.SetPixels32(secondCount, 0, (_textureLightRepresentation.width - momentEnd - 1), (int)intensityGradient, lastColorBlock);
+        _textureLightRepresentation.SetPixels32(secondCount, 0, _textureLightRepresentation.width - momentEnd - 1, (int)intensityGradient, lastColorBlock);
         _textureLightRepresentation.Apply();
         _representationPanel.GetComponent<Image>().sprite = Sprite.Create(_textureLightRepresentation, new Rect(0, 0, _textureLightRepresentation.width, _textureLightRepresentation.height), new Vector2(0.5f, 0.5f));
         UpdateKnobPositions();
+    }
+    public void EraseKnobs(int pLength)
+    {
+        Debug.Log("sets: "+StaticSceneData.StaticData.lightingSets.Count);
+        for (int i = 0; i < StaticSceneData.StaticData.lightingSets.Count; i++)
+        {
+            Debug.Log("moment: "+StaticSceneData.StaticData.lightingSets[i].moment+", piece lengtH: "+pLength*60);
+            if (StaticSceneData.StaticData.lightingSets[i].moment > pLength*60)
+            {
+                Debug.Log("erase lighiging set: " + i);
+                StaticSceneData.StaticData.lightingSets.Remove(StaticSceneData.StaticData.lightingSets[i]);
+            }
+        }
     }
 
     public void UpdateKnobPositions()

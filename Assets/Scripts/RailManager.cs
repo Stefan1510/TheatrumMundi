@@ -25,7 +25,6 @@ public class RailManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI spaceWarning;
     [SerializeField] RailMusicManager tmpRailMusicMan;
     [SerializeField] Image spaceWarningBorder;
-    [SerializeField] TimeSliderController tmpSlider;
     Vector2 objectShelfSize;
     GameObject[] objectShelfParent;
     GameObject newCopyOfFigure;
@@ -38,7 +37,6 @@ public class RailManager : MonoBehaviour
     Color colFigure = new Color(0.06f, 0.66f, .74f, 0.5f);
     Color colFigureHighlighted = new Color(0f, 0.87f, 1.0f, 0.5f);
     Color colSpaceWarning;
-    //Color colFigureRed = new Color(1, 0, 0, 0.5f);
     private GameObject[] figureObjects, figureObjects3D;
     private int currentClickedObjectIndex, currentClickedInstanceObjectIndex, hitTimeline = -1, flyerHit = -1;
     private int maxTimeInSec, currentPosInList;
@@ -46,17 +44,13 @@ public class RailManager : MonoBehaviour
     private float _timerFigure = 1;
     int currentSpaceActive = -1;
     private Vector2 diff;
-    // private FigureElement ThisFigureElement;    //element to set 3d object
     private float heightOpened, heightClosed, _spaceMax, _spaceMax3D;
     bool draggingOnTimeline, draggingObject, editTimelineObject, releaseOnTimeline, isInstance, _toBeRemoved, _toBeRemovedFromTimeline;
-    //private bool figureOnLiveView;
     int hitTimelineOld;
-    //private int _counterTouched = 0;
     private string currentName;
     private List<Figure> listWithoutCurrentFigure = new List<Figure>();
     private int countOverlaps;
     private float _idleTimer = -1;
-    // private float alpha = 1;
     #endregion
     #region Lists
     // Objects Position List
@@ -647,7 +641,6 @@ public class RailManager : MonoBehaviour
     }
     public void OpenTimelineByClick(bool thisTimelineOpen, int index, bool fromShelf)
     {
-        tmpSlider.CloseLengthDialog();
         if (fromShelf == false && SceneManaging.mainMenuActive == 2 && SceneManaging.directorMenueActive != 1)
         {
             UICanvas.GetComponent<ObjectShelfAll>().ButtonShelf05(true);

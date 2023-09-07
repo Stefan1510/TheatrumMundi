@@ -58,6 +58,13 @@ public class TimeSliderController : MonoBehaviour, IPointerUpHandler, IDragHandl
         {
             playerCtrls.ButtonStop();
         }
+        if(Input.GetMouseButtonDown(0))
+        {
+            if(_settingsLength.GetComponent<BoxCollider2D>() != Physics2D.OverlapPoint(Input.mousePosition))
+            {
+                _settingsLength.SetActive(false);
+            }
+        }
     }
     public void OnPointerUp(PointerEventData data)
     {
@@ -69,13 +76,8 @@ public class TimeSliderController : MonoBehaviour, IPointerUpHandler, IDragHandl
     }
     public void UpdateTimeSlider()
     {
-        //Debug.Log("value: " + _thisSlider.value);
         if (!SceneManaging.tutorialActive)
-        {
-            //AnimationTimer.SetTime(_thisSlider.value);
             AnimationTimer.SetTime(_thisSlider.value);
-            //Debug.Log("value: "+value);
-        }
         if (tmpRailMusicManager.playingSample)
         {
             tmpRailMusicManager.playingSample = false;
@@ -152,9 +154,9 @@ public class TimeSliderController : MonoBehaviour, IPointerUpHandler, IDragHandl
                 float rectSize = objectAnimationLength / (60 * _sliderMaxLength.value) * railwidthAbsolute;
                 float posX = UtilitiesTm.FloatRemap(tmpMoment, 0, _sliderMaxLength.value * 60, 0, railwidthAbsolute);
 
-                tmpRailManager.railList[i].myObjects[j].figure.GetComponent<RectTransform>().sizeDelta = new Vector2(rectSize, tmpRailManager.railList[i].myObjects[j].figure.GetComponent<RectTransform>().sizeDelta.y);
-                tmpRailManager.railList[i].myObjects[j].figure.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(rectSize, tmpRailManager.railList[i].myObjects[j].figure.GetComponent<RectTransform>().sizeDelta.y);
-                tmpRailManager.railList[i].myObjects[j].figure.GetComponent<RectTransform>().anchoredPosition = new Vector2(posX, tmpRailManager.railList[i].myObjects[j].figure.GetComponent<RectTransform>().anchoredPosition.y);
+                tmpRectTransform.sizeDelta = new Vector2(rectSize, tmpRectTransform.sizeDelta.y);
+                tmpRailManager.railList[i].myObjects[j].figure.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(rectSize, tmpRectTransform.sizeDelta.y);
+                tmpRectTransform.anchoredPosition = new Vector2(posX, tmpRectTransform.anchoredPosition.y);
 
                 tmpRailManager.railList[i].myObjects[j].position = new Vector2(posX, rectSize);
             }
@@ -169,20 +171,19 @@ public class TimeSliderController : MonoBehaviour, IPointerUpHandler, IDragHandl
             float rectSize = objectAnimationLength / (60 * _sliderMaxLength.value) * railwidthAbsolute;
             float posX = UtilitiesTm.FloatRemap(tmpMoment, 0, _sliderMaxLength.value * 60, 0, railwidthAbsolute);
 
-            tmpRailMusicManager.myObjects[j].musicPiece.GetComponent<RectTransform>().sizeDelta = new Vector2(rectSize, tmpRailMusicManager.myObjects[j].musicPiece.GetComponent<RectTransform>().sizeDelta.y);
-            tmpRailMusicManager.myObjects[j].musicPiece.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(rectSize, tmpRailMusicManager.myObjects[j].musicPiece.GetComponent<RectTransform>().sizeDelta.y);
-            tmpRailMusicManager.myObjects[j].musicPiece.GetComponent<RectTransform>().anchoredPosition = new Vector2(posX, tmpRailMusicManager.myObjects[j].musicPiece.GetComponent<RectTransform>().anchoredPosition.y);
+            tmpRectTransform.sizeDelta = new Vector2(rectSize, tmpRectTransform.sizeDelta.y);
+            tmpRailMusicManager.myObjects[j].musicPiece.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(rectSize, tmpRectTransform.sizeDelta.y);
+            tmpRectTransform.anchoredPosition = new Vector2(posX, tmpRectTransform.anchoredPosition.y);
 
             tmpRailMusicManager.myObjects[j].position = new Vector2(posX, rectSize);
         }
 
         tmpAnimTimer.SetMaxTime(60 * (int)_sliderMaxLength.value);
-        // Debug.Log("value: "+(int)_sliderMaxLength.value);
         _inputSliderLength.text = _sliderMaxLength.value.ToString("0");
-        GetComponent<Slider>().maxValue = (60 * _sliderMaxLength.value);
+        GetComponent<Slider>().maxValue = 60 * _sliderMaxLength.value;
         StaticSceneData.StaticData.pieceLength = int.Parse(_inputSliderLength.text);
-        // Debug.Log("length "+StaticSceneData.StaticData.pieceLength);
         // update light
+        tmpLightAnim.EraseKnobs(StaticSceneData.StaticData.pieceLength);
         tmpLightAnim.ChangeImage();
     }
     public void PressInfoButton(bool on)
@@ -200,9 +201,8 @@ public class TimeSliderController : MonoBehaviour, IPointerUpHandler, IDragHandl
     public void ChangeSliderValue()
     {
         _sliderMaxLength.value = int.Parse(_inputSliderLength.text);
-        // Debug.Log("change slider max length");
         tmpAnimTimer.SetMaxTime(60 * (int)_sliderMaxLength.value);
-        GetComponent<Slider>().maxValue = (60 * _sliderMaxLength.value);
+        GetComponent<Slider>().maxValue = 60 * _sliderMaxLength.value;
         StaticSceneData.StaticData.pieceLength = 60 * int.Parse(_inputSliderLength.text);
         GetComponent<Slider>().maxValue = 60 * _sliderMaxLength.value;
     }

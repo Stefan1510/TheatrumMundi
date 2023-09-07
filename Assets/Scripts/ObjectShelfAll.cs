@@ -33,6 +33,7 @@ public class ObjectShelfAll : MonoBehaviour
     [SerializeField] private UTJ.FrameCapturer.PlayerControls playerCtrls;
 
     public GameObject gameController;//, overlayWaiting;
+    private int tmpShelfNumber;
     [SerializeField] private TimeSliderController tmpSlider;
 
     #endregion
@@ -84,12 +85,12 @@ public class ObjectShelfAll : MonoBehaviour
             //overlayWaiting.SetActive(true);
             if (SceneManaging.mainMenuActive == 1 && SceneManaging.configMenueActive == 4 && !SceneManaging.isPreviewLoaded)
             {
-                StartCoroutine(panelPreviewNotLoaded.GetComponent<WarningPanelLoad>().WaitForButtonClick());
-                StartCoroutine(ButtonShelfI(1));
+                panelPreviewNotLoaded.SetActive(true);
+                tmpShelfNumber = 1;
             }
             else
             {
-                StartCoroutine(ButtonShelfI(1));
+                ButtonShelfI(1);
             }
         }
     }
@@ -99,62 +100,40 @@ public class ObjectShelfAll : MonoBehaviour
         {
             if (SceneManaging.mainMenuActive == 1 && SceneManaging.configMenueActive == 4 && !SceneManaging.isPreviewLoaded)
             {
-                StartCoroutine(panelPreviewNotLoaded.GetComponent<WarningPanelLoad>().WaitForButtonClick());
-                StartCoroutine(ButtonShelfI(2));
+                panelPreviewNotLoaded.SetActive(true);
+                tmpShelfNumber = 2;
             }
-            else StartCoroutine(ButtonShelfI(2));
-            // Debug.Log("button2");
-            // overlayWaiting.SetActive(true);
-            //show menue of kulissen or licht
+            else ButtonShelfI(2);
         }
     }
     public void ButtonShelf03()
     {
         if (!SceneManaging.tutorialActive && !SceneManaging.saveDialogActive && !SceneManaging.railLengthDialogActive && !SceneManaging.flyerActive && !SceneManaging.dialogActive)
         {
-            //overlayWaiting.SetActive(true);
             //show menue of lichtkonfiguration or musik
             if (SceneManaging.mainMenuActive == 1 && SceneManaging.configMenueActive == 4 && !SceneManaging.isPreviewLoaded)
             {
-                StartCoroutine(panelPreviewNotLoaded.GetComponent<WarningPanelLoad>().WaitForButtonClick());
-                StartCoroutine(ButtonShelfI(3));
+                panelPreviewNotLoaded.SetActive(true);
+                tmpShelfNumber = 3;
             }
-            else StartCoroutine(ButtonShelfI(3));
+            else ButtonShelfI(3);
         }
     }
     public void ButtonShelf04()
     {
         if (!SceneManaging.tutorialActive && !SceneManaging.saveDialogActive && !SceneManaging.railLengthDialogActive && !SceneManaging.flyerActive && !SceneManaging.dialogActive)
         {
-            // overlayWaiting.SetActive(true);
-            //show menue of ladenspeichern
-            if (SceneManaging.mainMenuActive == 1 && SceneManaging.configMenueActive == 4)
-            {
-            }
-            else
-            {
-                StartCoroutine(ButtonShelfI(4));
-            }
+            ButtonShelfI(4);
         }
     }
     public void ButtonShelf05(bool fromRail)
     {
-        //show menue of figuren
-        // wenn man von speichern aus kommt und die aktuelle szene noch nicht geladen hat
-        if (SceneManaging.mainMenuActive == 1 && SceneManaging.configMenueActive == 4 && !SceneManaging.isPreviewLoaded)
+        if (!SceneManaging.tutorialActive && !SceneManaging.saveDialogActive && !SceneManaging.railLengthDialogActive && !SceneManaging.flyerActive && !SceneManaging.dialogActive)
         {
-            StartCoroutine(panelPreviewNotLoaded.GetComponent<WarningPanelLoad>().WaitForButtonClick());
-            StartCoroutine(ButtonShelfI(5));
-        }
-        else
-        {
-            if (!SceneManaging.tutorialActive && !SceneManaging.saveDialogActive && !SceneManaging.railLengthDialogActive && !SceneManaging.flyerActive && !SceneManaging.dialogActive)
+            ButtonShelfI(5);
+            if (fromRail == false)
             {
-                StartCoroutine(ButtonShelfI(5));
-                if (fromRail == false)
-                {
-                    MenueContentRails.OpenTimelineByClick(false, 0, true);
-                }
+                MenueContentRails.OpenTimelineByClick(false, 0, true);
             }
         }
     }
@@ -162,96 +141,41 @@ public class ObjectShelfAll : MonoBehaviour
     {
         if (!SceneManaging.tutorialActive && !SceneManaging.saveDialogActive && !SceneManaging.railLengthDialogActive && !SceneManaging.flyerActive && !SceneManaging.dialogActive)
         {
-            // overlayWaiting.SetActive(true);
-            //show menue of kulissen or licht
-            if (SceneManaging.mainMenuActive == 1 && SceneManaging.configMenueActive == 4 && !SceneManaging.isPreviewLoaded)
-            {
-                StartCoroutine(panelPreviewNotLoaded.GetComponent<WarningPanelLoad>().WaitForButtonClick());
-                StartCoroutine(ButtonShelfI(6));
-            }
-            else
-            {
-                StartCoroutine(ButtonShelfI(6));
-            }
+            ButtonShelfI(6);
         }
     }
     public void ButtonShelf07(bool fromRail)
     {
         if (!SceneManaging.tutorialActive && !SceneManaging.saveDialogActive && !SceneManaging.railLengthDialogActive && !SceneManaging.flyerActive && !SceneManaging.dialogActive)
         {
-            // overlayWaiting.SetActive(true);
-            //show menue of lichtkonfiguration or musik
-            if (SceneManaging.mainMenuActive == 1 && SceneManaging.configMenueActive == 4 && !SceneManaging.isPreviewLoaded)
+            ButtonShelfI(7);
+            if (fromRail == false)
             {
-                StartCoroutine(panelPreviewNotLoaded.GetComponent<WarningPanelLoad>().WaitForButtonClick());
-                StartCoroutine(ButtonShelfI(7));
-            }
-            else
-            {
-                StartCoroutine(ButtonShelfI(7));
-                if (fromRail == false)
-                {
-                    gameController.GetComponent<UIController>().RailMusic.GetComponent<RailMusicManager>().OpenTimelineByClick(false, true);
-                }
+                gameController.GetComponent<UIController>().RailMusic.GetComponent<RailMusicManager>().OpenTimelineByClick(false, true);
             }
         }
     }
-    /*public void ButtonShelf08()
-    {
-        if (!SceneManaging.tutorialActive && !SceneManaging.saveDialogActive && !SceneManaging.railLengthDialogActive && !SceneManaging.flyerActive)
-        {
-            // overlayWaiting.SetActive(true);
-            if (SceneManaging.mainMenuActive == 1 && SceneManaging.configMenueActive == 4 && !SceneManaging.isPreviewLoaded)
-            {
-                StartCoroutine(panelPreviewNotLoaded.GetComponent<WarningPanelLoad>().WaitForButtonClick());
-                StartCoroutine(ButtonShelfI(8));
-            }
-            else StartCoroutine(ButtonShelfI(8));
-        }
-    }*/
     public void SwitchToMenueDirector()
     {
         // overlayWaiting.SetActive(true);
         if (SceneManaging.mainMenuActive == 1 && SceneManaging.configMenueActive == 4 && !SceneManaging.isPreviewLoaded)
         {
-            StartCoroutine(panelPreviewNotLoaded.GetComponent<WarningPanelLoad>().WaitForButtonClick());
-            StartCoroutine(ButtonShelfI(10));
+            panelPreviewNotLoaded.SetActive(true);
+                tmpShelfNumber = 10;
         }
         else
         {
-            StartCoroutine(ButtonShelfI(10));
+            ButtonShelfI(10);
         }
     }
     public void SwitchToMenueConfig()
     {
-
-        if (SceneManaging.mainMenuActive == 1 && SceneManaging.configMenueActive == 4 && !SceneManaging.isPreviewLoaded)
-        {
-            StartCoroutine(panelPreviewNotLoaded.GetComponent<WarningPanelLoad>().WaitForButtonClick());
-            StartCoroutine(ButtonShelfI(9));
-        }
-        else
-        {
-            StartCoroutine(ButtonShelfI(9));
-        }
+            ButtonShelfI(9);
     }
 
-    IEnumerator ButtonShelfI(int shelfNumber)
+    private void ButtonShelfI(int shelfNumber)
     {
-tmpSlider.CloseLengthDialog();
-        //overlayWaiting.SetActive(true);
-        //yield return new WaitForEndOfFrame();
-        while (panelPreviewNotLoaded.GetComponent<WarningPanelLoad>().buttonClicked == null)
-        {
-            yield return panelPreviewNotLoaded.GetComponent<WarningPanelLoad>().WaitForButtonClick();
-        }
-        if (panelPreviewNotLoaded.GetComponent<WarningPanelLoad>().buttonClicked == "ignore")
-        {
-        }
-        else if (panelPreviewNotLoaded.GetComponent<WarningPanelLoad>().buttonClicked == "back")
-        {
-            shelfNumber = 4;
-        }
+        tmpSlider.CloseLengthDialog();
         MenueShelf02.GetComponent<CoulissesManager>().HighlightRail(false);
 
         MenueShelf01.SetActive(false);
@@ -326,12 +250,6 @@ tmpSlider.CloseLengthDialog();
                 SceneManaging.mainMenuActive = 2;
                 SceneManaging.directorMenueActive = 1;
                 break;
-            case 6:         // MenueLightRegieShelf
-                MenueShelf06.SetActive(true);
-                MenueButton06.SetActive(false);
-                SceneManaging.mainMenuActive = 2;
-                SceneManaging.directorMenueActive = 2;
-                break;
             case 7:         // MenueMusicShelf
                 ObjectMenueDirectorMain.SetActive(true);
                 MenueShelf07.SetActive(true);
@@ -340,14 +258,6 @@ tmpSlider.CloseLengthDialog();
                 SceneManaging.mainMenuActive = 2;
                 SceneManaging.directorMenueActive = 3;
                 break;
-            /*case 8:         // MenueAboutShelf
-                MenueShelf08.SetActive(true);
-                MenueButton08.SetActive(false);
-                SceneManaging.mainMenuActive = 2;
-                SceneManaging.directorMenueActive = 2;
-                Debug.Log("shelf 8");
-                break;*/
-
             case 9:         // MenueConfigMain
                 ObjectMenueConfigMain.SetActive(true);
                 /////////////////////////////////// for VISITOR-Tool
@@ -381,5 +291,16 @@ tmpSlider.CloseLengthDialog();
         //StaticSceneData.Everything3D();
         MenueContentRails.PublicUpdate();
         SceneManaging.isPreviewLoaded = true;
+    }
+
+    public void OnClickIgnore()
+    {
+        ButtonShelfI(tmpShelfNumber);
+        panelPreviewNotLoaded.SetActive(false);
+        StaticSceneData.Everything3D();
+    }
+    public void OnClickBack()
+    {
+        panelPreviewNotLoaded.SetActive(false);
     }
 }

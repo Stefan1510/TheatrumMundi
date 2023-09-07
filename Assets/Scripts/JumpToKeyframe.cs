@@ -141,7 +141,7 @@ public class JumpToKeyframe : MonoBehaviour
                 break;
             case 1:     // Light
                 momentIndex = StaticSceneData.StaticData.lightingSets.FindIndex(mom => mom.moment == AnimationTimer.GetTime());
-                Debug.LogWarning("Licht l�schen! +++ momentIndex " + momentIndex);
+                Debug.LogWarning("Licht loeschen! +++ momentIndex " + momentIndex);
                 if (momentIndex > 0)
                 {
                     StaticSceneData.StaticData.lightingSets.Remove(StaticSceneData.StaticData.lightingSets[momentIndex]);

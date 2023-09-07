@@ -73,7 +73,7 @@ public class SceneDataController : MonoBehaviour
         if (fromAwake)
             scenePieceLength = 10;
         else
-            scenePieceLength = AnimationTimer._maxTime / 60;
+            scenePieceLength = AnimationTimer._maxTime;
     }
 
     public void SetFileMetaDataToScene()
@@ -85,9 +85,10 @@ public class SceneDataController : MonoBehaviour
 
     public SceneData CreateSceneData(bool fromAwake)  // only in awake
     {
-        SceneData sceneData = new SceneData();
-
-        sceneData.railElements = new List<RailElement>();
+        SceneData sceneData = new SceneData
+        {
+            railElements = new List<RailElement>()
+        };
         foreach (GameObject objectRailElement in objectsRailElements)
         {
             RailElement sceneRailElement = new RailElement
@@ -109,7 +110,7 @@ public class SceneDataController : MonoBehaviour
         sceneData.fileAuthor = sceneFileAuthor;
         sceneData.fileComment = sceneFileComment;
         sceneData.fileDate = sceneFileDate;
-        // sceneData.pieceLength = scenePieceLength;
+        sceneData.pieceLength = scenePieceLength;
         // Debug.Log("length: " + scenePieceLength);
 
         sceneData.sceneryElements = new List<SceneryElement>();
@@ -245,7 +246,7 @@ public class SceneDataController : MonoBehaviour
     public void SetPieceLength(int pieceLength)
     {
         // Debug.Log("maxtime before: "+AnimationTimer._maxTime);
-    //    AnimationTimer._maxTime = pieceLength * 60;
+        //    AnimationTimer._maxTime = pieceLength * 60;
         // Debug.Log("maxtime after: "+AnimationTimer._maxTime);
         sliderMaxLength.value = pieceLength / 60;
         // Debug.Log("slider max length: " + sliderMaxLength.value);
@@ -432,7 +433,7 @@ public class SceneDataController : MonoBehaviour
 
     public string CreateJsonFromSceneData(SceneData sceneData)
     {
-        String JsonData = JsonUtility.ToJson(sceneData, true);
+        string JsonData = JsonUtility.ToJson(sceneData, true);
         return JsonData;
     }
 

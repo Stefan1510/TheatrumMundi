@@ -239,7 +239,6 @@ public class CoulissesManager : MonoBehaviour
                         coulisses[currentObjectIndex].GetComponent<RectTransform>().anchoredPosition = new Vector2(coulisses[currentObjectIndex].GetComponent<RectTransform>().anchoredPosition.x, -165);
                     }
                 }
-                Debug.Log("nachher: " + coulisses[currentObjectIndex].transform.position.x);
 
                 // if coulisse is hitting a tab
                 int hitIndexTab = CheckHittingIndexTab(indexTabs, getMousePos);
