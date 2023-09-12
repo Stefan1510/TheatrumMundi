@@ -139,7 +139,6 @@ public class TimeSliderController : MonoBehaviour, IPointerUpHandler, IDragHandl
     {
         JumpToKeyframe tmpJump = GetComponent<JumpToKeyframe>();
         tmpJump._railPanelsLineDraw[tmpJump._railSelection].GetComponent<DrawCurve>().ChangeCurve();
-
         tmpAnimTimer.SetMaxTime(60 * (int)_sliderMaxLength.value);
         _inputSliderLength.text = _sliderMaxLength.value.ToString("0");
         GetComponent<Slider>().maxValue = 60 * _sliderMaxLength.value;
@@ -147,7 +146,7 @@ public class TimeSliderController : MonoBehaviour, IPointerUpHandler, IDragHandl
 
         //delete keyframes later than max time
         tmpJump.DeleteCurrentKeyframe(true);
-        
+
         //Figuren neu berechnen (moment berechnen)
         tmpRailManager.CalculateFigures(_sliderMaxLength.value);
 

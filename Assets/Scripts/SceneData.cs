@@ -127,6 +127,7 @@ public class SceneData
     public string fileDate;
     public string fileComment;
     public int pieceLength;     // in sekunden
+    public int tabActive;
     public List<MusicClipElement> musicClipElements;
     public List<RailElement> railElements;
     public List<SceneryElement> sceneryElements;

@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class SceneDataController : MonoBehaviour
 {
     #region variables
-    public InputField inputFieldFileNameExpert;//, inputFieldFileNameVisitor;
+    public InputField inputFieldFileNameExpert;
     public InputField inputFieldFileAuthor;
     public InputField inputFieldFileComment;
     public GameObject[] objectsRailElements;
@@ -26,13 +26,14 @@ public class SceneDataController : MonoBehaviour
     [HideInInspector] public int countActiveLightElements = 0;
     [HideInInspector] public int countActiveFigureElements = 0;
     [HideInInspector] public int countActiveMusicClips = 0;
-    [HideInInspector] public int scenePieceLength;
+    [HideInInspector] public int scenePieceLength, sceneTabActive;
     [HideInInspector] public List<GameObject> objects3dFigureInstances;
     [HideInInspector] public List<GameObject> objects2dFigureInstances;
     [HideInInspector] public SceneData recentSceneData;
     [HideInInspector] public SceneData tempSceneData;
     [SerializeField] private Slider sliderMaxLength;
     [SerializeField] private TimeSliderController timeSliderController;
+    [SerializeField] private ObjectShelfAll tmpobjShelfAll;
     #endregion
     void Awake()
     {
@@ -54,16 +55,24 @@ public class SceneDataController : MonoBehaviour
             sceneFileAuthor = inputFieldFileAuthor.text;
             sceneFileComment = inputFieldFileComment.text;
         }
-        // else
-        // {
-        //     sceneFileName = inputFieldFileNameVisitor.text;
-        // }
 
         sceneFileDate = DateTime.Now.ToString();
         if (fromAwake)
+        {
             scenePieceLength = 10;
+            sceneTabActive = 2;
+        }
         else
+        {
             scenePieceLength = AnimationTimer._maxTime;
+            if (tmpobjShelfAll.MenueShelf02.activeSelf)
+                sceneTabActive = 2;
+            else if (tmpobjShelfAll.MenueShelf05.activeSelf)
+                sceneTabActive = 5;
+            else if (tmpobjShelfAll.MenueShelf07.activeSelf)
+                sceneTabActive = 7;
+            Debug.Log("reiter: " + sceneTabActive);
+        }
     }
     public void SetFileMetaDataToScene()
     {
@@ -99,6 +108,7 @@ public class SceneDataController : MonoBehaviour
         sceneData.fileComment = sceneFileComment;
         sceneData.fileDate = sceneFileDate;
         sceneData.pieceLength = scenePieceLength;
+        sceneData.tabActive = sceneTabActive;
 
         sceneData.sceneryElements = new List<SceneryElement>();
         sceneData.figureElements = new List<FigureElement>();
@@ -184,7 +194,7 @@ public class SceneDataController : MonoBehaviour
         //lightAnimation
         sceneData.lightingSets.Add(new LightingSet());
 
-        //bckgroundAnimation
+        //backgroundAnimation
         sceneData.backgroundPositions.Add(new BackgroundPosition());
 
         //music
@@ -206,10 +216,11 @@ public class SceneDataController : MonoBehaviour
         sceneFileAuthor = sceneData.fileAuthor;
         sceneFileDate = sceneData.fileDate;
         sceneFileComment = sceneData.fileComment;
-
         scenePieceLength = sceneData.pieceLength;
-        // Debug.Log("length: " + scenePieceLength);
-        SetPieceLength(scenePieceLength);
+        sceneTabActive = sceneData.tabActive;
+
+        if (SceneManaging.isExpert)
+            SetPieceLength(scenePieceLength);
 
         //rail elements
         RailsApplyToScene(sceneData.railElements);
@@ -225,6 +236,10 @@ public class SceneDataController : MonoBehaviour
 
         //music title elements (Musik)
         MusicApplyToScene(sceneData.musicClipElements);
+
+        //set right tab
+        if (!SceneManaging.isExpert)
+            SetTabActive(sceneData.tabActive);
     }
 
     public void SetPieceLength(int pieceLength)
@@ -241,13 +256,15 @@ public class SceneDataController : MonoBehaviour
                 if (re.name == goRailElement.name)
                     goRailElement.transform.localPosition = new Vector3(re.x, re.y, re.z);
             }
-            foreach (RailElementSpeed res in re.railElementSpeeds)
+            if (SceneManaging.isExpert)
             {
-                timeSliderController.GetComponent<JumpToKeyframe>()._railPanelsLineDraw[timeSliderController.GetComponent<JumpToKeyframe>()._railSelection].GetComponent<DrawCurve>().ChangeCurve();
+                foreach (RailElementSpeed res in re.railElementSpeeds)
+                {
+                    timeSliderController.GetComponent<JumpToKeyframe>()._railPanelsLineDraw[timeSliderController.GetComponent<JumpToKeyframe>()._railSelection].GetComponent<DrawCurve>().ChangeCurve();
+                }
             }
         }
     }
-
     public void SceneriesApplyToScene(List<SceneryElement> sceneryElements)
     {
         countActiveSceneryElements = 0;
@@ -372,6 +389,22 @@ public class SceneDataController : MonoBehaviour
                 countActiveMusicClips++;
                 imageTimelineRailMusic.GetComponent<RailMusicManager>().CreateNew2DInstance(i, mceInstance.moment, mceInstance.layer);
             }
+        }
+    }
+    public void SetTabActive(int tab)
+    {
+        switch (tab)
+        {
+            case 2:
+                tmpobjShelfAll.ButtonShelf02();
+                break;
+            case 5:
+                tmpobjShelfAll.ButtonShelf05(false);
+                Debug.Log("button 5");
+                break;
+            case 7:
+                tmpobjShelfAll.ButtonShelf07(false);
+                break;
         }
     }
     public string CreateJsonFromSceneData(SceneData sceneData)
