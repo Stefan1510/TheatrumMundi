@@ -175,7 +175,6 @@ public class ObjectShelfAll : MonoBehaviour
 
     private void ButtonShelfI(int shelfNumber)
     {
-        tmpSlider.CloseLengthDialog();
         MenueShelf02.GetComponent<CoulissesManager>().HighlightRail(false);
 
         MenueShelf01.SetActive(false);

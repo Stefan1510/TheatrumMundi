@@ -2,15 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
 [System.Serializable]
 public class objectsLightElement
 {
     public GameObject goLightElement;
     public int lightStagePosition;   //{ 0- BeforeRail, 1- leftRail, 2- rightRail, 3- BehindRails, 4- middleLights};
 }
-
-
 [System.Serializable]
 public class RailElementSpeed
 {
@@ -31,7 +28,6 @@ public class RailElement
     public string direction;	//"toRight"=band moves from left to right, "toLeft"=band moves from left to right
     public List<RailElementSpeed> railElementSpeeds;
 }
-
 [System.Serializable]
 public class SceneryElement
 {
@@ -48,10 +44,7 @@ public class SceneryElement
     public bool mirrored;
     public bool outline;
 }
-
-
 [System.Serializable]
-
 public class FigureInstanceElement
 {
     public string name;
@@ -77,7 +70,6 @@ public class FigureElement
     public string direction;
     public List<FigureInstanceElement> figureInstanceElements;
 }
-
 [System.Serializable]
 public class LightElement
 {
@@ -97,7 +89,6 @@ public class LightElement
     public int angle_v;
     public int stagePosition;  //{ 0- BeforeRail, 1- leftRail, 2- rightRail, 3- behind Rail, 4- middle light};
 }
-
 [System.Serializable]
 public class LightingSet
 {
@@ -107,14 +98,12 @@ public class LightingSet
     public byte b;
     public float intensity;
 }
-
 [System.Serializable]
 public class BackgroundPosition
 {
     public float moment;
     public float yPosition;
 }
-
 [System.Serializable]
 public class MusicClipElementInstance
 {
@@ -123,7 +112,6 @@ public class MusicClipElementInstance
     public float moment;
     public float layer;
 }
-
 [System.Serializable]
 public class MusicClipElement
 {
@@ -131,7 +119,6 @@ public class MusicClipElement
     public List<MusicClipElementInstance> musicClipElementInstances;
 }
 
-//[System.Serializable]
 public class SceneData
 {
     //enthält alle objekte

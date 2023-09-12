@@ -7,7 +7,8 @@ using UnityEngine.EventSystems;
 public class DrawCurve : MonoBehaviour
 {
     #region variables
-    private Texture2D _textureCurve, _textureRest;
+    private Texture2D _textureCurve, _textureRest;  // textureRest ist der Strich nach unten und wagerecht bis zum Ende vom letzten Geschwindigkeitspunkt
+    [SerializeField] private RailManager tmpRailManager;
     [SerializeField] private UnitySwitchExpertUser gameController;
     [SerializeField] private Slider _valueSlider;
     [SerializeField] private Image _imagePositionKnob;
@@ -31,7 +32,7 @@ public class DrawCurve : MonoBehaviour
             _backColors = new Color32[_textureCurve.width * _textureCurve.height];
             _backColors = UtilitiesTm.ChangeColors(_backColors, new Color32(255, 255, 255, 31));
             _curveColors = new Color32[3 * 3];
-            _curveColors = UtilitiesTm.ChangeColors(_curveColors, new Color32(180, 180, 180, 150));
+            _curveColors = UtilitiesTm.ChangeColors(_curveColors, new Color32(150, 150, 150, 150));
 
             _middleLineColors = new Color32[_textureCurve.width * 2];
             _middleLineColors = UtilitiesTm.ChangeColors(_middleLineColors, new Color32(224, 224, 224, 224));
@@ -42,34 +43,31 @@ public class DrawCurve : MonoBehaviour
             _imagePositionKnob.gameObject.SetActive(false);
             _imagePositionKnobCollection = new List<Image>();
 
-            EventTrigger.Entry eventTriggerEntry = new EventTrigger.Entry();
-            eventTriggerEntry.eventID = EventTriggerType.PointerUp;
+            EventTrigger.Entry eventTriggerEntry = new EventTrigger.Entry
+            {
+                eventID = EventTriggerType.PointerUp
+            };
             eventTriggerEntry.callback.AddListener((data) => { AddValue(); });
             _valueSlider.GetComponent<EventTrigger>().triggers.Add(eventTriggerEntry);
-            //Debug.Log("val: "+_valueSlider.value);
             StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds[0] = new RailElementSpeed { moment = 0, speed = _valueSlider.value };  // im SceneDataController MUSS ein erstes Element hinzugef�gt werden, bevor es hier angesprochen werden kann
-            //Debug.Log("speed: "+StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds[0].speed);
             StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds.Sort((x, y) => x.moment.CompareTo(y.moment));   // sortiert die railElementSpeeds anhand der Eigenschaft moment
             ChangeCurve();
         }
         else
         {
-            this.gameObject.SetActive(false);
+            gameObject.SetActive(false);
             StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds[0] = new RailElementSpeed { moment = 0, speed = _valueSlider.value };
-            //Debug.Log("railind: "+_railIndex+", value: "+StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds[0].speed);
         }
     }
-    public void AddValue()      // Aufruf auf Slider, der etwas ver�ndern soll, gel�st �ber EventTrigger
+    public void AddValue()      // Aufruf auf Slider, der etwas veraendern soll, geloest ueber EventTrigger
     {
         if (_railIndex == ImageTimelineSelection.GetRailNumber())
         {
-            //Debug.LogError(data);
+            tmpRailManager.CalculateFigures(-1);
             float valueSliderValue = _valueSlider.value;
             float valueMoment = AnimationTimer.GetTime();
             int momentIndex = StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds.FindIndex(mom => mom.moment == valueMoment);     //hier spezifisches RailElement, das kann dann entsprechend ge�ndert werden
-
             RailElementSpeed thisRailElementSpeed = new RailElementSpeed();
-            //Debug.Log(StaticSceneData.StaticData.railElements[_railIndex].name);
 
             if (momentIndex == -1)
             {
@@ -89,7 +87,6 @@ public class DrawCurve : MonoBehaviour
     {
         _maxTime = AnimationTimer.GetMaxTime();
         _textureCurve.SetPixels32(_backColors);
-        //_textureCurve = UtilitiesTm.Bresenham(_textureCurve, 0, _textureCurve.height / 2, _textureCurve.width - 3, _textureCurve.height / 2, _middleLineColors);
         _textureCurve.SetPixels32(0, _textureCurve.height / 2, _textureCurve.width, 2, _middleLineColors);
 
         int momentStart = (int)StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds[0].moment;
@@ -97,7 +94,6 @@ public class DrawCurve : MonoBehaviour
 
         int valueStart = (int)StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds[0].speed;
         int valueEnd = (int)StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds[0].speed;
-        //Debug.Log("rail ind: "+_railIndex+", value: "+StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds[0].speed);
 
         int listLength = StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds.Count;
         if (listLength > 1)
@@ -122,9 +118,6 @@ public class DrawCurve : MonoBehaviour
 
                 _textureCurve = UtilitiesTm.Bresenham(_textureCurve, momentStart, valueStart, momentEnd, valueStart, _curveColors);
                 _textureCurve = UtilitiesTm.Bresenham(_textureCurve, momentEnd, valueStart, momentEnd, valueEnd, _curveColors);
-
-                float deltaMoment = momentEndF - momentStartF;  // deltaX
-                float deltaValue = valueEndF - valueStartF;     // deltaY
             }
         }
         else
@@ -132,10 +125,8 @@ public class DrawCurve : MonoBehaviour
             float valueEndF = StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds[0].speed;    // holen des "sp�teren" Werts aus der Datenhaltung
             valueEndF = UtilitiesTm.FloatRemap(valueEndF, _minValue, _maxValue, 0, _textureCurve.height - 3);    // mappen des "fr�heren" Moments von zwischen TimeSlider auf zwischen PanelWeite
             valueEnd = (int)valueEndF;
-            //Debug.Log("valueEnd: " + valueEnd);
         }
         _textureRest = new Texture2D(_rectWidth, 80, TextureFormat.RGBA32, false); // wird durch Panel RectTransform stretch automatisch gescaled
-        //Debug.Log("momentend: "+momentEnd+", valueEnd: "+valueEnd+", _texturewidth: "+(_textureCurve.width-3));
         _textureRest = UtilitiesTm.Bresenham(_textureCurve, momentEnd, valueEnd, _textureCurve.width - 3, valueEnd, _curveColors);
 
         _textureCurve.Apply();

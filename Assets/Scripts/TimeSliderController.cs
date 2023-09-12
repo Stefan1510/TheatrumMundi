@@ -58,12 +58,10 @@ public class TimeSliderController : MonoBehaviour, IPointerUpHandler, IDragHandl
         {
             playerCtrls.ButtonStop();
         }
-        if(Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0))
         {
-            if(_settingsLength.GetComponent<BoxCollider2D>() != Physics2D.OverlapPoint(Input.mousePosition))
-            {
+            if (_settingsLength.GetComponent<BoxCollider2D>() != Physics2D.OverlapPoint(Input.mousePosition))
                 _settingsLength.SetActive(false);
-            }
         }
     }
     public void OnPointerUp(PointerEventData data)
@@ -137,30 +135,21 @@ public class TimeSliderController : MonoBehaviour, IPointerUpHandler, IDragHandl
         }
 
     }
-    public void CloseLengthDialog()
-    {
-        _settingsLength.SetActive(false);
-    }
     public void ChangeMaxLength()
     {
+        JumpToKeyframe tmpJump = GetComponent<JumpToKeyframe>();
+        tmpJump._railPanelsLineDraw[tmpJump._railSelection].GetComponent<DrawCurve>().ChangeCurve();
+
+        tmpAnimTimer.SetMaxTime(60 * (int)_sliderMaxLength.value);
+        _inputSliderLength.text = _sliderMaxLength.value.ToString("0");
+        GetComponent<Slider>().maxValue = 60 * _sliderMaxLength.value;
+        StaticSceneData.StaticData.pieceLength = int.Parse(_inputSliderLength.text);
+
+        //delete keyframes later than max time
+        tmpJump.DeleteCurrentKeyframe(true);
+        
         //Figuren neu berechnen (moment berechnen)
-        for (int i = 0; i < tmpRailManager.railList.Length; i++)
-        {
-            for (int j = 0; j < tmpRailManager.railList[i].myObjects.Count; j++)
-            {
-                RectTransform tmpRectTransform = tmpRailManager.railList[i].myObjects[j].figure.GetComponent<RectTransform>();
-                float tmpMoment = UtilitiesTm.FloatRemap(tmpRailManager.railList[i].myObjects[j].position.x, 0, railwidthAbsolute, 0, AnimationTimer.GetMaxTime());
-                float objectAnimationLength = tmpRailSpeedContr.GetEndTimeFromStartTime(tmpMoment);
-                float rectSize = objectAnimationLength / (60 * _sliderMaxLength.value) * railwidthAbsolute;
-                float posX = UtilitiesTm.FloatRemap(tmpMoment, 0, _sliderMaxLength.value * 60, 0, railwidthAbsolute);
-
-                tmpRectTransform.sizeDelta = new Vector2(rectSize, tmpRectTransform.sizeDelta.y);
-                tmpRailManager.railList[i].myObjects[j].figure.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(rectSize, tmpRectTransform.sizeDelta.y);
-                tmpRectTransform.anchoredPosition = new Vector2(posX, tmpRectTransform.anchoredPosition.y);
-
-                tmpRailManager.railList[i].myObjects[j].position = new Vector2(posX, rectSize);
-            }
-        }
+        tmpRailManager.CalculateFigures(_sliderMaxLength.value);
 
         // update music
         for (int j = 0; j < tmpRailMusicManager.myObjects.Count; j++)
@@ -177,14 +166,6 @@ public class TimeSliderController : MonoBehaviour, IPointerUpHandler, IDragHandl
 
             tmpRailMusicManager.myObjects[j].position = new Vector2(posX, rectSize);
         }
-
-        tmpAnimTimer.SetMaxTime(60 * (int)_sliderMaxLength.value);
-        _inputSliderLength.text = _sliderMaxLength.value.ToString("0");
-        GetComponent<Slider>().maxValue = 60 * _sliderMaxLength.value;
-        StaticSceneData.StaticData.pieceLength = int.Parse(_inputSliderLength.text);
-        // update light
-        tmpLightAnim.EraseKnobs(StaticSceneData.StaticData.pieceLength);
-        tmpLightAnim.ChangeImage();
     }
     public void PressInfoButton(bool on)
     {

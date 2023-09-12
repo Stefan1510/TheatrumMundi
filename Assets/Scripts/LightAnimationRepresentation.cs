@@ -94,20 +94,6 @@ public class LightAnimationRepresentation : MonoBehaviour
         _representationPanel.GetComponent<Image>().sprite = Sprite.Create(_textureLightRepresentation, new Rect(0, 0, _textureLightRepresentation.width, _textureLightRepresentation.height), new Vector2(0.5f, 0.5f));
         UpdateKnobPositions();
     }
-    public void EraseKnobs(int pLength)
-    {
-        Debug.Log("sets: "+StaticSceneData.StaticData.lightingSets.Count);
-        for (int i = 0; i < StaticSceneData.StaticData.lightingSets.Count; i++)
-        {
-            Debug.Log("moment: "+StaticSceneData.StaticData.lightingSets[i].moment+", piece lengtH: "+pLength*60);
-            if (StaticSceneData.StaticData.lightingSets[i].moment > pLength*60)
-            {
-                Debug.Log("erase lighiging set: " + i);
-                StaticSceneData.StaticData.lightingSets.Remove(StaticSceneData.StaticData.lightingSets[i]);
-            }
-        }
-    }
-
     public void UpdateKnobPositions()
     {
         //Debug.Log("update knob pos");

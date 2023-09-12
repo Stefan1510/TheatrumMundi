@@ -7,10 +7,10 @@ public class JumpToKeyframe : MonoBehaviour
 {
     List<float> keyFrames;
     private int _selection;
-    private int _railSelection;
+    public int _railSelection;
     [SerializeField] private GameObject _panelColorGradient;
     [SerializeField] private GameObject _imageTimelineRailBg;
-    [SerializeField] private GameObject[] _railPanelsLineDraw;
+    public GameObject[] _railPanelsLineDraw;
     [SerializeField] private Slider _sliderLightIntensity;
     [SerializeField] private Slider _sliderRailSpeed;
     [SerializeField] private Slider _sliderBackgroundPosition;
@@ -32,24 +32,16 @@ public class JumpToKeyframe : MonoBehaviour
     public void ChangeSelection(int selectSelection)
     {
         if (selectSelection >= 0 && selectSelection <= 3)
-        {
             _selection = selectSelection;
-        }
         else
-        {
             _selection = 1;
-        }
     }
     public void ChangeRailSelection(int selectRailSelection)
     {
         if (selectRailSelection >= 0 && selectRailSelection <= 5)
-        {
             _railSelection = selectRailSelection;
-        }
         else
-        {
             _railSelection = 0;
-        }
     }
     public void PreviousKeyframe()
     {
@@ -126,14 +118,19 @@ public class JumpToKeyframe : MonoBehaviour
         AnimationTimer.SetTime(nextKeyframe);
         // float intensityValue = SliderIntensity.value;
     }
-    public void DeleteCurrentKeyframe()
+    public void DeleteCurrentKeyframe(bool changeMaxLength)
     {
         int momentIndex = -1;
         switch (_selection)
         {
             case 0:     //Rails
                 momentIndex = StaticSceneData.StaticData.railElements[_railSelection].railElementSpeeds.FindIndex(mom => mom.moment == AnimationTimer.GetTime());
-                if (momentIndex > 0)
+                if(changeMaxLength && momentIndex > AnimationTimer._maxTime)
+                {
+                    StaticSceneData.StaticData.railElements[_railSelection].railElementSpeeds.Remove(StaticSceneData.StaticData.railElements[_railSelection].railElementSpeeds[momentIndex]);
+                    _railPanelsLineDraw[_railSelection].GetComponent<DrawCurve>().ChangeCurve();
+                }
+                else if (momentIndex > 0)
                 {
                     StaticSceneData.StaticData.railElements[_railSelection].railElementSpeeds.Remove(StaticSceneData.StaticData.railElements[_railSelection].railElementSpeeds[momentIndex]);
                     _railPanelsLineDraw[_railSelection].GetComponent<DrawCurve>().ChangeCurve();
@@ -141,8 +138,12 @@ public class JumpToKeyframe : MonoBehaviour
                 break;
             case 1:     // Light
                 momentIndex = StaticSceneData.StaticData.lightingSets.FindIndex(mom => mom.moment == AnimationTimer.GetTime());
-                Debug.LogWarning("Licht loeschen! +++ momentIndex " + momentIndex);
-                if (momentIndex > 0)
+                if(changeMaxLength && momentIndex > AnimationTimer._maxTime)
+                {
+                    StaticSceneData.StaticData.lightingSets.Remove(StaticSceneData.StaticData.lightingSets[momentIndex]);
+                    _panelColorGradient.GetComponent<LightAnimationRepresentation>().ChangeImage();
+                }
+                else if (momentIndex > 0)
                 {
                     StaticSceneData.StaticData.lightingSets.Remove(StaticSceneData.StaticData.lightingSets[momentIndex]);
                     _panelColorGradient.GetComponent<LightAnimationRepresentation>().ChangeImage();
@@ -153,7 +154,12 @@ public class JumpToKeyframe : MonoBehaviour
                 break;
             case 3:     //BackgroundPosition
                 momentIndex = StaticSceneData.StaticData.backgroundPositions.FindIndex(mom => mom.moment == AnimationTimer.GetTime());
-                if (momentIndex > 0)
+                if(changeMaxLength && momentIndex > AnimationTimer._maxTime)
+                {
+                    StaticSceneData.StaticData.backgroundPositions.Remove(StaticSceneData.StaticData.backgroundPositions[momentIndex]);
+                    _imageTimelineRailBg.GetComponent<DrawCurveBg>().ChangeCurve();
+                }
+                else if (momentIndex > 0)
                 {
                     StaticSceneData.StaticData.backgroundPositions.Remove(StaticSceneData.StaticData.backgroundPositions[momentIndex]);
                     _imageTimelineRailBg.GetComponent<DrawCurveBg>().ChangeCurve();
@@ -173,10 +179,7 @@ public class JumpToKeyframe : MonoBehaviour
     {
         keyFrames.Clear();
         foreach (LightingSet lightingSet in StaticSceneData.StaticData.lightingSets)
-        {
             keyFrames.Add(lightingSet.moment);
-            //Debug.LogWarning(lightingSet.moment);
-        }
     }
     void GetMomentFromBackgroundPositions()
     {
