@@ -257,7 +257,6 @@ public class CoulissesManager : MonoBehaviour
                         ShowDeleteButton(deleteButton, coulisses[currentObjectIndex], false);
                         sliderX.GetComponent<Slider>().value = coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.x / 270;
                         sliderY.GetComponent<Slider>().value = (coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.y / 260) + 0.515f;
-                        Debug.Log("y wert: " + sliderY.GetComponent<Slider>().value);
                     }
                     objectInField = true;
                     objectInRail = false;
@@ -274,12 +273,10 @@ public class CoulissesManager : MonoBehaviour
                     SceneManaging.objectInIndexTab = -1;
                     objectInRail = false;
                 }
-                ////////////////////////////////////////////////////////////////////////////////////////////
                 StaticSceneData.StaticData.sceneryElements[currentObjectIndex].z = coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.x / 270;
                 StaticSceneData.StaticData.sceneryElements[currentObjectIndex].y = coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.y / 260 + 0.515f;
                 StaticSceneData.StaticData.sceneryElements[currentObjectIndex].x = 0.062f;
                 StaticSceneData.Sceneries3D(); //CreateScene der SceneryElements
-                                               ////////////////////////////////////////////////////////////////////////////////////////////
             }
 
             if (Input.GetMouseButtonUp(0)) //left mouse button up

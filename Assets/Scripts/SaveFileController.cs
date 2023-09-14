@@ -24,6 +24,7 @@ public class SaveFileController : MonoBehaviour
     [SerializeField] private GameObject _visitorPanelSave;
     [SerializeField] private GameObject codeReminder;
     [SerializeField] private TextMeshProUGUI codeReminderText;
+    [SerializeField] private Image imgCodeReminder;
     public InputField inputFieldShowCode, inputFieldShowCodeVisitor;
     [SerializeField] GameObject _showSavedCode;
     public Button fileSelectButton; // prefab
@@ -36,6 +37,9 @@ public class SaveFileController : MonoBehaviour
     private string code;
     private Color col_green = new Color32(64, 192, 16, 192);
     private string characters = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ";
+    private bool _animateCodeReminder, _biggerSmaller;
+    private float _helper = 10;
+    private float _codeTimer;
     #endregion
     private void Start()
     {
@@ -67,6 +71,53 @@ public class SaveFileController : MonoBehaviour
 
         tmpCoulissesManager.Awake();
     }
+    private void Update()
+    {
+        if (_biggerSmaller && _codeTimer < 0.5f)
+        {
+            _codeTimer += Time.deltaTime;
+            if (_codeTimer <= 0.25f)
+            {
+                codeReminderText.transform.localScale = new Vector2(codeReminderText.transform.localScale.x + 0.1f, codeReminderText.transform.localScale.y + 0.1f);
+                imgCodeReminder.gameObject.transform.localScale = codeReminderText.transform.localScale;
+            }
+            else if (_codeTimer > 0.25f && codeReminderText.transform.localScale.x > 1)
+            {
+                codeReminderText.transform.localScale = new Vector2(codeReminderText.transform.localScale.x - 0.1f, codeReminderText.transform.localScale.y - 0.1f);
+                imgCodeReminder.gameObject.transform.localScale = codeReminderText.transform.localScale;
+            }
+            imgCodeReminder.color = new Color(imgCodeReminder.color.r, imgCodeReminder.color.g, imgCodeReminder.color.b, imgCodeReminder.color.a - 0.08f);
+
+        }
+        else if (_biggerSmaller)
+        {
+            _biggerSmaller = false;
+            _animateCodeReminder = true;
+            _codeTimer = 0;
+        }
+
+        if (_animateCodeReminder && codeReminder.transform.localPosition.y < 514 && !SceneManaging.isExpert)
+        {
+            _helper += 0.5f;
+            if (codeReminder.transform.localPosition.x < 300)
+            {
+                Debug.Log("alpha: " + imgCodeReminder.color.a);
+                imgCodeReminder.color = new Color(imgCodeReminder.color.r, imgCodeReminder.color.g, imgCodeReminder.color.b, imgCodeReminder.color.a - 0.08f);
+                codeReminder.transform.localPosition = new Vector2(codeReminder.transform.localPosition.x + _helper / 1.2f, codeReminder.transform.localPosition.y + _helper);
+            }
+            else
+                codeReminder.transform.localPosition = new Vector2(codeReminder.transform.localPosition.x, codeReminder.transform.localPosition.y + _helper);
+            imgCodeReminder.gameObject.transform.localPosition = codeReminderText.transform.localPosition;
+
+        }
+        else if (_animateCodeReminder)
+        {
+            _animateCodeReminder = false;
+            codeReminder.transform.localPosition = new Vector2(300, 514);
+            codeReminder.GetComponent<Image>().enabled = true;
+            codeReminder.transform.GetChild(2).gameObject.SetActive(true);
+        }
+    }
     public void SaveSceneToFile(int overwrite) // 0=save, 1=overwrite, 2=save with number behind
     {
         bool foundName = false;
@@ -85,7 +136,9 @@ public class SaveFileController : MonoBehaviour
             filePath = code + ".json";
             StartCoroutine(WriteToServer(sceneDataSaveString, filePath));
             codeReminder.SetActive(true);
-            codeReminderText.text = "Zuletzt abgespeicherter Code: " + code;
+            codeReminderText.text = code;
+            ClosePanelShowCode(_visitorPanelSave);
+            _biggerSmaller = true;
         }
         else    // expertenversion
         {
@@ -128,7 +181,7 @@ public class SaveFileController : MonoBehaviour
                             else
                             {
                                 filePath = sceneDataSave.fileName + ".json";
-                                ClosePanelShowCode(_visitorPanelSave);
+                                // ClosePanelShowCode(_visitorPanelSave);
 
                                 if (sceneDataSaveString.Length != 0)
                                 {
@@ -654,7 +707,7 @@ public class SaveFileController : MonoBehaviour
                 break;
             case 2:
                 SaveSceneToFile(0);
-                ClosePanelShowCode(_visitorPanelSave);
+                //ClosePanelShowCode(_visitorPanelSave);
                 break;
             case 3:
                 ClosePanelShowCode(_visitorPanelSave);
@@ -699,5 +752,10 @@ public class SaveFileController : MonoBehaviour
     public void OnClickCloseCodeReminder()
     {
         codeReminder.SetActive(false);
+        codeReminder.transform.localPosition = new Vector2(-209, -43);
+        codeReminder.GetComponent<Image>().enabled = false;
+        codeReminder.transform.GetChild(2).gameObject.SetActive(false);
+        imgCodeReminder.color = new Color(imgCodeReminder.color.r, imgCodeReminder.color.g, imgCodeReminder.color.b, 1);
+        imgCodeReminder.gameObject.transform.localPosition = codeReminderText.transform.localPosition;
     }
 }

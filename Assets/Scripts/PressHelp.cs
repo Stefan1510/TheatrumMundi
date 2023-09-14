@@ -13,6 +13,7 @@ public class PressHelp : MonoBehaviour
     [SerializeField] private GameObject tutorialCountImage;
     [SerializeField] private GameObject flyer;
     [SerializeField] private GameObject liveView;
+    [SerializeField] private GameObject codeReminder;
 
     public GameObject _arrowHelp;
     GameObject _timeSliderBubble;
@@ -91,10 +92,8 @@ public class PressHelp : MonoBehaviour
     {
         if (i == 0) // help
         {
-            //Debug.Log("hier");
             if (!SceneManaging.aboutActive && !SceneManaging.saveDialogActive && !SceneManaging.railLengthDialogActive && !SceneManaging.dialogActive)
             {
-                //Debug.Log("pressed: " + pressed);
                 if (pressed)
                 {
                     helpOverlayMenue1.SetActive(false);
@@ -222,8 +221,6 @@ public class PressHelp : MonoBehaviour
         {
             helpTextLiveView.SetActive(false);
             pressedLiveView = false;
-            Debug.Log("pressed: " + pressedLiveView);
-            //offFromClick = true;
         }
         if (!pressedLiveView)
         {
@@ -254,9 +251,7 @@ public class PressHelp : MonoBehaviour
                 {
                     helpTextLiveView.transform.GetChild(0).GetComponent<Text>().text = "Das ist der LiveView. Links im Shelf hast du die Möglichkeit, Szenen zu laden oder zu speichern.";
                 }
-                //pressed = true;
                 pressedLiveView = true;
-                //Debug.Log("pressed: " + pressedLiveView);
             }
         }
     }
@@ -289,13 +284,13 @@ public class PressHelp : MonoBehaviour
                 // timeslider tutorial for object menu
                 if (_publicHelpMenue == helpOverlayMenue5)
                 {
-                    if (_tutorialCounter == 4) // timeslider
+                    if (_tutorialCounter == 5) // timeslider
                     {
                         _timeSliderBubble.transform.position = _timeSliderPlayButton.transform.position;
                         maskTimeSlider.SetActive(true);
                         _timeSliderBubble.GetComponent<RectTransform>().anchoredPosition = new Vector2(_timeSliderBubble.GetComponent<RectTransform>().anchoredPosition.x, 13);
                     }
-                    else if (_tutorialCounter == 5) // nach timeslider
+                    else if (_tutorialCounter == 6) // nach timeslider
                     {
                         maskTimeSlider.SetActive(false);
                     }
@@ -332,9 +327,7 @@ public class PressHelp : MonoBehaviour
                     }
                     SceneManaging.tutorialActive = false;
                 }
-                catch (NullReferenceException)
-                {
-                }
+                catch (NullReferenceException) { }
 
             }
             if (helpTextLiveView.activeSelf)
@@ -410,6 +403,7 @@ public class PressHelp : MonoBehaviour
                 }
 
                 _introOverlay.SetActive(true);
+                codeReminder.SetActive(false);
             }
         }
     }

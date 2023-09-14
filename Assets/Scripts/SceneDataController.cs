@@ -71,7 +71,6 @@ public class SceneDataController : MonoBehaviour
                 sceneTabActive = 5;
             else if (tmpobjShelfAll.MenueShelf07.activeSelf)
                 sceneTabActive = 7;
-            Debug.Log("reiter: " + sceneTabActive);
         }
     }
     public void SetFileMetaDataToScene()
