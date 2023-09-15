@@ -101,7 +101,6 @@ public class SaveFileController : MonoBehaviour
             _helper += 0.5f;
             if (codeReminder.transform.localPosition.x < 300)
             {
-                Debug.Log("alpha: " + imgCodeReminder.color.a);
                 imgCodeReminder.color = new Color(imgCodeReminder.color.r, imgCodeReminder.color.g, imgCodeReminder.color.b, imgCodeReminder.color.a - 0.08f);
                 codeReminder.transform.localPosition = new Vector2(codeReminder.transform.localPosition.x + _helper / 1.2f, codeReminder.transform.localPosition.y + _helper);
             }

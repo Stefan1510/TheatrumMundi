@@ -118,19 +118,14 @@ public class JumpToKeyframe : MonoBehaviour
         AnimationTimer.SetTime(nextKeyframe);
         // float intensityValue = SliderIntensity.value;
     }
-    public void DeleteCurrentKeyframe(bool changeMaxLength)
+    public void DeleteCurrentKeyframe()
     {
         int momentIndex = -1;
         switch (_selection)
         {
             case 0:     //Rails
                 momentIndex = StaticSceneData.StaticData.railElements[_railSelection].railElementSpeeds.FindIndex(mom => mom.moment == AnimationTimer.GetTime());
-                if(changeMaxLength && momentIndex > AnimationTimer._maxTime)
-                {
-                    StaticSceneData.StaticData.railElements[_railSelection].railElementSpeeds.Remove(StaticSceneData.StaticData.railElements[_railSelection].railElementSpeeds[momentIndex]);
-                    _railPanelsLineDraw[_railSelection].GetComponent<DrawCurve>().ChangeCurve();
-                }
-                else if (momentIndex > 0)
+                if (momentIndex > 0)
                 {
                     StaticSceneData.StaticData.railElements[_railSelection].railElementSpeeds.Remove(StaticSceneData.StaticData.railElements[_railSelection].railElementSpeeds[momentIndex]);
                     _railPanelsLineDraw[_railSelection].GetComponent<DrawCurve>().ChangeCurve();
@@ -138,12 +133,7 @@ public class JumpToKeyframe : MonoBehaviour
                 break;
             case 1:     // Light
                 momentIndex = StaticSceneData.StaticData.lightingSets.FindIndex(mom => mom.moment == AnimationTimer.GetTime());
-                if(changeMaxLength && momentIndex > AnimationTimer._maxTime)
-                {
-                    StaticSceneData.StaticData.lightingSets.Remove(StaticSceneData.StaticData.lightingSets[momentIndex]);
-                    _panelColorGradient.GetComponent<LightAnimationRepresentation>().ChangeImage();
-                }
-                else if (momentIndex > 0)
+                if (momentIndex > 0)
                 {
                     StaticSceneData.StaticData.lightingSets.Remove(StaticSceneData.StaticData.lightingSets[momentIndex]);
                     _panelColorGradient.GetComponent<LightAnimationRepresentation>().ChangeImage();
@@ -154,17 +144,45 @@ public class JumpToKeyframe : MonoBehaviour
                 break;
             case 3:     //BackgroundPosition
                 momentIndex = StaticSceneData.StaticData.backgroundPositions.FindIndex(mom => mom.moment == AnimationTimer.GetTime());
-                if(changeMaxLength && momentIndex > AnimationTimer._maxTime)
-                {
-                    StaticSceneData.StaticData.backgroundPositions.Remove(StaticSceneData.StaticData.backgroundPositions[momentIndex]);
-                    _imageTimelineRailBg.GetComponent<DrawCurveBg>().ChangeCurve();
-                }
-                else if (momentIndex > 0)
+                if (momentIndex > 0)
                 {
                     StaticSceneData.StaticData.backgroundPositions.Remove(StaticSceneData.StaticData.backgroundPositions[momentIndex]);
                     _imageTimelineRailBg.GetComponent<DrawCurveBg>().ChangeCurve();
                 }
                 break;
+        }
+    }
+    public void DeleteKeyframeFromChangeMaxLength()
+    {
+        //Rails
+        for (int i = 0; i < StaticSceneData.StaticData.railElements.Count; i++)
+        {
+            for (int j = 0; j < StaticSceneData.StaticData.railElements[i].railElementSpeeds.Count; j++)
+            {
+                if (StaticSceneData.StaticData.railElements[i].railElementSpeeds[j].moment > AnimationTimer._maxTime)
+                {
+                    StaticSceneData.StaticData.railElements[i].railElementSpeeds.Remove(StaticSceneData.StaticData.railElements[i].railElementSpeeds[j]);
+                    _railPanelsLineDraw[i].GetComponent<DrawCurve>().ChangeCurve();
+                }
+            }
+        }
+        // Light
+        for (int i = 0; i < StaticSceneData.StaticData.lightingSets.Count; i++)
+        {
+            if (StaticSceneData.StaticData.lightingSets[i].moment > AnimationTimer._maxTime)
+            {
+                StaticSceneData.StaticData.lightingSets.Remove(StaticSceneData.StaticData.lightingSets[i]);
+                _panelColorGradient.GetComponent<LightAnimationRepresentation>().ChangeImage();
+            }
+        }
+        //BackgroundPosition
+        for (int j = 0; j < StaticSceneData.StaticData.backgroundPositions.Count; j++)
+        {
+            if (StaticSceneData.StaticData.backgroundPositions[j].moment > AnimationTimer._maxTime)
+            {
+                StaticSceneData.StaticData.backgroundPositions.Remove(StaticSceneData.StaticData.backgroundPositions[j]);
+                _imageTimelineRailBg.GetComponent<DrawCurveBg>().ChangeCurve();
+            }
         }
     }
     void GetMomentsFromRailElementSpeeds()

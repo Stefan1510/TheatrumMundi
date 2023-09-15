@@ -163,9 +163,9 @@ public class RailManager : MonoBehaviour
         _spaceMax = 0.1f * _spaceMax3D * 100 / maxTimeInSec * railwidthAbsolute;      // *100 fuer umrechnung m in cm, 0.1 fuer speed
         AnimationTimer.SetTime(0);
     }
-    public void CalculateFigures(float valueSlider)
+    public void CalculateFigures(float timeAfter)
     {
-        if (valueSlider == -1)
+        if (timeAfter == -1)
         {
             for (int j = 0; j < railList[currentRailIndex].myObjects.Count; j++)
             {
@@ -187,14 +187,13 @@ public class RailManager : MonoBehaviour
                 {
                     RectTransform tmpRectTransform = railList[i].myObjects[j].figure.GetComponent<RectTransform>();
                     float moment = UtilitiesTm.FloatRemap(tmpRectTransform.anchoredPosition.x, 0, railwidthAbsolute, 0, AnimationTimer.GetMaxTime());
-                    objectAnimationLength = rails3D[currentRailIndex].transform.GetChild(0).GetComponent<RailSpeedController>().GetEndTimeFromStartTime(moment);
-                    rectSize = objectAnimationLength / AnimationTimer.GetMaxTime() * railwidthAbsolute;
-                    float posX = UtilitiesTm.FloatRemap(moment, 0, valueSlider * 60, 0, railwidthAbsolute);
+                    objectAnimationLength = rails3D[i].transform.GetChild(0).GetComponent<RailSpeedController>().GetEndTimeFromStartTime(moment);
+                    rectSize = objectAnimationLength / (timeAfter*60) * railwidthAbsolute;
+                    float posX = UtilitiesTm.FloatRemap(moment, 0, timeAfter * 60, 0, railwidthAbsolute);
                     tmpRectTransform.anchoredPosition = new Vector2(posX, tmpRectTransform.anchoredPosition.y);
                     railList[i].myObjects[j].position = new Vector2(posX, rectSize);
                     tmpRectTransform.sizeDelta = new Vector2(rectSize, tmpRectTransform.sizeDelta.y);
                     railList[i].myObjects[j].figure.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(rectSize, tmpRectTransform.sizeDelta.y);
-
                     railList[i].myObjects[j].figure.GetComponent<BoxCollider2D>().size = tmpRectTransform.sizeDelta;
                 }
             }

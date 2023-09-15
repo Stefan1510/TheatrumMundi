@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using TMPro;
 using System;
+using System.Linq;
 
 public class TimeSliderController : MonoBehaviour, IPointerUpHandler, IDragHandler
 {
@@ -18,16 +19,17 @@ public class TimeSliderController : MonoBehaviour, IPointerUpHandler, IDragHandl
     [SerializeField] private TMP_InputField _inputSliderLength;
     [SerializeField] private AnimationTimer tmpAnimTimer;
     [SerializeField] private RailManager tmpRailManager;
-    [SerializeField] private RailSpeedController tmpRailSpeedContr;
     [SerializeField] private RailMusicManager tmpRailMusicManager;
     [SerializeField] private LightAnimationRepresentation tmpLightAnim;
+    [SerializeField] private DrawCurveBg tmpBG;
     [SerializeField] private UTJ.FrameCapturer.PlayerControls playerCtrls;
+    [SerializeField] private GameObject[] verticalTimeLines;
+    [SerializeField] private GameObject[] timeStamps;
     private float railwidthAbsolute = 1670.4f;
     private Slider _thisSlider;
     #endregion
     void Start()
     {
-        // if (SceneManaging.isExpert)
         imgTimelineSettingsArea.SetActive(true);
         _thisSlider = GetComponent<Slider>();
         _textTime.text = UtilitiesTm.FloaTTimeToString(_thisSlider.value);
@@ -35,10 +37,25 @@ public class TimeSliderController : MonoBehaviour, IPointerUpHandler, IDragHandl
         _textMaxTimeBigLetters.text = UtilitiesTm.FloaTTimeToString(AnimationTimer.GetMaxTime());
         GetComponent<Slider>().maxValue = AnimationTimer.GetMaxTime();
 
-        _toggleKeyConfigControlls.onValueChanged.AddListener((bool value) => SwitchKeyConfigControls(value));
+        _toggleKeyConfigControlls.onValueChanged.AddListener(SwitchKeyConfigControls);
         UpdateTimeSlider();
         SwitchKeyConfigControls(false);
         ChangeControlsFromTimelineSelection();
+
+        //place vertical timelines
+        if (SceneManaging.isExpert)
+        {
+            foreach (GameObject vL in verticalTimeLines)
+                vL.GetComponent<RectTransform>().sizeDelta = new Vector2(vL.GetComponent<RectTransform>().sizeDelta.x, 460);
+        }
+        for (int i = 0; i <= AnimationTimer._maxTime / 60; i++)
+        {
+            verticalTimeLines[i].SetActive(true);
+            timeStamps[i].SetActive(true);
+            float posX = UtilitiesTm.FloatRemap(i * 60, 0, AnimationTimer.GetMaxTime(), 0, railwidthAbsolute);
+            verticalTimeLines[i].transform.localPosition = new Vector2(posX, verticalTimeLines[i].transform.localPosition.y);
+            timeStamps[i].transform.localPosition = new Vector2(posX, timeStamps[i].transform.localPosition.y);
+        }
     }
     void Update()
     {
@@ -137,18 +154,21 @@ public class TimeSliderController : MonoBehaviour, IPointerUpHandler, IDragHandl
     }
     public void ChangeMaxLength()
     {
-        JumpToKeyframe tmpJump = GetComponent<JumpToKeyframe>();
-        tmpJump._railPanelsLineDraw[tmpJump._railSelection].GetComponent<DrawCurve>().ChangeCurve();
+        //Figuren neu berechnen (moment berechnen)
+        tmpRailManager.CalculateFigures(_sliderMaxLength.value);
+
         tmpAnimTimer.SetMaxTime(60 * (int)_sliderMaxLength.value);
         _inputSliderLength.text = _sliderMaxLength.value.ToString("0");
         GetComponent<Slider>().maxValue = 60 * _sliderMaxLength.value;
         StaticSceneData.StaticData.pieceLength = int.Parse(_inputSliderLength.text);
 
+        // update rail keyframes
+        JumpToKeyframe tmpJump = GetComponent<JumpToKeyframe>();
         //delete keyframes later than max time
-        tmpJump.DeleteCurrentKeyframe(true);
+        tmpJump.DeleteKeyframeFromChangeMaxLength();
 
-        //Figuren neu berechnen (moment berechnen)
-        tmpRailManager.CalculateFigures(_sliderMaxLength.value);
+        //update Light
+        tmpLightAnim.ChangeImage();
 
         // update music
         for (int j = 0; j < tmpRailMusicManager.myObjects.Count; j++)
@@ -165,6 +185,27 @@ public class TimeSliderController : MonoBehaviour, IPointerUpHandler, IDragHandl
 
             tmpRailMusicManager.myObjects[j].position = new Vector2(posX, rectSize);
         }
+
+
+
+        //update vertical time lines
+        for (int i = 0; i < verticalTimeLines.Length; i++)
+        {
+            verticalTimeLines[i].SetActive(false);
+            timeStamps[i].SetActive(false);
+        }
+
+        for (int i = 0; i <= AnimationTimer._maxTime / 60; i++)
+        {
+            verticalTimeLines[i].SetActive(true);
+            timeStamps[i].SetActive(true);
+            float posX = UtilitiesTm.FloatRemap(i * 60, 0, AnimationTimer.GetMaxTime(), 0, railwidthAbsolute);
+            verticalTimeLines[i].transform.localPosition = new Vector2(posX, verticalTimeLines[i].transform.localPosition.y);
+            timeStamps[i].transform.localPosition = new Vector2(posX, timeStamps[i].transform.localPosition.y);
+        }
+
+        //update background
+        tmpBG.ChangeCurve();
     }
     public void PressInfoButton(bool on)
     {

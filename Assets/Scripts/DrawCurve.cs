@@ -63,7 +63,6 @@ public class DrawCurve : MonoBehaviour
     {
         if (_railIndex == ImageTimelineSelection.GetRailNumber())
         {
-            tmpRailManager.CalculateFigures(-1);
             float valueSliderValue = _valueSlider.value;
             float valueMoment = AnimationTimer.GetTime();
             int momentIndex = StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds.FindIndex(mom => mom.moment == valueMoment);     //hier spezifisches RailElement, das kann dann entsprechend ge�ndert werden
@@ -81,6 +80,7 @@ public class DrawCurve : MonoBehaviour
             StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds.Sort((x, y) => x.moment.CompareTo(y.moment));   // sortiert die railElementSpeeds anhand der Eigenschaft moment
 
             ChangeCurve();
+            tmpRailManager.CalculateFigures(-1);
         }
     }
     public void ChangeCurve()
