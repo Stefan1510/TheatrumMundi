@@ -19,12 +19,10 @@ public class CoulissesManager : MonoBehaviour
     [HideInInspector] public bool[] isWide, isHighlighted, isMirrored;
     public TextMeshProUGUI[] coulisseCounter;
     #endregion
-
     #region private variables
     [SerializeField] private GameObject[] rails;
     [SerializeField] GameObject scrollViewScenery, liveView;
     [SerializeField] PressHelp helpButton;
-
     int currentObjectIndex, clickInSettingsWindow;
     bool dragging;
     private bool sliding;
@@ -34,10 +32,8 @@ public class CoulissesManager : MonoBehaviour
     private int currentTabIndex, publicSibling;
     private bool objectInRail, clickOnDelete, clickCoulisseFromShelf;
     private float railMinX;
-    //private float _timerCoulisse = 1;
     Vector2 diff;
     private float railMinY, currentLossyScale;
-    //private int _counterTouched;
     #endregion
     public void Awake()
     {
@@ -75,7 +71,6 @@ public class CoulissesManager : MonoBehaviour
                 shelfSizeWidth[i] = Screen.width * 0.104f / coulisses[i].transform.lossyScale.x;
                 coulisses[i].GetComponent<RectTransform>().sizeDelta = new Vector2(Screen.width * 0.104f / coulisses[i].transform.lossyScale.x, Screen.height * 0.185f / coulisses[i].GetComponent<CoulisseStats>().CoulisseWidth * coulisses[i].GetComponent<CoulisseStats>().CoulisseHeight / coulisses[i].transform.lossyScale.x);
                 coulisses[i].transform.parent.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(Screen.width * 0.104f / coulisses[i].transform.lossyScale.x, shelfSizeHeight[i]);
-                // coulisses[i].GetComponent<BoxCollider2D>().size = new Vector2(Screen.width * 0.104f, shelfSizeHeight[i]);
             }
             parentStart[i] = coulisses[i].transform.parent.gameObject;
             coulisses[i].GetComponent<RectTransform>().localPosition = new Vector2(0.0f, -coulisses[i].GetComponent<RectTransform>().rect.height / 2);

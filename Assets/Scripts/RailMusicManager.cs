@@ -41,7 +41,7 @@ public class RailMusicManager : MonoBehaviour
     Vector2 releaseObjMousePos, diff;
     double minX, maxX;
     private float railWidthAbsolute = 1670.4f, railWidth;
-    int maxTimeInSec, currentClip;
+    int currentClip;
     GameObject[] figureObjects;
     [SerializeField] TextMeshProUGUI[] figCounterCircle;
     public Image[] sampleImages;
@@ -71,8 +71,6 @@ public class RailMusicManager : MonoBehaviour
     #endregion
     void Awake()
     {
-        //minX = timelineImage.transform.position.x;
-        //maxX = minX + railWidth;
         clip = gameController.GetComponent<SceneDataController>().objectsMusicClips;
         draggingOnTimeline = false;
         draggingObject = false;
@@ -106,8 +104,6 @@ public class RailMusicManager : MonoBehaviour
         currentLossyScale = 1.0f;
 
         ResetScreenSize();
-        timelineImage.GetComponent<RectTransform>().sizeDelta = new Vector2(railWidthAbsolute, 20);
-        gameObject.GetComponent<BoxCollider2D>().size = new Vector2(railWidthAbsolute, 20);
 
         audioSource = GetComponent<AudioSource>();
         if (SceneManaging.isExpert)
@@ -117,11 +113,10 @@ public class RailMusicManager : MonoBehaviour
                 figCounterCircle[i].text = "0";
             }
         }
-
-        maxTimeInSec = (int)AnimationTimer.GetMaxTime();
     }
     public void OpenTimelineByClick(bool thisTimelineOpen, bool fromShelf)
     {
+        // open Music Tab
         if (fromShelf == false && SceneManaging.mainMenuActive == 2 && SceneManaging.directorMenueActive != 3)
         {
             UICanvas.GetComponent<ObjectShelfAll>().ButtonShelf07(true);
@@ -129,9 +124,7 @@ public class RailMusicManager : MonoBehaviour
         if (thisTimelineOpen)
         {
             for (int i = 0; i < myObjects.Count; i++)
-            {
                 SceneManaging.highlight(myObjects[i].musicPiece, false);
-            }
         }
         else
         {
@@ -144,11 +137,6 @@ public class RailMusicManager : MonoBehaviour
                     contentRailsMenue.rails[i].GetComponent<BoxCollider2D>().size = new Vector2(timelineImage.GetComponent<BoxCollider2D>().size.x, 20);
                     contentRailsMenue.railList[i].isTimelineOpen = false;
                     contentRailsMenue.OpenCloseObjectInTimeline(contentRailsMenue.railList[i].myObjects, i, true);
-
-                    // for (int j = 0; j < contentRailsMenue.railList[i].myObjects.Count; j++)
-                    // {
-                    //     SceneManaging.highlight(contentRailsMenue.railList[i].myObjects[j].figure3D, contentRailsMenue.railList[i].myObjects[j].figure, false, "figure");
-                    // }
                 }
             }
             for (int k = 0; k < 2; k++)

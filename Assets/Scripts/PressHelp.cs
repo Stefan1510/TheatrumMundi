@@ -14,6 +14,7 @@ public class PressHelp : MonoBehaviour
     [SerializeField] private GameObject flyer;
     [SerializeField] private GameObject liveView;
     [SerializeField] private GameObject codeReminder;
+    [SerializeField] private GameObject helpOverlaySave1, helpOverlaySave2, helpOverlaySave3;
 
     public GameObject _arrowHelp;
     GameObject _timeSliderBubble;
@@ -61,6 +62,15 @@ public class PressHelp : MonoBehaviour
             }
             throw;
         }
+
+        //destroy save-helpOverlays, because they are not there in Expert Version
+        if (SceneManaging.isExpert)
+        {
+            Destroy(helpOverlaySave1);
+            Destroy(helpOverlaySave2);
+            Destroy(helpOverlaySave3);
+        }
+
     }
     private void HelpAnimation()
     {
@@ -141,11 +151,6 @@ public class PressHelp : MonoBehaviour
                         _tutorialCounter = 0;
                         helpOverlayMenue2.transform.GetChild(0).gameObject.SetActive(true);
                     }
-                    /*else if (SceneManaging.mainMenuActive == 2 && SceneManaging.directorMenueActive == 2)    // (light director) verworfen
-                    {
-                        helpOverlayMenue2.SetActive(true);
-                        Debug.Log("overlay 6");
-                    }*/
                     else if (SceneManaging.mainMenuActive == 1 && SceneManaging.configMenueActive == 3)  // licht
                     {
                         helpOverlayMenue3.SetActive(true);
@@ -281,16 +286,31 @@ public class PressHelp : MonoBehaviour
                     _publicHelpMenue.transform.GetChild(i).gameObject.SetActive(false);
                 }
                 _publicHelpMenue.transform.GetChild(_tutorialCounter).gameObject.SetActive(true);
+
                 // timeslider tutorial for object menu
                 if (_publicHelpMenue == helpOverlayMenue5)
                 {
-                    if (_tutorialCounter == 5) // timeslider
+                    if (_tutorialCounter == 0)   // visitor/expert version shelf
+                    {
+                        if (!SceneManaging.isExpert)
+                            helpOverlayMenue5.transform.GetChild(0).GetChild(0).gameObject.SetActive(true);
+                        else
+                            helpOverlayMenue5.transform.GetChild(0).GetChild(1).gameObject.SetActive(true);
+                    }
+                    else if(_tutorialCounter==3) // visitor/expert version figures direction
+                    {
+                        if(!SceneManaging.isExpert)
+                        helpOverlayMenue5.transform.GetChild(3).GetChild(0).gameObject.SetActive(true);
+                        else
+                        helpOverlayMenue5.transform.GetChild(3).GetChild(1).gameObject.SetActive(true);
+                    }
+                    else if (_tutorialCounter == 4) // timeslider
                     {
                         _timeSliderBubble.transform.position = _timeSliderPlayButton.transform.position;
                         maskTimeSlider.SetActive(true);
                         _timeSliderBubble.GetComponent<RectTransform>().anchoredPosition = new Vector2(_timeSliderBubble.GetComponent<RectTransform>().anchoredPosition.x, 13);
                     }
-                    else if (_tutorialCounter == 6) // nach timeslider
+                    else if (_tutorialCounter == 5) // nach timeslider
                     {
                         maskTimeSlider.SetActive(false);
                     }
@@ -298,15 +318,33 @@ public class PressHelp : MonoBehaviour
                 // timeslider tutorial for music menu
                 else if (_publicHelpMenue == helpOverlayMenue6)
                 {
-                    if (_tutorialCounter == 2) // timeslider
+                    if (_tutorialCounter == 0)   // visitor/expert version
+                    {
+                        if (!SceneManaging.isExpert)
+                            helpOverlayMenue6.transform.GetChild(0).GetChild(0).gameObject.SetActive(true);
+                        else
+                            helpOverlayMenue6.transform.GetChild(0).GetChild(1).gameObject.SetActive(true);
+                    }
+                    else if (_tutorialCounter == 2) // timeslider
                     {
                         _timeSliderBubble.transform.position = _timeSliderPlayButton.transform.position;
                         maskTimeSlider.SetActive(true);
                         _timeSliderBubble.GetComponent<RectTransform>().anchoredPosition = new Vector2(_timeSliderBubble.GetComponent<RectTransform>().anchoredPosition.x, 13);
                     }
-                    else if (_tutorialCounter == 3) // nach timeslider
+                }
+                // expert/visitor for coulisses
+                else if (_publicHelpMenue == helpOverlayMenue2)
+                {
+                    if (_tutorialCounter == 0)
                     {
-                        maskTimeSlider.SetActive(false);
+                        if (!SceneManaging.isExpert)
+                        {
+                            helpOverlayMenue2.transform.GetChild(0).GetChild(0).gameObject.SetActive(true);
+                        }
+                        else
+                        {
+                            helpOverlayMenue2.transform.GetChild(0).GetChild(1).gameObject.SetActive(true);
+                        }
                     }
                 }
                 _tutorialCounter++;
@@ -314,6 +352,7 @@ public class PressHelp : MonoBehaviour
             }
             else
             {
+                maskTimeSlider.SetActive(false);
                 try
                 {
                     tutorialCountImage.SetActive(false);
@@ -397,7 +436,6 @@ public class PressHelp : MonoBehaviour
                 }
                 else if (SceneManaging.fullscreenOn)
                 {
-                    Debug.Log("hi");
                     liveView.SetActive(false);
                     SceneManaging.fullscreenOn = false;
                 }

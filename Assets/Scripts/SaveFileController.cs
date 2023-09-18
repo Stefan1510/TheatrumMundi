@@ -24,21 +24,20 @@ public class SaveFileController : MonoBehaviour
     [SerializeField] private GameObject _visitorPanelSave;
     [SerializeField] private GameObject codeReminder;
     [SerializeField] private TextMeshProUGUI codeReminderText;
-    [SerializeField] private Image imgCodeReminder;
+    // [SerializeField] private Image imgCodeReminder;
     public InputField inputFieldShowCode, inputFieldShowCodeVisitor;
     [SerializeField] GameObject _showSavedCode;
     public Button fileSelectButton; // prefab
     private List<Button> _buttonsFileList = new List<Button>();
     public Text textFileMetaData, textFileContentData, textShowCode;
     private SceneData tempSceneData;
-    private string _selectedFile, _directorySaves, _basepath;
+    private string _selectedFile, _basepath;
     private bool loadFromAwake;
     private int _loadSaveNew;   // 0 = new, 1 = save, 2 = load
     private string code;
     private Color col_green = new Color32(64, 192, 16, 192);
     private string characters = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ";
-    private bool _animateCodeReminder, _biggerSmaller;
-    private float _helper = 10;
+    private bool _biggerSmaller;
     private float _codeTimer;
     #endregion
     private void Start()
@@ -67,7 +66,6 @@ public class SaveFileController : MonoBehaviour
         }
         SceneManaging.isPreviewLoaded = true;
         loadFromAwake = true;
-        _directorySaves = "Saves";
 
         tmpCoulissesManager.Awake();
     }
@@ -77,44 +75,15 @@ public class SaveFileController : MonoBehaviour
         {
             _codeTimer += Time.deltaTime;
             if (_codeTimer <= 0.25f)
-            {
                 codeReminderText.transform.localScale = new Vector2(codeReminderText.transform.localScale.x + 0.1f, codeReminderText.transform.localScale.y + 0.1f);
-                imgCodeReminder.gameObject.transform.localScale = codeReminderText.transform.localScale;
-            }
             else if (_codeTimer > 0.25f && codeReminderText.transform.localScale.x > 1)
-            {
                 codeReminderText.transform.localScale = new Vector2(codeReminderText.transform.localScale.x - 0.1f, codeReminderText.transform.localScale.y - 0.1f);
-                imgCodeReminder.gameObject.transform.localScale = codeReminderText.transform.localScale;
-            }
-            imgCodeReminder.color = new Color(imgCodeReminder.color.r, imgCodeReminder.color.g, imgCodeReminder.color.b, imgCodeReminder.color.a - 0.08f);
 
         }
         else if (_biggerSmaller)
         {
             _biggerSmaller = false;
-            _animateCodeReminder = true;
             _codeTimer = 0;
-        }
-
-        if (_animateCodeReminder && codeReminder.transform.localPosition.y < 514 && !SceneManaging.isExpert)
-        {
-            _helper += 0.5f;
-            if (codeReminder.transform.localPosition.x < 300)
-            {
-                imgCodeReminder.color = new Color(imgCodeReminder.color.r, imgCodeReminder.color.g, imgCodeReminder.color.b, imgCodeReminder.color.a - 0.08f);
-                codeReminder.transform.localPosition = new Vector2(codeReminder.transform.localPosition.x + _helper / 1.2f, codeReminder.transform.localPosition.y + _helper);
-            }
-            else
-                codeReminder.transform.localPosition = new Vector2(codeReminder.transform.localPosition.x, codeReminder.transform.localPosition.y + _helper);
-            imgCodeReminder.gameObject.transform.localPosition = codeReminderText.transform.localPosition;
-
-        }
-        else if (_animateCodeReminder)
-        {
-            _animateCodeReminder = false;
-            codeReminder.transform.localPosition = new Vector2(300, 514);
-            codeReminder.GetComponent<Image>().enabled = true;
-            codeReminder.transform.GetChild(2).gameObject.SetActive(true);
         }
     }
     public void SaveSceneToFile(int overwrite) // 0=save, 1=overwrite, 2=save with number behind
@@ -304,7 +273,7 @@ public class SaveFileController : MonoBehaviour
 
         if (!SceneManaging.isExpert)
         {
-            StartCoroutine(LoadFileFromWWW(fileName, ""));
+            StartCoroutine(LoadFileFromWWW(fileName, "fromCode"));
         }
         else
         {
@@ -398,50 +367,15 @@ public class SaveFileController : MonoBehaviour
                         // wenn die ersten 6 zeichen mit denen des eingegebenen codes uebereinstimmen
                         if (fileEntry.ToLower().Substring(0, 6) == code.ToLower())
                         {
-                            // if (SceneManaging.isExpert)
-                            // {
-                            //     // wenn schon szenen geladen wurden
-                            //     if (!string.IsNullOrEmpty(loadedFiles))
-                            //     {
-                            //         if (loadedFiles.ToLower().Contains(code.ToLower()))
-                            //         {
-                            //             panelWarningInput.SetActive(true);
-                            //             panelWarningInput.transform.GetChild(1).GetComponent<Text>().text = "Du hast diese Szene bereits geladen.";
-                            //         }
-                            //         // szene wurde noch nicht geladen
-                            //         else
-                            //         {
-                            //             ClearFileButtons();
-                            //             LoadSceneFromFile(fileEntry, true, null);
-                            //             loadedFiles += fileEntry + ",";
-                            //         }
-                            //         found = true;
-                            //         ClosePanelShowCode(_visitorPanelSave);
-                            //     }
-                            //     // wenn noch keine szenen geladen wurden
-                            //     else
-                            //     {
-                            //         ClearFileButtons();
-                            //         LoadSceneFromFile(fileEntry, true, null);
-                            //         loadedFiles += fileEntry + ",";
-                            //         found = true;
-                            //         ClosePanelShowCode(_visitorPanelSave);
-                            //     }
-                            // }
-                            // else
-                            // {
-                            ClearFileButtons();
                             LoadSceneFromFile(fileEntry, true, null);
                             found = true;
                             ClosePanelShowCode(_visitorPanelSave);
-                            // }
                         }
                     }
                 }
                 if (!found)
                 {
                     panelWarningInput.SetActive(true);
-                    //panelWarningInput.transform.GetChild(1).GetComponent<Text>().text = "Die Szene wurde nicht gefunden.";
                     panelWarningInput.GetComponent<Text>().text = "Die Szene wurde nicht gefunden.";
                 }
             }
@@ -522,7 +456,7 @@ public class SaveFileController : MonoBehaviour
         writer.Write(json);
         writer.Close();
     }
-    public IEnumerator LoadFileFromWWW(string fileName, string status) //bool fromCode, bool fromFlyer)
+    public IEnumerator LoadFileFromWWW(string fileName, string status)
     {
         SceneDataController tmpSceneDataController = GetComponent<SceneDataController>();
         // UnityWebRequest uwr = UnityWebRequest.Get(_basepath + "Saves/" + fileName);
@@ -754,7 +688,5 @@ public class SaveFileController : MonoBehaviour
         codeReminder.transform.localPosition = new Vector2(-209, -43);
         codeReminder.GetComponent<Image>().enabled = false;
         codeReminder.transform.GetChild(2).gameObject.SetActive(false);
-        imgCodeReminder.color = new Color(imgCodeReminder.color.r, imgCodeReminder.color.g, imgCodeReminder.color.b, 1);
-        imgCodeReminder.gameObject.transform.localPosition = codeReminderText.transform.localPosition;
     }
 }

@@ -652,9 +652,7 @@ public class RailManager : MonoBehaviour
         {
             // if timeline is already open, unhighlight all
             for (int i = 0; i < railList[index].myObjects.Count; i++)
-            {
                 SceneManaging.highlight(railList[index].myObjects[i].figure3D, railList[index].myObjects[i].figure, false, "figure");
-            }
         }
         else
         {
@@ -673,7 +671,6 @@ public class RailManager : MonoBehaviour
                     {
                         SceneManaging.highlight(railList[i].myObjects[j].figure3D, railList[i].myObjects[j].figure, false, "figure");
                         railList[i].myObjects[j].figure.GetComponent<BoxCollider2D>().enabled = false;
-                        //Debug.Log("figur: " + railList[i].myObjects[j].objName);
                     }
                 }
             }
