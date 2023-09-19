@@ -20,7 +20,9 @@ public class RailLightManager : MonoBehaviour
     void Start()
     {
         ResetScreenSize();
-        // gameObject.GetComponent<BoxCollider2D>().size = new Vector2(railWidth / gameObject.transform.lossyScale.x, heightClosed / gameObject.transform.lossyScale.x);
+        
+        if (!SceneManaging.isExpert)
+            GetComponent<BoxCollider2D>().enabled = false;
     }
     public void openTimelineByClick(bool thisTimelineOpen)
     {

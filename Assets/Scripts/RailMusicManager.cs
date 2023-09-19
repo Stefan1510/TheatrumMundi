@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
 using TMPro;
+using UTJ.FrameCapturer;
 
 public class RailMusicManager : MonoBehaviour
 {
@@ -26,6 +27,7 @@ public class RailMusicManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI spaceWarning;
     [SerializeField] private Image spaceWarningBorder;
     [SerializeField] private GameObject musicPieceLengthDialog;
+    [SerializeField] private PlayerControls tmpPlayerControls;
     AudioSource audioSource;
     Vector2 objectShelfSize;
     Vector2 screenDifference;
@@ -109,9 +111,7 @@ public class RailMusicManager : MonoBehaviour
         if (SceneManaging.isExpert)
         {
             for (int i = 0; i < figureObjects.Length; i++)
-            {
                 figCounterCircle[i].text = "0";
-            }
         }
     }
     public void OpenTimelineByClick(bool thisTimelineOpen, bool fromShelf)
@@ -179,7 +179,6 @@ public class RailMusicManager : MonoBehaviour
         {
             for (int i = 0; i < musicList.Count; i++)
             {
-                //Debug.Log("name: " + figureList.objName);
                 if (((musicList[i].position.x <= obj.position.x
                 && musicList[i].position.x + musicList[i].position.y >= obj.position.x)
                 || (musicList[i].position.x >= obj.position.x
@@ -193,20 +192,13 @@ public class RailMusicManager : MonoBehaviour
                     val2 = i;
 
                     count++;
-                    //Debug.LogWarning("val2: " + val2 + ", val3: " + val3);
                 }
                 if (count > 1)
                 {
                     if (musicList[val2].layer == musicList[val3].layer)
-                    {
-                        //Debug.Log("count: " + count);
                         count = 1;
-                    }
                     else
-                    {
-                        //Debug.Log("es gibt mehr als eine überlappung auf unterschiedlichen Ebenen");
                         break;
-                    }
                 }
             }
         }
@@ -227,20 +219,13 @@ public class RailMusicManager : MonoBehaviour
                     val2 = i;
 
                     count++;
-                    //Debug.LogWarning("val2: " + val2 + ", val3: " + val3);
                 }
                 if (count > 1)
                 {
                     if (musicList[val2].layer == musicList[val3].layer)
-                    {
-                        //Debug.Log("count: " + count);
                         count = 1;
-                    }
                     else
-                    {
-                        //Debug.Log("es gibt mehr als eine überlappung auf unterschiedlichen Ebenen");
                         break;
-                    }
                 }
             }
         }
@@ -308,11 +293,8 @@ public class RailMusicManager : MonoBehaviour
         for (int i = 0; i < myObjects.Count; i++)
         {
             if (myObjects[i].objName != mus.objName)
-            {
                 listWithoutCurrentFigure.Add(myObjects[i]);
-            }
         }
-        //Debug.Log("liste ohne current figure: " + listWithoutCurrentFigure.Count);
     }
     public void RemoveObjectFromTimeline(MusicPiece obj)
     {
@@ -325,9 +307,7 @@ public class RailMusicManager : MonoBehaviour
         for (int j = 0; j < StaticSceneData.StaticData.musicClipElements[Int32.Parse(obj.musicPiece.name.Substring(6, 2)) - 1].musicClipElementInstances.Count; j++)
         {
             if (StaticSceneData.StaticData.musicClipElements[Int32.Parse(obj.musicPiece.name.Substring(6, 2)) - 1].musicClipElementInstances[j].instanceNr == int.Parse(obj.musicPiece.name.Substring(17)))
-            {
                 StaticSceneData.StaticData.musicClipElements[Int32.Parse(obj.musicPiece.name.Substring(6, 2)) - 1].musicClipElementInstances.Remove(StaticSceneData.StaticData.musicClipElements[Int32.Parse(obj.musicPiece.name.Substring(6, 2)) - 1].musicClipElementInstances[j]);
-            }
         }
 
         Destroy(obj.musicPiece);
@@ -346,6 +326,7 @@ public class RailMusicManager : MonoBehaviour
         }
         myObjects = myObjects.OrderBy(x => x.position.x).ToList();
         SceneManaging.CalculateNeighbors(myObjects);
+        musicPieceLengthDialog.SetActive(false);
     }
     private void LoopRight(int startIdx, MusicPiece mus, bool fromLeft)
     {
@@ -356,50 +337,34 @@ public class RailMusicManager : MonoBehaviour
             // wenn es einen rechten nachbarn hat (nicht sich selbst!)
             if (listWithoutCurrentFigure[i].neighborRight != -1)
             {
-                //Debug.Log("HAT einen rechten nachbarn");
                 // wenn zwischen den beiden genug platz ist
                 if (listWithoutCurrentFigure[listWithoutCurrentFigure[i].neighborRight].position.x + 1 >= listWithoutCurrentFigure[i].position.x + listWithoutCurrentFigure[i].position.y + mus.position.y)
                 {
-                    //Debug.Log("es ist genug platz");
                     if (listWithoutCurrentFigure[i].layer == 1)
                     {
-                        //Debug.Log("layer 1");
                         SceneManaging.scaleToLayerSize(mus.musicPiece, 1, gameObject, mus.position.y, false);
                         mus.layer = 1;
                     }
                     else
                     {
-                        //Debug.Log("layer 2");
                         SceneManaging.scaleToLayerSize(mus.musicPiece, 2, gameObject, mus.position.y, false);
                         mus.layer = 2;
                     }
-
                     rectTransform.anchoredPosition = new Vector2(listWithoutCurrentFigure[i].position.x + listWithoutCurrentFigure[i].position.y, rectTransform.anchoredPosition.y);
-
                     break;
-                }
-                else
-                {
-                    //Debug.Log("nicht genug platz. x: " + (listWithoutCurrentFigure[listWithoutCurrentFigure[i].neighborRight].position.x) + ", Figur: " + (listWithoutCurrentFigure[i].position.x + listWithoutCurrentFigure[i].position.y + mus.position.y));
-                    // hier passiert nichts, es muss weiter gesucht werden
                 }
             }
             else
             {
-                //Debug.Log("platz bis rand: " + (listWithoutCurrentFigure[i].position.x + listWithoutCurrentFigure[i].position.y + rectSize) + ", rand: " + railwidthAbsolute);
-
-                //Debug.Log("hat KEINEN rechten nachbarn");
                 if (listWithoutCurrentFigure[i].position.x + listWithoutCurrentFigure[i].position.y + mus.position.y - 50 < railWidthAbsolute)
                 {
                     if (listWithoutCurrentFigure[i].layer == 1)
                     {
-                        //Debug.Log("layer 1");
                         SceneManaging.scaleToLayerSize(mus.musicPiece, 1, gameObject, mus.position.y, false);
                         mus.layer = 1;
                     }
                     else
                     {
-                        //_Debug.Log("layer 2");
                         SceneManaging.scaleToLayerSize(mus.musicPiece, 2, gameObject, mus.position.y, false);
                         mus.layer = 2;
                     }
@@ -413,24 +378,12 @@ public class RailMusicManager : MonoBehaviour
                     if (!fromLeft)
                     {
                         // hier muss links weitergesucht werden
-                        //Debug.Log("kein platz bis zum rand, es muss links weitergesucht werden");
                         LoopLeft(listWithoutCurrentFigure.Count - 1, mus, true);
                     }
                     else
                     {
-                        ////Debug.Log("alles voll!");
                         if (currentClickedInstanceObjectIndex != -1)
                         {
-                            //Debug.Log("in der timeline");
-                            // wenn maus links vom objekt ist
-                            // if (Input.mousePosition.x < listWithoutCurrentFigure[currentClickedInstanceObjectIndex].figure.GetComponent<RectTransform>().position.x + listWithoutCurrentFigure[currentClickedInstanceObjectIndex].position.y / 2)
-                            // {
-                            //     listWithoutCurrentFigure[currentClickedInstanceObjectIndex].figure.transform.GetChild(0).GetChild(0).GetChild(0).gameObject.SetActive(true);
-                            // }
-                            // else
-                            // {
-                            //     listWithoutCurrentFigure[currentClickedInstanceObjectIndex].figure.transform.GetChild(0).GetChild(0).GetChild(1).gameObject.SetActive(true);
-                            // }
                         }
                         // vom shelf
                         else
@@ -458,20 +411,16 @@ public class RailMusicManager : MonoBehaviour
             // wenn es einen linken nachbarn hat
             if (listWithoutCurrentFigure[i].neighborLeft != -1)
             {
-                //Debug.Log(listWithoutCurrentFigure[i].objName + " HAT einen linken nachbarn: " + listWithoutCurrentFigure[i].neighborLeft);
                 // wenn zwischen den beiden genug platz ist
                 if (listWithoutCurrentFigure[listWithoutCurrentFigure[i].neighborLeft].position.x + listWithoutCurrentFigure[listWithoutCurrentFigure[i].neighborLeft].position.y + mus.position.y <= listWithoutCurrentFigure[i].position.x + 1)
                 {
-                    //Debug.Log("es ist genug platz");
                     if (listWithoutCurrentFigure[i].layer == 1)
                     {
-                        //Debug.Log("layer 1");
                         SceneManaging.scaleToLayerSize(mus.musicPiece, 1, gameObject, mus.position.y, false);
                         mus.layer = 1;
                     }
                     else
                     {
-                        //Debug.Log("layer 2");
                         SceneManaging.scaleToLayerSize(mus.musicPiece, 2, gameObject, mus.position.y, false);
                         mus.layer = 2;
                     }
@@ -481,26 +430,21 @@ public class RailMusicManager : MonoBehaviour
                 }
                 else
                 {
-                    //Debug.Log("nicht genug platz. x: " + (listWithoutCurrentFigure[i].position.x) + ", Figur: " + (listWithoutCurrentFigure[listWithoutCurrentFigure[i].neighborLeft].position.x + listWithoutCurrentFigure[listWithoutCurrentFigure[i].neighborLeft].position.y + mus.position.y));
                     // hier passiert nichts, es muss weiter gesucht werden
                 }
             }
             else
             {
-                //Debug.Log(listWithoutCurrentFigure[i].objName + " hat KEINEN linken nachbarn");
                 if (listWithoutCurrentFigure[i].position.x - mus.position.y > 50)
                 {
-                    //Debug.Log("platz bis rand");
                     if (listWithoutCurrentFigure[i].layer == 1)
                     {
-                        //Debug.Log("layer 1");
                         SceneManaging.scaleToLayerSize(mus.musicPiece, 1, gameObject, mus.position.y, false);
                         mus.layer = 1;
 
                     }
                     else
                     {
-                        //Debug.Log("layer 2");
                         SceneManaging.scaleToLayerSize(mus.musicPiece, 2, gameObject, mus.position.y, false);
                         mus.layer = 2;
                     }
@@ -512,28 +456,13 @@ public class RailMusicManager : MonoBehaviour
                     // hier muss rechts weitergesucht werden
                     if (!fromRight)
                     {
-                        //Debug.Log("kein platz bis zum rand, es muss rechts weitergesucht werden");
                         LoopRight(0, mus, true);
                     }
                     else
                     {
                         // ins shelf zurueck!
-                        //Debug.Log("alles voll!");
                         if (currentClickedInstanceObjectIndex != -1)
                         {
-                            //Debug.Log("in der timeline");
-                            //rectTransform.anchoredPosition = new Vector2(railList[currentRailIndex].myObjects[listWithoutCurrentFigure[i].neighborLeft].position.x + railList[currentRailIndex].myObjects[listWithoutCurrentFigure[i].neighborLeft].position.y, rectTransform.anchoredPosition.y);
-
-                            // wenn maus links vom objekt ist
-                            // if (Input.mousePosition.x < listWithoutCurrentFigure[i].figure.GetComponent<RectTransform>().position.x + listWithoutCurrentFigure[currentClickedInstanceObjectIndex].position.y / 2)
-                            // {
-                            //     listWithoutCurrentFigure[i].figure.transform.GetChild(0).GetChild(0).GetChild(0).gameObject.SetActive(true);
-                            // }
-                            // else
-                            // {
-                            //     listWithoutCurrentFigure[i].figure.transform.GetChild(0).GetChild(0).GetChild(1).gameObject.SetActive(true);
-                            // }
-                            //_toBeRemovedFromTimeline = true;
                         }
                         // vom shelf
                         else
@@ -543,8 +472,6 @@ public class RailMusicManager : MonoBehaviour
                             spaceWarning.enabled = true;
                             spaceWarningBorder.enabled = true;
                             spaceWarningBorder.transform.position = new Vector2(spaceWarning.transform.position.x, gameObject.transform.position.y); _idleTimer = 0;
-                            //Debug.Log("vom shelf");
-                            //WarningAnimation();
                         }
                     }
                     break;
@@ -557,36 +484,27 @@ public class RailMusicManager : MonoBehaviour
         // find out index in the middle
         int middleIdx;
         RectTransform rectTransform = mus.musicPiece.GetComponent<RectTransform>();
-        // //Debug.Log("count: " + listWithoutCurrentmusure.Count);
 
         if (listWithoutCurrentFigure.Count % 2 == 1)
-        {
             middleIdx = ((listWithoutCurrentFigure.Count - 1) / 2);
-        }
         else
-        {
             middleIdx = (listWithoutCurrentFigure.Count / 2);
-        }
 
         // maus ist LINKS vom bereich der figuren
         if (Input.mousePosition.x < listWithoutCurrentFigure[middleIdx].musicPiece.transform.position.x + (listWithoutCurrentFigure[middleIdx].position.y / 2) - 100)
         {
-            //Debug.Log("_________________MAUS LINKS__________________");
             int idx = IsCurrentFigureOverlapping(mus, "left", out countOverlaps, listWithoutCurrentFigure);
             if (countOverlaps == 1)
             {
-                //Debug.Log("hier kann das element frei verschoben werden");
                 // overlapping obj is layer 1, obj needs to be layer 2
                 if (listWithoutCurrentFigure[idx].layer == 1)
                 {
-                    //Debug.Log("layer 1");
                     mus.layer = 2;
                     SceneManaging.scaleToLayerSize(mus.musicPiece, 2, gameObject, mus.position.y, false);
                 }
                 // overlapping obj is layer 2, obj needs to be layer 1
                 else
                 {
-                    //Debug.Log("layer 2");
                     mus.layer = 1;
                     SceneManaging.scaleToLayerSize(mus.musicPiece, 1, gameObject, mus.position.y, false);
                 }
@@ -595,53 +513,41 @@ public class RailMusicManager : MonoBehaviour
             {
                 if (idx != -1)
                 {
-                    //Debug.Log("idx: " + idx);
                     // gibt es ein idx + 1 mit unterschiedlicher Layer?
                     if (idx < listWithoutCurrentFigure.Count - 1 && listWithoutCurrentFigure[idx + 1].layer != listWithoutCurrentFigure[idx].layer
                     && listWithoutCurrentFigure[idx + 1].objName != mus.objName)
                     {
-                        //Debug.Log("es gibt ein idx+1: " + listWithoutCurrentFigure[idx + 1].objName);
                         // hat es einen linken nachbarn? 
                         LoopLeft(idx + 1, mus, false);
                     }
                     else
                     {
-                        //Debug.Log("es gibt kein idx+1");
-
                         LoopLeft(idx, mus, false);
                     }
                 }
                 // nichts ueberlappt
                 else
                 {
-                    //Debug.Log("not overlapping");
-                    // if (mus.layer != 1)
-                    // {
                     SceneManaging.scaleToLayerSize(mus.musicPiece, 1, gameObject, mus.position.y, false);
                     mus.layer = 1;
-                    // }
                 }
             }
         }
         // maus ist RECHTS vom bereich der figuren
         else
         {
-            //Debug.Log("_________________MAUS RECHTS__________________");
             int idx = IsCurrentFigureOverlapping(mus, "right", out countOverlaps, listWithoutCurrentFigure);
             if (countOverlaps == 1)
             {
-                //Debug.Log("hier kann das element frei verschoben werden");
                 // overlapping obj is layer 1, obj needs to be layer 2
                 if (listWithoutCurrentFigure[idx].layer == 1)
                 {
-                    //Debug.Log("layer 1");
                     mus.layer = 2;
                     SceneManaging.scaleToLayerSize(mus.musicPiece, 2, gameObject, mus.position.y, false);
                 }
                 // overlapping obj is layer 2, obj needs to be layer 1
                 else
                 {
-                    //Debug.Log("layer 2");
                     mus.layer = 1;
                     SceneManaging.scaleToLayerSize(mus.musicPiece, 1, gameObject, mus.position.y, false);
                 }
@@ -650,23 +556,19 @@ public class RailMusicManager : MonoBehaviour
             {
                 if (idx != -1)
                 {
-                    //Debug.Log("idx: " + idx);
                     // gibt es ein idx - 1 mit unterschiedlicher Layer?
                     if (idx > 0 && listWithoutCurrentFigure[idx - 1].layer != listWithoutCurrentFigure[idx].layer)
                     {
-                        //Debug.Log("es gibt ein idx-1: " + listWithoutCurrentFigure[idx - 1].objName);
                         // hat es einen rechten nachbarn? 
                         LoopRight(idx - 1, mus, false);
                     }
                     else
                     {
-                        //Debug.Log("es gibt kein idx-1");
                         LoopRight(idx, mus, false);
                     }
                 }
                 else
                 {
-                    //Debug.Log("not overlapping");
                     SceneManaging.scaleToLayerSize(mus.musicPiece, 1, gameObject, mus.position.y, false);
                     mus.layer = 1;
                 }
@@ -742,17 +644,12 @@ public class RailMusicManager : MonoBehaviour
     }
     private void CreateRectangle(GameObject obj, float height, double animLength)
     {
-        //double tmpLength = (maxX - minX) / 614.0f * animLength;
-        //animLength -= 25;
         GameObject imgObject = Instantiate(prefabRect);
         RectTransform trans = imgObject.GetComponent<RectTransform>();
         trans.transform.SetParent(obj.transform); // setting parent
         trans.localScale = Vector3.one;
 
-
         trans.sizeDelta = new Vector2((float)animLength, height); // custom size
-        //Debug.Log("size: " + animLength);
-
         trans.pivot = new Vector2(0.0f, 0.5f);
         //set pivot point of sprite  to left border, so that rect aligns with sprite
         trans.anchorMin = trans.anchorMax = new Vector2(0, 0.5f);
@@ -774,16 +671,16 @@ public class RailMusicManager : MonoBehaviour
         screenDifference = new Vector2(1920.0f / Screen.width, 1080.0f / Screen.height);
 
         if (isTimelineOpen)
-        {
             timelineImage.GetComponent<RectTransform>().sizeDelta = gameObject.GetComponent<BoxCollider2D>().size = new Vector2(railWidthAbsolute, 80);
-        }
         else
-        {
             timelineImage.GetComponent<RectTransform>().sizeDelta = gameObject.GetComponent<BoxCollider2D>().size = new Vector2(railWidthAbsolute, 20);
-        }
     }
     public void PlaySample(int i)
     {
+        if(SceneManaging.playing)
+        {
+            tmpPlayerControls.ButtonPlay();
+        }
         if (sampleButtonPressed == i)
         {
             playingSample = false;
@@ -836,7 +733,6 @@ public class RailMusicManager : MonoBehaviour
         int musicCount = 0;
         for (int i = 0; i < myObjects.Count; i++)
         {
-            //Debug.Log("piece: "+myObjects[i].musicPiece.name);
             double startSec = UtilitiesTm.FloatRemap(myObjects[i].position.x, 0, gameObject.GetComponent<RectTransform>().rect.width, 0, AnimationTimer.GetMaxTime());
             double endSec;
             if (!gameController.GetComponent<UnitySwitchExpertUser>()._isExpert)
@@ -983,6 +879,24 @@ public class RailMusicManager : MonoBehaviour
         }
         catch (NullReferenceException) { }
     }
+    public void CalculateMusic(float timeAfterChange)
+    {
+        for (int j = 0; j < myObjects.Count; j++)
+        {
+            RectTransform tmpRectTransform = myObjects[j].musicPiece.GetComponent<RectTransform>();
+            float tmpMoment = UtilitiesTm.FloatRemap(tmpRectTransform.anchoredPosition.x, 0, railWidthAbsolute, 0, AnimationTimer.GetMaxTime());
+            float objectAnimationLength = myObjects[j].musicPiece.GetComponent<MusicLength>().musicLength;
+            float rectSize = objectAnimationLength / (60 * timeAfterChange) * railWidthAbsolute;
+            float posX = UtilitiesTm.FloatRemap(tmpMoment, 0, timeAfterChange * 60, 0, railWidthAbsolute);
+
+            tmpRectTransform.anchoredPosition = new Vector2(posX, tmpRectTransform.anchoredPosition.y);
+            myObjects[j].position = new Vector2(posX, rectSize);
+            tmpRectTransform.sizeDelta = new Vector2(rectSize, tmpRectTransform.sizeDelta.y);
+            myObjects[j].musicPiece.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(rectSize, tmpRectTransform.sizeDelta.y);
+            myObjects[j].musicPiece.GetComponent<BoxCollider2D>().size = tmpRectTransform.sizeDelta;
+            myObjects[saveIndexForChangePieceLength].musicPiece.GetComponent<BoxCollider2D>().offset = new Vector2(myObjects[saveIndexForChangePieceLength].musicPiece.GetComponent<BoxCollider2D>().size.x/2, myObjects[saveIndexForChangePieceLength].musicPiece.GetComponent<BoxCollider2D>().offset.y);
+        }
+    }
     public void ClickSetMusicPieceLength(bool longer)
     {
         int newLength = 0;
@@ -992,21 +906,15 @@ public class RailMusicManager : MonoBehaviour
         if ((longer && myObjects[saveIndexForChangePieceLength].musicPiece.GetComponent<MusicLength>().musicLength + 30 <= initialPieceLength[nr]) || (!longer && myObjects[saveIndexForChangePieceLength].musicPiece.GetComponent<MusicLength>().musicLength - 30 >= 30))
         {
             if (longer && myObjects[saveIndexForChangePieceLength].musicPiece.GetComponent<MusicLength>().musicLength + 30 <= initialPieceLength[nr])
-            {
                 newLength = 30;
-                // myObjects[currentClickedInstanceObjectIndex].musicPiece.GetComponent<RectTransform>().sizeDelta = new Vector2(, );
-            }
             else if (!longer && myObjects[saveIndexForChangePieceLength].musicPiece.GetComponent<MusicLength>().musicLength - 30 >= 30)
-            {
                 newLength = -30;
-            }
 
             myObjects[saveIndexForChangePieceLength].musicPiece.GetComponent<MusicLength>().musicLength += newLength;
-
             myObjects[saveIndexForChangePieceLength].position.y = UtilitiesTm.FloatRemap(myObjects[saveIndexForChangePieceLength].musicPiece.GetComponent<MusicLength>().musicLength, 0, (float)AnimationTimer.GetMaxTime(), 0, (float)gameObject.GetComponent<RectTransform>().rect.width);
 
-            //  = new Vector2(myObjects[saveIndexForChangePieceLength].position.x, myObjects[saveIndexForChangePieceLength].musicPiece.GetComponent<RectTransform>().sizeDelta.x + newLength);
             SceneManaging.scaleObject(myObjects[saveIndexForChangePieceLength].musicPiece, myObjects[saveIndexForChangePieceLength].position.y, myObjects[saveIndexForChangePieceLength].musicPiece.GetComponent<RectTransform>().sizeDelta.y, false);
+            myObjects[saveIndexForChangePieceLength].musicPiece.GetComponent<BoxCollider2D>().offset = new Vector2(myObjects[saveIndexForChangePieceLength].musicPiece.GetComponent<BoxCollider2D>().size.x/2, myObjects[saveIndexForChangePieceLength].musicPiece.GetComponent<BoxCollider2D>().offset.y);
             myObjects = myObjects.OrderBy(w => w.position.x).ToList();
             SceneManaging.CalculateNeighbors(myObjects);
         }

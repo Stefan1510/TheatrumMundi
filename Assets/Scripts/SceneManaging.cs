@@ -62,7 +62,6 @@ public static class SceneManaging
         //scale the object
         fig.GetComponent<RectTransform>().sizeDelta = new Vector2(x, y);
         fig.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(x, y);
-        //Debug.Log("fig 1: " + fig.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta.x + ", x: " + x);
         fig.transform.GetChild(1).GetComponent<RectTransform>().sizeDelta = new Vector2(100, y);
         //scale the collider, if object has one
         if (fig.GetComponent<BoxCollider2D>() == true)
@@ -76,7 +75,7 @@ public static class SceneManaging
             {
                 //scale the collider, if object has one
                 fig.GetComponent<BoxCollider2D>().enabled = true;
-                fig.GetComponent<BoxCollider2D>().size = new Vector2(fig.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta.x, y);
+                fig.GetComponent<BoxCollider2D>().size = fig.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta;
             }
         }
     }

@@ -25,6 +25,8 @@ public class TimeSliderController : MonoBehaviour, IPointerUpHandler, IDragHandl
     [SerializeField] private UTJ.FrameCapturer.PlayerControls playerCtrls;
     [SerializeField] private GameObject[] verticalTimeLines;
     [SerializeField] private GameObject[] timeStamps;
+    [SerializeField] private GameObject longerTimeslider;
+    [SerializeField] private GameObject blackStripeOverLight;
     private float railwidthAbsolute = 1670.4f;
     private Slider _thisSlider;
     #endregion
@@ -47,6 +49,8 @@ public class TimeSliderController : MonoBehaviour, IPointerUpHandler, IDragHandl
         {
             foreach (GameObject vL in verticalTimeLines)
                 vL.GetComponent<RectTransform>().sizeDelta = new Vector2(vL.GetComponent<RectTransform>().sizeDelta.x, 460);
+            longerTimeslider.SetActive(true);
+            blackStripeOverLight.SetActive(false);
         }
         for (int i = 0; i <= AnimationTimer._maxTime / 60; i++)
         {
@@ -157,6 +161,9 @@ public class TimeSliderController : MonoBehaviour, IPointerUpHandler, IDragHandl
         //Figuren neu berechnen (moment berechnen)
         tmpRailManager.CalculateFigures(_sliderMaxLength.value);
 
+        //Music neu berechnen
+        tmpRailMusicManager.CalculateMusic(_sliderMaxLength.value);
+
         tmpAnimTimer.SetMaxTime(60 * (int)_sliderMaxLength.value);
         _inputSliderLength.text = _sliderMaxLength.value.ToString("0");
         GetComponent<Slider>().maxValue = 60 * _sliderMaxLength.value;
@@ -164,29 +171,12 @@ public class TimeSliderController : MonoBehaviour, IPointerUpHandler, IDragHandl
 
         // update rail keyframes
         JumpToKeyframe tmpJump = GetComponent<JumpToKeyframe>();
+
         //delete keyframes later than max time
         tmpJump.DeleteKeyframeFromChangeMaxLength();
 
         //update Light
         tmpLightAnim.ChangeImage();
-
-        // update music
-        for (int j = 0; j < tmpRailMusicManager.myObjects.Count; j++)
-        {
-            RectTransform tmpRectTransform = tmpRailMusicManager.myObjects[j].musicPiece.GetComponent<RectTransform>();
-            float tmpMoment = UtilitiesTm.FloatRemap(tmpRailMusicManager.myObjects[j].position.x, 0, railwidthAbsolute, 0, AnimationTimer.GetMaxTime());
-            float objectAnimationLength = tmpRailMusicManager.myObjects[j].musicPiece.GetComponent<MusicLength>().musicLength;
-            float rectSize = objectAnimationLength / (60 * _sliderMaxLength.value) * railwidthAbsolute;
-            float posX = UtilitiesTm.FloatRemap(tmpMoment, 0, _sliderMaxLength.value * 60, 0, railwidthAbsolute);
-
-            tmpRectTransform.sizeDelta = new Vector2(rectSize, tmpRectTransform.sizeDelta.y);
-            tmpRailMusicManager.myObjects[j].musicPiece.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(rectSize, tmpRectTransform.sizeDelta.y);
-            tmpRectTransform.anchoredPosition = new Vector2(posX, tmpRectTransform.anchoredPosition.y);
-
-            tmpRailMusicManager.myObjects[j].position = new Vector2(posX, rectSize);
-        }
-
-
 
         //update vertical time lines
         for (int i = 0; i < verticalTimeLines.Length; i++)

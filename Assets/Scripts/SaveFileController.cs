@@ -685,8 +685,5 @@ public class SaveFileController : MonoBehaviour
     public void OnClickCloseCodeReminder()
     {
         codeReminder.SetActive(false);
-        codeReminder.transform.localPosition = new Vector2(-209, -43);
-        codeReminder.GetComponent<Image>().enabled = false;
-        codeReminder.transform.GetChild(2).gameObject.SetActive(false);
     }
 }

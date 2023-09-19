@@ -199,6 +199,8 @@ public class PressHelp : MonoBehaviour
     }
     public void OnClickBack()
     {
+        maskTimeSlider.SetActive(false);
+
         if (_tutorialCounter == 1)
         {
             helpOverlayMenue1.SetActive(false);
@@ -217,7 +219,6 @@ public class PressHelp : MonoBehaviour
         else
         {
             _tutorialCounter -= 2;
-
         }
     }
     public void ClickOnLiveView()
@@ -287,7 +288,7 @@ public class PressHelp : MonoBehaviour
                 }
                 _publicHelpMenue.transform.GetChild(_tutorialCounter).gameObject.SetActive(true);
 
-                // timeslider tutorial for object menu
+                // object menu
                 if (_publicHelpMenue == helpOverlayMenue5)
                 {
                     if (_tutorialCounter == 0)   // visitor/expert version shelf
@@ -297,12 +298,12 @@ public class PressHelp : MonoBehaviour
                         else
                             helpOverlayMenue5.transform.GetChild(0).GetChild(1).gameObject.SetActive(true);
                     }
-                    else if(_tutorialCounter==3) // visitor/expert version figures direction
+                    else if (_tutorialCounter == 3) // visitor/expert version figures direction
                     {
-                        if(!SceneManaging.isExpert)
-                        helpOverlayMenue5.transform.GetChild(3).GetChild(0).gameObject.SetActive(true);
+                        if (!SceneManaging.isExpert)
+                            helpOverlayMenue5.transform.GetChild(3).GetChild(0).gameObject.SetActive(true);
                         else
-                        helpOverlayMenue5.transform.GetChild(3).GetChild(1).gameObject.SetActive(true);
+                            helpOverlayMenue5.transform.GetChild(3).GetChild(1).gameObject.SetActive(true);
                     }
                     else if (_tutorialCounter == 4) // timeslider
                     {
@@ -315,7 +316,7 @@ public class PressHelp : MonoBehaviour
                         maskTimeSlider.SetActive(false);
                     }
                 }
-                // timeslider tutorial for music menu
+                // music menu
                 else if (_publicHelpMenue == helpOverlayMenue6)
                 {
                     if (_tutorialCounter == 0)   // visitor/expert version
@@ -325,11 +326,29 @@ public class PressHelp : MonoBehaviour
                         else
                             helpOverlayMenue6.transform.GetChild(0).GetChild(1).gameObject.SetActive(true);
                     }
-                    else if (_tutorialCounter == 2) // timeslider
+                    else if(_tutorialCounter == 1)
+                    {
+                        if (!SceneManaging.isExpert)
+                            helpOverlayMenue6.transform.GetChild(1).GetChild(0).gameObject.SetActive(true);
+                        else
+                            helpOverlayMenue6.transform.GetChild(1).GetChild(1).gameObject.SetActive(true);
+                    }
+                    else if(_tutorialCounter==2)
+                    {
+                        if (!SceneManaging.isExpert)
+                            helpOverlayMenue6.transform.GetChild(2).GetChild(0).gameObject.SetActive(true);
+                        else
+                            helpOverlayMenue6.transform.GetChild(2).GetChild(1).gameObject.SetActive(true);
+                    }
+                    else if (_tutorialCounter == 3) // timeslider
                     {
                         _timeSliderBubble.transform.position = _timeSliderPlayButton.transform.position;
                         maskTimeSlider.SetActive(true);
                         _timeSliderBubble.GetComponent<RectTransform>().anchoredPosition = new Vector2(_timeSliderBubble.GetComponent<RectTransform>().anchoredPosition.x, 13);
+                    }
+                    else if (_tutorialCounter == 4) // nach timeslider
+                    {
+                        maskTimeSlider.SetActive(false);
                     }
                 }
                 // expert/visitor for coulisses

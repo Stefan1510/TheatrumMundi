@@ -682,6 +682,12 @@ public class CoulissesManager : MonoBehaviour
         PlaceInShelf(i);
         StaticSceneData.StaticData.sceneryElements[i].active = false;
         StaticSceneData.Sceneries3D();
+
+        // update counter
+        for (int j = 0; j < collections.Length; j++)
+        {
+            coulisseCounter[j].text = collections[j].transform.childCount.ToString();
+        }
     }
     private void ShowDeleteButton(GameObject deleteButton, GameObject parent, bool show)
     {

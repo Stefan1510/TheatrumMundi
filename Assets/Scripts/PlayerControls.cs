@@ -26,9 +26,6 @@ namespace UTJ.FrameCapturer
         [SerializeField] private MovieRecorder rec;
         [SerializeField] private GameObject buttonOkay;
 
-        // var controllerSettings = ScriptableObject.CreateInstance<RecorderControllerSettings>();
-        // var TestRecorderController = new RecorderController(controllerSettings);
-
         void Start()
         {
             for (int i = 0; i < aPlayButtons.Length; i++)
@@ -47,7 +44,6 @@ namespace UTJ.FrameCapturer
                 textPercent.text = (AnimationTimer.GetTime()/AnimationTimer._maxTime*100).ToString("0.0")+"%";
                 if(rec.endFrame==rec.m_frame)
                 {
-                    Debug.Log("fertig!");
                     buttonOkay.SetActive(true);
                     rec.EndRecording();
                     textTitle.text="Dein Film ist fertig.";
@@ -103,8 +99,6 @@ namespace UTJ.FrameCapturer
                     break;
                 case AnimationTimer.TimerState.paused:
                     AnimationTimer.StartTimer();
-                    //start music
-                    //tmpRailMusicMan.PlayLatestPiece(true);
                     SceneManaging.playing = true;
                     for (int i = 0; i < aPlayButtons.Length; i++)
                     {

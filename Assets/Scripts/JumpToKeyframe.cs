@@ -155,17 +155,18 @@ public class JumpToKeyframe : MonoBehaviour
     public void DeleteKeyframeFromChangeMaxLength()
     {
         //Rails
-        for (int i = 0; i < StaticSceneData.StaticData.railElements.Count; i++)
+        for (int i = 0; i < StaticSceneData.StaticData.railElements.Count-2; i++)   // rails sind 8, aber panels fuer die geschwindigkeiten nur 6
         {
             for (int j = 0; j < StaticSceneData.StaticData.railElements[i].railElementSpeeds.Count; j++)
             {
                 if (StaticSceneData.StaticData.railElements[i].railElementSpeeds[j].moment > AnimationTimer._maxTime)
                 {
                     StaticSceneData.StaticData.railElements[i].railElementSpeeds.Remove(StaticSceneData.StaticData.railElements[i].railElementSpeeds[j]);
-                    _railPanelsLineDraw[i].GetComponent<DrawCurve>().ChangeCurve();
                 }
             }
+            _railPanelsLineDraw[i].GetComponent<DrawCurve>().ChangeCurve();
         }
+
         // Light
         for (int i = 0; i < StaticSceneData.StaticData.lightingSets.Count; i++)
         {
@@ -175,6 +176,7 @@ public class JumpToKeyframe : MonoBehaviour
                 _panelColorGradient.GetComponent<LightAnimationRepresentation>().ChangeImage();
             }
         }
+        
         //BackgroundPosition
         for (int j = 0; j < StaticSceneData.StaticData.backgroundPositions.Count; j++)
         {
