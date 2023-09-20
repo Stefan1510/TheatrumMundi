@@ -89,6 +89,7 @@ public class CoulissesManager : MonoBehaviour
     void Start()
     {
         SetIndexTabActive(0);
+        HighlightRail(true);
     }
     void Update()
     {

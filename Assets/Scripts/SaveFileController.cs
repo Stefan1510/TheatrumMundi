@@ -459,9 +459,6 @@ public class SaveFileController : MonoBehaviour
     public IEnumerator LoadFileFromWWW(string fileName, string status)
     {
         SceneDataController tmpSceneDataController = GetComponent<SceneDataController>();
-        // UnityWebRequest uwr = UnityWebRequest.Get(_basepath + "Saves/" + fileName);
-        // yield return uwr;
-        // _jsonString = uwr.downloadHandler.text;
         WWW www = new WWW(_basepath + "Saves/" + fileName);
         yield return www;
         _jsonString = www.text;
@@ -488,7 +485,7 @@ public class SaveFileController : MonoBehaviour
         if (status == "fromCode" && !SceneManaging.isExpert)
         {
             LoadSceneFromTempToStatic();
-            _canvas.GetComponent<ObjectShelfAll>().ButtonShelf02();
+            //_canvas.GetComponent<ObjectShelfAll>().ButtonShelf02();
         }
 
         else if (status == "fromFlyerCreate")

@@ -677,7 +677,7 @@ public class RailMusicManager : MonoBehaviour
     }
     public void PlaySample(int i)
     {
-        if(SceneManaging.playing)
+        if (SceneManaging.playing)
         {
             tmpPlayerControls.ButtonPlay();
         }
@@ -894,7 +894,7 @@ public class RailMusicManager : MonoBehaviour
             tmpRectTransform.sizeDelta = new Vector2(rectSize, tmpRectTransform.sizeDelta.y);
             myObjects[j].musicPiece.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(rectSize, tmpRectTransform.sizeDelta.y);
             myObjects[j].musicPiece.GetComponent<BoxCollider2D>().size = tmpRectTransform.sizeDelta;
-            myObjects[saveIndexForChangePieceLength].musicPiece.GetComponent<BoxCollider2D>().offset = new Vector2(myObjects[saveIndexForChangePieceLength].musicPiece.GetComponent<BoxCollider2D>().size.x/2, myObjects[saveIndexForChangePieceLength].musicPiece.GetComponent<BoxCollider2D>().offset.y);
+            myObjects[saveIndexForChangePieceLength].musicPiece.GetComponent<BoxCollider2D>().offset = new Vector2(myObjects[saveIndexForChangePieceLength].musicPiece.GetComponent<BoxCollider2D>().size.x / 2, myObjects[saveIndexForChangePieceLength].musicPiece.GetComponent<BoxCollider2D>().offset.y);
         }
     }
     public void ClickSetMusicPieceLength(bool longer)
@@ -914,7 +914,7 @@ public class RailMusicManager : MonoBehaviour
             myObjects[saveIndexForChangePieceLength].position.y = UtilitiesTm.FloatRemap(myObjects[saveIndexForChangePieceLength].musicPiece.GetComponent<MusicLength>().musicLength, 0, (float)AnimationTimer.GetMaxTime(), 0, (float)gameObject.GetComponent<RectTransform>().rect.width);
 
             SceneManaging.scaleObject(myObjects[saveIndexForChangePieceLength].musicPiece, myObjects[saveIndexForChangePieceLength].position.y, myObjects[saveIndexForChangePieceLength].musicPiece.GetComponent<RectTransform>().sizeDelta.y, false);
-            myObjects[saveIndexForChangePieceLength].musicPiece.GetComponent<BoxCollider2D>().offset = new Vector2(myObjects[saveIndexForChangePieceLength].musicPiece.GetComponent<BoxCollider2D>().size.x/2, myObjects[saveIndexForChangePieceLength].musicPiece.GetComponent<BoxCollider2D>().offset.y);
+            myObjects[saveIndexForChangePieceLength].musicPiece.GetComponent<BoxCollider2D>().offset = new Vector2(myObjects[saveIndexForChangePieceLength].musicPiece.GetComponent<BoxCollider2D>().size.x / 2, myObjects[saveIndexForChangePieceLength].musicPiece.GetComponent<BoxCollider2D>().offset.y);
             myObjects = myObjects.OrderBy(w => w.position.x).ToList();
             SceneManaging.CalculateNeighbors(myObjects);
         }
@@ -1358,7 +1358,13 @@ public class RailMusicManager : MonoBehaviour
             {
                 RemoveObjectFromTimeline(myObjects[currentClickedInstanceObjectIndex]);
             }
-
+            else if (SceneManaging.updateMusic)
+            {
+                SceneManaging.updateMusic = false;
+                audioSource.Stop();
+                audioSource.Play();
+                audioSource.volume = 1.0f;
+            }
             ///////////////////////////////////////////////////////////////////////////////////////////////////////
             //Save musictitle.moment to SceneData:
             for (int i = 0; i < myObjects.Count; i++)
