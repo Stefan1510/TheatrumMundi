@@ -124,7 +124,10 @@ public class RailMusicManager : MonoBehaviour
         if (thisTimelineOpen)
         {
             for (int i = 0; i < myObjects.Count; i++)
+            {
                 SceneManaging.highlight(myObjects[i].musicPiece, false);
+                musicPieceLengthDialog.SetActive(false);
+            }
         }
         else
         {
@@ -994,7 +997,11 @@ public class RailMusicManager : MonoBehaviour
                 {
                     //wenn neues objekt genommen wird, soll altes aktuelles objekt unhighlighted werden
                     for (int j = 0; j < myObjects.Count; j++)
+                    {
                         SceneManaging.highlight(myObjects[j].musicPiece, false);
+                musicPieceLengthDialog.SetActive(false);
+
+                    }
 
                     if (!SceneManaging.sceneChanged)
                         SceneManaging.sceneChanged = true;
@@ -1027,7 +1034,6 @@ public class RailMusicManager : MonoBehaviour
                             && getMousePos.y >= pos.y - rect.sizeDelta.y / 2.5f && getMousePos.y <= pos.y + rect.sizeDelta.y / 2.5f)
                         {
                             _toBeRemovedFromTimeline = true;
-                            //Debug.Log("delete");
                         }
                         diff = new Vector2(getMousePos.x - myObjects[currentClickedInstanceObjectIndex].musicPiece.transform.position.x, getMousePos.y - myObjects[currentClickedInstanceObjectIndex].musicPiece.transform.position.y);
 
@@ -1037,7 +1043,10 @@ public class RailMusicManager : MonoBehaviour
 
                         //highlighting objects and showing delete button when clicked
                         if (SceneManaging.highlighted == false)
+                        {
                             SceneManaging.highlight(myObjects[currentClickedInstanceObjectIndex].musicPiece, true);
+                            musicPieceLengthDialog.SetActive(true);
+                        }
                         else
                         {
                             for (int i = 0; i < myObjects.Count; i++)
@@ -1053,7 +1062,10 @@ public class RailMusicManager : MonoBehaviour
                     musicPieceLengthDialog.SetActive(false);
                     musicLengthClicked = false;
                     for (int i = 0; i < myObjects.Count; i++)
+                    {
                         SceneManaging.highlight(myObjects[i].musicPiece, false);
+                musicPieceLengthDialog.SetActive(false);
+                    }
                 }
             }
         }

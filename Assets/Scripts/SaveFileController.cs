@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.Networking;
 using System.IO;
 using TMPro;
+using UnityEditor;
 
 public class SaveFileController : MonoBehaviour
 {
@@ -20,7 +21,6 @@ public class SaveFileController : MonoBehaviour
     [SerializeField] GameObject _borderWarning, _borderLoad;
     [SerializeField] Text _placeholderTextWarning;
     [SerializeField] GameObject warningPanel;
-    [SerializeField] private GameObject _canvas;
     [SerializeField] private GameObject _visitorPanelSave;
     [SerializeField] private GameObject codeReminder;
     [SerializeField] private TextMeshProUGUI codeReminderText;
@@ -62,6 +62,14 @@ public class SaveFileController : MonoBehaviour
             _basepath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments);
             _basepath += "\\theatrum mundi";
 
+            // json aus dem projekt in den save ordner ziehen
+            string path = Application.dataPath + "/json-Files";
+            if (!File.Exists(_basepath + "/#Musterszene.json"))
+            {
+                FileUtil.CopyFileOrDirectory(path + "/#Musterszene.json", _basepath + "/#Musterszene.json");
+                FileUtil.CopyFileOrDirectory(path + "/#Musterszene_leer.json", _basepath + "/#Musterszene_leer.json");
+            }
+
             ShowFilesFromDirectory();
         }
         SceneManaging.isPreviewLoaded = true;
@@ -92,7 +100,7 @@ public class SaveFileController : MonoBehaviour
         string filePath = "";
         SceneData sceneDataSave = GetComponent<SceneDataController>().CreateSceneData(false);
 
-        if (!SceneManaging.isExpert)
+        if (!SceneManaging.isExpert)    // Besucherversion
         {
             StaticSceneData.StaticData.fileName = sceneDataSave.fileName;
             StaticSceneData.StaticData.fileAuthor = sceneDataSave.fileAuthor;
@@ -126,6 +134,7 @@ public class SaveFileController : MonoBehaviour
 
                 if (overwrite == 0) // auf speichern geklickt
                 {
+                    Debug.Log("0");
                     if (_buttonsFileList.Count > 0)
                     {
                         foreach (Button btn in _buttonsFileList)
@@ -137,30 +146,27 @@ public class SaveFileController : MonoBehaviour
                                 foundName = true;
                             }
                         }
-                        if (!foundName) // wenn name nicht gefunden wurde
+                    }
+                    if (!foundName) // wenn name nicht gefunden wurde
+                    {
+                        // wenn kein Name eingegeben wurde
+                        if (string.IsNullOrEmpty(sceneDataSave.fileName.ToString())) // Warnung, dass ein name eingegeben werden muss
                         {
-                            // wenn kein Name eingegeben wurde
-                            if (string.IsNullOrEmpty(sceneDataSave.fileName.ToString())) // Warnung, dass ein name eingegeben werden muss
+                            _borderWarning.SetActive(true);
+                            _placeholderTextWarning.color = new Color(1, 0, 0, 0.27f);
+                        }
+                        // wenn es namen noch nicht gibt: normal speichern
+                        else
+                        {
+                            filePath = sceneDataSave.fileName + ".json";
+
+                            if (sceneDataSaveString.Length != 0)
                             {
-                                _borderWarning.SetActive(true);
-                                _placeholderTextWarning.color = new Color(1, 0, 0, 0.27f);
+                                WriteFileToDirectory(sceneDataSaveString, filePath);
+
+                                GenerateFileButton(filePath, true, true);
                             }
-                            // wenn es namen noch nicht gibt: normal speichern
-                            else
-                            {
-                                filePath = sceneDataSave.fileName + ".json";
-                                // ClosePanelShowCode(_visitorPanelSave);
-
-                                if (sceneDataSaveString.Length != 0)
-                                {
-                                    //StartCoroutine(WriteToServer(sceneDataSaveString, filePath, isExpert));
-                                    WriteFileToDirectory(sceneDataSaveString, filePath);
-
-                                    GenerateFileButton(filePath, true);
-                                }
-                                panelOverwrite.SetActive(false);
-
-                            }
+                            panelOverwrite.SetActive(false);
                         }
                     }
                 }
@@ -187,16 +193,15 @@ public class SaveFileController : MonoBehaviour
                     }
                     panelOverwrite.SetActive(false);
                     WriteFileToDirectory(sceneDataSaveString, filePath);
-                    GenerateFileButton(filePath, true);
+                    GenerateFileButton(filePath, true, true);
                 }
-
 
                 else    // overwrite
                 {
                     filePath = tmpCode + sceneDataSave.fileName + ".json";
                     DeleteFileFromDirectory(filePath);
                     WriteFileToDirectory(sceneDataSaveString, filePath);
-                    GenerateFileButton(filePath, true);
+                    GenerateFileButton(filePath, true, true);
                     panelOverwrite.SetActive(false);
                 }
             }
@@ -263,7 +268,7 @@ public class SaveFileController : MonoBehaviour
         if (_selectedFile != "")
             DeleteFileFromDirectory(_selectedFile);
     }
-    public void LoadSceneFromFile(string fileName, bool fromCode, Button fileButtonInstance)
+    public void LoadSceneFromFile(string fileName, Button fileButtonInstance)
     {
         if (fileName.Substring(0, fileName.Length - 5) != StaticSceneData.StaticData.fileName)
             SceneManaging.isPreviewLoaded = false;
@@ -281,34 +286,37 @@ public class SaveFileController : MonoBehaviour
             tmpFileButtonScene = fileButtonInstance;
         }
     }
-    private void GenerateFileButton(string fileName, bool isPermamentScene)
+    private void GenerateFileButton(string fileName, bool isPermamentScene, bool highlight)
     {
+        Debug.Log("hier");
+        // unhighlight all other buttons
+        for (int i = 0; i < contentFileSelect.transform.childCount; i++)
+        {
+            contentFileSelect.transform.GetChild(i).GetComponent<Button>().image.color = new Color32(255, 255, 255, 255);
+        }
+
+        // for config menue
         Button fileButtonInstance = Instantiate(fileSelectButton, contentFileSelect.transform);
         fileButtonInstance.name = fileName;
-        if (fileName.Substring(0, fileName.Length - 5) == StaticSceneData.StaticData.fileName)
-        {
+
+        if (highlight)
             fileButtonInstance.GetComponent<Button>().image.color = new Color32(64, 192, 16, 192);
-            SceneManaging.isPreviewLoaded = true;
-        }
-        else if (fileName.Length > 11)
-        {
-            if (fileName.Substring(6, fileName.Length - 11) == StaticSceneData.StaticData.fileName)
-            {
-                fileButtonInstance.GetComponent<Button>().image.color = new Color32(64, 192, 16, 192);
-                SceneManaging.isPreviewLoaded = true;
-            }
-        }
+        //SceneManaging.isPreviewLoaded = true;
+
+        //fileButtonInstance.gameObject.SetActive(true);
+        fileButtonInstance.onClick.AddListener(() => LoadSceneFromFile(fileName, fileButtonInstance));
+        _buttonsFileList.Add(fileButtonInstance);
+
+
         if (isPermamentScene)
+        {
             fileButtonInstance.GetComponentInChildren<Text>().text = fileName.Substring(0, fileName.Length - 5);
+        }
         else
         {
             string[] x = fileName.Split('.');
-
             fileButtonInstance.GetComponentInChildren<Text>().text = x[0].Substring(6);
         }
-        fileButtonInstance.gameObject.SetActive(true);
-        fileButtonInstance.onClick.AddListener(() => LoadSceneFromFile(fileName, false, fileButtonInstance));
-        _buttonsFileList.Add(fileButtonInstance);
     }
     public void ShowInputFieldForCode()
     {
@@ -338,8 +346,6 @@ public class SaveFileController : MonoBehaviour
     private IEnumerator LoadFilesFromServer(bool loadFromCode, string code, bool fromAwake)
     {
         WWWForm form = new WWWForm();
-        // UnityWebRequest uwr = UnityWebRequest.Post(_basepath + "LoadFileNames.php", form);
-        // yield return uwr;
         WWW www = new WWW(_basepath + "LoadFileNames.php", form);
         yield return www;
 
@@ -367,7 +373,7 @@ public class SaveFileController : MonoBehaviour
                         // wenn die ersten 6 zeichen mit denen des eingegebenen codes uebereinstimmen
                         if (fileEntry.ToLower().Substring(0, 6) == code.ToLower())
                         {
-                            LoadSceneFromFile(fileEntry, true, null);
+                            LoadSceneFromFile(fileEntry, null);
                             found = true;
                             ClosePanelShowCode(_visitorPanelSave);
                         }
@@ -391,7 +397,7 @@ public class SaveFileController : MonoBehaviour
                 {
                     if (fileEntry.Substring(0, 1) == "*")
                     {
-                        GenerateFileButton(fileEntry, true);
+                        GenerateFileButton(fileEntry, true, !fromAwake);
                     }
                     else if (!string.IsNullOrEmpty(loadedFiles))
                     {
@@ -400,7 +406,7 @@ public class SaveFileController : MonoBehaviour
                         {
                             if (fileEntry == word)
                             {
-                                GenerateFileButton(fileEntry, false);
+                                GenerateFileButton(fileEntry, false, !fromAwake);
                             }
                         }
                     }
@@ -422,7 +428,7 @@ public class SaveFileController : MonoBehaviour
             DirectoryInfo d = new DirectoryInfo(_basepath);
             foreach (var fileEntry in d.GetFiles("*.json"))
             {
-                GenerateFileButton(fileEntry.Name, true);
+                GenerateFileButton(fileEntry.Name, true, false);
             }
         }
         else
@@ -552,7 +558,7 @@ public class SaveFileController : MonoBehaviour
             contentMenueRails.Update3DFigurePositions();
             contentMenueRails.OpenCloseObjectInTimeline(contentMenueRails.railList[0].myObjects, 0, false);
 
-            this.GetComponent<SceneDataController>().CreateScene(tempSceneData);
+            GetComponent<SceneDataController>().CreateScene(tempSceneData);
         }
         else if (status == "fromFlyerDelete")
         {

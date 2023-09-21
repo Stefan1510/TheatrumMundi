@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
 using TMPro;
+using UnityEngine.EventSystems;
 
 public class RailManager : MonoBehaviour
 {
@@ -1261,6 +1262,13 @@ public class RailManager : MonoBehaviour
         if (Input.GetMouseButtonDown(0)) //left mouse button down
         {
             #region identifying
+            PointerEventData eventData = new PointerEventData(EventSystem.current);
+            eventData.position = Input.mousePosition;
+
+            // Erstelle eine Liste von Raycast-Ergebnissen
+            List<RaycastResult> results = new List<RaycastResult>();
+            EventSystem.current.RaycastAll(eventData, results);
+
             if (!SceneManaging.tutorialActive)  // wenn tutorial gerade ausgeführt wird, soll nichts klickbar sein
             {
                 //identify which gameobject you clicked
@@ -1276,7 +1284,7 @@ public class RailManager : MonoBehaviour
                     int tmpI = -1;
                     for (int i = 0; i < railList[currentRailIndex].myObjects.Count; i++)
                     {
-                        if (railList[currentRailIndex].myObjects[i].figure.GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(getMousePos))
+                        if (railList[currentRailIndex].myObjects[i].figure.GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(getMousePos) && results[0].gameObject.name != "ImageTimeSliderOverlay")
                             tmpI = i;
                     }
                     if (tmpI >= 0)

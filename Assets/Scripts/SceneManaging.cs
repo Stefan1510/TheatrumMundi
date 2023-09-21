@@ -222,13 +222,11 @@ public static class SceneManaging
             {
                 obj.transform.GetChild(0).GetComponent<Image>().color = col;
                 obj.transform.GetChild(1).GetChild(0).gameObject.SetActive(false);  //hide Delete-Button
-                //obj.transform.GetChild(0).gameObject.SetActive(true); // border
 
                 if (obj3D.GetComponent<FigureStats>().isShip)
                     obj3D.GetComponent<cakeslice.Outline>().enabled = false;
                 else
                     obj3D.transform.GetChild(1).GetComponent<cakeslice.Outline>().enabled = false;
-                //SceneManaging.highlighted = false;
             }
         }
     }
@@ -239,13 +237,13 @@ public static class SceneManaging
             //Debug.Log("obj: "+obj.name);
             obj.transform.GetChild(0).GetComponent<Image>().color = _colMusicHighlighted;
             obj.transform.GetChild(1).GetChild(0).gameObject.SetActive(true);   //show Delete-Button
-            SceneManaging.highlighted = true;
+            highlighted = true;
         }
         else
         {
             obj.transform.GetChild(0).GetComponent<Image>().color = _colMusic;
             obj.transform.GetChild(1).GetChild(0).gameObject.SetActive(false);  //hide Delete-Button
-            SceneManaging.highlighted = false;
+            highlighted = false;
         }
     }
     public static void closeRail(GameObject rail, float railwidthAbsolute)

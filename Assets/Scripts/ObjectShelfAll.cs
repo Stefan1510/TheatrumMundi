@@ -21,13 +21,15 @@ public class ObjectShelfAll : MonoBehaviour
     public GameObject MenueButton05;    //ButtonObjects
     public GameObject MenueButton06;    //ButtonLights          -- only expert
     public GameObject MenueButton07;    //ButtonMusic
-    public GameObject MenueButton08;    //ButtonAbout
+    public GameObject MenueButton08;    //ButtonSaveDirector    -- only expert
 
     public GameObject ObjectMenueDirectorMain;
     public GameObject ObjectMenueConfigMain;
     public RailManager MenueContentRails;
     public GameObject ButtonMenueConfig;    // Der Button in ObjectMenueDirectorMain der zum ConfigMenu leitet
     public GameObject ButtonMenueDirector;  // Der Button in ObjectMenueConfigMain der zum DirectorMenu leitet
+
+    [SerializeField] private GameObject viewportSaveDir, viewportSaveConfig, contentSave;
 
     public GameObject panelPreviewNotLoaded;
     [SerializeField] private UTJ.FrameCapturer.PlayerControls playerCtrls;
@@ -155,13 +157,20 @@ public class ObjectShelfAll : MonoBehaviour
             }
         }
     }
+    public void ButtonShelf08()
+    {
+        if (!SceneManaging.tutorialActive && !SceneManaging.railLengthDialogActive && !SceneManaging.dialogActive)
+        {
+            ButtonShelfI(8);
+        }
+    }
     public void SwitchToMenueDirector()
     {
         // overlayWaiting.SetActive(true);
         if (SceneManaging.mainMenuActive == 1 && SceneManaging.configMenueActive == 4 && !SceneManaging.isPreviewLoaded)
         {
             panelPreviewNotLoaded.SetActive(true);
-                tmpShelfNumber = 10;
+            tmpShelfNumber = 10;
         }
         else
         {
@@ -170,7 +179,7 @@ public class ObjectShelfAll : MonoBehaviour
     }
     public void SwitchToMenueConfig()
     {
-            ButtonShelfI(9);
+        ButtonShelfI(9);
     }
 
     private void ButtonShelfI(int shelfNumber)
@@ -184,7 +193,7 @@ public class ObjectShelfAll : MonoBehaviour
         MenueShelf05.SetActive(false);
         MenueShelf06.SetActive(false);
         MenueShelf07.SetActive(false);
-        //MenueShelf08.SetActive(false);
+        MenueShelf08.SetActive(false);
 
         MenueButton01.SetActive(false);
         MenueButton02.SetActive(true);
@@ -193,6 +202,7 @@ public class ObjectShelfAll : MonoBehaviour
         MenueButton05.SetActive(true);
         MenueButton06.SetActive(false);
         MenueButton07.SetActive(true);
+        MenueButton08.SetActive(false);
 
         if (SceneManaging.isExpert)
         {
@@ -203,7 +213,7 @@ public class ObjectShelfAll : MonoBehaviour
             MenueButton02.SetActive(true);
             MenueButton03.SetActive(true);
             MenueButton06.SetActive(true);
-            //MenueButton08.SetActive(true);
+            MenueButton08.SetActive(true);
         }
 
         switch (shelfNumber)
@@ -240,6 +250,7 @@ public class ObjectShelfAll : MonoBehaviour
                 ObjectMenueDirectorMain.SetActive(false);
                 SceneManaging.mainMenuActive = 1;
                 SceneManaging.configMenueActive = 4;
+                contentSave.transform.SetParent(viewportSaveConfig.transform);
                 break;
             case 5:         // MenueObjectsShelf
                 ObjectMenueDirectorMain.SetActive(true);
@@ -256,6 +267,15 @@ public class ObjectShelfAll : MonoBehaviour
                 ObjectMenueConfigMain.SetActive(false);
                 SceneManaging.mainMenuActive = 2;
                 SceneManaging.directorMenueActive = 3;
+                break;
+            case 8:         // MenueLadenSpeichern Director
+                ObjectMenueConfigMain.SetActive(false);
+                MenueShelf08.SetActive(true);
+                MenueButton08.SetActive(false);
+                ObjectMenueDirectorMain.SetActive(true);
+                SceneManaging.mainMenuActive = 2;
+                SceneManaging.directorMenueActive = 3;
+                contentSave.transform.SetParent(viewportSaveDir.transform);
                 break;
             case 9:         // MenueConfigMain
                 ObjectMenueConfigMain.SetActive(true);
@@ -287,7 +307,6 @@ public class ObjectShelfAll : MonoBehaviour
                 ObjectMenueConfigMain.SetActive(false);
                 break;
         }
-        //StaticSceneData.Everything3D();
         MenueContentRails.PublicUpdate();
         SceneManaging.isPreviewLoaded = true;
     }
