@@ -56,7 +56,7 @@ public class SceneDataController : MonoBehaviour
             sceneFileComment = inputFieldFileComment.text;
         }
 
-        sceneFileDate = DateTime.Now.ToString();
+        sceneFileDate = DateTime.Now.ToString("dd.MM.yyyy HH:mm");
         if (fromAwake)
         {
             scenePieceLength = 10;
