@@ -33,7 +33,7 @@ public class Snapshot : MonoBehaviour
         snapshot.ReadPixels(new Rect(0, 0, resWidth, resHeight), 0, 0);
         byte[] bytes = snapshot.EncodeToJPG();
         fileName += "_preview.jpg";
-        System.IO.File.WriteAllBytes(fileName, bytes);
+        File.WriteAllBytes(fileName, bytes);
     }
     public void ShowSnapshot(string filePath)
     {
@@ -41,7 +41,6 @@ public class Snapshot : MonoBehaviour
         byte[] fileData;
         filePath = filePath.Substring(0, filePath.Length - 5);
         filePath += "_preview.jpg";
-        Debug.Log("filepath: " + filePath);
 
         if (File.Exists(filePath))
         {
@@ -51,5 +50,9 @@ public class Snapshot : MonoBehaviour
             Sprite mySprite = Sprite.Create(tex, new Rect(0.0f, 0.0f, tex.width, tex.height), new Vector2(0.5f, 0.5f), 100.0f);
             preview.sprite = mySprite; // = Application.persistentDataPath + "/" + fileName + "_preview.jpg";}
         }
+    }
+    public void SaveTexture2DToFile(Texture2D tex, string filePath, int jpgQuality = 95)
+    {
+        File.WriteAllBytes(filePath + ".jpg", tex.EncodeToJPG(jpgQuality));
     }
 }

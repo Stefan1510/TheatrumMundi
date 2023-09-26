@@ -56,6 +56,7 @@ public class RailLightManager : MonoBehaviour
                 SceneManaging.closeRail(gameController.RailMusic.gameObject, railWidthAbsolute);
                 gameController.RailMusic.OpenCloseObjectInTimeline(false);
                 gameController.RailMusic.isTimelineOpen = false;
+                gameController.RailMusic.musicPieceLengthDialog.SetActive(false);
 
                 for (int k = 0; k < gameController.RailMusic.myObjects.Count; k++)
                 {
@@ -78,7 +79,7 @@ public class RailLightManager : MonoBehaviour
                 ImageTimelineSelection.SetRailNumber(6);
                 ImageTimelineSelection.SetRailType(3);  // for background-rail 
             }
-            tmpLightAnim.UpdateKnobPositions();
+            tmpLightAnim.ChangeImage();
         }
 
     }

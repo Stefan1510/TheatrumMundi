@@ -27,7 +27,7 @@ public class RailMusicManager : MonoBehaviour
     [SerializeField] private GameObject prefabRect;
     [SerializeField] private TextMeshProUGUI spaceWarning;
     [SerializeField] private Image spaceWarningBorder;
-    [SerializeField] private GameObject musicPieceLengthDialog;
+    [SerializeField] public GameObject musicPieceLengthDialog;
     [SerializeField] private Button musicLengthLonger;
     [SerializeField] private Button musicLengthShorter;
     [SerializeField] private PlayerControls tmpPlayerControls;
@@ -48,7 +48,7 @@ public class RailMusicManager : MonoBehaviour
     private float railWidthAbsolute = 1670.4f, railWidth;
     int currentClip;
     GameObject[] figureObjects;
-    [SerializeField] TextMeshProUGUI[] figCounterCircle;
+    [SerializeField] public TextMeshProUGUI[] figCounterCircle;
     public Image[] sampleImages;
     int currentClickedObjectIndex;
     int saveIndexForChangePieceLength;
@@ -129,8 +129,8 @@ public class RailMusicManager : MonoBehaviour
             for (int i = 0; i < myObjects.Count; i++)
             {
                 SceneManaging.highlight(myObjects[i].musicPiece, false);
-                musicPieceLengthDialog.SetActive(false);
             }
+            musicPieceLengthDialog.SetActive(false);
         }
         else
         {
@@ -1034,9 +1034,8 @@ public class RailMusicManager : MonoBehaviour
                     for (int j = 0; j < myObjects.Count; j++)
                     {
                         SceneManaging.highlight(myObjects[j].musicPiece, false);
-                        musicPieceLengthDialog.SetActive(false);
-
                     }
+                    musicPieceLengthDialog.SetActive(false);
 
                     if (!SceneManaging.sceneChanged)
                         SceneManaging.sceneChanged = true;
@@ -1099,7 +1098,6 @@ public class RailMusicManager : MonoBehaviour
                     for (int i = 0; i < myObjects.Count; i++)
                     {
                         SceneManaging.highlight(myObjects[i].musicPiece, false);
-                        musicPieceLengthDialog.SetActive(false);
                     }
                 }
             }

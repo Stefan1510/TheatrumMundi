@@ -16,14 +16,13 @@ public class LightMiddleController : MonoBehaviour
     void Start()
     {
         thisLightElement = StaticSceneData.StaticData.lightElements.Find(le => le.name == gameObject.name);
-
     }
     public void ChangeIntensity(float intensityValue)
     {
         //Debug.Log("sliderintensity: "+sliderIntensity.value);
         spotLight.intensity = sliderIntensity.value / 3;
         thisLightElement.intensity = spotLight.intensity;
-       //Debug.Log("intens after: "+spotLight.intensity);
+       Debug.Log("intens after: "+spotLight.intensity);
     }
     public void LightActivation(bool on)
     {

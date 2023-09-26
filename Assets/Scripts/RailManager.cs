@@ -636,6 +636,7 @@ public class RailManager : MonoBehaviour
         else
         {
             UIController tmpUIController = gameController.GetComponent<UIController>();
+
             // a different rail is open - close it
             for (int i = 0; i < rails.Length; i++)
             {
@@ -668,6 +669,7 @@ public class RailManager : MonoBehaviour
                 SceneManaging.closeRail(tmpUIController.RailMusic.gameObject, railwidthAbsolute);
                 tmpRailMusicMan.OpenCloseObjectInTimeline(false);
                 tmpRailMusicMan.isTimelineOpen = false;
+                tmpRailMusicMan.musicPieceLengthDialog.SetActive(false);
 
                 for (int k = 0; k < tmpRailMusicMan.myObjects.Count; k++)
                 {

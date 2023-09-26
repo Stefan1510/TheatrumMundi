@@ -13,8 +13,10 @@ public class SaveFileController : MonoBehaviour
     public GameObject contentFileSelect, panelCodeInput, panelWarningInput, panelWarningInputVisitor, panelOverwrite, menuKulissen, flyer;
     public RailManager contentMenueRails;
     private Button tmpFileButtonScene;
+    [SerializeField] Texture2D texMusterszene, texMusterSzeneLeer;
     [SerializeField] private RailMusicManager tmpMusicManager;
     [SerializeField] private CoulissesManager tmpCoulissesManager;
+    [SerializeField] private LightAnimationRepresentation lightAnim;
     [SerializeField] private GameObject _dialogSave, _dialogNewScene, _dialogLoadCode;
     [SerializeField] AnimationTimer _animTimer;
     [SerializeField] GameObject _borderWarning, _borderLoad;
@@ -25,7 +27,7 @@ public class SaveFileController : MonoBehaviour
     [SerializeField] private TextMeshProUGUI codeReminderText;
     [SerializeField] private Snapshot tmpSnapshot;
     [SerializeField] private InputField inputFileName, inputAuthor, inputComment;
-    // [SerializeField] private Image imgCodeReminder;
+    [SerializeField] private LightShelf[] tmpLightShelf;
     public InputField inputFieldShowCode, inputFieldShowCodeVisitor;
     [SerializeField] GameObject _showSavedCode;
     public Button fileSelectButton; // prefab
@@ -63,16 +65,29 @@ public class SaveFileController : MonoBehaviour
             _basepath = Application.persistentDataPath;
             // _basepath += "/theatrum mundi";
 
-            // json aus dem projekt in den save ordner ziehen
-            string path = Application.dataPath + "/json-Files";
-            File file = Resources.Load(_basepath + "/#Musterszene.json");
-            // if (!File.Exists(_basepath + "/#Musterszene.json"))
-            // {
-            //     // File.Copy(path + "/#Musterszene.json", _basepath + "/#Musterszene.json");
-            //     // File.Copy(path + "/#Musterszene_leer.json", _basepath + "/#Musterszene_leer.json");
-            //     // File.Copy(path+"/#Musterszene_preview.jpg", _basepath + "//#Musterszene_preview.jpg");
-            //     // File.Copy(path+"/#Musterszene_leer_preview.jpg", _basepath + "//#Musterszene_leer_preview.jpg");
-            // }
+            //copy textures
+            tmpSnapshot.SaveTexture2DToFile(texMusterszene, _basepath + "/#Musterszene_preview");
+            tmpSnapshot.SaveTexture2DToFile(texMusterSzeneLeer, _basepath + "/#Musterszene_leer_preview");
+
+            if (!File.Exists(_basepath + "/#Musterszene.json"))
+            {
+                TextAsset jsonTextFile = Resources.Load<TextAsset>("Text/#Musterszene");
+                SceneData sceneData = JsonUtility.FromJson<SceneData>(jsonTextFile.text);
+                string json = JsonUtility.ToJson(sceneData);
+
+                StreamWriter writer = new StreamWriter(_basepath + "/#Musterszene.json", true);
+                writer.Write(json);
+                writer.Close();
+
+                jsonTextFile = Resources.Load<TextAsset>("Text/#Musterszene_leer");
+                sceneData = JsonUtility.FromJson<SceneData>(jsonTextFile.text);
+                json = JsonUtility.ToJson(sceneData);
+
+                writer = new StreamWriter(_basepath + "/#Musterszene_leer.json");
+                writer.Write(json);
+
+                writer.Close();
+            }
 
             ShowFilesFromDirectory();
         }
@@ -213,17 +228,7 @@ public class SaveFileController : MonoBehaviour
     {
         if (tempSceneData != null)
         {
-            Debug.Log("tempscene: " + tempSceneData);
-            if (SceneManaging.isExpert)
-                GetComponent<SceneDataController>().CreateScene(tempSceneData);
-
-            SceneManaging.isPreviewLoaded = true;
             CoulissesManager tmpCoulMan = menuKulissen.GetComponent<CoulissesManager>();
-
-            for (int i = 0; i < tmpCoulMan.GetComponent<CoulissesManager>().coulisses.Length; i++)
-            {
-                tmpCoulMan.PlaceInShelf(i);   // alle kulissen zurueck ins shelf
-            }
             // alle counter zurueck
             for (int j = 0; j < contentMenueRails.figCounterCircle.Length; j++)
             {
@@ -233,13 +238,32 @@ public class SaveFileController : MonoBehaviour
             {
                 tmpCoulMan.coulisseCounter[k].text = "0";
             }
+            for (int j = 0; j < tmpMusicManager.figCounterCircle.Length; j++)
+            {
+                tmpMusicManager.figCounterCircle[j].text = "0";
+            }
+
+            //Debug.Log("tempscene: " + tempSceneData);
+            if (SceneManaging.isExpert)
+                GetComponent<SceneDataController>().CreateScene(tempSceneData);
+
+            SceneManaging.isPreviewLoaded = true;
+            lightAnim.ChangeImage();
+
+            for (int i = 0; i < tmpCoulMan.GetComponent<CoulissesManager>().coulisses.Length; i++)
+            {
+                tmpCoulMan.PlaceInShelf(i);   // alle kulissen zurueck ins shelf
+            }
+
 
             StaticSceneData.StaticData = tempSceneData;
             GetComponent<UIController>().SceneriesApplyToUI();
             GetComponent<UIController>().LightsApplyToUI();
             GetComponent<UIController>().RailsApplyToUI();
+            for (int i = 0; i < tmpLightShelf.Length; i++)
+                tmpLightShelf[i].ToggleLightBlock(false);
 
-            if (!SceneManaging.isExpert)
+            if (!SceneManaging.isExpert)    // besucherversion
             {
                 StartCoroutine(LoadFilesFromServer(false, "", false));
             }
@@ -254,9 +278,6 @@ public class SaveFileController : MonoBehaviour
                     tmpFileButtonScene.GetComponent<Button>().image.color = col_green;
                 }
             }
-
-            // textFileContentData.text = "";
-            // textFileMetaData.text = "";
 
             // if loaded from Awake coulisses-menue should be loaded
             if (loadFromAwake && !SceneManaging.isExpert)
@@ -601,14 +622,52 @@ public class SaveFileController : MonoBehaviour
         sceneMetaData += "Autor/in: " + tempSceneData.fileAuthor + "\n\n";
         sceneMetaData += "Kommentar:\n" + tempSceneData.fileComment;
         textFileMetaData.text = sceneMetaData;
+
         string sceneContentData = "";
-        //sceneContentData += "Datei-Informationen:\n\n";
-        sceneContentData += "Kulissen: " + GetComponent<SceneDataController>().countActiveSceneryElements.ToString() + "\n\n";
-        sceneContentData += "Figuren: " + GetComponent<SceneDataController>().countActiveFigureElements.ToString() + "\n\n";
+        sceneContentData += "Kulissen: " + CountActiveSceneries().ToString() + "\n\n"; //GetComponent<SceneDataController>().countActiveSceneryElements.ToString() + "\n\n";
+        sceneContentData += "Figuren: " + CountActiveFigures().ToString() + "\n\n"; // GetComponent<SceneDataController>().countActiveFigureElements.ToString() + "\n\n";
         sceneContentData += "Länge: " + tempSceneData.pieceLength / 60 + " min\n\n";
-        sceneContentData += "Lichter: " + GetComponent<SceneDataController>().countActiveLightElements.ToString() + "\n\n";
-        sceneContentData += "Musik: " + GetComponent<SceneDataController>().countActiveMusicClips.ToString() + "\n\n";
+        sceneContentData += "Lichter: " + CountLights().ToString() + "\n\n"; //GetComponent<SceneDataController>().countActiveLightElements.ToString() + "\n\n";
+        sceneContentData += "Musik: " + CountMusic().ToString() + "\n\n"; //GetComponent<SceneDataController>().countActiveMusicClips.ToString() + "\n\n";
         textFileContentData.text = sceneContentData;
+    }
+    private int CountActiveFigures()
+    {
+        int count = 0;
+        foreach (FigureElement fE in tempSceneData.figureElements)
+        {
+            count += fE.figureInstanceElements.Count;
+        }
+        return count;
+    }
+    private int CountMusic()
+    {
+        int count = 0;
+        foreach (MusicClipElement mE in tempSceneData.musicClipElements)
+        {
+            count += mE.musicClipElementInstances.Count;
+        }
+        return count;
+    }
+    private int CountActiveSceneries()
+    {
+        int count = 0;
+        foreach (SceneryElement sE in tempSceneData.sceneryElements)
+        {
+            if (sE.active)
+                count++;
+        }
+        return count;
+    }
+    private int CountLights()
+    {
+        int count = 0;
+        foreach (LightElement lE in tempSceneData.lightElements)
+        {
+            if (lE.active)
+                count++;
+        }
+        return count;
     }
     private void DeleteFileFromDirectory(string FileName)
     {

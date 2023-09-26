@@ -45,7 +45,6 @@ public class SceneDataController : MonoBehaviour
 
             objectSceneryElement.GetComponent<cakeslice.Outline>().enabled = false;
         }
-
     }
     private void GetFileMetaDataFromScene(bool fromAwake)
     {
@@ -314,25 +313,27 @@ public class SceneDataController : MonoBehaviour
                         countActiveLightElements++;
                     }
                     gameObjectLe.GetComponent<Light>().intensity = le.intensity;
+                    LightController lC = gameObjectLe.GetComponent<LightController>();
+
                     switch (objectLightElement.lightStagePosition)
                     {
                         case 0:
                             break;
                         case 1: // left
-                            gameObjectLe.GetComponent<LightController>().ChangeHorizontal(le.angle_h);
-                            gameObjectLe.GetComponent<LightController>().ChangeVertical(le.angle_v);
-                            gameObjectLe.GetComponent<LightController>().ChangePosition(le.z);
-                            gameObjectLe.GetComponent<LightController>().ChangeHeight(le.y);
-                            gameObjectLe.GetComponent<LightController>().ChangeIntensity(le.intensity);
-                            gameObjectLe.GetComponent<LightController>().sliderLbIntensity.value = le.intensity;
+                            lC.ChangeHorizontal(le.angle_h);
+                            lC.ChangeVertical(le.angle_v);
+                            lC.ChangePosition(le.z);
+                            lC.ChangeHeight(le.y);
+                            lC.ChangeIntensity(le.intensity);
+                            lC.sliderLbIntensity.value = le.intensity;
                             break;
                         case 2: // right
-                            gameObjectLe.GetComponent<LightController>().ChangeHorizontal(le.angle_h);
-                            gameObjectLe.GetComponent<LightController>().ChangeVerticalLeft(le.angle_v);
-                            gameObjectLe.GetComponent<LightController>().ChangePosition(le.z);
-                            gameObjectLe.GetComponent<LightController>().ChangeHeight(le.y);
-                            gameObjectLe.GetComponent<LightController>().ChangeIntensity(le.intensity);
-                            gameObjectLe.GetComponent<LightController>().sliderLbIntensity.value = le.intensity;
+                            lC.ChangeHorizontal(le.angle_h);
+                            lC.ChangeVerticalLeft(le.angle_v);
+                            lC.ChangePosition(le.z);
+                            lC.ChangeHeight(le.y);
+                            lC.ChangeIntensity(le.intensity);
+                            lC.sliderLbIntensity.value = le.intensity;
                             break;
                         case 3:
                             countActiveLightElements--;
@@ -348,8 +349,9 @@ public class SceneDataController : MonoBehaviour
     public void FiguresApplyToScene(List<FigureElement> figureElements)
     {
         countActiveFigureElements = 0;
+        RailManager tmpRail = ContentRailMenue.GetComponent<RailManager>();
 
-        foreach (RailManager.Rail rail in ContentRailMenue.GetComponent<RailManager>().railList)
+        foreach (RailManager.Rail rail in tmpRail.railList)
         {
             foreach (RailManager.Figure obj in rail.myObjects)
             {
@@ -360,34 +362,45 @@ public class SceneDataController : MonoBehaviour
             rail.sizeLayering = 1;
         }
 
+        int count;
+
         for (int i = 0; i < figureElements.Count; i++)
         {
+            count = 0;
             foreach (FigureInstanceElement feInstance in figureElements[i].figureInstanceElements)
             {
                 countActiveFigureElements++;
-                GameObject curr3DObject = ContentRailMenue.GetComponent<RailManager>().CreateNew2DInstance(i, feInstance.moment, feInstance.railStart, feInstance.layer, false);
+                count++;
+                GameObject curr3DObject = tmpRail.CreateNew2DInstance(i, feInstance.moment, feInstance.railStart, feInstance.layer, false);
                 curr3DObject.transform.localPosition = new Vector3(curr3DObject.transform.localPosition.x, curr3DObject.transform.localPosition.y, objectsRailElements[feInstance.railStart].transform.GetChild(0).GetComponent<RailSpeedController>().GetDistanceAtTime(feInstance.moment));
                 objects3dFigureInstances.Add(curr3DObject);
             }
+            tmpRail.figCounterCircle[i].text = count.ToString();
         }
     }
     public void MusicApplyToScene(List<MusicClipElement> musicClipElements)
     {
         countActiveMusicClips = 0;
-        foreach (RailMusicManager.MusicPiece obj in imageTimelineRailMusic.GetComponent<RailMusicManager>().myObjects)
+        int count;
+        RailMusicManager tmpMusic = imageTimelineRailMusic.GetComponent<RailMusicManager>();
+
+        foreach (RailMusicManager.MusicPiece obj in tmpMusic.myObjects)
         {
             Destroy(obj.musicPiece);
         }
-        imageTimelineRailMusic.GetComponent<RailMusicManager>().myObjects.Clear();
-        imageTimelineRailMusic.GetComponent<RailMusicManager>().sizeLayering = 1;
+        tmpMusic.myObjects.Clear();
+        tmpMusic.sizeLayering = 1;
 
         for (int i = 0; i < musicClipElements.Count; i++)
         {
+            count=0;
             foreach (MusicClipElementInstance mceInstance in musicClipElements[i].musicClipElementInstances)
             {
                 countActiveMusicClips++;
-                imageTimelineRailMusic.GetComponent<RailMusicManager>().CreateNew2DInstance(i, mceInstance.moment, mceInstance.layer);
+                count++;
+                tmpMusic.CreateNew2DInstance(i, mceInstance.moment, mceInstance.layer);
             }
+            tmpMusic.figCounterCircle[i].text = count.ToString();
         }
     }
     public void SetTabActive(int tab)

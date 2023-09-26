@@ -74,6 +74,8 @@ public class UIController : MonoBehaviour
                 if (le.name == objectLightElement.goLightElement.name)
                 {
                     GameObject gameObjectLe = objectLightElement.goLightElement;
+                    LightController lC = gameObjectLe.GetComponent<LightController>();
+                    
                     switch (objectLightElement.lightStagePosition)
                     {
                         case 0:
@@ -81,22 +83,22 @@ public class UIController : MonoBehaviour
                             gameObjectLe.GetComponent<LightBbController>().toggleBb.isOn = le.active;
                             break;
                         case 1:
-                            gameObjectLe.GetComponent<LightController>().thisLightElement = StaticSceneData.StaticData.lightElements.Find(DataLe => DataLe.name == le.name);
-                            gameObjectLe.GetComponent<LightController>().toggleLb.isOn = le.active;
-                            gameObjectLe.GetComponent<LightController>().sliderLbIntensity.value = le.intensity;
-                            gameObjectLe.GetComponent<LightController>().sliderLbPosition.value = le.z;
-                            gameObjectLe.GetComponent<LightController>().sliderLbHeight.value = le.y;
-                            gameObjectLe.GetComponent<LightController>().sliderLbHorizontal.value = le.angle_h;
-                            gameObjectLe.GetComponent<LightController>().sliderLbVertical.value = le.angle_v;
+                            lC.thisLightElement = StaticSceneData.StaticData.lightElements.Find(DataLe => DataLe.name == le.name);
+                            lC.toggleLb.isOn = le.active;
+                            lC.sliderLbIntensity.value = le.intensity;
+                            lC.sliderLbPosition.value = le.z;
+                            lC.sliderLbHeight.value = le.y;
+                            lC.sliderLbHorizontal.value = le.angle_h;
+                            lC.sliderLbVertical.value = le.angle_v;
                             break;
                         case 2:
-                            gameObjectLe.GetComponent<LightController>().thisLightElement = StaticSceneData.StaticData.lightElements.Find(DataLe => DataLe.name == le.name);
-                            gameObjectLe.GetComponent<LightController>().toggleLb.isOn = le.active;
-                            gameObjectLe.GetComponent<LightController>().sliderLbIntensity.value = le.intensity;
-                            gameObjectLe.GetComponent<LightController>().sliderLbPosition.value = le.z;
-                            gameObjectLe.GetComponent<LightController>().sliderLbHeight.value = le.y;
-                            gameObjectLe.GetComponent<LightController>().sliderLbHorizontal.value = le.angle_h;
-                            gameObjectLe.GetComponent<LightController>().sliderLbVertical.value = le.angle_v;
+                            lC.thisLightElement = StaticSceneData.StaticData.lightElements.Find(DataLe => DataLe.name == le.name);
+                            lC.toggleLb.isOn = le.active;
+                            lC.sliderLbIntensity.value = le.intensity;
+                            lC.sliderLbPosition.value = le.z;
+                            lC.sliderLbHeight.value = le.y;
+                            lC.sliderLbHorizontal.value = le.angle_h;
+                            lC.sliderLbVertical.value = le.angle_v;
                             break;
                         case 3:
                             gameObjectLe.GetComponent<LightHbController>().thisLightElement = StaticSceneData.StaticData.lightElements.Find(DataLe => DataLe.name == le.name);
