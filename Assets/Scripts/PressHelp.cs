@@ -437,7 +437,7 @@ public class PressHelp : MonoBehaviour
             {
                 _countdown.SetActive(false);
                 _timerOverlay = 0;
-                StartCoroutine(gameController.GetComponent<SaveFileController>().LoadFileFromWWW("*Musterszene_leer_Visitor.json", "fromCode"));
+                StartCoroutine(gameController.GetComponent<SaveFileController>().LoadFileFromServer("*Musterszene_leer_Visitor.json", "fromCode"));
                 _newScene = true;
 
 

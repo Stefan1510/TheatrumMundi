@@ -28,9 +28,6 @@ public class ObjectShelfAll : MonoBehaviour
     public RailManager MenueContentRails;
     public GameObject ButtonMenueConfig;    // Der Button in ObjectMenueDirectorMain der zum ConfigMenu leitet
     public GameObject ButtonMenueDirector;  // Der Button in ObjectMenueConfigMain der zum DirectorMenu leitet
-
-    [SerializeField] private GameObject contentSave;
-
     public GameObject panelPreviewNotLoaded;
     [SerializeField] private UTJ.FrameCapturer.PlayerControls playerCtrls;
 
@@ -61,7 +58,7 @@ public class ObjectShelfAll : MonoBehaviour
         MenueButton05.SetActive(true);
         MenueButton06.SetActive(false);
         MenueButton07.SetActive(true);
-        MenueButton08.SetActive(true);
+        MenueButton08.SetActive(false);
 
         if (SceneManaging.isExpert)
         {
@@ -72,6 +69,7 @@ public class ObjectShelfAll : MonoBehaviour
             MenueButton02.SetActive(true);
             MenueButton03.SetActive(true);
             MenueButton06.SetActive(true);
+            MenueButton08.SetActive(true);
 
             SceneManaging.mainMenuActive = 1;
             SceneManaging.configMenueActive = 1;
@@ -230,9 +228,7 @@ public class ObjectShelfAll : MonoBehaviour
                 SceneManaging.mainMenuActive = 1;
                 SceneManaging.configMenueActive = 2;
                 if (AnimationTimer.GetTimerState() == AnimationTimer.TimerState.playing)
-                {
                     playerCtrls.ButtonPlay();
-                }
                 MenueShelf02.GetComponent<CoulissesManager>().HighlightRail(true);
                 break;
             case 3:         // MenueLichtConfig

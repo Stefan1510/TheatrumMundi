@@ -120,12 +120,12 @@ public class LightController : MonoBehaviour
         if (thisLightElement.stagePosition == 1)
         {
             ChangeVertical(thisLightElement.angle_v);
-            Debug.Log("pos: "+thisLightElement.stagePosition+", this: "+thisLightElement.name+thisLightElement.angle_v);
+            Debug.Log("pos: " + thisLightElement.stagePosition + ", this: " + thisLightElement.name + thisLightElement.angle_v);
         }
         else
         {
             ChangeVerticalLeft(thisLightElement.angle_v);
-            Debug.Log("pos: "+thisLightElement.stagePosition+", this: "+thisLightElement.name);
+            Debug.Log("pos: " + thisLightElement.stagePosition + ", this: " + thisLightElement.name);
         }
         UiSetting_LB_Image.GetComponent<LightRepresentationController>().RotateVertical(HorizontalValue);
     }
@@ -196,8 +196,7 @@ public class LightController : MonoBehaviour
 
     private void ChangeCookie()
     {
-
-        float grayScale = 0.0f;
+        float grayScale;
         int attenuation = _lbCookieAttenuation;
         _lbCookie.SetPixels(0, 0, _lbCookieWidth, _lbCookieHeight, _lbColors_on);
 

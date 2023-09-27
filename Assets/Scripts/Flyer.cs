@@ -36,7 +36,7 @@ public class Flyer : MonoBehaviour
     public void OnClickFillScene()
     {
         //Debug.Log("hier");
-        StartCoroutine(tmpFileController.LoadFileFromWWW("Musterszene_Kulissen.json", "fromFlyerCreate"));
+        StartCoroutine(tmpFileController.LoadFileFromServer("Musterszene_Kulissen.json", "fromFlyerCreate"));
         // StartCoroutine(tmpFileController.LoadFileFromWWW("Musterszene_Kulissen.json", "fromFlyerCreate"));
         SceneManaging.flyerActive = false;
     }
@@ -61,7 +61,7 @@ public class Flyer : MonoBehaviour
             SceneManaging.flyerActive = true;
 
             // load new scene
-            StartCoroutine(tmpFileController.LoadFileFromWWW("*Musterszene_leer_Visitor.json", "fromFlyerDelete"));
+            StartCoroutine(tmpFileController.LoadFileFromServer("*Musterszene_leer_Visitor.json", "fromFlyerDelete"));
 
             warningPanel.SetActive(false);
             // destroy children

@@ -110,7 +110,7 @@ public class RailLightManager : MonoBehaviour
         if (Input.GetMouseButtonDown(0)) //left mouse button down
         {
             //if you click the timeline with the mouse
-            if (this.GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(getMousePos))
+            if (GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(getMousePos))
             {
                 //open or close timeline
                 openTimelineByClick(isTimelineOpen);

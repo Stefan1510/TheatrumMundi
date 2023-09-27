@@ -45,7 +45,6 @@ public class LightAnimationRepresentation : MonoBehaviour
 
     public void ChangeImage()
     {
-        //Debug.Log("change image");
         if (!SceneManaging.sceneChanged) SceneManaging.sceneChanged = true;
         _maxTime = AnimationTimer.GetMaxTime();
         _lightColors = ChangeColors(_lightColors, new Color32(255, 255, 255, 255));

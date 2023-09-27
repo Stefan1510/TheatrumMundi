@@ -339,7 +339,7 @@ public class SceneDataController : MonoBehaviour
                             countActiveLightElements--;
                             break;
                         case 4:
-                            gameObjectLe.GetComponent<LightMiddleController>().ChangeIntensity(le.intensity);
+                            gameObjectLe.GetComponent<LightMiddleController>().ChangeIntensity();
                             break;
                     }
                 }
@@ -412,7 +412,6 @@ public class SceneDataController : MonoBehaviour
                 break;
             case 5:
                 tmpobjShelfAll.ButtonShelf05(false);
-                Debug.Log("button 5");
                 break;
             case 7:
                 tmpobjShelfAll.ButtonShelf07(false);

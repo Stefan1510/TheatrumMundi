@@ -1073,12 +1073,12 @@ public class RailManager : MonoBehaviour
 
                 if (rails3D[k].name.Substring(7) == "1" || rails3D[k].name.Substring(7) == "3" || rails3D[k].name.Substring(7) == "5")
                 {
-                    railList[k].myObjects[i].figure3D.transform.localPosition = new Vector3(-rails3D[k].transform.GetChild(0).transform.localPosition.x, (-rails3D[k].transform.GetChild(0).transform.localPosition.y - 0.01f), zPosFigure);
+                    railList[k].myObjects[i].figure3D.transform.localPosition = new Vector3(-rails3D[k].transform.GetChild(0).transform.localPosition.x, -rails3D[k].transform.GetChild(0).transform.localPosition.y - 0.01f, zPosFigure);
                 }
 
                 else
                 {
-                    railList[k].myObjects[i].figure3D.transform.localPosition = new Vector3(rails3D[k].transform.GetChild(0).transform.localPosition.x, (-rails3D[k].transform.GetChild(0).transform.localPosition.y - 0.01f), zPosFigure);
+                    railList[k].myObjects[i].figure3D.transform.localPosition = new Vector3(rails3D[k].transform.GetChild(0).transform.localPosition.x, -rails3D[k].transform.GetChild(0).transform.localPosition.y - 0.01f, zPosFigure);
                 }
 
                 if (rails3D[k].transform.GetChild(0).GetComponent<RailSpeedController>().railIndex % 2 == 1)
@@ -1090,21 +1090,21 @@ public class RailManager : MonoBehaviour
                     railList[k].myObjects[i].figure3D.transform.localEulerAngles = new Vector3(railList[k].myObjects[i].figure3D.transform.localEulerAngles.x, 270, railList[k].myObjects[i].figure3D.transform.localEulerAngles.z);
                 }
 
-                for (int j = 0; j < StaticSceneData.StaticData.figureElements[Int32.Parse(railList[k].myObjects[i].figure.name.Substring(6, 2)) - 1].figureInstanceElements.Count; j++)
+                for (int j = 0; j < StaticSceneData.StaticData.figureElements[int.Parse(railList[k].myObjects[i].figure.name.Substring(6, 2)) - 1].figureInstanceElements.Count; j++)
                 {
-                    if (StaticSceneData.StaticData.figureElements[Int32.Parse(railList[k].myObjects[i].figure.name.Substring(6, 2)) - 1].figureInstanceElements[j].instanceNr == int.Parse(railList[k].myObjects[i].figure.name.Substring(16)))
+                    if (StaticSceneData.StaticData.figureElements[int.Parse(railList[k].myObjects[i].figure.name.Substring(6, 2)) - 1].figureInstanceElements[j].instanceNr == int.Parse(railList[k].myObjects[i].figure.name.Substring(16)))
                     {
-                        StaticSceneData.StaticData.figureElements[Int32.Parse(railList[k].myObjects[i].figure.name.Substring(6, 2)) - 1].figureInstanceElements[j].moment = moment;
+                        StaticSceneData.StaticData.figureElements[int.Parse(railList[k].myObjects[i].figure.name.Substring(6, 2)) - 1].figureInstanceElements[j].moment = moment;
 
                         if (railList[k].myObjects[i].layer == 1) //railList[k].myObjects.Contains(railList[k].myObjects[i]))
                         {
                             if (railList[k].sizeLayering == 1)
-                                StaticSceneData.StaticData.figureElements[Int32.Parse(railList[k].myObjects[i].figure.name.Substring(6, 2)) - 1].figureInstanceElements[j].layer = 0;
+                                StaticSceneData.StaticData.figureElements[int.Parse(railList[k].myObjects[i].figure.name.Substring(6, 2)) - 1].figureInstanceElements[j].layer = 0;
                             else
-                                StaticSceneData.StaticData.figureElements[Int32.Parse(railList[k].myObjects[i].figure.name.Substring(6, 2)) - 1].figureInstanceElements[j].layer = 1;
+                                StaticSceneData.StaticData.figureElements[int.Parse(railList[k].myObjects[i].figure.name.Substring(6, 2)) - 1].figureInstanceElements[j].layer = 1;
                         }
                         else
-                            StaticSceneData.StaticData.figureElements[Int32.Parse(railList[k].myObjects[i].figure.name.Substring(6, 2)) - 1].figureInstanceElements[j].layer = 2;
+                            StaticSceneData.StaticData.figureElements[int.Parse(railList[k].myObjects[i].figure.name.Substring(6, 2)) - 1].figureInstanceElements[j].layer = 2;
                     }
                 }
             }

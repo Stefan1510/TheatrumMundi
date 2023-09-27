@@ -63,7 +63,7 @@ public class UIController : MonoBehaviour
         {
             goMenueKulissen.coulisseCounter[i].text = count[i].ToString();
         }
-        goMenueKulissen.gameObject.SetActive(false);
+        //goMenueKulissen.gameObject.SetActive(false);
     }
     public void LightsApplyToUI()
     {

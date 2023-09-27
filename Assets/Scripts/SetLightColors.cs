@@ -18,7 +18,7 @@ public class SetLightColors : MonoBehaviour
         _savedButtonColor = 0;
         ButtonClick(0);
         //ChangeLightColor();
-        SliderIntensity.onValueChanged.AddListener((float value) => ChangeLiveColor(value));
+        SliderIntensity.onValueChanged.AddListener(ChangeLiveColor);
     }
 
     public void ButtonClick(int buttonColor)
@@ -98,7 +98,7 @@ public class SetLightColors : MonoBehaviour
         }
     }
 
-    void ChangeLiveColor(float lightAnimationIntensityValue)
+    public void ChangeLiveColor(float lightAnimationIntensityValue)
     {
         foreach (objectsLightElement element in objectsLight)
         {

@@ -22,7 +22,8 @@ public class UnitySwitchExpertUser : MonoBehaviour
     [SerializeField] private GameObject _buttonAbout;
     [SerializeField] private GameObject _buttonDummy; // leeres dummy
 
-    [SerializeField] private GameObject _buttonMenueDirector, _buttonMenueConfig, _buttonHelp, _buttonHelpPressed, _buttonAboutWebGL, _buttonFlyer, _buttonMovie;
+    [SerializeField] private GameObject _buttonMenueDirector, _buttonMenueConfig, _buttonHelp, _buttonHelpPressed, _buttonFlyer, _buttonMovie;
+    [SerializeField] private GameObject flyerButtonTop;
     [SerializeField] private GameObject bgBrownImage;
     [SerializeField] private MovieRecorder mov;
     #endregion
@@ -32,6 +33,7 @@ public class UnitySwitchExpertUser : MonoBehaviour
     [SerializeField] private BoxCollider2D _imageTimelineBg;
     [SerializeField] private GameObject[] counter;
     [SerializeField] private GameObject[] _timesLettersBig;
+    [SerializeField] private GameObject _buttonLadenSpeichernDir;
     #endregion
     private bool _gameControllerStarted = false;
 
@@ -43,7 +45,6 @@ public class UnitySwitchExpertUser : MonoBehaviour
             mov.enabled = false;
             
             _buttonTimelineLength.SetActive(false);
-            _buttonAboutWebGL.gameObject.SetActive(false);
 
             _buttonKulissen.transform.SetParent(_buttonKulissen.transform.parent.parent);
             _buttonKulissen.GetComponent<RectTransform>().anchoredPosition = new Vector2(_buttonKulissen.GetComponent<RectTransform>().anchoredPosition.x, 465);
@@ -58,6 +59,7 @@ public class UnitySwitchExpertUser : MonoBehaviour
             _buttonMusic.transform.SetSiblingIndex(2);
 
             _buttonLadenSpeichern.SetActive(false);
+            _buttonLadenSpeichernDir.SetActive(false);
 
             _buttonMenueDirector.transform.GetChild(0).GetComponent<Image>().enabled = false; // switch button ausgrauen
             _buttonMenueDirector.GetComponent<Button>().enabled = false;
@@ -66,12 +68,13 @@ public class UnitySwitchExpertUser : MonoBehaviour
 
             _buttonHelp.GetComponent<RectTransform>().anchoredPosition = new Vector2(_buttonHelp.GetComponent<RectTransform>().anchoredPosition.x, 465);
             _buttonHelpPressed.GetComponent<RectTransform>().anchoredPosition = _buttonHelp.GetComponent<RectTransform>().anchoredPosition;
-            _buttonAboutWebGL.gameObject.SetActive(true);
-            _buttonAboutWebGL.GetComponent<RectTransform>().anchoredPosition = new Vector2(_buttonAboutWebGL.GetComponent<RectTransform>().anchoredPosition.x, 315);
-            _buttonAboutWebGL.transform.GetChild(0).gameObject.SetActive(true);
+            _buttonAbout.gameObject.SetActive(true);
+            _buttonAbout.GetComponent<RectTransform>().anchoredPosition = new Vector2(_buttonAbout.GetComponent<RectTransform>().anchoredPosition.x, 315);
+            _buttonAbout.transform.GetChild(0).gameObject.SetActive(true);
             _buttonMenueDirector.SetActive(false);
             _buttonFlyer.SetActive(true);
             _buttonFlyer.GetComponent<RectTransform>().anchoredPosition = new Vector2(_buttonFlyer.GetComponent<RectTransform>().anchoredPosition.x, 14);
+            flyerButtonTop.SetActive(true);
 
             _buttonMovie.SetActive(true);
             _buttonDummy.SetActive(false);
@@ -126,7 +129,6 @@ public class UnitySwitchExpertUser : MonoBehaviour
             _menueBuehne.SetActive(false);
             _buttonLicht.SetActive(false);
             _menueLicht.SetActive(false);
-            _buttonAbout.SetActive(false);
         }
     }
 }

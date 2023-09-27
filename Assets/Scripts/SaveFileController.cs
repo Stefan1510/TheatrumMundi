@@ -17,7 +17,9 @@ public class SaveFileController : MonoBehaviour
     [SerializeField] private RailMusicManager tmpMusicManager;
     [SerializeField] private CoulissesManager tmpCoulissesManager;
     [SerializeField] private LightAnimationRepresentation lightAnim;
+    [SerializeField] private SetLightColors setLightColors;
     [SerializeField] private GameObject _dialogSave, _dialogNewScene, _dialogLoadCode;
+    [SerializeField] private RailManager tmpRailmanager;
     [SerializeField] AnimationTimer _animTimer;
     [SerializeField] GameObject _borderWarning, _borderLoad;
     [SerializeField] Text _placeholderTextWarning;
@@ -58,7 +60,7 @@ public class SaveFileController : MonoBehaviour
 
             panelWarningInput = panelWarningInputVisitor;
             _loadSaveNew = 0;
-            StartCoroutine(LoadFileFromWWW("*Musterszene_leer_Visitor.json", "fromCode"));
+            StartCoroutine(LoadFileFromServer("*Musterszene_leer_Visitor.json", "fromCode"));
         }
         else
         {
@@ -243,18 +245,16 @@ public class SaveFileController : MonoBehaviour
                 tmpMusicManager.figCounterCircle[j].text = "0";
             }
 
-            //Debug.Log("tempscene: " + tempSceneData);
             if (SceneManaging.isExpert)
+            {
                 GetComponent<SceneDataController>().CreateScene(tempSceneData);
-
             SceneManaging.isPreviewLoaded = true;
-            lightAnim.ChangeImage();
+            }
 
             for (int i = 0; i < tmpCoulMan.GetComponent<CoulissesManager>().coulisses.Length; i++)
             {
                 tmpCoulMan.PlaceInShelf(i);   // alle kulissen zurueck ins shelf
             }
-
 
             StaticSceneData.StaticData = tempSceneData;
             GetComponent<UIController>().SceneriesApplyToUI();
@@ -262,10 +262,14 @@ public class SaveFileController : MonoBehaviour
             GetComponent<UIController>().RailsApplyToUI();
             for (int i = 0; i < tmpLightShelf.Length; i++)
                 tmpLightShelf[i].ToggleLightBlock(false);
+            tmpRailmanager.Update3DFigurePositions();
+            lightAnim.ChangeImage();
+            setLightColors.ChangeLightColor();
+            setLightColors.ChangeLiveColor(1);
 
             if (!SceneManaging.isExpert)    // besucherversion
             {
-                StartCoroutine(LoadFilesFromServer(false, "", false));
+                // StartCoroutine(LoadFilesFromServer(false, "", false));
             }
             else
             {
@@ -301,16 +305,16 @@ public class SaveFileController : MonoBehaviour
             SceneManaging.isPreviewLoaded = true;
         _selectedFile = fileName;
 
-        if (!SceneManaging.isExpert)
-        {
-            StartCoroutine(LoadFileFromWWW(fileName, "fromCode"));
-        }
-        else
-        {
-            LoadInformationPreview(fileName);
-            tmpFileButtonScene = fileButtonInstance;
-            tmpSnapshot.ShowSnapshot(Application.persistentDataPath + "/" + fileName);
-        }
+        // if (!SceneManaging.isExpert)
+        // {
+        //     StartCoroutine(LoadFileFromWWW(fileName, "fromCode"));
+        // }
+        // else
+        // {
+        LoadInformationPreview(fileName);
+        tmpFileButtonScene = fileButtonInstance;
+        tmpSnapshot.ShowSnapshot(Application.persistentDataPath + "/" + fileName);
+        // }
     }
     private void GenerateFileButton(string fileName, bool isPermamentScene, bool highlight)
     {
@@ -362,7 +366,7 @@ public class SaveFileController : MonoBehaviour
     public void LoadCodeNow()
     {
         panelCodeInput.SetActive(false);
-        StartCoroutine(LoadFilesFromServer(true, inputFieldShowCodeVisitor.text, false));
+        StartCoroutine(CheckIfCodeExists(true, inputFieldShowCodeVisitor.text, false));
         inputFieldShowCodeVisitor.text = "";
     }
     public void ClosePanelShowCode(GameObject panel)
@@ -379,7 +383,7 @@ public class SaveFileController : MonoBehaviour
         }
         _buttonsFileList.Clear();
     }
-    private IEnumerator LoadFilesFromServer(bool loadFromCode, string code, bool fromAwake)
+    private IEnumerator CheckIfCodeExists(bool loadFromCode, string code, bool fromAwake)
     {
         WWWForm form = new WWWForm();
         WWW www = new WWW(_basepath + "LoadFileNames.php", form);
@@ -409,7 +413,8 @@ public class SaveFileController : MonoBehaviour
                         // wenn die ersten 6 zeichen mit denen des eingegebenen codes uebereinstimmen
                         if (fileEntry.ToLower().Substring(0, 6) == code.ToLower())
                         {
-                            LoadSceneFromFile(fileEntry, null);
+                            //LoadSceneFromFile(fileEntry, null);
+                            StartCoroutine(LoadFileFromServer(fileEntry, "fromCode"));
                             found = true;
                             ClosePanelShowCode(_visitorPanelSave);
                         }
@@ -452,7 +457,7 @@ public class SaveFileController : MonoBehaviour
 
         if (fromAwake && !SceneManaging.isExpert)
         {
-            StartCoroutine(LoadFileFromWWW("*Musterszene_leer_Visitor.json", "fromCode"));
+            StartCoroutine(LoadFileFromServer("*Musterszene_leer_Visitor.json", "fromCode"));
         }
     }
     private void ShowFilesFromDirectory()
@@ -499,7 +504,7 @@ public class SaveFileController : MonoBehaviour
         writer.Write(json);
         writer.Close();
     }
-    public IEnumerator LoadFileFromWWW(string fileName, string status)
+    public IEnumerator LoadFileFromServer(string fileName, string status)
     {
         SceneDataController tmpSceneDataController = GetComponent<SceneDataController>();
         WWW www = new WWW(_basepath + "Saves/" + fileName);
@@ -508,27 +513,9 @@ public class SaveFileController : MonoBehaviour
         tempSceneData = tmpSceneDataController.CreateSceneDataFromJSON(_jsonString);
         tmpSceneDataController.CreateScene(tempSceneData);
 
-        string sceneMetaData = "";
-        sceneMetaData += tempSceneData.fileName + "\n\n";
-        sceneMetaData += "erstellt: " + tempSceneData.fileDate + "\n\n";
-        sceneMetaData += "Ersteller: " + tempSceneData.fileAuthor + "\n\n";
-        sceneMetaData += "Kommentar:\n" + tempSceneData.fileComment;
-        textFileMetaData.text = sceneMetaData;
-        string sceneContentData = "";
-        sceneContentData += "Dateiinformationen:\n\n";
-        sceneContentData += "Kulissen: " + tmpSceneDataController.countActiveSceneryElements.ToString() + "\n\n";
-        sceneContentData += "Figuren: " + tmpSceneDataController.countActiveFigureElements.ToString() + "\n\n";
-        sceneContentData += "Länge: " + "3 min\n\n";
-        sceneContentData += "Lichter: " + tmpSceneDataController.countActiveLightElements.ToString() + "\n\n";
-        sceneContentData += "Musik: " + tmpSceneDataController.countActiveMusicClips.ToString() + "\n\n";
-
-        textFileContentData.text = sceneContentData;
-        _animTimer.SetMaxTime(tmpSceneDataController.scenePieceLength);
-
         if (status == "fromCode" && !SceneManaging.isExpert)
         {
             LoadSceneFromTempToStatic();
-            //_canvas.GetComponent<ObjectShelfAll>().ButtonShelf02();
         }
 
         else if (status == "fromFlyerCreate")
@@ -686,7 +673,7 @@ public class SaveFileController : MonoBehaviour
     }
     public void OnClickNewScene()
     {
-        StartCoroutine(LoadFileFromWWW("*Musterszene_leer_Visitor.json", "fromCode"));
+        StartCoroutine(LoadFileFromServer("*Musterszene_leer_Visitor.json", "fromCode"));
         ClosePanelShowCode(_visitorPanelSave);
     }
     public void OnClickSaveTabs(int loadSaveNew)
