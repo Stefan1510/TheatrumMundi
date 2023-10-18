@@ -440,7 +440,6 @@ public class PressHelp : MonoBehaviour
                 StartCoroutine(gameController.GetComponent<SaveFileController>().LoadFileFromServer("*Musterszene_leer_Visitor.json", "fromCode"));
                 _newScene = true;
 
-
                 if (SceneManaging.saveDialogActive)
                 {
                     loadSaveDialog.SetActive(false);

@@ -180,7 +180,13 @@ public class ObjectShelfAll : MonoBehaviour
     }
     private void ButtonShelfI(int shelfNumber)
     {
-        MenueShelf02.GetComponent<CoulissesManager>().HighlightRail(false);
+        CoulissesManager tmpCoulisseManager = MenueShelf02.GetComponent<CoulissesManager>();
+        tmpCoulisseManager.HighlightRail(false);
+        for (int j = 0; j < tmpCoulisseManager.coulissesOnRails.Count; j++)
+        {
+            int k = int.Parse(tmpCoulisseManager.coulissesOnRails[j].name.Substring(8, 2)) - 1;
+            tmpCoulisseManager.Highlight(k, 0);
+        }
 
         MenueShelf01.SetActive(false);
         MenueShelf02.SetActive(false);
@@ -229,7 +235,7 @@ public class ObjectShelfAll : MonoBehaviour
                 SceneManaging.configMenueActive = 2;
                 if (AnimationTimer.GetTimerState() == AnimationTimer.TimerState.playing)
                     playerCtrls.ButtonPlay();
-                MenueShelf02.GetComponent<CoulissesManager>().HighlightRail(true);
+                tmpCoulisseManager.HighlightRail(true);
                 break;
             case 3:         // MenueLichtConfig
                 MenueShelf03.SetActive(true);

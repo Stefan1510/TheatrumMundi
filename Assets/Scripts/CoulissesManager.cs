@@ -535,7 +535,7 @@ public class CoulissesManager : MonoBehaviour
         }
         return hit;
     }
-    private void Highlight(int i, int color) // color: 0 = unhighlight ; 1 = highlight grey ; 2 = highlight green
+    public void Highlight(int i, int color) // color: 0 = unhighlight ; 1 = highlight grey ; 2 = highlight green
     {
         if (color == 1)
         {

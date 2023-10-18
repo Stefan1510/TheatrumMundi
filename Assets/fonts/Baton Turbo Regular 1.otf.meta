@@ -1,0 +1,32 @@
+fileFormatVersion: 2
+guid: 8f8ca8bb32b92fc408a6f37297ecae64
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - Baton Turbo
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: fb94ca947f2fc3e43bf848d0a95dc44c, type: 3}
+  - {fileID: 12800000, guid: 66ea86a715c79ce409d47df5f38252ff, type: 3}
+  - {fileID: 12800000, guid: 6ed1604352725f64f90a89af2bc9b234, type: 3}
+  - {fileID: 12800000, guid: 7c39fb9aeb6172f46bf3b10c06b86aaf, type: 3}
+  - {fileID: 12800000, guid: 32e5706ab7803a84ebeb59a9971efe42, type: 3}
+  - {fileID: 12800000, guid: c6b75aaaba59a9042b13d9c81a04d639, type: 3}
+  - {fileID: 12800000, guid: 89c0832b41d27a5468a027e4211973b0, type: 3}
+  - {fileID: 12800000, guid: 0ef960aa69e0bad4a8489bd576bee7f7, type: 3}
+  - {fileID: 12800000, guid: 15b56c8ae126ee540b70e5afd56402ee, type: 3}
+  - {fileID: 12800000, guid: 2b8251046a41c0a4e87974e7baa517a4, type: 3}
+  - {fileID: 12800000, guid: 2da722a5fccd5ba4290c418e6e8a67f1, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -10,7 +10,7 @@ public class AnimationTimer : MonoBehaviour
     private static float _timer = 0.0f;
     private static float _minTime = 0.0f;
     public static int _maxTime = 3 * 60;
-   
+
     public enum TimerState { stopped, playing, paused };
     private static TimerState _timerState = TimerState.stopped;
     void Start()
@@ -19,8 +19,8 @@ public class AnimationTimer : MonoBehaviour
         {
             _maxTime = 10 * 60;
         }
+        PauseTimer();
         ResetTime();
-
     }
     void Update()
     {
@@ -76,5 +76,5 @@ public class AnimationTimer : MonoBehaviour
     {
         return _timerState;
     }
-    
+
 }
