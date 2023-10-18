@@ -18,7 +18,7 @@ public class SaveFileController : MonoBehaviour
     [SerializeField] private CoulissesManager tmpCoulissesManager;
     [SerializeField] private LightAnimationRepresentation lightAnim;
     [SerializeField] private SetLightColors setLightColors;
-    [SerializeField] private GameObject _dialogSave, _dialogNewScene, _dialogLoadCode;
+    [SerializeField] private GameObject _dialogSave, _dialogNewScene, _dialogLoadCode, dialogQuitSave;
     [SerializeField] private RailManager tmpRailmanager;
     [SerializeField] AnimationTimer _animTimer;
     [SerializeField] GameObject _borderWarning, _borderLoad;
@@ -69,7 +69,7 @@ public class SaveFileController : MonoBehaviour
 
             //copy textures
             tmpSnapshot.SaveTexture2DToFile(texMusterszene, _basepath + "/#Musterszene_preview");
-            tmpSnapshot.SaveTexture2DToFile(texMusterSzeneLeer, _basepath + "/#Musterszene_leer_preview");
+            tmpSnapshot.SaveTexture2DToFile(texMusterSzeneLeer, _basepath + "/#NeueSzene_preview");
 
             if (!File.Exists(_basepath + "/#Musterszene.json"))
             {
@@ -81,11 +81,11 @@ public class SaveFileController : MonoBehaviour
                 writer.Write(json);
                 writer.Close();
 
-                jsonTextFile = Resources.Load<TextAsset>("Text/#Musterszene_leer");
+                jsonTextFile = Resources.Load<TextAsset>("Text/#NeueSzene");
                 sceneData = JsonUtility.FromJson<SceneData>(jsonTextFile.text);
                 json = JsonUtility.ToJson(sceneData);
 
-                writer = new StreamWriter(_basepath + "/#Musterszene_leer.json");
+                writer = new StreamWriter(_basepath + "/#NeueSzene.json");
                 writer.Write(json);
 
                 writer.Close();
@@ -248,7 +248,7 @@ public class SaveFileController : MonoBehaviour
             if (SceneManaging.isExpert)
             {
                 GetComponent<SceneDataController>().CreateScene(tempSceneData);
-            SceneManaging.isPreviewLoaded = true;
+                SceneManaging.isPreviewLoaded = true;
             }
 
             for (int i = 0; i < tmpCoulMan.GetComponent<CoulissesManager>().coulisses.Length; i++)
@@ -294,7 +294,7 @@ public class SaveFileController : MonoBehaviour
     }
     public void DeleteFile()
     {
-        if (_selectedFile != "" && _selectedFile != "#Musterszene.json" && _selectedFile != "#Musterszene_leer.json")
+        if (_selectedFile != "" && _selectedFile != "#Musterszene.json" && _selectedFile != "#NeueSzene.json")
             DeleteFileFromDirectory(_selectedFile);
     }
     public void LoadSceneFromFile(string fileName, Button fileButtonInstance)
@@ -331,22 +331,11 @@ public class SaveFileController : MonoBehaviour
 
         _buttonsFileList.Add(fileButtonInstance);
 
-        // if (fileName == "#Musterszene_leer.json")
-        //     fileName = "*Musterszene_leer.json";
-        // else if (fileName == "#Musterszene.json")
-        //     fileName = "*Musterszene.json";
-
         fileButtonInstance.name = fileName;
 
 
         if (highlight)
             fileButtonInstance.GetComponent<Button>().image.color = new Color32(64, 192, 16, 192);
-        //SceneManaging.isPreviewLoaded = true;
-
-        // fileButtonInstance.gameObject.SetActive(true);
-        // fileButtonInstance.onClick.AddListener(() => LoadSceneFromFile(fileName, fileButtonInstance));
-        // _buttonsFileList.Add(fileButtonInstance);
-
 
         if (isPermamentScene)
         {
@@ -756,5 +745,35 @@ public class SaveFileController : MonoBehaviour
     public void OnClickCloseCodeReminder()
     {
         codeReminder.SetActive(false);
+    }
+    public void UnhighlightButton()
+    {
+        // unhighlight all buttons
+        for (int i = 0; i < contentFileSelect.transform.childCount; i++)
+        {
+            contentFileSelect.transform.GetChild(i).GetComponent<Button>().image.color = new Color32(255, 255, 255, 255);
+        }
+
+        inputFileName.text = "";
+        inputAuthor.text = "";
+        inputComment.text = "";
+
+        //GetComponent<SceneDataController>().CreateScene(tempSceneData);
+        string sceneMetaData = "";
+        sceneMetaData += "Name: " + "\n\n";
+        sceneMetaData += "Datum: " + "\n\n";
+        sceneMetaData += "Autor/in: " + "\n\n";
+        sceneMetaData += "Kommentar:\n";
+        textFileMetaData.text = sceneMetaData;
+
+        string sceneContentData = "";
+        sceneContentData += "Kulissen: " + "\n\n"; 
+        sceneContentData += "Figuren: " + "\n\n"; 
+        sceneContentData += "Länge: " + " min\n\n";
+        sceneContentData += "Lichter: " + "\n\n"; 
+        sceneContentData += "Musik: " + "\n\n"; 
+        textFileContentData.text = sceneContentData;
+
+        tmpSnapshot.HidePreview();
     }
 }

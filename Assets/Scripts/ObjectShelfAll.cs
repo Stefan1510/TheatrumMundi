@@ -187,6 +187,8 @@ public class ObjectShelfAll : MonoBehaviour
             int k = int.Parse(tmpCoulisseManager.coulissesOnRails[j].name.Substring(8, 2)) - 1;
             tmpCoulisseManager.Highlight(k, 0);
         }
+        // empty file preview and unhighlight buttons in save/load
+        gameController.GetComponent<SaveFileController>().UnhighlightButton();
 
         MenueShelf01.SetActive(false);
         MenueShelf02.SetActive(false);

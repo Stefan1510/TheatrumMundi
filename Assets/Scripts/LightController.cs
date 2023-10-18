@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 public class LightController : MonoBehaviour
 {
+    #region variables
     public Toggle toggleLb;
     public Slider sliderLbIntensity;
     public Slider sliderLbPosition;
@@ -33,6 +34,7 @@ public class LightController : MonoBehaviour
     [HideInInspector] public Image PanelLbImage;
 
     [HideInInspector] public LightElement thisLightElement;
+    #endregion
 
     private void Awake()
     {
@@ -43,7 +45,6 @@ public class LightController : MonoBehaviour
         _lbCookieWidth = 1024;
         _lbCookieHeight = 1024;
         _lbCookieAttenuation = 128;
-        //_lbCookie = _lbCookieOriginal;
         _lbCookie = new Texture2D(_lbCookieWidth, _lbCookieHeight);
         _lbCookie.wrapModeU = TextureWrapMode.Clamp;
         _lbCookie.SetPixels(_lbCookie.GetPixels());
@@ -56,27 +57,21 @@ public class LightController : MonoBehaviour
         _lbColors_off = changeColors(_lbColors_off, new Color(0f, 0f, 0f, 0f));
         ChangeHorizontal(256);
         ChangeIntensity(sliderLbIntensity.value);
-        // ChangePosition(sliderLbPosition.value);
         ChangeHeight(sliderLbHeight.value);
         PanelLbImage = toggleLb.transform.parent.parent.GetComponent<Image>();
         PanelLbImage.color = new Color(171f / 255f, 171f / 255f, 171f / 255f, 160f / 255f);
-
     }
     void Start()
     {
         thisLightElement = StaticSceneData.StaticData.lightElements.Find(le => le.name == gameObject.name);
-        //Debug.Log(PanelLbImage);
         LightActivation(false);
         ChangePosition(sliderLbPosition.value);
-        //Debug.Log("pos: " + sliderLbPosition.value);
     }
     public void LightActivation(bool onOffSwitch)
     {
         //lightElements muessen erst noch mit der StaticData bekannt gemacht werden --> SceneDataController
-
         thisLightElement.active = onOffSwitch;
         GetComponent<Light>().enabled = onOffSwitch;
-        //StaticSceneData.Lights3D();
         UiSetting_LB_Image.GetComponent<LightRepresentationController>().SetActive(onOffSwitch);
         if (onOffSwitch)
         {
@@ -86,18 +81,15 @@ public class LightController : MonoBehaviour
         {
             PanelLbImage.color = new Color(171f / 255f, 171f / 255f, 171f / 255f, 160f / 255f);
         }
-        //ChangePosition(sliderLbPosition.value);
     }
     public void ChangeIntensity(float intensityValue)
     {
         thisLightElement.intensity = intensityValue;
-        //Debug.Log("intensity: "+thisLightElement.intensity+", thislightEl: "+thisLightElement.name);
         GetComponent<Light>().intensity = intensityValue;
         UiSetting_LB_Image.GetComponent<LightRepresentationController>().setBrightness_UiSetting_LB_Light_angle(intensityValue);
     }
     public void ChangePosition(float PositionValue)
     {
-        //Debug.Log(name + " YAngle: " + _startYAngle);
         thisLightElement.z = PositionValue;
         float angleYValue = PositionValue * 10;
         transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, _startPosition + PositionValue);
@@ -114,25 +106,21 @@ public class LightController : MonoBehaviour
     }
     public void ChangeHorizontalValue(float HorizontalValue)
     {
-        //ChangeVertical(VerticalValue);
         thisLightElement.angle_v = (int)HorizontalValue;
 
         if (thisLightElement.stagePosition == 1)
         {
             ChangeVertical(thisLightElement.angle_v);
-            Debug.Log("pos: " + thisLightElement.stagePosition + ", this: " + thisLightElement.name + thisLightElement.angle_v);
         }
         else
         {
             ChangeVerticalLeft(thisLightElement.angle_v);
-            Debug.Log("pos: " + thisLightElement.stagePosition + ", this: " + thisLightElement.name);
         }
         UiSetting_LB_Image.GetComponent<LightRepresentationController>().RotateVertical(HorizontalValue);
     }
 
     public void ChangeVerticalValue(float VerticalValue)
     {
-        //ChangeHorizontal(HorizontalValue);
         thisLightElement.angle_h = (int)VerticalValue;
 
         if (thisLightElement.stagePosition == 1)
@@ -140,13 +128,11 @@ public class LightController : MonoBehaviour
         else
             ChangeHorizontalLeft(thisLightElement.angle_h);
 
-        //ChangeHorizontal(thisLightElement.angle_h);
         UiSetting_LB_Image.GetComponent<LightRepresentationController>().RotateHorizontal(VerticalValue);
     }
 
     public void ChangeHorizontal(int HorizontalValue)
     {
-        //Debug.Log("PING ChangeHorizontal");
         int attenuation = _lbCookieAttenuation;
         HorizontalValue = _lbCookieWidth / 2 - HorizontalValue; //wie weit geht das Licht zu, hier noch auf beiden Seiten
         _lbAngleHorizontal = Mathf.Max(1, (int)(HorizontalValue) - attenuation);
@@ -158,10 +144,9 @@ public class LightController : MonoBehaviour
 
     public void ChangeHorizontalLeft(int HorizontalValue)
     {
-        //Debug.Log("PING ChangeHorizontal");
         int attenuation = _lbCookieAttenuation;
         HorizontalValue = _lbCookieWidth / 2 - HorizontalValue; //wie weit geht das Licht zu, hier noch auf beiden Seiten
-        _lbAngleHorizontal = Mathf.Max(1, (int)(HorizontalValue) - attenuation);
+        _lbAngleHorizontal = Mathf.Max(1, HorizontalValue - attenuation);
         ChangeCookie();
 
         FlipTexture(ref _lbCookie);
@@ -174,7 +159,7 @@ public class LightController : MonoBehaviour
     {
         int attenuation = _lbCookieAttenuation;
         VerticalValue = _lbCookieWidth / 2 - VerticalValue; //wie weit geht das Licht zu, hier noch auf beiden Seiten
-        _lbAngleVertical = Mathf.Max(1, (int)(VerticalValue) - attenuation);
+        _lbAngleVertical = Mathf.Max(1, VerticalValue - attenuation);
         ChangeCookie();
 
         _lbCookie.Apply();
@@ -185,7 +170,7 @@ public class LightController : MonoBehaviour
     {
         int attenuation = _lbCookieAttenuation;
         VerticalValue = _lbCookieWidth / 2 - VerticalValue; //wie weit geht das Licht zu, hier noch auf beiden Seiten
-        _lbAngleVertical = Mathf.Max(1, (int)(VerticalValue) - attenuation);
+        _lbAngleVertical = Mathf.Max(1, VerticalValue - attenuation);
         ChangeCookie();
 
         FlipTexture(ref _lbCookie);
