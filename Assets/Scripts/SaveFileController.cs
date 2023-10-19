@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using System.IO;
 using TMPro;
 using UnityEditor;
+using System;
 
 public class SaveFileController : MonoBehaviour
 {
@@ -34,6 +35,7 @@ public class SaveFileController : MonoBehaviour
     [SerializeField] GameObject _showSavedCode;
     public Button fileSelectButton; // prefab
     private List<Button> _buttonsFileList = new List<Button>();
+    [SerializeField] private Button _buttonLoad, _buttonDelete;
     public Text textFileMetaData, textFileContentData, textShowCode;
     private SceneData tempSceneData;
     private string _selectedFile, _basepath;
@@ -97,6 +99,10 @@ public class SaveFileController : MonoBehaviour
         loadFromAwake = true;
 
         tmpCoulissesManager.Awake();
+
+        // make buttons not interactable
+        _buttonLoad.interactable = false;
+        _buttonDelete.interactable = false;
     }
     private void Update()
     {
@@ -117,6 +123,7 @@ public class SaveFileController : MonoBehaviour
     }
     public void SaveSceneToFile(int overwrite) // 0=save, 1=overwrite, 2=save with number behind
     {
+        Debug.Log("hier?");
         bool foundName = false;
         string filePath = "";
         SceneData sceneDataSave = GetComponent<SceneDataController>().CreateSceneData(false);
@@ -153,6 +160,9 @@ public class SaveFileController : MonoBehaviour
                 StaticSceneData.StaticData.pieceLength = sceneDataSave.pieceLength;
                 string sceneDataSaveString = GetComponent<SceneDataController>().CreateJsonFromSceneData(StaticSceneData.StaticData);
 
+                if (SceneManaging.saveQuit)
+                    StaticSceneData.StaticData.fileName = "autosave-file_" + DateTime.Now.Year+"_"+DateTime.Now.Month+"_"+DateTime.Now.Day+"_"+DateTime.Now.Hour+"-"+DateTime.Now.Minute;
+
                 if (overwrite == 0) // auf speichern geklickt
                 {
                     if (_buttonsFileList.Count > 0)
@@ -160,7 +170,7 @@ public class SaveFileController : MonoBehaviour
                         foreach (Button btn in _buttonsFileList)
                         {
                             string[] x = btn.name.Split('.');
-                            if (x[0] == sceneDataSave.fileName) // Name is already in loaded files -> overwrite?
+                            if (x[0] == StaticSceneData.StaticData.fileName) // Name is already in loaded files -> overwrite?
                             {
                                 panelOverwrite.SetActive(true);
                                 foundName = true;
@@ -170,7 +180,7 @@ public class SaveFileController : MonoBehaviour
                     if (!foundName) // wenn name nicht gefunden wurde
                     {
                         // wenn kein Name eingegeben wurde
-                        if (string.IsNullOrEmpty(sceneDataSave.fileName.ToString())) // Warnung, dass ein name eingegeben werden muss
+                        if (string.IsNullOrEmpty(StaticSceneData.StaticData.fileName.ToString())) // Warnung, dass ein name eingegeben werden muss
                         {
                             _borderWarning.SetActive(true);
                             _placeholderTextWarning.color = new Color(1, 0, 0, 0.27f);
@@ -178,7 +188,7 @@ public class SaveFileController : MonoBehaviour
                         // wenn es namen noch nicht gibt: normal speichern
                         else
                         {
-                            filePath = sceneDataSave.fileName + ".json";
+                            filePath = StaticSceneData.StaticData.fileName + ".json";
 
                             if (sceneDataSaveString.Length != 0)
                             {
@@ -305,16 +315,13 @@ public class SaveFileController : MonoBehaviour
             SceneManaging.isPreviewLoaded = true;
         _selectedFile = fileName;
 
-        // if (!SceneManaging.isExpert)
-        // {
-        //     StartCoroutine(LoadFileFromWWW(fileName, "fromCode"));
-        // }
-        // else
-        // {
         LoadInformationPreview(fileName);
         tmpFileButtonScene = fileButtonInstance;
         tmpSnapshot.ShowSnapshot(Application.persistentDataPath + "/" + fileName);
-        // }
+
+        // make buttons interactable
+        _buttonLoad.interactable = true;
+        _buttonDelete.interactable = true;
     }
     private void GenerateFileButton(string fileName, bool isPermamentScene, bool highlight)
     {
@@ -332,7 +339,6 @@ public class SaveFileController : MonoBehaviour
         _buttonsFileList.Add(fileButtonInstance);
 
         fileButtonInstance.name = fileName;
-
 
         if (highlight)
             fileButtonInstance.GetComponent<Button>().image.color = new Color32(64, 192, 16, 192);
@@ -487,6 +493,7 @@ public class SaveFileController : MonoBehaviour
     private void WriteFileToDirectory(string json, string filePath)
     {
         string path = _basepath + "\\" + filePath;
+        Debug.Log("path: " + path);
         tmpSnapshot.CallTakeSnapshot(path.Substring(0, path.Length - 5));
         Debug.LogWarning(path);
         StreamWriter writer = new StreamWriter(path, true);
@@ -648,7 +655,9 @@ public class SaveFileController : MonoBehaviour
     private void DeleteFileFromDirectory(string FileName)
     {
         string path = _basepath + "\\" + FileName;
+        string pathImage = _basepath + "\\" + FileName.Substring(0,FileName.Length-5)+"_preview.jpg";
         File.Delete(path);
+        File.Delete(pathImage);
         ShowFilesFromDirectory();
     }
     public void SaveVisitorVersion()
@@ -679,7 +688,7 @@ public class SaveFileController : MonoBehaviour
                 code = "";
                 for (int i = 0; i < 6; i++)
                 {
-                    int a = Random.Range(0, characters.Length);
+                    int a = UnityEngine.Random.Range(0, characters.Length);
                     code += characters[a].ToString();
                 }
                 _showSavedCode.transform.GetChild(1).GetComponent<Text>().text = code;
@@ -767,13 +776,17 @@ public class SaveFileController : MonoBehaviour
         textFileMetaData.text = sceneMetaData;
 
         string sceneContentData = "";
-        sceneContentData += "Kulissen: " + "\n\n"; 
-        sceneContentData += "Figuren: " + "\n\n"; 
+        sceneContentData += "Kulissen: " + "\n\n";
+        sceneContentData += "Figuren: " + "\n\n";
         sceneContentData += "Länge: " + " min\n\n";
-        sceneContentData += "Lichter: " + "\n\n"; 
-        sceneContentData += "Musik: " + "\n\n"; 
+        sceneContentData += "Lichter: " + "\n\n";
+        sceneContentData += "Musik: " + "\n\n";
         textFileContentData.text = sceneContentData;
 
         tmpSnapshot.HidePreview();
+
+        // make buttons not interactable
+        _buttonLoad.interactable = false;
+        _buttonDelete.interactable = false;
     }
 }

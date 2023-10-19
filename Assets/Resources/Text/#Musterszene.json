@@ -608,13 +608,6 @@
                     "moment": 473.8797607421875,
                     "railStart": 0,
                     "layer": 0
-                },
-                {
-                    "name": "Radfahrer(Clone)_002",
-                    "instanceNr": 2,
-                    "moment": 473.8797607421875,
-                    "railStart": 5,
-                    "layer": 0
                 }
             ]
         },
@@ -921,18 +914,11 @@
                     "name": "Ruderschiff02(Clone)_001",
                     "instanceNr": 1,
                     "moment": 238.06178283691407,
-                    "railStart": 2,
-                    "layer": 1
-                },
-                {
-                    "name": "Ruderschiff02(Clone)_002",
-                    "instanceNr": 2,
-                    "moment": 250.0062255859375,
                     "railStart": 3,
                     "layer": 1
                 },
                 {
-                    "name": "Ruderschiff02(Clone)_003",
+                    "name": "Ruderschiff02(Clone)_002",
                     "instanceNr": 3,
                     "moment": 121.0062255859375,
                     "railStart": 3,

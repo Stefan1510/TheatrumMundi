@@ -39,6 +39,7 @@ public static class SceneManaging
     public static float alpha = 1;
 
     public static bool recording = false;
+    public static bool saveQuit = false;
     #endregion
     public static void createRectangle(GameObject obj, Color col, double rectHeight, GameObject prefab, double tmpLength)
     {
