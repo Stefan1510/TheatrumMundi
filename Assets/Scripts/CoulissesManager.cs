@@ -11,7 +11,7 @@ public class CoulissesManager : MonoBehaviour
     public GameObject scenerySettings, mainMenue, textPositionZCoulisses, colliderSettings, colliderRailImage;
     public GameObject deleteButton, sliderX, sliderY, sliderPosX, sliderPosY;
     [SerializeField] TextMeshProUGUI sceneryName;
-    [SerializeField] Toggle _toggleMirrored;
+    [SerializeField] GameObject toggleMirror;
     [HideInInspector] public List<GameObject> coulissesOnRails;
     public GameObject[] coulisses = new GameObject[21];
     [HideInInspector] public float railWidth, railHeight;
@@ -239,6 +239,7 @@ public class CoulissesManager : MonoBehaviour
                     {
                         SetIndexTabActive(hitIndexTab);
                         HighlightRail(true);
+                        ShowCurrentOrder();
                     }
                 }
 
@@ -251,7 +252,6 @@ public class CoulissesManager : MonoBehaviour
                     }
                     else
                     {
-                        Highlight(currentObjectIndex, 2);
                         ShowDeleteButton(deleteButton, coulisses[currentObjectIndex], false);
                         sliderX.GetComponent<Slider>().value = coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.x / 270;
                         sliderY.GetComponent<Slider>().value = (coulisses[currentObjectIndex].GetComponent<RectTransform>().localPosition.y / 260) + 0.515f;
@@ -348,10 +348,8 @@ public class CoulissesManager : MonoBehaviour
 
                         if (clickCoulisseFromShelf)
                         {
-                            int tmpCount = collections[currentTabIndex].transform.childCount;
+                            ShowCurrentOrder();
 
-                            textPositionZCoulisses.GetComponent<TextMeshProUGUI>().text = "1/" + tmpCount;
-                            coulisses[currentObjectIndex].transform.SetSiblingIndex(tmpCount - 1);
                         }
                         else
                         {
@@ -559,12 +557,24 @@ public class CoulissesManager : MonoBehaviour
             }
             ShowDeleteButton(deleteButton, coulisses[i], true);
 
-            //StaticSceneData.StaticData.sceneryElements[i].emission = true;
+            //Spiegelung
+            if (isMirrored[i])
+            {
+                toggleMirror.SetActive(true);
+            }
+            else
+            {
+                toggleMirror.SetActive(false);
+                Debug.Log("nicht gepsiegelt");
+            }
+
             StaticSceneData.StaticData.sceneryElements[i].outline = true;
             isHighlighted[i] = true;
         }
         else
         {
+            Debug.Log("unhiglight");
+            toggleMirror.SetActive(false);
             coulisses[i].GetComponent<Image>().color = colCoulisse;
             ShowDeleteButton(deleteButton, coulisses[i], false);
             StaticSceneData.StaticData.sceneryElements[i].outline = false;
@@ -572,10 +582,6 @@ public class CoulissesManager : MonoBehaviour
             if (gameController.GetComponent<UnitySwitchExpertUser>()._isExpert)
             {
                 scenerySettings.SetActive(false);
-                if (isMirrored[i])
-                    _toggleMirrored.isOn = true;
-                else
-                    _toggleMirrored.isOn = false;
             }
         }
     }
@@ -628,6 +634,7 @@ public class CoulissesManager : MonoBehaviour
         if (isMirrored[currentObjectIndex])
         {
             isMirrored[currentObjectIndex] = false;
+            toggleMirror.SetActive(false);
             coulisses[currentObjectIndex].GetComponent<RectTransform>().eulerAngles = new Vector3(0.0f, 0.0f, 0.0f);
             StaticSceneData.StaticData.sceneryElements[currentObjectIndex].mirrored = false;
             deleteButton.GetComponent<RectTransform>().localPosition = new Vector3(deleteButton.GetComponent<RectTransform>().localPosition.x, deleteButton.GetComponent<RectTransform>().localPosition.y, -1.0f);
@@ -635,6 +642,7 @@ public class CoulissesManager : MonoBehaviour
         else
         {
             isMirrored[currentObjectIndex] = true;
+            toggleMirror.SetActive(true);
             StaticSceneData.StaticData.sceneryElements[currentObjectIndex].mirrored = true;
             coulisses[currentObjectIndex].GetComponent<RectTransform>().eulerAngles = new Vector3(0.0f, 180.0f, 0.0f);
             deleteButton.GetComponent<RectTransform>().localPosition = new Vector3(deleteButton.GetComponent<RectTransform>().localPosition.x, deleteButton.GetComponent<RectTransform>().localPosition.y, 1.0f);
@@ -726,6 +734,13 @@ public class CoulissesManager : MonoBehaviour
         collections[currentIndex].SetActive(true);
         indexTabImages[currentIndex].SetActive(true);
         currentTabIndex = currentIndex;
+    }
+    void ShowCurrentOrder()
+    {
+        int tmpCount = collections[currentTabIndex].transform.childCount;
+
+        textPositionZCoulisses.GetComponent<TextMeshProUGUI>().text = "1/" + tmpCount;
+        coulisses[currentObjectIndex].transform.SetSiblingIndex(tmpCount - 1);
     }
     public void PublicUpdate()
     {
