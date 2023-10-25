@@ -11,6 +11,7 @@ public class CoulissesManager : MonoBehaviour
     public GameObject scenerySettings, mainMenue, textPositionZCoulisses, colliderSettings, colliderRailImage;
     public GameObject deleteButton, sliderX, sliderY, sliderPosX, sliderPosY;
     [SerializeField] TextMeshProUGUI sceneryName;
+    [SerializeField] Toggle _toggleMirrored;
     [HideInInspector] public List<GameObject> coulissesOnRails;
     public GameObject[] coulisses = new GameObject[21];
     [HideInInspector] public float railWidth, railHeight;
@@ -185,6 +186,7 @@ public class CoulissesManager : MonoBehaviour
                         Highlight(currentObjectIndex, 2);
                         ShowDeleteButton(deleteButton, coulisses[currentObjectIndex], false);
                     }
+
                     // if coulisse is clicked in shelf ('first time')
                     if (coulisses[currentObjectIndex].GetComponent<RectTransform>().rect.width.ToString().Substring(0, 5) == shelfSizeWidth[currentObjectIndex].ToString().Substring(0, 5))
                     {
@@ -570,6 +572,10 @@ public class CoulissesManager : MonoBehaviour
             if (gameController.GetComponent<UnitySwitchExpertUser>()._isExpert)
             {
                 scenerySettings.SetActive(false);
+                if (isMirrored[i])
+                    _toggleMirrored.isOn = true;
+                else
+                    _toggleMirrored.isOn = false;
             }
         }
     }
@@ -624,12 +630,14 @@ public class CoulissesManager : MonoBehaviour
             isMirrored[currentObjectIndex] = false;
             coulisses[currentObjectIndex].GetComponent<RectTransform>().eulerAngles = new Vector3(0.0f, 0.0f, 0.0f);
             StaticSceneData.StaticData.sceneryElements[currentObjectIndex].mirrored = false;
+            deleteButton.GetComponent<RectTransform>().localPosition = new Vector3(deleteButton.GetComponent<RectTransform>().localPosition.x, deleteButton.GetComponent<RectTransform>().localPosition.y, -1.0f);
         }
         else
         {
             isMirrored[currentObjectIndex] = true;
             StaticSceneData.StaticData.sceneryElements[currentObjectIndex].mirrored = true;
             coulisses[currentObjectIndex].GetComponent<RectTransform>().eulerAngles = new Vector3(0.0f, 180.0f, 0.0f);
+            deleteButton.GetComponent<RectTransform>().localPosition = new Vector3(deleteButton.GetComponent<RectTransform>().localPosition.x, deleteButton.GetComponent<RectTransform>().localPosition.y, 1.0f);
         }
         StaticSceneData.Sceneries3D();
     }
@@ -650,7 +658,7 @@ public class CoulissesManager : MonoBehaviour
             }
         }
         StaticSceneData.StaticData.sceneryElements[currentObjectIndex].zPos = coulisses[currentObjectIndex].transform.GetSiblingIndex();
-        int val = (coulisses[currentObjectIndex].transform.parent.transform.childCount - coulisses[currentObjectIndex].transform.GetSiblingIndex());
+        int val = coulisses[currentObjectIndex].transform.parent.transform.childCount - coulisses[currentObjectIndex].transform.GetSiblingIndex();
         //Debug.Log("zPos: " + val);
         textPositionZCoulisses.GetComponent<TextMeshProUGUI>().text = val + "/" + coulisses[currentObjectIndex].transform.parent.transform.childCount;
         //Debug.Log("val: " + val + ", text: " + textPositionZCoulisses.GetComponent<Text>().text);
@@ -680,6 +688,11 @@ public class CoulissesManager : MonoBehaviour
     private void RemoveCoulisse()
     {
         int i = int.Parse(deleteButton.transform.parent.name.Substring(8, 2)) - 1;
+        if (isMirrored[i])
+        {
+            currentObjectIndex = i;
+            MirrorObject();
+        }
         PlaceInShelf(i);
         StaticSceneData.StaticData.sceneryElements[i].active = false;
         StaticSceneData.Sceneries3D();

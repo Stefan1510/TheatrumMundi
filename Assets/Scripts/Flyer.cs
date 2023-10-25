@@ -61,7 +61,7 @@ public class Flyer : MonoBehaviour
             SceneManaging.flyerActive = true;
 
             // load new scene
-            StartCoroutine(tmpFileController.LoadFileFromServer("*Musterszene_leer_Visitor.json", "fromFlyerDelete"));
+            StartCoroutine(tmpFileController.LoadFileFromServer("Musterszene_leer_Visitor.json", "fromFlyerDelete"));
 
             warningPanel.SetActive(false);
             // destroy children

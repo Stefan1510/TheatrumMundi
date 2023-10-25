@@ -7,7 +7,7 @@ public class AboutDialog : MonoBehaviour
     public void OpenLink(string str)
     {
         if (str == "skd")
-            Application.OpenURL("https://skd-online-collection.skd.museum/Kollektion?id=1336");
+            Application.OpenURL("https://skd-online-collection.skd.museum/Kollektion?id=1544");
         else if (str == "br")
             Application.OpenURL("https://www.bundesregierung.de/breg-de/bundesregierung/bundeskanzleramt/staatsministerin-fuer-kultur-und-medien");
         else if (str == "nsk")

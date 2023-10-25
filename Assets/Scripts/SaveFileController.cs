@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.IO;
 using TMPro;
-using UnityEditor;
 using System;
 
 public class SaveFileController : MonoBehaviour
@@ -51,18 +50,18 @@ public class SaveFileController : MonoBehaviour
     {
         if (!SceneManaging.isExpert)
         {
-            if (Application.absoluteURL == "tm.skd.museum")
-            {
-                _basepath = "http://tm.skd.museum/";
-            }
-            else
-            {
-                _basepath = "https://lightframefx.de/extras/theatrum-mundi/";
-            }
+            // if (Application.absoluteURL == "tm.skd.museum")
+            // {
+            // _basepath = "https://tm.skd.museum/";
+            // }
+            // else
+            // {
+            _basepath = "https://lightframefx.de/extras/theatrum-mundi/";
+            StartCoroutine(LoadFileFromServer("Musterszene_leer_Visitor.json", "fromCode"));
+            // }
 
             panelWarningInput = panelWarningInputVisitor;
             _loadSaveNew = 0;
-            StartCoroutine(LoadFileFromServer("*Musterszene_leer_Visitor.json", "fromCode"));
         }
         else
         {
@@ -123,7 +122,6 @@ public class SaveFileController : MonoBehaviour
     }
     public void SaveSceneToFile(int overwrite) // 0=save, 1=overwrite, 2=save with number behind
     {
-        Debug.Log("hier?");
         bool foundName = false;
         string filePath = "";
         SceneData sceneDataSave = GetComponent<SceneDataController>().CreateSceneData(false);
@@ -161,7 +159,7 @@ public class SaveFileController : MonoBehaviour
                 string sceneDataSaveString = GetComponent<SceneDataController>().CreateJsonFromSceneData(StaticSceneData.StaticData);
 
                 if (SceneManaging.saveQuit)
-                    StaticSceneData.StaticData.fileName = "autosave-file_" + DateTime.Now.Year+"_"+DateTime.Now.Month+"_"+DateTime.Now.Day+"_"+DateTime.Now.Hour+"-"+DateTime.Now.Minute;
+                    StaticSceneData.StaticData.fileName = "autosave-file_" + DateTime.Now.Year + "_" + DateTime.Now.Month + "_" + DateTime.Now.Day + "_" + DateTime.Now.Hour + "-" + DateTime.Now.Minute;
 
                 if (overwrite == 0) // auf speichern geklickt
                 {
@@ -194,6 +192,7 @@ public class SaveFileController : MonoBehaviour
                             {
                                 WriteFileToDirectory(sceneDataSaveString, filePath);
                                 GenerateFileButton(filePath, true, true);
+                                LoadInformationPreview(filePath);
                             }
                             panelOverwrite.SetActive(false);
                         }
@@ -452,7 +451,7 @@ public class SaveFileController : MonoBehaviour
 
         if (fromAwake && !SceneManaging.isExpert)
         {
-            StartCoroutine(LoadFileFromServer("*Musterszene_leer_Visitor.json", "fromCode"));
+            StartCoroutine(LoadFileFromServer("Musterszene_leer_Visitor.json", "fromCode"));
         }
     }
     private void ShowFilesFromDirectory()
@@ -493,7 +492,6 @@ public class SaveFileController : MonoBehaviour
     private void WriteFileToDirectory(string json, string filePath)
     {
         string path = _basepath + "\\" + filePath;
-        Debug.Log("path: " + path);
         tmpSnapshot.CallTakeSnapshot(path.Substring(0, path.Length - 5));
         Debug.LogWarning(path);
         StreamWriter writer = new StreamWriter(path, true);
@@ -506,7 +504,10 @@ public class SaveFileController : MonoBehaviour
         WWW www = new WWW(_basepath + "Saves/" + fileName);
         yield return www;
         _jsonString = www.text;
+        Debug.Log("json: " + _jsonString);
+        Debug.Log("path: " + _basepath + "/Saves/" + fileName);
         tempSceneData = tmpSceneDataController.CreateSceneDataFromJSON(_jsonString);
+        Debug.Log("data: " + tempSceneData.figureElements.Count);
         tmpSceneDataController.CreateScene(tempSceneData);
 
         if (status == "fromCode" && !SceneManaging.isExpert)
@@ -655,7 +656,7 @@ public class SaveFileController : MonoBehaviour
     private void DeleteFileFromDirectory(string FileName)
     {
         string path = _basepath + "\\" + FileName;
-        string pathImage = _basepath + "\\" + FileName.Substring(0,FileName.Length-5)+"_preview.jpg";
+        string pathImage = _basepath + "\\" + FileName.Substring(0, FileName.Length - 5) + "_preview.jpg";
         File.Delete(path);
         File.Delete(pathImage);
         ShowFilesFromDirectory();
@@ -671,7 +672,7 @@ public class SaveFileController : MonoBehaviour
     }
     public void OnClickNewScene()
     {
-        StartCoroutine(LoadFileFromServer("*Musterszene_leer_Visitor.json", "fromCode"));
+        StartCoroutine(LoadFileFromServer("Musterszene_leer_Visitor.json", "fromCode"));
         ClosePanelShowCode(_visitorPanelSave);
     }
     public void OnClickSaveTabs(int loadSaveNew)

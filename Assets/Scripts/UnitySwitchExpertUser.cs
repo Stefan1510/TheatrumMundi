@@ -21,6 +21,9 @@ public class UnitySwitchExpertUser : MonoBehaviour
     [SerializeField] private GameObject _buttonMusic;
     [SerializeField] private GameObject _buttonAbout;
     [SerializeField] private GameObject _buttonDummy; // leeres dummy
+    [SerializeField] private GameObject _buttonClose;
+    [SerializeField] private Light backgroundLight;
+    [SerializeField] private GameObject titleCoulisses;
 
     [SerializeField] private GameObject _buttonMenueDirector, _buttonMenueConfig, _buttonHelp, _buttonHelpPressed, _buttonFlyer, _buttonMovie;
     [SerializeField] private GameObject flyerButtonTop;
@@ -42,6 +45,9 @@ public class UnitySwitchExpertUser : MonoBehaviour
         SceneManaging.isExpert = _isExpert;
         if (!_isExpert)
         {
+            titleCoulisses.SetActive(false);
+            backgroundLight.transform.eulerAngles = new Vector3(25, backgroundLight.transform.eulerAngles.y,  backgroundLight.transform.eulerAngles.z);
+            _buttonClose.SetActive(false);
             mov.enabled = false;
             
             _buttonTimelineLength.SetActive(false);
