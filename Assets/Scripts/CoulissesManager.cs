@@ -412,7 +412,6 @@ public class CoulissesManager : MonoBehaviour
                         && coulisses[currentObjectIndex].transform.position.y > liveView.transform.position.y - liveView.GetComponent<RectTransform>().sizeDelta.y / 2
                         && coulisses[currentObjectIndex].transform.position.y < liveView.transform.position.y + liveView.GetComponent<RectTransform>().sizeDelta.y / 2)
                         {
-                            //Debug.Log("hi");
                             helpButton.GetComponent<PressHelp>().helpTextLiveView.SetActive(true);
                         }
 
@@ -559,21 +558,15 @@ public class CoulissesManager : MonoBehaviour
 
             //Spiegelung
             if (isMirrored[i])
-            {
                 toggleMirror.SetActive(true);
-            }
             else
-            {
                 toggleMirror.SetActive(false);
-                Debug.Log("nicht gepsiegelt");
-            }
 
             StaticSceneData.StaticData.sceneryElements[i].outline = true;
             isHighlighted[i] = true;
         }
         else
         {
-            Debug.Log("unhiglight");
             toggleMirror.SetActive(false);
             coulisses[i].GetComponent<Image>().color = colCoulisse;
             ShowDeleteButton(deleteButton, coulisses[i], false);

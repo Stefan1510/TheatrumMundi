@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class AboutDialog : MonoBehaviour
 {
+    [SerializeField] private Texture2D _textureHand;
     public void OpenLink(string str)
     {
         if (str == "skd")
@@ -20,5 +22,12 @@ public class AboutDialog : MonoBehaviour
             Application.OpenURL("http://www.drematrix.de/");
         else if (str == "light")
             Application.OpenURL("https://lightframefx.de/");
+    }
+    public void ChangeMouseIcon(bool hoverOver)
+    {
+        if(hoverOver)
+        Cursor.SetCursor(_textureHand,new Vector2(_textureHand.width/2,0),CursorMode.Auto);
+        else
+        Cursor.SetCursor(null,Vector2.zero,CursorMode.Auto);
     }
 }

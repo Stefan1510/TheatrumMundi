@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
@@ -32,9 +30,7 @@ public class sliderValueToInputValue : MonoBehaviour
 
 	void Start()
 	{
-		slider = this.GetComponent<Slider>();
-		//Debug.Log("+++Name of Slider: " +slider.ToString());
-		//Debug.Log("===START: " +slider.value);
+		slider = GetComponent<Slider>();
 		currSliderVal = slider.value;
 		currSliderVal2 = slider.value;
 		currSliderVal3 = slider.value;
@@ -109,7 +105,7 @@ public class sliderValueToInputValue : MonoBehaviour
 				v.x = v.x + ((slider.value - currSliderVal) * shiftScaleFacHor);
 				v.y = attachedRailSide.transform.localPosition.y;
 				//topview
-				v2.y = v2.y + ((slider.value - currSliderVal2) * shiftScaleFacHor/1.5f);
+				v2.y = v2.y + ((slider.value - currSliderVal2) * shiftScaleFacHor);
 				//3d, switch direction because of the coordinate-system in 3d instead of 2d
 				v3.x = v3.x + ((slider.value - currSliderVal3) * shiftScaleFac3d * -1.0f);
 				v3.y = rail3D.transform.localPosition.y;

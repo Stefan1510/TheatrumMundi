@@ -46,10 +46,14 @@ public class UnitySwitchExpertUser : MonoBehaviour
         if (!_isExpert)
         {
             titleCoulisses.SetActive(false);
-            backgroundLight.transform.eulerAngles = new Vector3(25, backgroundLight.transform.eulerAngles.y,  backgroundLight.transform.eulerAngles.z);
+            // backgroundLight.transform.eulerAngles = new Vector3(25, backgroundLight.transform.eulerAngles.y, backgroundLight.transform.eulerAngles.z);
+            RenderSettings.ambientLight = new Color(1.86f,1.8f,1.28f);
+            // RenderSettings.ambientIntensity = 1;
+            // RenderSettings.am
+
             _buttonClose.SetActive(false);
             mov.enabled = false;
-            
+
             _buttonTimelineLength.SetActive(false);
 
             _buttonKulissen.transform.SetParent(_buttonKulissen.transform.parent.parent);
