@@ -1064,6 +1064,7 @@ public class RailManager : MonoBehaviour
             for (int i = 0; i < railList[k].myObjects.Count; i++)
             {
                 float moment = UtilitiesTm.FloatRemap(railList[k].myObjects[i].position.x, 0, railwidthAbsolute, 0, AnimationTimer.GetMaxTime());
+                Debug.Log("moment: "+moment);
                 float zPosFigure = rails3D[k].transform.GetChild(0).GetComponent<RailSpeedController>().GetDistanceAtTime(moment);
 
                 if (zPosFigure < 0) // wenn die Figur auf eine Position noch vor dem empty gesetzt werden würde, würde sie erscheinen bevor sie auf den rails da ist
@@ -1487,6 +1488,7 @@ public class RailManager : MonoBehaviour
                     float moment = UtilitiesTm.FloatRemap(currentRect.anchoredPosition.x, 0, railwidthAbsolute, 0, AnimationTimer.GetMaxTime());
                     objectAnimationLength = rails3D[currentRailIndex].transform.GetChild(0).GetComponent<RailSpeedController>().GetEndTimeFromStartTime(moment);
                     rectSize = objectAnimationLength / AnimationTimer.GetMaxTime() * railwidthAbsolute;
+                    Debug.Log("obj length: "+objectAnimationLength);
                 }
                 // if there is only one layer on Rail
                 if (railList[currentRailIndex].sizeLayering == 1)

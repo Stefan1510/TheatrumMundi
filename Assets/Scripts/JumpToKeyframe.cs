@@ -82,7 +82,6 @@ public class JumpToKeyframe : MonoBehaviour
     }
     public void NextKeyframe()
     {
-        //Debug.LogError("BONG! BONG! BONG! -->");
         SelectKeyFrames();
         keyFrames.Reverse();
         float timerNow = AnimationTimer.GetTime();
@@ -103,20 +102,16 @@ public class JumpToKeyframe : MonoBehaviour
         {
             railIndex = ImageTimelineSelection.GetRailNumber();
             _sliderRailSpeed.value = StaticSceneData.StaticData.railElements[railIndex].railElementSpeeds[knobIndex].speed;
-            // Debug.Log("rail speed: " + StaticSceneData.StaticData.railElements[railIndex].railElementSpeeds[knobIndex].speed);
         }
         else if (ImageTimelineSelection.GetRailType() == 1)
         {
-            // Debug.Log("lighting set: " + StaticSceneData.StaticData.lightingSets[knobIndex].intensity);
             _sliderLightIntensity.value = StaticSceneData.StaticData.lightingSets[knobIndex].intensity;
-            // Debug.Log("value: " + _sliderLightIntensity.value);
         }
         else if (ImageTimelineSelection.GetRailType() == 3)
         {
             _sliderBackgroundPosition.value = StaticSceneData.StaticData.backgroundPositions[knobIndex].yPosition;
         }
         AnimationTimer.SetTime(nextKeyframe);
-        // float intensityValue = SliderIntensity.value;
     }
     public void DeleteCurrentKeyframe()
     {
@@ -154,14 +149,21 @@ public class JumpToKeyframe : MonoBehaviour
     }
     public void DeleteKeyframeFromChangeMaxLength()
     {
+        bool elementsAvailable = true;
         //Rails
-        for (int i = 0; i < StaticSceneData.StaticData.railElements.Count-2; i++)   // rails sind 8, aber panels fuer die geschwindigkeiten nur 6
+        for (int i = 0; i < StaticSceneData.StaticData.railElements.Count - 2; i++)   // rails sind 8, aber panels fuer die geschwindigkeiten nur 6
         {
-            for (int j = 0; j < StaticSceneData.StaticData.railElements[i].railElementSpeeds.Count; j++)
+            while (elementsAvailable)
             {
-                if (StaticSceneData.StaticData.railElements[i].railElementSpeeds[j].moment > AnimationTimer._maxTime)
+                for (int j = 0; j < StaticSceneData.StaticData.railElements[i].railElementSpeeds.Count; j++)
                 {
-                    StaticSceneData.StaticData.railElements[i].railElementSpeeds.Remove(StaticSceneData.StaticData.railElements[i].railElementSpeeds[j]);
+                    elementsAvailable = false;
+                    if (StaticSceneData.StaticData.railElements[i].railElementSpeeds[j].moment > AnimationTimer._maxTime)
+                    {
+                        StaticSceneData.StaticData.railElements[i].railElementSpeeds.Remove(StaticSceneData.StaticData.railElements[i].railElementSpeeds[j]);
+                        elementsAvailable = true;
+                        break;
+                    }
                 }
             }
             _railPanelsLineDraw[i].GetComponent<DrawCurve>().ChangeCurve();
@@ -176,7 +178,7 @@ public class JumpToKeyframe : MonoBehaviour
                 _panelColorGradient.GetComponent<LightAnimationRepresentation>().ChangeImage();
             }
         }
-        
+
         //BackgroundPosition
         for (int j = 0; j < StaticSceneData.StaticData.backgroundPositions.Count; j++)
         {

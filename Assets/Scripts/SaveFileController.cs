@@ -45,20 +45,16 @@ public class SaveFileController : MonoBehaviour
     private string characters = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ";
     private bool _biggerSmaller;
     private float _codeTimer;
+    private bool pressEnterOnSaveDialog = false;
+    private bool pressEnterOnWarning = false;
     #endregion
     private void Start()
     {
         if (!SceneManaging.isExpert)
         {
-            // if (Application.absoluteURL == "tm.skd.museum")
-            // {
-            // _basepath = "https://tm.skd.museum/";
-            // }
-            // else
-            // {
+            //_basepath = "https://tm.skd.museum/";
             _basepath = "https://lightframefx.de/extras/theatrum-mundi/";
             StartCoroutine(LoadFileFromServer("Musterszene_leer_Visitor.json", "fromCode"));
-            // }
 
             panelWarningInput = panelWarningInputVisitor;
             _loadSaveNew = 0;
@@ -112,12 +108,25 @@ public class SaveFileController : MonoBehaviour
                 codeReminderText.transform.localScale = new Vector2(codeReminderText.transform.localScale.x + 0.1f, codeReminderText.transform.localScale.y + 0.1f);
             else if (_codeTimer > 0.25f && codeReminderText.transform.localScale.x > 1)
                 codeReminderText.transform.localScale = new Vector2(codeReminderText.transform.localScale.x - 0.1f, codeReminderText.transform.localScale.y - 0.1f);
-
         }
         else if (_biggerSmaller)
         {
             _biggerSmaller = false;
             _codeTimer = 0;
+        }
+        if (Input.GetKeyDown(KeyCode.Return))
+        {
+            if (pressEnterOnSaveDialog)
+            {
+                Debug.Log("1");
+                OnClickOKAYOnTabs();
+
+            }
+            else if (pressEnterOnWarning)
+            {
+                Debug.Log("2");
+                OnClickWarning(true);
+            }
         }
     }
     public void SaveSceneToFile(int overwrite) // 0=save, 1=overwrite, 2=save with number behind
@@ -667,6 +676,11 @@ public class SaveFileController : MonoBehaviour
         {
             _visitorPanelSave.SetActive(true);
             _loadSaveNew = 0;
+            if (!SceneManaging.saveDialogActive)
+            {
+                pressEnterOnSaveDialog = true;
+                Debug.Log("hier true");
+            }
             SceneManaging.saveDialogActive = true;
         }
     }
@@ -700,10 +714,14 @@ public class SaveFileController : MonoBehaviour
     }
     public void OnClickOKAYOnTabs()
     {
+
+
         switch (_loadSaveNew)
         {
             case 0: // click auf neue szene - ok
                 warningPanel.SetActive(true);
+                pressEnterOnWarning = true;
+                Debug.Log("new scene");
                 break;
             case 1:
                 LoadCodeNow();
@@ -716,6 +734,8 @@ public class SaveFileController : MonoBehaviour
                 ClosePanelShowCode(_visitorPanelSave);
                 break;
         }
+        pressEnterOnSaveDialog = false;
+        Debug.Log("hier false");
     }
     public void OnClickWarning(bool ok)
     {
@@ -724,6 +744,7 @@ public class SaveFileController : MonoBehaviour
             OnClickNewScene();
         }
         warningPanel.SetActive(false);
+        pressEnterOnWarning = false;
     }
     public void ResetTabs(int tab)
     {

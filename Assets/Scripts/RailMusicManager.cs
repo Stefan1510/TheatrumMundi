@@ -709,9 +709,9 @@ public class RailMusicManager : MonoBehaviour
     {
         fading = true;
         currentClip = (int)char.GetNumericValue(obj.name[07]) - 1; // object index
-        while (audioSource.volume > 0.2f)
+        while (audioSource.volume > 0)
         {
-            audioSource.volume -= 2 * Time.deltaTime / FadeTime;
+            audioSource.volume -= 0.01f / FadeTime;
             yield return null;
         }
         audioSource.clip = clip[currentClip];
@@ -844,7 +844,7 @@ public class RailMusicManager : MonoBehaviour
             {
                 try
                 {
-                    StartCoroutine(FadeOut(1, myObjects[m].musicPiece, -1, -1, false));
+                    StartCoroutine(FadeOut(.5f, myObjects[m].musicPiece, -1, -1, false));
                     onlyPiecefinished = false;
                 }
                 catch (ArgumentOutOfRangeException) { }
@@ -950,8 +950,9 @@ public class RailMusicManager : MonoBehaviour
             if (obj.position.x + obj.position.y + calculated30seconds > myObjects[obj.neighborRight].position.x)
                 musicLengthLonger.interactable = false;
 
-        musicPieceLengthDialog.transform.position = new Vector2(Input.mousePosition.x, musicPieceLengthDialog.transform.position.y);
+        musicPieceLengthDialog.transform.position = new Vector2(obj.musicPiece.transform.position.x, musicPieceLengthDialog.transform.position.y);
         musicPieceLengthDialog.transform.SetAsLastSibling();
+        Debug.Log("hier");
     }
     void Update()
     {
