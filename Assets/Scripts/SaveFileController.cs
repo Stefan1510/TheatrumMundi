@@ -513,17 +513,15 @@ public class SaveFileController : MonoBehaviour
         WWW www = new WWW(_basepath + "Saves/" + fileName);
         yield return www;
         _jsonString = www.text;
-        Debug.Log("json: " + _jsonString);
-        Debug.Log("path: " + _basepath + "/Saves/" + fileName);
+        //Debug.Log("json: " + _jsonString);
+        //Debug.Log("path: " + _basepath + "/Saves/" + fileName);
         tempSceneData = tmpSceneDataController.CreateSceneDataFromJSON(_jsonString);
-        Debug.Log("data: " + tempSceneData.figureElements.Count);
         tmpSceneDataController.CreateScene(tempSceneData);
 
         if (status == "fromCode" && !SceneManaging.isExpert)
         {
             LoadSceneFromTempToStatic();
         }
-
         else if (status == "fromFlyerCreate")
         {
             LoadSceneFromTempToStatic();
@@ -584,11 +582,11 @@ public class SaveFileController : MonoBehaviour
 
             flyer.SetActive(false);
             SceneManaging.flyerActive = false;
-            contentMenueRails.currentRailIndex = 0;
+            //contentMenueRails.currentRailIndex = 0;
             contentMenueRails.Update3DFigurePositions();
             contentMenueRails.OpenCloseObjectInTimeline(contentMenueRails.railList[0].myObjects, 0, false);
+            contentMenueRails.PublicUpdate();
 
-            GetComponent<SceneDataController>().CreateScene(tempSceneData);
         }
         else if (status == "fromFlyerDelete")
         {

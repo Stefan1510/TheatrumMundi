@@ -957,6 +957,7 @@ public class RailManager : MonoBehaviour
                 moment = momentOrPosX,
                 layer = 0
             };
+            Debug.Log("railstart: " + thisFigureInstanceElement.railStart);
 
             StaticSceneData.StaticData.figureElements[figureNr].figureInstanceElements.Add(thisFigureInstanceElement);
             gameController.GetComponent<SceneDataController>().objects3dFigureInstances.Add(curr3DObject);
@@ -1064,7 +1065,6 @@ public class RailManager : MonoBehaviour
             for (int i = 0; i < railList[k].myObjects.Count; i++)
             {
                 float moment = UtilitiesTm.FloatRemap(railList[k].myObjects[i].position.x, 0, railwidthAbsolute, 0, AnimationTimer.GetMaxTime());
-                Debug.Log("moment: "+moment);
                 float zPosFigure = rails3D[k].transform.GetChild(0).GetComponent<RailSpeedController>().GetDistanceAtTime(moment);
 
                 if (zPosFigure < 0) // wenn die Figur auf eine Position noch vor dem empty gesetzt werden würde, würde sie erscheinen bevor sie auf den rails da ist
@@ -1108,6 +1108,7 @@ public class RailManager : MonoBehaviour
                             StaticSceneData.StaticData.figureElements[int.Parse(railList[k].myObjects[i].figure.name.Substring(6, 2)) - 1].figureInstanceElements[j].layer = 2;
                     }
                 }
+                //Debug.Log("figure: "+railList[k].myObjects[i].figure3D.name+", pos 3: "+railList[k].myObjects[i].figure3D.transform.localPosition);
             }
         }
     }
@@ -1488,7 +1489,7 @@ public class RailManager : MonoBehaviour
                     float moment = UtilitiesTm.FloatRemap(currentRect.anchoredPosition.x, 0, railwidthAbsolute, 0, AnimationTimer.GetMaxTime());
                     objectAnimationLength = rails3D[currentRailIndex].transform.GetChild(0).GetComponent<RailSpeedController>().GetEndTimeFromStartTime(moment);
                     rectSize = objectAnimationLength / AnimationTimer.GetMaxTime() * railwidthAbsolute;
-                    Debug.Log("obj length: "+objectAnimationLength);
+                    Debug.Log("obj length: " + objectAnimationLength);
                 }
                 // if there is only one layer on Rail
                 if (railList[currentRailIndex].sizeLayering == 1)
@@ -1862,6 +1863,7 @@ public class RailManager : MonoBehaviour
                         railStart = (int)Char.GetNumericValue(rails[currentRailIndex].name[17]) - 1 //railIndex
                     };
 
+
                     StaticSceneData.StaticData.figureElements[currentClickedObjectIndex].figureInstanceElements.Add(thisFigureInstanceElement);
                     gameController.GetComponent<SceneDataController>().objects3dFigureInstances.Add(curr3DObject);
                     SceneManaging.highlight(railList[currentRailIndex].myObjects[currentPosInList].figure3D, railList[currentRailIndex].myObjects[currentPosInList].figure, true, "figure");
@@ -1927,6 +1929,7 @@ public class RailManager : MonoBehaviour
             }
 
             Update3DFigurePositions();
+            
 
             // enable binnenanimation when playing
             for (int k = 0; k < railList.Length; k++)

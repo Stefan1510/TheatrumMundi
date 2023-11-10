@@ -54,6 +54,7 @@ public class RailSpeedController : MonoBehaviour
         }
         else
         {
+            Debug.Log("moment: "+tStart+", after: " + railElementSpeeds[momentAfter].moment + ", before: " + railElementSpeeds[momentBefore].moment);
             float tRest;
 
             v1 = railElementSpeeds[momentBefore].speed;
@@ -63,6 +64,7 @@ public class RailSpeedController : MonoBehaviour
 
             // erst abstand ausrechnen bis 4.1
             tRest = distance / v1;
+            Debug.Log("trest: "+tRest);
 
             if (tStart + tRest > t2)
             {
@@ -73,6 +75,7 @@ public class RailSpeedController : MonoBehaviour
             }
 
             currentDistance = GetDistanceBetweenTwoMoments(tStart, t2, v1, v1);
+            Debug.Log("curr dist: "+currentDistance);
 
             if (currentDistance < distance)
             {
@@ -116,7 +119,7 @@ public class RailSpeedController : MonoBehaviour
         List<RailElementSpeed> railElementSpeeds = StaticSceneData.StaticData.railElements[railIndex].railElementSpeeds;
         int momentAfter = railElementSpeeds.FindIndex(speed => speed.moment > t);      //sucht von vorne aus und findet den ersten Moment, der nach t liegt
         int momentBefore = railElementSpeeds.FindLastIndex(speed => speed.moment <= t); //sucht von hinten aus und findet den ersten Moment, der vor t liegt
-        Debug.LogWarning("Before: " + momentBefore + " - After: " + momentAfter);
+        //Debug.LogWarning("Before: " + momentBefore + " - After: " + momentAfter);
         if (momentBefore == 0 && momentAfter == -1) //ein momentBefore existiert immer, da der erste Wert von railElementSpeeds bei Programmstart gesetzt wird
         {
             v1 = v2 = railElementSpeeds[0].speed;
