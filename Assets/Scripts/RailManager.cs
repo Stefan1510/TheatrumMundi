@@ -1489,7 +1489,7 @@ public class RailManager : MonoBehaviour
                     float moment = UtilitiesTm.FloatRemap(currentRect.anchoredPosition.x, 0, railwidthAbsolute, 0, AnimationTimer.GetMaxTime());
                     objectAnimationLength = rails3D[currentRailIndex].transform.GetChild(0).GetComponent<RailSpeedController>().GetEndTimeFromStartTime(moment);
                     rectSize = objectAnimationLength / AnimationTimer.GetMaxTime() * railwidthAbsolute;
-                    Debug.Log("obj length: " + objectAnimationLength);
+                    //Debug.Log("obj length: " + objectAnimationLength);
                 }
                 // if there is only one layer on Rail
                 if (railList[currentRailIndex].sizeLayering == 1)

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -54,8 +55,8 @@ public class RailSpeedController : MonoBehaviour
         }
         else
         {
-            Debug.Log("moment: "+tStart+", after: " + railElementSpeeds[momentAfter].moment + ", before: " + railElementSpeeds[momentBefore].moment);
-            float tRest;
+            Debug.Log("moment: " + tStart + ", after: " + railElementSpeeds[momentAfter].moment + ", before: " + railElementSpeeds[momentBefore].moment);
+            float tCurrent;
 
             v1 = railElementSpeeds[momentBefore].speed;
             t1 = railElementSpeeds[momentBefore].moment;
@@ -63,53 +64,68 @@ public class RailSpeedController : MonoBehaviour
             v2 = railElementSpeeds[momentAfter].speed;
 
             // erst abstand ausrechnen bis 4.1
-            tRest = distance / v1;
-            Debug.Log("trest: "+tRest);
+            tCurrent = distance / v1;
+            Debug.Log("tCurrent: " + tCurrent);
 
-            if (tStart + tRest > t2)
+            if (tStart + tCurrent > t2) // wenn ausgerechnete Zeit für 4.1m größer ist, als der nächste gesetzte Punkt t2
             {
-            }
-            else
-            {
-                deltaT = tRest;
-            }
+                currentDistance = GetDistanceBetweenTwoMoments(tStart, t2, v1, v1);
+                Debug.Log("curr dist: " + currentDistance);
 
-            currentDistance = GetDistanceBetweenTwoMoments(tStart, t2, v1, v1);
-            Debug.Log("curr dist: "+currentDistance);
-
-            if (currentDistance < distance)
-            {
-                deltaT += t2 - tStart;
-                sRest = distance - currentDistance;
-                v1 = v2;
-            }
-
-            int i = momentAfter;
-
-            // wenn bis zum naechsten Punkt noch keine 4,1 zurueckgelegt wurden
-            while (i < momentCount - 1 && currentDistance < distance)
-            {
-                t1 = railElementSpeeds[i].moment;
-                t2 = railElementSpeeds[i + 1].moment;
-                v1 = railElementSpeeds[i].speed;
-                v2 = railElementSpeeds[i + 1].speed;
-                if (currentDistance + GetDistanceBetweenTwoMoments(t1, t2, v1, v1) < distance)
+                if (currentDistance < distance)
                 {
-                    currentDistance += GetDistanceBetweenTwoMoments(t1, t2, v1, v1);
-                    deltaT += t2 - t1;
-                }
-                else
-                {
+                    deltaT += t2 - tStart;
+                    //deltaT=t2-tStart;
                     sRest = distance - currentDistance;
-                    break;
+                    Debug.Log("sRest before: " + sRest);
+                    v1 = v2;
+                    tCurrent = sRest / v1;
                 }
-                sRest -= currentDistance;
-                i++;
-            }
-            tRest = sRest / v1;
-            deltaT += tRest;
-        }
 
+                int i = momentAfter;
+
+                // wenn bis zum naechsten Punkt noch keine 4,1 zurueckgelegt wurden
+                while (i < momentCount - 1 && currentDistance < distance)
+                {
+                    t1 = railElementSpeeds[i].moment;
+                    v1 = railElementSpeeds[i].speed;
+                    try
+                    {
+                        t2 = railElementSpeeds[i + 1].moment;
+                        v2 = railElementSpeeds[i + 1].speed;
+                    }
+                    catch (ArgumentOutOfRangeException) { }
+
+                    Debug.Log("i: " + i + ", moment 1: " + t1 + ", moment 2: " + t2);
+
+                    float distanceBetweenTwoMoments = GetDistanceBetweenTwoMoments(t1, t2, v1, v1);
+                    Debug.Log("distancebetToMomments: " + distanceBetweenTwoMoments);
+                    if (currentDistance + distanceBetweenTwoMoments < distance)
+                    {
+                        currentDistance += distanceBetweenTwoMoments;
+                        deltaT += t2 - t1;
+                        sRest -= distanceBetweenTwoMoments;
+                        tCurrent = sRest / v2;
+                        Debug.Log("sRest: " + sRest + ", currentDist: " + currentDistance);
+                    }
+                    else
+                    {
+                        Debug.Log("else sRest: " + sRest);
+                        sRest = distance - currentDistance;
+                        tCurrent = sRest / v1;
+                        break;
+                    }
+                    i++;
+                }
+
+                deltaT += tCurrent;
+            }
+            else        // wenn 4.1m schon erreicht wurden, bevor der nächste Punkt t2 erreicht wurde, dann ist das Ergebnis schon klar
+            {
+                deltaT = tCurrent;
+            }
+        }
+        Debug.Log("deltaT: " + deltaT);
         return deltaT;
     }
     public float GetDistanceAtTime(float t)    //time in Sekunden
@@ -176,17 +192,17 @@ public class RailSpeedController : MonoBehaviour
     float GetDistanceBetweenTwoMoments(float t1, float t2, float v1, float v2)
     {
         float s = 0;    //zurueckgelegter Weg zwischen t1 und t2;
-        float a = 0;
+        // float a = 0;
         float t = t2 - t1;
-        if (v1 == v2)
-        {
-            s = v1 * t;
-        }
-        else
-        {
-            a = (v2 - v1) / (t2 - t1);
-            s = 0.5f * a * t * t + v1 * t;
-        }
+        // if (v1 == v2)
+        // {
+        s = v1 * t;
+        // }
+        // else
+        // {
+        //     a = (v2 - v1) / (t2 - t1);
+        //     s = 0.5f * a * t * t + v1 * t;
+        // }
         //Debug.Log("zurueckgelegter weg zwischen "+ t1+" und "+t2+": "+s);
         return s;
     }
