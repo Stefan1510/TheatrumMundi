@@ -761,6 +761,9 @@ public class RailManager : MonoBehaviour
             railList[index].isTimelineOpen = true;
 
             OpenCloseObjectInTimeline(railList[index].myObjects, index, false);
+
+            ImageTimelineSelection.SetRailNumber((int)Char.GetNumericValue(rails[index].name[17]) - 1);
+            ImageTimelineSelection.SetRailType(0);  // for rail-rails
         }
     }
     public void UpdateObjectPosition(Figure obj, Vector2 mousePos)
@@ -1929,7 +1932,7 @@ public class RailManager : MonoBehaviour
             }
 
             Update3DFigurePositions();
-            
+
 
             // enable binnenanimation when playing
             for (int k = 0; k < railList.Length; k++)

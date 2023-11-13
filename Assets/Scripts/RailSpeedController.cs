@@ -55,7 +55,7 @@ public class RailSpeedController : MonoBehaviour
         }
         else
         {
-            Debug.Log("moment: " + tStart + ", after: " + railElementSpeeds[momentAfter].moment + ", before: " + railElementSpeeds[momentBefore].moment);
+            // Debug.Log("moment: " + tStart + ", after: " + railElementSpeeds[momentAfter].moment + ", before: " + railElementSpeeds[momentBefore].moment);
             float tCurrent;
 
             v1 = railElementSpeeds[momentBefore].speed;
@@ -65,19 +65,19 @@ public class RailSpeedController : MonoBehaviour
 
             // erst abstand ausrechnen bis 4.1
             tCurrent = distance / v1;
-            Debug.Log("tCurrent: " + tCurrent);
+            // Debug.Log("tCurrent: " + tCurrent);
 
             if (tStart + tCurrent > t2) // wenn ausgerechnete Zeit für 4.1m größer ist, als der nächste gesetzte Punkt t2
             {
                 currentDistance = GetDistanceBetweenTwoMoments(tStart, t2, v1, v1);
-                Debug.Log("curr dist: " + currentDistance);
+                // Debug.Log("curr dist: " + currentDistance);
 
                 if (currentDistance < distance)
                 {
                     deltaT += t2 - tStart;
                     //deltaT=t2-tStart;
                     sRest = distance - currentDistance;
-                    Debug.Log("sRest before: " + sRest);
+                    // Debug.Log("sRest before: " + sRest);
                     v1 = v2;
                     tCurrent = sRest / v1;
                 }
@@ -96,21 +96,21 @@ public class RailSpeedController : MonoBehaviour
                     }
                     catch (ArgumentOutOfRangeException) { }
 
-                    Debug.Log("i: " + i + ", moment 1: " + t1 + ", moment 2: " + t2);
+                    // Debug.Log("i: " + i + ", moment 1: " + t1 + ", moment 2: " + t2);
 
                     float distanceBetweenTwoMoments = GetDistanceBetweenTwoMoments(t1, t2, v1, v1);
-                    Debug.Log("distancebetToMomments: " + distanceBetweenTwoMoments);
+                    // Debug.Log("distancebetToMomments: " + distanceBetweenTwoMoments);
                     if (currentDistance + distanceBetweenTwoMoments < distance)
                     {
                         currentDistance += distanceBetweenTwoMoments;
                         deltaT += t2 - t1;
                         sRest -= distanceBetweenTwoMoments;
                         tCurrent = sRest / v2;
-                        Debug.Log("sRest: " + sRest + ", currentDist: " + currentDistance);
+                        // Debug.Log("sRest: " + sRest + ", currentDist: " + currentDistance);
                     }
                     else
                     {
-                        Debug.Log("else sRest: " + sRest);
+                        // Debug.Log("else sRest: " + sRest);
                         sRest = distance - currentDistance;
                         tCurrent = sRest / v1;
                         break;
@@ -125,7 +125,7 @@ public class RailSpeedController : MonoBehaviour
                 deltaT = tCurrent;
             }
         }
-        Debug.Log("deltaT: " + deltaT);
+        // Debug.Log("deltaT: " + deltaT);
         return deltaT;
     }
     public float GetDistanceAtTime(float t)    //time in Sekunden
