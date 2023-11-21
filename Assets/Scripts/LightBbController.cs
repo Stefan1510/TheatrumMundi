@@ -11,7 +11,7 @@ public class LightBbController : MonoBehaviour
     void Start()
     {
         thisLightElement = StaticSceneData.StaticData.lightElements.Find(le => le.name == gameObject.name);
-        if (SceneManaging.isExpert) LightAmbientChange(0.0f);
+        //if (SceneManaging.isExpert) LightAmbientChange(0.0f);
         PanelBbImage = toggleBb.transform.parent.parent.gameObject.GetComponent<Image>();
         PanelBbImage.color = new Color(171f / 255f, 171f / 255f, 171f / 255f, 160f / 255f);
         if (SceneManaging.isExpert)

@@ -74,12 +74,13 @@ public class UIController : MonoBehaviour
                 {
                     GameObject gameObjectLe = objectLightElement.goLightElement;
                     LightController lC = gameObjectLe.GetComponent<LightController>();
-                    
+
                     switch (objectLightElement.lightStagePosition)
                     {
                         case 0:
-                            gameObjectLe.GetComponent<LightBbController>().thisLightElement = StaticSceneData.StaticData.lightElements.Find(DataLe => DataLe.name == le.name);
-                            gameObjectLe.GetComponent<LightBbController>().toggleBb.isOn = le.active;
+                            // gameObjectLe.GetComponent<LightBbController>().thisLightElement = StaticSceneData.StaticData.lightElements.Find(DataLe => DataLe.name == le.name);
+                            // gameObjectLe.GetComponent<LightBbController>().toggleBb.isOn = le.active;
+                            // Debug.Log("light: "+gameObjectLe.name+", active: "+le.active);
                             break;
                         case 1:
                             lC.thisLightElement = StaticSceneData.StaticData.lightElements.Find(DataLe => DataLe.name == le.name);

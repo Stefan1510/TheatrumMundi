@@ -52,8 +52,8 @@ public class SaveFileController : MonoBehaviour
     {
         if (!SceneManaging.isExpert)
         {
-            //_basepath = "https://tm.skd.museum/";
-            _basepath = "https://lightframefx.de/extras/theatrum-mundi/";
+            _basepath = "./";
+            _basepath = "https://lightframefx.de/extras/theatrum-mundi/2023_11_16/";
             StartCoroutine(LoadFileFromServer("Musterszene_leer_Visitor.json", "fromCode"));
 
             panelWarningInput = panelWarningInputVisitor;
@@ -144,7 +144,7 @@ public class SaveFileController : MonoBehaviour
             StaticSceneData.StaticData.tabActive = sceneDataSave.tabActive;
             string sceneDataSaveString = GetComponent<SceneDataController>().CreateJsonFromSceneData(StaticSceneData.StaticData);
 
-            filePath = code + ".json";
+            filePath = _basepath+"Saves/"+code + ".json";
             StartCoroutine(WriteToServer(sceneDataSaveString, filePath));
             codeReminder.SetActive(true);
             codeReminderText.text = code;
@@ -277,6 +277,9 @@ public class SaveFileController : MonoBehaviour
             StaticSceneData.StaticData = tempSceneData;
             GetComponent<UIController>().SceneriesApplyToUI();
             GetComponent<UIController>().LightsApplyToUI();
+            //manuell lichter position einstellen
+            GetComponent<SceneDataController>().objectsLightElements[4].goLightElement.GetComponent<LightController>().ChangePosition(0.4f);
+            GetComponent<SceneDataController>().objectsLightElements[6].goLightElement.GetComponent<LightController>().ChangePosition(-0.2f);
             GetComponent<UIController>().RailsApplyToUI();
             for (int i = 0; i < tmpLightShelf.Length; i++)
                 tmpLightShelf[i].ToggleLightBlock(false);
@@ -488,11 +491,14 @@ public class SaveFileController : MonoBehaviour
         form.AddField("pathFile", filePath);
         form.AddField("text", json);
 
+        Debug.Log("path: "+filePath+", json : "+json);
+
         // UnityWebRequest uwr = UnityWebRequest.Post(_basepath + "WriteFile.php", form);
         // yield return uwr;
 
         WWW www = new WWW(_basepath + "WriteFile.php", form);
         yield return www;
+        Debug.Log("www: "+www.text);
         //yield return StartCoroutine(LoadFilesFromServer(false, "", false));
 
         _placeholderTextWarning.text = "";
@@ -513,8 +519,8 @@ public class SaveFileController : MonoBehaviour
         WWW www = new WWW(_basepath + "Saves/" + fileName);
         yield return www;
         _jsonString = www.text;
-        //Debug.Log("json: " + _jsonString);
-        //Debug.Log("path: " + _basepath + "/Saves/" + fileName);
+        Debug.Log("json: " + _jsonString);
+        Debug.Log("path: " + _basepath + "/Saves/" + fileName);
         tempSceneData = tmpSceneDataController.CreateSceneDataFromJSON(_jsonString);
         tmpSceneDataController.CreateScene(tempSceneData);
 
@@ -677,7 +683,6 @@ public class SaveFileController : MonoBehaviour
             if (!SceneManaging.saveDialogActive)
             {
                 pressEnterOnSaveDialog = true;
-                Debug.Log("hier true");
             }
             SceneManaging.saveDialogActive = true;
         }
@@ -719,7 +724,6 @@ public class SaveFileController : MonoBehaviour
             case 0: // click auf neue szene - ok
                 warningPanel.SetActive(true);
                 pressEnterOnWarning = true;
-                Debug.Log("new scene");
                 break;
             case 1:
                 LoadCodeNow();
@@ -733,7 +737,6 @@ public class SaveFileController : MonoBehaviour
                 break;
         }
         pressEnterOnSaveDialog = false;
-        Debug.Log("hier false");
     }
     public void OnClickWarning(bool ok)
     {

@@ -108,12 +108,12 @@ public class DrawCurve : MonoBehaviour
                 momentEndF = UtilitiesTm.FloatRemap(momentEndF, 0, _maxTime, 0, _textureCurve.width - 3); // mappen des "sp�teren" Moments von zwischen TimeSlider auf zwischen PanelWeite
                 momentEnd = (int)momentEndF;
 
-                float valueStartF = StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds[valueStates].speed;  // holen des "fr�heren" Werts aus der Datenhaltung
-                valueStartF = UtilitiesTm.FloatRemap(valueStartF, _minValue, _maxValue, 0, _textureCurve.height - 3);   // mappen des "fr�heren" Werts von zwischen ValueSlider auf zwischen GraphicHoehe
+                float valueStartF = StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds[valueStates].speed;  // holen des "frueheren" Werts aus der Datenhaltung
+                valueStartF = UtilitiesTm.FloatRemap(valueStartF, _minValue, _maxValue, 0, _textureCurve.height - 3);   // mappen des "frueheren" Werts von zwischen ValueSlider auf zwischen GraphicHoehe
                 valueStart = (int)valueStartF;
 
-                float valueEndF = StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds[valueStates + 1].speed;    // holen des "sp�teren" Werts aus der Datenhaltung
-                valueEndF = UtilitiesTm.FloatRemap(valueEndF, _minValue, _maxValue, 0, _textureCurve.height - 3);    // mappen des "fr�heren" Moments von zwischen TimeSlider auf zwischen PanelWeite
+                float valueEndF = StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds[valueStates + 1].speed;    // holen des "spaeteren" Werts aus der Datenhaltung
+                valueEndF = UtilitiesTm.FloatRemap(valueEndF, _minValue, _maxValue, 0, _textureCurve.height - 3);    // mappen des "frueheren" Moments von zwischen TimeSlider auf zwischen PanelWeite
                 valueEnd = (int)valueEndF;
 
                 _textureCurve = UtilitiesTm.Bresenham(_textureCurve, momentStart, valueStart, momentEnd, valueStart, _curveColors);
@@ -122,8 +122,8 @@ public class DrawCurve : MonoBehaviour
         }
         else
         {
-            float valueEndF = StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds[0].speed;    // holen des "sp�teren" Werts aus der Datenhaltung
-            valueEndF = UtilitiesTm.FloatRemap(valueEndF, _minValue, _maxValue, 0, _textureCurve.height - 3);    // mappen des "fr�heren" Moments von zwischen TimeSlider auf zwischen PanelWeite
+            float valueEndF = StaticSceneData.StaticData.railElements[_railIndex].railElementSpeeds[0].speed;    // holen des "spaeteren" Werts aus der Datenhaltung
+            valueEndF = UtilitiesTm.FloatRemap(valueEndF, _minValue, _maxValue, 0, _textureCurve.height - 3);    // mappen des "frueheren" Moments von zwischen TimeSlider auf zwischen PanelWeite
             valueEnd = (int)valueEndF;
         }
         _textureRest = new Texture2D(_rectWidth, 80, TextureFormat.RGBA32, false); // wird durch Panel RectTransform stretch automatisch gescaled

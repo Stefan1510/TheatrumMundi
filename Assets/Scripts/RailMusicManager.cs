@@ -7,6 +7,7 @@ using System.Linq;
 using TMPro;
 using UTJ.FrameCapturer;
 using UnityEngine.EventSystems;
+using UnityEditorInternal.Profiling.Memory.Experimental;
 
 public class RailMusicManager : MonoBehaviour
 {
@@ -910,22 +911,39 @@ public class RailMusicManager : MonoBehaviour
         int nr = tmpMusicLength.nr;
         musicLengthClicked = true;
 
-        if ((longer && tmpMusicLength.musicLength + 30 <= initialPieceLength[nr])
-        || (!longer && tmpMusicLength.musicLength - 30 >= 30))
+        if (longer)
         {
-            if (longer && tmpMusicLength.musicLength + 30 <= initialPieceLength[nr])
-                newLength = 30;
-            else if (!longer && tmpMusicLength.musicLength - 30 >= 30)
-                newLength = -30;
-
-            tmpMusicLength.musicLength += newLength;
-            myObjects[saveIndexForChangePieceLength].position.y = UtilitiesTm.FloatRemap(tmpMusicLength.musicLength, 0, (float)AnimationTimer.GetMaxTime(), 0, (float)gameObject.GetComponent<RectTransform>().rect.width);
-
-            SceneManaging.scaleObject(myObjects[saveIndexForChangePieceLength].musicPiece, myObjects[saveIndexForChangePieceLength].position.y, myObjects[saveIndexForChangePieceLength].musicPiece.GetComponent<RectTransform>().sizeDelta.y, false);
-            myObjects[saveIndexForChangePieceLength].musicPiece.GetComponent<BoxCollider2D>().offset = new Vector2(myObjects[saveIndexForChangePieceLength].musicPiece.GetComponent<BoxCollider2D>().size.x / 2, myObjects[saveIndexForChangePieceLength].musicPiece.GetComponent<BoxCollider2D>().offset.y);
-            myObjects = myObjects.OrderBy(w => w.position.x).ToList();
-            SceneManaging.CalculateNeighbors(myObjects);
+            for (int i = initialPieceLength[nr]; i > 30; i -= 30)
+            {
+                if (i > tmpMusicLength.musicLength)
+                {
+                    Debug.Log("i: " + i+", musicPiece: "+tmpMusicLength.musicLength);
+                    newLength = i;
+                }
+            }
         }
+        // else if (!longer && tmpMusicLength.musicLength - 30 >= 30)
+        else
+        {
+            for (int i = 30; i < initialPieceLength[nr]; i += 30)
+            {
+                if (i < tmpMusicLength.musicLength)
+                {
+                    Debug.Log("i: " + i+", musicPiece: "+tmpMusicLength.musicLength);
+                    newLength = i;
+                }
+            }
+        }
+
+        tmpMusicLength.musicLength = newLength;
+        myObjects[saveIndexForChangePieceLength].position.y = UtilitiesTm.FloatRemap(tmpMusicLength.musicLength, 0, (float)AnimationTimer.GetMaxTime(), 0, (float)gameObject.GetComponent<RectTransform>().rect.width);
+
+        SceneManaging.scaleObject(myObjects[saveIndexForChangePieceLength].musicPiece, myObjects[saveIndexForChangePieceLength].position.y, myObjects[saveIndexForChangePieceLength].musicPiece.GetComponent<RectTransform>().sizeDelta.y, false);
+        myObjects[saveIndexForChangePieceLength].musicPiece.GetComponent<BoxCollider2D>().offset = new Vector2(myObjects[saveIndexForChangePieceLength].musicPiece.GetComponent<BoxCollider2D>().size.x / 2, myObjects[saveIndexForChangePieceLength].musicPiece.GetComponent<BoxCollider2D>().offset.y);
+        myObjects = myObjects.OrderBy(w => w.position.x).ToList();
+        SceneManaging.CalculateNeighbors(myObjects);
+        // }
+        // else if(longer && )
 
         CalculateLengthDialog(myObjects[saveIndexForChangePieceLength]);
     }
@@ -941,18 +959,19 @@ public class RailMusicManager : MonoBehaviour
         musicLengthShorter.interactable = true;
 
         float calculated30seconds = UtilitiesTm.FloatRemap(30, 0, (float)AnimationTimer.GetMaxTime(), 0, (float)gameObject.GetComponent<RectTransform>().rect.width);
-
+        Debug.Log("layer: " + obj.layer);
         if (obj.musicPiece.GetComponent<MusicLength>().musicLength < 60)
             musicLengthShorter.interactable = false;
         else if (obj.musicPiece.GetComponent<MusicLength>().musicLength >= initialPieceLength[nr])
             musicLengthLonger.interactable = false;
         else if (obj.neighborRight != -1)
+        {
             if (obj.position.x + obj.position.y + calculated30seconds > myObjects[obj.neighborRight].position.x)
                 musicLengthLonger.interactable = false;
+        }
 
         musicPieceLengthDialog.transform.position = new Vector2(obj.musicPiece.transform.position.x, musicPieceLengthDialog.transform.position.y);
         musicPieceLengthDialog.transform.SetAsLastSibling();
-        Debug.Log("hier");
     }
     void Update()
     {

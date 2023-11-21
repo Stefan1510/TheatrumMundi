@@ -179,6 +179,7 @@ public class RailManager : MonoBehaviour
                 railList[currentRailIndex].myObjects[j].position = new Vector2(railList[currentRailIndex].myObjects[j].position.x, rectSize);
                 railList[currentRailIndex].myObjects[j].figure.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(rectSize, tmpRectTransform.sizeDelta.y);
                 railList[currentRailIndex].myObjects[j].figure.GetComponent<BoxCollider2D>().size = tmpRectTransform.sizeDelta;
+                SceneManaging.scaleToLayerSize(railList[currentRailIndex].myObjects[j].figure, railList[currentRailIndex].myObjects[j].layer, rails[currentRailIndex], rectSize, false);
             }
         }
         else
@@ -1466,7 +1467,6 @@ public class RailManager : MonoBehaviour
                     }
                 }
 
-                //if you click an object in timeline (for dragging)
                 UpdateObjectPosition(currentObj, getMousePos - diff);
                 currentObj.figure.transform.position = new Vector3(currentObj.figure.transform.position.x, rails[currentRailIndex].transform.position.y, -1.0f);
 
@@ -1508,6 +1508,10 @@ public class RailManager : MonoBehaviour
                         {
                             if (railList[currentRailIndex].myObjects[j].figure != currentObj.figure && railList[currentRailIndex].myObjects[j].layer == 1)
                             {
+                                float moment = UtilitiesTm.FloatRemap(railList[currentRailIndex].myObjects[j].figure.GetComponent<RectTransform>().anchoredPosition.x, 0, railwidthAbsolute, 0, AnimationTimer.GetMaxTime());
+                                objectAnimationLength = rails3D[currentRailIndex].transform.GetChild(0).GetComponent<RailSpeedController>().GetEndTimeFromStartTime(moment);
+                                rectSize = objectAnimationLength / AnimationTimer.GetMaxTime() * railwidthAbsolute;
+
                                 SceneManaging.scaleToLayerSize(railList[currentRailIndex].myObjects[j].figure, 1, rails[currentRailIndex], rectSize, false);
                                 railList[currentRailIndex].myObjects[j].layer = 1;
                             }
@@ -1527,6 +1531,10 @@ public class RailManager : MonoBehaviour
                         // scale all timelineobjects to layer 0
                         for (int j = 0; j < railList[currentRailIndex].myObjects.Count; j++)
                         {
+                            float moment = UtilitiesTm.FloatRemap(railList[currentRailIndex].myObjects[j].figure.GetComponent<RectTransform>().anchoredPosition.x, 0, railwidthAbsolute, 0, AnimationTimer.GetMaxTime());
+                            objectAnimationLength = rails3D[currentRailIndex].transform.GetChild(0).GetComponent<RailSpeedController>().GetEndTimeFromStartTime(moment);
+                            rectSize = objectAnimationLength / AnimationTimer.GetMaxTime() * railwidthAbsolute;
+
                             SceneManaging.scaleToLayerSize(railList[currentRailIndex].myObjects[j].figure, 0, rails[currentRailIndex], rectSize, false);
                             railList[currentRailIndex].myObjects[j].layer = 1;
                         }

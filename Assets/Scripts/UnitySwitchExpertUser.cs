@@ -47,7 +47,7 @@ public class UnitySwitchExpertUser : MonoBehaviour
         {
             titleCoulisses.SetActive(false);
             // backgroundLight.transform.eulerAngles = new Vector3(25, backgroundLight.transform.eulerAngles.y, backgroundLight.transform.eulerAngles.z);
-            RenderSettings.ambientLight = new Color(1.86f,1.8f,1.28f);
+            //RenderSettings.ambientLight = new Color(1.86f,1.8f,1.28f);
             // RenderSettings.ambientIntensity = 1;
             // RenderSettings.am
 
