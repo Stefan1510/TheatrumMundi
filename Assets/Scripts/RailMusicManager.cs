@@ -7,7 +7,6 @@ using System.Linq;
 using TMPro;
 using UTJ.FrameCapturer;
 using UnityEngine.EventSystems;
-using UnityEditorInternal.Profiling.Memory.Experimental;
 
 public class RailMusicManager : MonoBehaviour
 {
@@ -36,7 +35,7 @@ public class RailMusicManager : MonoBehaviour
     Vector2 objectShelfSize;
     Vector2 screenDifference;
     int[] initialPieceLength = new int[6];
-    bool draggingOnTimeline, draggingObject, editTimelineObject, releaseOnTimeline, playingMusic, isInstance, fading;
+    bool draggingOnTimeline, draggingObject, editTimelineObject, releaseOnTimeline, playingMusic, isInstance;
     public bool playingSample;
     private bool musicLengthClicked;
     GameObject[] objectShelfParent;
@@ -708,7 +707,6 @@ public class RailMusicManager : MonoBehaviour
     }
     private IEnumerator FadeOut(float FadeTime, GameObject obj, float time, int clipNr, bool newPiece)
     {
-        fading = true;
         currentClip = (int)char.GetNumericValue(obj.name[07]) - 1; // object index
         while (audioSource.volume > 0)
         {
@@ -741,14 +739,14 @@ public class RailMusicManager : MonoBehaviour
         for (int i = 0; i < myObjects.Count; i++)
         {
             double startSec = UtilitiesTm.FloatRemap(myObjects[i].position.x, 0, gameObject.GetComponent<RectTransform>().rect.width, 0, AnimationTimer.GetMaxTime());
+            // startSec-=3;
             double endSec;
-            if (!gameController.GetComponent<UnitySwitchExpertUser>()._isExpert)
+            if (!SceneManaging.isExpert)
                 endSec = startSec + 60;
             else
                 endSec = startSec + myObjects[i].musicPiece.GetComponent<MusicLength>().musicLength;
-            float tmpTime = AnimationTimer.GetTime();
 
-            // wenn timer im bereich musikstuecks und musik ist nicht an
+            // wenn timer im bereich musikstuecks
             if (AnimationTimer.GetTime() >= startSec && AnimationTimer.GetTime() <= endSec)
             {
                 musicCount++;
@@ -792,10 +790,9 @@ public class RailMusicManager : MonoBehaviour
             if (firstTimeSecond && playingMusic) // es switcht von 1 auf 2 musikstuecke gleichzeitig
             {
                 firstTimeSecond = false;
-                fading = false;
                 if (fade)
                 {
-                    StartCoroutine(FadeOut(1, myObjects[n].musicPiece, tmpTime - (float)startSec, (int)char.GetNumericValue(myObjects[n].musicPiece.name[07]) - 1, true));
+                    StartCoroutine(FadeOut(.5f, myObjects[n].musicPiece, tmpTime - (float)startSec, (int)char.GetNumericValue(myObjects[n].musicPiece.name[07]) - 1, true));
                 }
                 else
                 {
@@ -810,10 +807,9 @@ public class RailMusicManager : MonoBehaviour
             else if (newPiece && currentClip != ((int)char.GetNumericValue(myObjects[n].musicPiece.name[07]) - 1))
             {
                 newPiece = false;
-                fading = false;
                 if (fade)
                 {
-                    StartCoroutine(FadeOut(1, myObjects[n].musicPiece, tmpTime - (float)startSec, (int)char.GetNumericValue(myObjects[n].musicPiece.name[07]) - 1, true));
+                    StartCoroutine(FadeOut(.5f, myObjects[n].musicPiece, tmpTime - (float)startSec, (int)char.GetNumericValue(myObjects[n].musicPiece.name[07]) - 1, true));
                 }
                 else
                 {
@@ -911,27 +907,21 @@ public class RailMusicManager : MonoBehaviour
         int nr = tmpMusicLength.nr;
         musicLengthClicked = true;
 
+        // Länge soll auf maximale Länge des Stücks verlängerbar sein (wenn ein Stück bspw. auf eine 2-minütige Timeline gesetzt wird, wird sie auf 120sek getrimmt)
         if (longer)
         {
             for (int i = initialPieceLength[nr]; i > 30; i -= 30)
             {
                 if (i > tmpMusicLength.musicLength)
-                {
-                    Debug.Log("i: " + i+", musicPiece: "+tmpMusicLength.musicLength);
                     newLength = i;
-                }
             }
         }
-        // else if (!longer && tmpMusicLength.musicLength - 30 >= 30)
         else
         {
             for (int i = 30; i < initialPieceLength[nr]; i += 30)
             {
                 if (i < tmpMusicLength.musicLength)
-                {
-                    Debug.Log("i: " + i+", musicPiece: "+tmpMusicLength.musicLength);
                     newLength = i;
-                }
             }
         }
 
@@ -942,8 +932,6 @@ public class RailMusicManager : MonoBehaviour
         myObjects[saveIndexForChangePieceLength].musicPiece.GetComponent<BoxCollider2D>().offset = new Vector2(myObjects[saveIndexForChangePieceLength].musicPiece.GetComponent<BoxCollider2D>().size.x / 2, myObjects[saveIndexForChangePieceLength].musicPiece.GetComponent<BoxCollider2D>().offset.y);
         myObjects = myObjects.OrderBy(w => w.position.x).ToList();
         SceneManaging.CalculateNeighbors(myObjects);
-        // }
-        // else if(longer && )
 
         CalculateLengthDialog(myObjects[saveIndexForChangePieceLength]);
     }
@@ -959,7 +947,6 @@ public class RailMusicManager : MonoBehaviour
         musicLengthShorter.interactable = true;
 
         float calculated30seconds = UtilitiesTm.FloatRemap(30, 0, (float)AnimationTimer.GetMaxTime(), 0, (float)gameObject.GetComponent<RectTransform>().rect.width);
-        Debug.Log("layer: " + obj.layer);
         if (obj.musicPiece.GetComponent<MusicLength>().musicLength < 60)
             musicLengthShorter.interactable = false;
         else if (obj.musicPiece.GetComponent<MusicLength>().musicLength >= initialPieceLength[nr])

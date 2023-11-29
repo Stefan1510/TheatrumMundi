@@ -60,6 +60,12 @@ public class LightController : MonoBehaviour
         ChangeHeight(sliderLbHeight.value);
         PanelLbImage = toggleLb.transform.parent.parent.GetComponent<Image>();
         PanelLbImage.color = new Color(171f / 255f, 171f / 255f, 171f / 255f, 160f / 255f);
+
+        if(!SceneManaging.isExpert)
+        {
+            sliderLbHeight.maxValue = 0.75f;
+            GetComponent<Light>().range = 16.5f;
+        }
     }
     void Start()
     {

@@ -52,8 +52,10 @@ public class SaveFileController : MonoBehaviour
     {
         if (!SceneManaging.isExpert)
         {
-            _basepath = "./";
-            _basepath = "https://lightframefx.de/extras/theatrum-mundi/2023_11_16/";
+            // _basepath = "./";
+            // _basepath = "https://lightframefx.de/extras/theatrum-mundi/";
+            //_basepath = "https://theatrummundi-lab.de/";
+            _basepath = "https://tm.skd.museum/";
             StartCoroutine(LoadFileFromServer("Musterszene_leer_Visitor.json", "fromCode"));
 
             panelWarningInput = panelWarningInputVisitor;
@@ -144,7 +146,7 @@ public class SaveFileController : MonoBehaviour
             StaticSceneData.StaticData.tabActive = sceneDataSave.tabActive;
             string sceneDataSaveString = GetComponent<SceneDataController>().CreateJsonFromSceneData(StaticSceneData.StaticData);
 
-            filePath = _basepath+"Saves/"+code + ".json";
+            filePath = code + ".json";
             StartCoroutine(WriteToServer(sceneDataSaveString, filePath));
             codeReminder.SetActive(true);
             codeReminderText.text = code;
@@ -491,15 +493,19 @@ public class SaveFileController : MonoBehaviour
         form.AddField("pathFile", filePath);
         form.AddField("text", json);
 
-        Debug.Log("path: "+filePath+", json : "+json);
+        Debug.Log("path: " + filePath + ", json : " + json);
 
         // UnityWebRequest uwr = UnityWebRequest.Post(_basepath + "WriteFile.php", form);
         // yield return uwr;
 
         WWW www = new WWW(_basepath + "WriteFile.php", form);
         yield return www;
-        Debug.Log("www: "+www.text);
-        //yield return StartCoroutine(LoadFilesFromServer(false, "", false));
+        try
+        {
+            Debug.Log("www: " + www.text);
+            //yield return StartCoroutine(LoadFilesFromServer(false, "", false));
+        }
+        catch (Exception ex) { Debug.Log("file not found"); }
 
         _placeholderTextWarning.text = "";
         _loadSaveNew = 3;
