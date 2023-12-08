@@ -38,7 +38,7 @@ namespace UTJ.FrameCapturer
         [SerializeField] protected int m_resolutionWidth = 3840;
 
         [SerializeField] protected FrameRateMode m_framerateMode = FrameRateMode.Constant;
-        [SerializeField] protected int m_targetFramerate = 30;
+        [SerializeField] protected int m_targetFramerate = 25;
         [SerializeField] protected bool m_fixDeltaTime = true;
         [SerializeField] protected bool m_waitDeltaTime = true;
         [SerializeField][Range(1, 10)] protected int m_captureEveryNthFrame = 1;
@@ -147,9 +147,9 @@ namespace UTJ.FrameCapturer
         public virtual void BeginRecording()
         {
             m_startFrame = 0;
-            m_endFrame = AnimationTimer._maxTime*25;
+            m_endFrame = AnimationTimer._maxTime * 25;
             m_frame = 0;
-            //Debug.Log("frames: "+endFrame);
+            Debug.Log("frames: " + m_endFrame);
             // if(m_recording) { return false; }
 
             // delta time control
@@ -261,6 +261,7 @@ namespace UTJ.FrameCapturer
             if (EditorApplication.isPlaying)
 #endif
             {
+                /*
                 if (m_captureControl == CaptureControl.FrameRange)
                 {
                     if (!m_aborted && m_frame >= m_startFrame && m_frame <= m_endFrame)
@@ -288,9 +289,11 @@ namespace UTJ.FrameCapturer
                 else if (m_captureControl == CaptureControl.Manual)
                 {
                 }
+                */
 
                 if (m_framerateMode == FrameRateMode.Constant && m_fixDeltaTime && m_waitDeltaTime)
                 {
+                    //Debug.Log("hier");
                     StartCoroutine(Wait());
                 }
             }

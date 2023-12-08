@@ -36,6 +36,7 @@ namespace UTJ.FrameCapturer
                 string path = m_outPath + "_" + m_frame.ToString("0000") + ".png";
                 int channels = System.Math.Min(m_config.channels, (int)format & 7);
                 fcAPI.fcPngExportPixels(m_ctx, path, frame, m_config.width, m_config.height, format, channels);
+                Debug.Log("path: "+path);
             }
             ++m_frame;
         }

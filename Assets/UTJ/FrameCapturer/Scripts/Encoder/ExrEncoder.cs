@@ -36,6 +36,7 @@ namespace UTJ.FrameCapturer
             if (m_ctx)
             {
                 string path = m_outPath + "_" + m_frame.ToString("0000") + ".exr";
+                Debug.Log("path: "+path);
                 int channels = System.Math.Min(m_config.channels, (int)format & 7);
 
                 fcAPI.fcExrBeginImage(m_ctx, path, m_config.width, m_config.height);

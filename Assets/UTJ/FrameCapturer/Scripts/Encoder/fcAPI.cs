@@ -281,7 +281,7 @@ namespace UTJ.FrameCapturer
                     {
                         numColors = 256,
                         maxTasks = 8,
-                        keyframeInterval = 30,
+                        keyframeInterval = 25,
                     };
                 }
             }
@@ -349,7 +349,7 @@ namespace UTJ.FrameCapturer
                         video = true,
                         videoBitrateMode = fcBitrateMode.VBR,
                         videoTargetBitrate = 1024 * 1000,
-                        videoTargetFramerate = 30,
+                        videoTargetFramerate = 25,
                         videoFlags = (int)fcMP4VideoFlags.H264Mask,
                         videoMaxTasks = 4,
 
@@ -443,7 +443,7 @@ namespace UTJ.FrameCapturer
                     {
                         video = true,
                         videoEncoder = fcWebMVideoEncoder.VP8,
-                        videoTargetFramerate = 60,
+                        videoTargetFramerate = 25,
                         videoBitrateMode = fcBitrateMode.VBR,
                         videoTargetBitrate = 1024 * 1000,
                         videoMaxTasks = 4,

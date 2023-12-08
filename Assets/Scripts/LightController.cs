@@ -61,17 +61,20 @@ public class LightController : MonoBehaviour
         PanelLbImage = toggleLb.transform.parent.parent.GetComponent<Image>();
         PanelLbImage.color = new Color(171f / 255f, 171f / 255f, 171f / 255f, 160f / 255f);
 
-        if(!SceneManaging.isExpert)
-        {
-            sliderLbHeight.maxValue = 0.75f;
-            GetComponent<Light>().range = 16.5f;
-        }
+
     }
     void Start()
     {
         thisLightElement = StaticSceneData.StaticData.lightElements.Find(le => le.name == gameObject.name);
         LightActivation(false);
         ChangePosition(sliderLbPosition.value);
+
+        if (!SceneManaging.isExpert)
+        {
+            sliderLbHeight.maxValue = 0.75f;
+            Debug.Log("hier");
+            GetComponent<Light>().range = 16.5f;
+        }
     }
     public void LightActivation(bool onOffSwitch)
     {

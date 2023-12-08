@@ -188,7 +188,7 @@ namespace UTJ.FrameCapturer
             {
                 Debug.Log("MovieRecorder: EndRecording()");
             }
-            base.EndRecording();
+            //base.EndRecording();
         }
 
 

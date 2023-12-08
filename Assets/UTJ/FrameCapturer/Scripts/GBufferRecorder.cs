@@ -175,8 +175,10 @@ namespace UTJ.FrameCapturer
                 }
 
                 int tid = Shader.PropertyToID("_TmpFrameBuffer");
-                m_cbCopyFB = new CommandBuffer();
-                m_cbCopyFB.name = "GBufferRecorder: Copy FrameBuffer";
+                m_cbCopyFB = new CommandBuffer
+                {
+                    name = "GBufferRecorder: Copy FrameBuffer"
+                };
                 m_cbCopyFB.GetTemporaryRT(tid, -1, -1, 0, FilterMode.Point);
                 m_cbCopyFB.Blit(BuiltinRenderTextureType.CurrentActive, tid);
                 m_cbCopyFB.SetRenderTarget(new RenderTargetIdentifier[] { m_rtFB[0], m_rtFB[1] }, m_rtFB[0]);
@@ -189,8 +191,10 @@ namespace UTJ.FrameCapturer
                 m_rtGB = new RenderTexture[8];
                 for (int i = 0; i < m_rtGB.Length; ++i)
                 {
-                    m_rtGB[i] = new RenderTexture(captureWidth, captureHeight, 0, RenderTextureFormat.ARGBHalf);
-                    m_rtGB[i].filterMode = FilterMode.Point;
+                    m_rtGB[i] = new RenderTexture(captureWidth, captureHeight, 0, RenderTextureFormat.ARGBHalf)
+                    {
+                        filterMode = FilterMode.Point
+                    };
                     m_rtGB[i].Create();
                 }
 
@@ -209,8 +213,10 @@ namespace UTJ.FrameCapturer
                 m_matCopy.SetColor("_ClearColor", cam.backgroundColor);
 
                 // copy gbuffer
-                m_cbCopyGB = new CommandBuffer();
-                m_cbCopyGB.name = "GBufferRecorder: Copy GBuffer";
+                m_cbCopyGB = new CommandBuffer
+                {
+                    name = "GBufferRecorder: Copy GBuffer"
+                };
                 m_cbCopyGB.SetRenderTarget(new RenderTargetIdentifier[] {
                     m_rtGB[0], m_rtGB[1], m_rtGB[2], m_rtGB[3], m_rtGB[4], m_rtGB[5], m_rtGB[6]
                 }, m_rtGB[0]);
@@ -220,8 +226,10 @@ namespace UTJ.FrameCapturer
 
                 if (m_fbComponents.gbVelocity)
                 {
-                    m_cbCopyVelocity = new CommandBuffer();
-                    m_cbCopyVelocity.name = "GBufferRecorder: Copy Velocity";
+                    m_cbCopyVelocity = new CommandBuffer
+                    {
+                        name = "GBufferRecorder: Copy Velocity"
+                    };
                     m_cbCopyVelocity.SetRenderTarget(m_rtGB[7]);
                     m_cbCopyVelocity.DrawMesh(m_quad, Matrix4x4.identity, m_matCopy, 0, 4);
                     cam.AddCommandBuffer(CameraEvent.BeforeImageEffectsOpaque, m_cbCopyVelocity);
