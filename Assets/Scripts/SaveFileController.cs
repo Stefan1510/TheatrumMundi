@@ -54,8 +54,8 @@ public class SaveFileController : MonoBehaviour
         {
             // _basepath = "./";
             // _basepath = "https://lightframefx.de/extras/theatrum-mundi/";
-            _basepath = "https://theatrummundi-lab.de/";
-            //_basepath = "https://tm.skd.museum/";
+            //_basepath = "https://theatrummundi-lab.de/";
+            _basepath = "https://tm.skd.museum/";
             StartCoroutine(LoadFileFromServer("Musterszene_leer_Visitor.json", "fromCode"));
 
             panelWarningInput = panelWarningInputVisitor;
@@ -168,7 +168,7 @@ public class SaveFileController : MonoBehaviour
                 StaticSceneData.StaticData.fileDate = sceneDataSave.fileDate;
                 StaticSceneData.StaticData.pieceLength = sceneDataSave.pieceLength;
 
-                Debug.Log("hier: "+StaticSceneData.StaticData.musicClipElements[1].musicClipElementInstances.Count);
+                //Debug.Log("hier: "+StaticSceneData.StaticData.musicClipElements[1].musicClipElementInstances.Count);
 
                 string sceneDataSaveString = GetComponent<SceneDataController>().CreateJsonFromSceneData(StaticSceneData.StaticData);
 
