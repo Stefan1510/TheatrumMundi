@@ -35,7 +35,6 @@ public static class SceneManaging
     private static Color _colFlyerHighlighted = new Color(1, .5f, .25f);
     private static Color _colFlyer = new Color(.78f, .46f, .31f);
     private static Color _colFlyerSpace = new Color(.78f, .54f, .44f, .0f);
-    private static float _idleTimer = -1;
     public static float alpha = 1;
 
     public static bool recording = false;

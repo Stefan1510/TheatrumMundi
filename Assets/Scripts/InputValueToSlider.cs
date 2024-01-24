@@ -33,10 +33,4 @@ public class InputValueToSlider : MonoBehaviour
 			myInputField.text=attachedSlider.minValue.ToString("0.00");
 		}
 	}
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

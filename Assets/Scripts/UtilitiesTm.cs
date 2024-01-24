@@ -110,6 +110,4 @@ public static class UtilitiesTm
         }
         return texture2D;
     } /* gbham() */
-
-
 }

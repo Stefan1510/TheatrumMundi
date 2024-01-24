@@ -46,9 +46,4 @@ public class MoveRailsAbstand12_34 : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

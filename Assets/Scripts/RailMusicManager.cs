@@ -960,7 +960,7 @@ public class RailMusicManager : MonoBehaviour
         musicPieceLengthDialog.transform.position = new Vector2(obj.musicPiece.transform.position.x, musicPieceLengthDialog.transform.position.y);
         musicPieceLengthDialog.transform.SetAsLastSibling();
     }
-    void Update()
+    void FixedUpdate()
     {
         if (currentLossyScale != transform.lossyScale.x)
         {

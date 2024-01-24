@@ -21,12 +21,6 @@ public class DirectorLightOverview : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
     private void showLightField()
     {
         //Debug.Log(StaticSceneData.StaticData.lightElements[_thisLight].name);

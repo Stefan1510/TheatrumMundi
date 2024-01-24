@@ -21,7 +21,7 @@ public class JumpToKeyframe : MonoBehaviour
         ChangeSelection(ImageTimelineSelection.GetRailType());         //0 - railspeed; 1 - light; 2 - music; 3 - background
         ChangeRailSelection(ImageTimelineSelection.GetRailNumber());     //der index der Rails in der Rail-Liste
     }
-    void Update()
+    void FixedUpdate()
     {
         if (ImageTimelineSelection.UpdateNecessary())
         {

@@ -13,7 +13,7 @@ public class LiveViewFrame : MonoBehaviour
         cam2.SetActive(false);
     }
 
-    void Update()
+    void FixedUpdate()
     {
         if (Input.GetButtonDown("Switch1"))
         {

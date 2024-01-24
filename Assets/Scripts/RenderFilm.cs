@@ -8,14 +8,14 @@ public class RenderFilm : MonoBehaviour
     [SerializeField] private PlayerControls playerControls;
     public void ClickOkay()
     {
-        playerControls.ButtonRender(true);
         gameObject.SetActive(false);
+        playerControls.ButtonRender();
     }
     public void ClickCancel()
     {
         gameObject.SetActive(false);
     }
-    public void setActive()
+    public void Activate()
     {
         gameObject.SetActive(true);
     }

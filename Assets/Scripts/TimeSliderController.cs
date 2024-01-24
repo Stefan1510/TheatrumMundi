@@ -28,7 +28,7 @@ public class TimeSliderController : MonoBehaviour, IPointerUpHandler, IDragHandl
     [SerializeField] private GameObject longerTimeslider;
     [SerializeField] private GameObject blackStripeOverLight;
     private float railwidthAbsolute = 1670.4f;
-    private Slider _thisSlider;
+    public Slider _thisSlider;
     #endregion
     void Start()
     {
@@ -61,7 +61,7 @@ public class TimeSliderController : MonoBehaviour, IPointerUpHandler, IDragHandl
             timeStamps[i].transform.localPosition = new Vector2(posX, timeStamps[i].transform.localPosition.y);
         }
     }
-    void Update()
+    void FixedUpdate()
     {
         _thisSlider.value = AnimationTimer.GetTime();
         _textTime.text = UtilitiesTm.FloaTTimeToString(_thisSlider.value);

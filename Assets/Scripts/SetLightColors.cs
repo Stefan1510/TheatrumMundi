@@ -122,30 +122,4 @@ public class SetLightColors : MonoBehaviour
             element.goLightElement.GetComponent<Light>().intensity = lightAnimationIntensityValue * _lightSpotIntensity;
         }
     }
-
-    void Update()
-    {
-        //ChangeLightColor();
-
-        //if (AnimationTimer.GetTimerState() == AnimationTimer.TimerState.playing)
-        //{
-        //    ChangeLightColor();
-        //}
-        //else if()
-        //{
-
-        //}
-        //{
-        //    if (_time <= _sliderTime.maxValue)
-        //    {
-        //        _sliderTime.GetComponent<Slider>().value = _time;
-        //    }
-        //    else
-        //    {
-        //        AnimationTimer.StopTimer();
-        //        _time = 0;
-        //        _sliderTime.GetComponent<Slider>().value = _time;
-        //    }
-        //}
-    }
 }

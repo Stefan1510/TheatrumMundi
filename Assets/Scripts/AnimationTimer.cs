@@ -22,7 +22,7 @@ public class AnimationTimer : MonoBehaviour
         PauseTimer();
         ResetTime();
     }
-    void Update()
+    void FixedUpdate()
     {
         if (_runTimer)
             _timer += Time.deltaTime;

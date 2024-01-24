@@ -1234,7 +1234,7 @@ public class RailManager : MonoBehaviour
             }
         }
     }
-    void Update()
+    void FixedUpdate()
     {
         #region eachCycle
         if (currentLossyScale != transform.lossyScale.x)    // Abfrage, ob sich lossyScale geaendert hat dann werden die Schienen rescaled
@@ -1974,6 +1974,6 @@ public class RailManager : MonoBehaviour
     }
     public void PublicUpdate()
     {
-        Update();
+        FixedUpdate();
     }
 }

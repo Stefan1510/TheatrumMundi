@@ -101,7 +101,7 @@ public class SaveFileController : MonoBehaviour
         _buttonLoad.interactable = false;
         _buttonDelete.interactable = false;
     }
-    private void Update()
+    private void FixedUpdate()
     {
         if (_biggerSmaller && _codeTimer < 0.5f)
         {
@@ -120,13 +120,11 @@ public class SaveFileController : MonoBehaviour
         {
             if (pressEnterOnSaveDialog)
             {
-                Debug.Log("1");
                 OnClickOKAYOnTabs();
 
             }
             else if (pressEnterOnWarning)
             {
-                Debug.Log("2");
                 OnClickWarning(true);
             }
         }
@@ -508,7 +506,7 @@ public class SaveFileController : MonoBehaviour
             Debug.Log("www: " + www.text);
             //yield return StartCoroutine(LoadFilesFromServer(false, "", false));
         }
-        catch (Exception ex) { Debug.Log("file not found"); }
+        catch (Exception) { Debug.Log("file not found"); }
 
         _placeholderTextWarning.text = "";
         _loadSaveNew = 3;
@@ -517,7 +515,6 @@ public class SaveFileController : MonoBehaviour
     {
         string path = _basepath + "\\" + filePath;
         tmpSnapshot.CallTakeSnapshot(path.Substring(0, path.Length - 5));
-        //Debug.LogWarning(path);
         StreamWriter writer = new StreamWriter(path, true);
         writer.Write(json);
         writer.Close();
