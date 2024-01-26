@@ -683,7 +683,7 @@ public class RailMusicManager : MonoBehaviour
     }
     public void PlaySample(int i)
     {
-        if (SceneManaging.playing)
+        if (AnimationTimer.GetTimerState()==AnimationTimer.TimerState.playing)
         {
             tmpPlayerControls.ButtonPlay();
         }
@@ -1459,7 +1459,7 @@ public class RailMusicManager : MonoBehaviour
         }
 
         // turning music on and off in playmode
-        if (SceneManaging.playing)
+        if (AnimationTimer.GetTimerState()==AnimationTimer.TimerState.playing)
         {
             PlayLatestPiece(false, true);
         }

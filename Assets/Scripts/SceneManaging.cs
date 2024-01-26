@@ -7,7 +7,6 @@ public static class SceneManaging
 {
     #region variables
     public static int objectInIndexTab;
-    public static bool playing;
     public static bool dragging;
     public static bool updateMusic = false;
     public static bool highlighted;                 //global variable since only one object can be highlighted - everything else is unhighlighted

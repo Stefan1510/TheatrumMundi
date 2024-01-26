@@ -19,6 +19,7 @@ namespace UTJ.FrameCapturer
         public Sprite[] aPauseSprites;
         public Sprite[] aStopSprites;
         [SerializeField] private Snapshot _snapshot;
+        [SerializeField] private RailManager tmpRailManager;
         [SerializeField] private TimeSliderController _tmpSlider;
         //private float _f = 0.0f;
         [SerializeField] private GameObject overlayRendering;
@@ -26,7 +27,8 @@ namespace UTJ.FrameCapturer
         [SerializeField] private MovieRecorder rec;
         [SerializeField] private GameObject buttonOkay;
         private string _fileName;
-        private bool render = false;
+        public bool isRecording = false;
+        private float currentFrame = 0;
 
         void Start()
         {
@@ -39,11 +41,42 @@ namespace UTJ.FrameCapturer
                 aStopButtons[i].transform.GetComponent<Image>().sprite = aStopSprites[i];
             }
         }
-        void FixedUpdate()
+        void Update()
         {
+            if (!isRecording) return; // mache nichts wenn nicht aufgenommen wird
+
+            if (currentFrame >= AnimationTimer.GetMaxTime() * 25) // wenn die maximale Anzahl an Frames erreicht wurde
+            {
+                isRecording = false; // stoppe die Aufnahme
+                return;
+            }
+
+            currentFrame++;
+
+            // erstelle einen neuen Frame und currentFrame ist der index
+            _snapshot.CallTakeSnapshot(_fileName + "/" + currentFrame);
+            Debug.Log("time: " + currentFrame);
+            textPercent.text = (AnimationTimer.GetTime() / AnimationTimer._maxTime * 100).ToString("0.0") + "%";
+
+            _tmpSlider._thisSlider.value = currentFrame / 25;
+            AnimationTimer.SetTime(currentFrame / 25);
+
+            /*if (render)
+            {
+                for (int i = 0; i < 100; i++)
+                {
+                    _snapshot.CallTakeSnapshot(_fileName + "/" + i);
+                    Debug.Log("time: " + i);
+                    textPercent.text = i.ToString();
+
+                    _tmpSlider._thisSlider.value = i / 25;
+                    AnimationTimer.SetTime(i / 25);
+                }
+                render=false;
+            }*/
+
             if (pointAnimation)
             {
-                textPercent.text = (AnimationTimer.GetTime() / AnimationTimer._maxTime * 100).ToString("0.0") + "%";
                 if (rec.endFrame == rec.m_frame)
                 {
                     buttonOkay.SetActive(true);
@@ -66,22 +99,6 @@ namespace UTJ.FrameCapturer
                 }
             }
         }
-        void Update()
-        {
-            if (render)
-            {
-                for (int i = 0; i < 100; i++)
-                {
-                    _snapshot.CallTakeSnapshot(_fileName + "/" + i);
-                    Debug.Log("time: " + i);
-                    textPercent.text = i.ToString();
-
-                    _tmpSlider._thisSlider.value = i / 25;
-                    AnimationTimer.SetTime(i / 25);
-                }
-                render=false;
-            }
-        }
         public void PressOkayOnFinish()
         {
             overlayRendering.SetActive(false);
@@ -99,24 +116,27 @@ namespace UTJ.FrameCapturer
             switch (AnimationTimer.GetTimerState())
             {
                 case AnimationTimer.TimerState.stopped:
+                    Debug.Log("start from stop");
                     AnimationTimer.StartTimer();
-                    SceneManaging.playing = true;
+                    tmpRailManager.PlayAndStopFigureAnimation(true);
                     for (int i = 0; i < aPlayButtons.Length; i++)
                     {
                         aPlayButtons[i].transform.GetComponent<Image>().sprite = aPauseSprites[i];
                     }
                     break;
                 case AnimationTimer.TimerState.playing:
+                    Debug.Log("pause");
                     AnimationTimer.PauseTimer();
-                    SceneManaging.playing = false;
+                    tmpRailManager.PlayAndStopFigureAnimation(false);
                     for (int i = 0; i < aPlayButtons.Length; i++)
                     {
                         aPlayButtons[i].transform.GetComponent<Image>().sprite = aPlaySprites[i];
                     }
                     break;
                 case AnimationTimer.TimerState.paused:
+                    Debug.Log("start from paused");
                     AnimationTimer.StartTimer();
-                    SceneManaging.playing = true;
+                    tmpRailManager.PlayAndStopFigureAnimation(true);
                     for (int i = 0; i < aPlayButtons.Length; i++)
                     {
                         aPlayButtons[i].transform.GetComponent<Image>().sprite = aPauseSprites[i];
@@ -132,7 +152,6 @@ namespace UTJ.FrameCapturer
                     break;
                 case AnimationTimer.TimerState.playing:
                     AnimationTimer.StopTimer();
-                    SceneManaging.playing = false;
                     for (int i = 0; i < aPlayButtons.Length; i++)
                     {
                         aPlayButtons[i].transform.GetComponent<Image>().sprite = aPlaySprites[i];
@@ -140,7 +159,6 @@ namespace UTJ.FrameCapturer
                     break;
                 case AnimationTimer.TimerState.paused:
                     AnimationTimer.StopTimer();
-                    SceneManaging.playing = false;
                     break;
             }
         }
@@ -149,10 +167,10 @@ namespace UTJ.FrameCapturer
             overlayRendering.SetActive(true);
             _fileName = "C:/tmp/TheatrumMundi/" + "neu";
             Directory.CreateDirectory(_fileName);
-            render = true;
-            //AnimationTimer.ResetTime();
+            isRecording = true;
+            AnimationTimer.ResetTime();
             //ButtonPlay();
-            float _maxFrames = AnimationTimer.GetMaxTime() * 25;
+            //float _maxFrames = AnimationTimer.GetMaxTime() * 25;
 
             // pointAnimation = true;
             // rec.BeginRecording();

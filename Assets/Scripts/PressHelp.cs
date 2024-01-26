@@ -400,13 +400,13 @@ public class PressHelp : MonoBehaviour
             _idleTimer = 0;
             offFromClick = false;
         }
-        if (_tutorialCounter == -1 && !_isClicked && !SceneManaging.playing && !SceneManaging.isExpert)
+        if (_tutorialCounter == -1 && !_isClicked && AnimationTimer.GetTimerState() != AnimationTimer.TimerState.playing && !SceneManaging.isExpert)
         {
             _idleTimer += Time.deltaTime;
             if (!_newScene)
                 _timerOverlay += Time.deltaTime;
         }
-        if (_idleTimer > _helpAnimWaitTime && !SceneManaging.playing)
+        if (_idleTimer > _helpAnimWaitTime && AnimationTimer.GetTimerState() != AnimationTimer.TimerState.playing)
         {
             HelpAnimation();
         }
@@ -415,7 +415,7 @@ public class PressHelp : MonoBehaviour
             StopHelpAnimation();
             secondHighlight = false;
         }
-        if (_timerOverlay > _maxTimeArrow && _timerOverlay < _maxTimeCountdown && !SceneManaging.playing && !SceneManaging.dragging && !arrowPressed)
+        if (_timerOverlay > _maxTimeArrow && _timerOverlay < _maxTimeCountdown && AnimationTimer.GetTimerState() != AnimationTimer.TimerState.playing && !SceneManaging.dragging && !arrowPressed)
         {
             _arrowHelp.SetActive(true);
             arrowPressed = true;

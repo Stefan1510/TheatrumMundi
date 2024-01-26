@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using System.Linq;
 using TMPro;
 using UnityEngine.EventSystems;
+using UnityEditor.Animations;
 
 public class RailManager : MonoBehaviour
 {
@@ -1234,8 +1235,48 @@ public class RailManager : MonoBehaviour
             }
         }
     }
-    void FixedUpdate()
+    public void PlayAndStopFigureAnimation(bool enableAnimation)
     {
+        // enable binnenanimation when playing
+        for (int k = 0; k < railList.Length; k++)
+        {
+            for (int i = 0; i < railList[k].myObjects.Count; i++)
+            {
+                // start Animation on play
+                if (railList[k].myObjects[i].figure3D.GetComponent<FigureStats>().isShip == false)
+                {
+                    if (enableAnimation)
+                    {
+                        railList[k].myObjects[i].figure3D.GetComponent<Animator>().enabled = true;
+                    }
+                    else
+                    {
+                        railList[k].myObjects[i].figure3D.GetComponent<Animator>().enabled = false;
+                    }
+                }
+            }
+        }
+    }
+    public void ShowAnimationTimeOfFigure()
+    {
+        for (int k = 0; k < railList.Length; k++)
+        {
+            for (int i = 0; i < railList[k].myObjects.Count; i++)
+            {
+                // start Animation on play
+                if (railList[k].myObjects[i].figure3D.GetComponent<FigureStats>().isShip == false)
+                {
+                    //Debug.Log(railList[k].myObjects[i].figure3D.GetComponent<Animator>().c.GetComponent<AnimatorController>().animationClips[0].frameRate); //animstatSetFloat(GetCurrentAnimatorStateInfo(0).normalizedTime%4);
+
+                }
+            }
+        }
+    }
+    void Update()
+    {
+        if (AnimationTimer.GetTimerState() == AnimationTimer.TimerState.playing)
+            ShowAnimationTimeOfFigure();
+
         #region eachCycle
         if (currentLossyScale != transform.lossyScale.x)    // Abfrage, ob sich lossyScale geaendert hat dann werden die Schienen rescaled
         {
@@ -1942,22 +1983,6 @@ public class RailManager : MonoBehaviour
             Update3DFigurePositions();
 
 
-            // enable binnenanimation when playing
-            for (int k = 0; k < railList.Length; k++)
-            {
-                for (int i = 0; i < railList[k].myObjects.Count; i++)
-                {
-                    // start Animation on play
-                    if (railList[k].myObjects[i].figure3D.GetComponent<FigureStats>().isShip == false)
-                    {
-                        if (SceneManaging.playing && !railList[k].myObjects[i].figure3D.GetComponent<Animator>().enabled)
-                            railList[k].myObjects[i].figure3D.GetComponent<Animator>().enabled = true;
-                        else if (!SceneManaging.playing && railList[k].myObjects[i].figure3D.GetComponent<Animator>().enabled)
-                            railList[k].myObjects[i].figure3D.GetComponent<Animator>().enabled = false;
-                    }
-                }
-            }
-
             releaseOnTimeline = false;
             releaseObjMousePos.x = 0.0f;
             releaseObjMousePos.y = 0.0f;
@@ -1974,6 +1999,6 @@ public class RailManager : MonoBehaviour
     }
     public void PublicUpdate()
     {
-        FixedUpdate();
+        Update();
     }
 }
