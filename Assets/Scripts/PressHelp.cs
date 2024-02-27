@@ -6,7 +6,7 @@ using TMPro;
 public class PressHelp : MonoBehaviour
 {
     #region variables
-    [SerializeField] private GameObject helpButtonPressed, helpOverlayMenue2, helpOverlayMenue1, helpOverlayMenue3, helpOverlayMenue4, helpOverlayMenue5, helpOverlayMenue6, helpOverlayFlyer, aboutScreen;
+    [SerializeField] private GameObject helpButtonPressed, helpOverlayMenue2, helpOverlayMenue1, helpOverlayMenue3, helpOverlayMenue4, helpOverlayMenue5, helpOverlayMenue6, helpOverlayFlyer, aboutScreenVisitor, aboutScreenExpert;
     [SerializeField] private GameObject timeSliderBubbleFigure, timeSliderBubbleMusic, gameController, loadSaveDialog, panelWarningInput;
     [SerializeField] private GameObject maskTimeSlider, _timeSliderPlayButton;
     [SerializeField] private TextMeshProUGUI tutText;
@@ -44,7 +44,8 @@ public class PressHelp : MonoBehaviour
         helpButtonPressed.SetActive(false);
         helpOverlayMenue2.SetActive(false);
         helpOverlayMenue3.SetActive(false);
-        aboutScreen.SetActive(false);
+        aboutScreenVisitor.SetActive(false);
+        aboutScreenExpert.SetActive(false);
         _buttonColorStart = new Color(255, 255, 255, 0);
         _buttonColorAttention = new Color32(255, 255, 255, 70);
         _maxTimeArrow = 40;
@@ -184,7 +185,10 @@ public class PressHelp : MonoBehaviour
         {
             if (!SceneManaging.tutorialActive && !SceneManaging.saveDialogActive && !SceneManaging.railLengthDialogActive && !SceneManaging.dialogActive)
             {
-                aboutScreen.SetActive(true);
+                if (SceneManaging.isExpert)
+                    aboutScreenExpert.SetActive(true);
+                else
+                    aboutScreenVisitor.SetActive(true);
                 SceneManaging.aboutActive = true;
             }
         }
@@ -192,7 +196,8 @@ public class PressHelp : MonoBehaviour
         {
             if (!SceneManaging.tutorialActive && !SceneManaging.saveDialogActive && !SceneManaging.railLengthDialogActive && !SceneManaging.dialogActive)
             {
-                aboutScreen.SetActive(false);
+                aboutScreenVisitor.SetActive(false);
+                aboutScreenExpert.SetActive(false);
                 SceneManaging.aboutActive = false;
             }
         }
@@ -326,14 +331,14 @@ public class PressHelp : MonoBehaviour
                         else
                             helpOverlayMenue6.transform.GetChild(0).GetChild(1).gameObject.SetActive(true);
                     }
-                    else if(_tutorialCounter == 1)
+                    else if (_tutorialCounter == 1)
                     {
                         if (!SceneManaging.isExpert)
                             helpOverlayMenue6.transform.GetChild(1).GetChild(0).gameObject.SetActive(true);
                         else
                             helpOverlayMenue6.transform.GetChild(1).GetChild(1).gameObject.SetActive(true);
                     }
-                    else if(_tutorialCounter==2)
+                    else if (_tutorialCounter == 2)
                     {
                         if (!SceneManaging.isExpert)
                             helpOverlayMenue6.transform.GetChild(2).GetChild(0).gameObject.SetActive(true);
