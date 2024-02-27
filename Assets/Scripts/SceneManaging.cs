@@ -17,6 +17,7 @@ public static class SceneManaging
     public static int mainMenuActive;
     public static bool isPreviewLoaded;    // Variable zur Abfrage, ob die Szene in der Vorschau auch geladen wurde.
     public static bool isExpert;
+    public static bool playing;
     // flyer
     public static bool flyerActive;
     public static int[] flyerSpace = new int[11];

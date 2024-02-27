@@ -72,7 +72,6 @@ public class LightController : MonoBehaviour
         if (!SceneManaging.isExpert)
         {
             sliderLbHeight.maxValue = 0.75f;
-            Debug.Log("hier");
             GetComponent<Light>().range = 16.5f;
         }
     }

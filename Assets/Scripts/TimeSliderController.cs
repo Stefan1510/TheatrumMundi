@@ -61,7 +61,7 @@ public class TimeSliderController : MonoBehaviour, IPointerUpHandler, IDragHandl
             timeStamps[i].transform.localPosition = new Vector2(posX, timeStamps[i].transform.localPosition.y);
         }
     }
-    void FixedUpdate()
+    void Update()
     {
         _thisSlider.value = AnimationTimer.GetTime();
         _textTime.text = UtilitiesTm.FloaTTimeToString(_thisSlider.value);

@@ -121,7 +121,7 @@ public class UnitySwitchExpertUser : MonoBehaviour
             _buttonKulissen.transform.GetChild(1).gameObject.SetActive(false);
         }
     }
-    void FixedUpdate()
+    void Update()
     {
         if (_gameControllerStarted)
         {

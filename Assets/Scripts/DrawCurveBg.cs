@@ -41,7 +41,7 @@ public class DrawCurveBg : MonoBehaviour
         StaticSceneData.StaticData.backgroundPositions.Sort((x, y) => x.moment.CompareTo(y.moment));   // sortiert die railElementSpeeds anhand der Eigenschaft moment
     }
 
-    void FixedUpdate()
+    void Update()
     {
         ChangeBackgroundPosition();
     }

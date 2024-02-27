@@ -9,7 +9,7 @@ public class RenderFilm : MonoBehaviour
     public void ClickOkay()
     {
         gameObject.SetActive(false);
-        playerControls.ButtonRender();
+        playerControls.ButtonRender(true);
     }
     public void ClickCancel()
     {

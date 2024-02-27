@@ -8,7 +8,7 @@ public class RailSpeedController : MonoBehaviour
     public int railIndex;
     public float speed = 0;
     private float _speedAtTime;
-    void FixedUpdate()
+    void Update()
     {
         if (railIndex % 2 == 0)
         {

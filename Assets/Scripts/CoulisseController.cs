@@ -12,7 +12,7 @@ public class CoulisseController : MonoBehaviour
         currentTab = 0;
         timer = 0.0f;
     }
-    void FixedUpdate()
+    void Update()
     {
         if (SceneManaging.objectInIndexTab != -1)
         {

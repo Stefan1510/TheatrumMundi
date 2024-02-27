@@ -92,7 +92,7 @@ public class CoulissesManager : MonoBehaviour
         SetIndexTabActive(0);
         HighlightRail(true);
     }
-    void FixedUpdate()
+    void Update()
     {
         Vector2 getMousePos = Input.mousePosition;
 

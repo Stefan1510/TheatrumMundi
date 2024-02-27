@@ -98,7 +98,7 @@ public class RailLightManager : MonoBehaviour
             timelineImage.GetComponent<RectTransform>().sizeDelta = gameObject.GetComponent<BoxCollider2D>().size = new Vector2(railWidthAbsolute, 20);
         }
     }
-    void FixedUpdate()
+    void Update()
     {
         if (currentLossyScale != transform.lossyScale.x)
         {

@@ -24,7 +24,7 @@ public class UIController : MonoBehaviour
         currenScreenWidth = Screen.width;
         objectsLightElements = GetComponent<SceneDataController>().objectsLightElements;
     }
-    void FixedUpdate()
+    void Update()
     {
         if (Screen.width != currenScreenWidth)
         {

@@ -101,7 +101,7 @@ public class SaveFileController : MonoBehaviour
         _buttonLoad.interactable = false;
         _buttonDelete.interactable = false;
     }
-    private void FixedUpdate()
+    private void Update()
     {
         if (_biggerSmaller && _codeTimer < 0.5f)
         {
@@ -525,8 +525,6 @@ public class SaveFileController : MonoBehaviour
         WWW www = new WWW(_basepath + "Saves/" + fileName);
         yield return www;
         _jsonString = www.text;
-        Debug.Log("json: " + _jsonString);
-        Debug.Log("path: " + _basepath + "/Saves/" + fileName);
         tempSceneData = tmpSceneDataController.CreateSceneDataFromJSON(_jsonString);
         tmpSceneDataController.CreateScene(tempSceneData);
 

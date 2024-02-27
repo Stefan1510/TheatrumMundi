@@ -22,12 +22,14 @@ public class AboutDialog : MonoBehaviour
             Application.OpenURL("http://www.drematrix.de/");
         else if (str == "light")
             Application.OpenURL("https://lightframefx.de/");
+        else if (str == "more")
+            Application.OpenURL("https://shop.skd.museum/");
     }
     public void ChangeMouseIcon(bool hoverOver)
     {
-        if(hoverOver)
-        Cursor.SetCursor(_textureHand,new Vector2(_textureHand.width/2,0),CursorMode.Auto);
+        if (hoverOver)
+            Cursor.SetCursor(_textureHand, new Vector2(_textureHand.width / 2, 0), CursorMode.Auto);
         else
-        Cursor.SetCursor(null,Vector2.zero,CursorMode.Auto);
+            Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
     }
 }

@@ -5,7 +5,6 @@ using UnityEngine.UI;
 using System.Linq;
 using TMPro;
 using UnityEngine.EventSystems;
-using UnityEditor.Animations;
 
 public class RailManager : MonoBehaviour
 {
